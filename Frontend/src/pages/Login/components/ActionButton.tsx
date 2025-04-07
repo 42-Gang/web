@@ -15,10 +15,10 @@ const ActionButton = ({ email, password, setError}: {
 	const handleButtonClick = (type: 'signIn' | 'signUp') => {
 		if (type === 'signIn') {
 			if (!email || !password) {
-				setError("이메일 또는 비밀번호를 입력해주세요.")
+				setError("Please enter your email or password.")
 				return
 			} else if (email !== mockUser.email || password !== mockUser.password) {
-				setError("아이디 또는 비밀번호가 일치하지 않습니다.")
+				setError("The email or password does not match.")
 			} else {
 				setError("")
 				navigate('/Home')

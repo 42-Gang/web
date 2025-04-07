@@ -1,7 +1,8 @@
 import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { AnimatePresence } from "framer-motion"
 import GiveupButtonOn from '../../../assets/image/GiveupButtonOn.png'
 import GiveupPopup from "./GiveupPopup"
+import { FadeOverlay, PopupWrapper } from "./Animation"
 
 const Giveup = () => {
 	const [isOpenPopup, setIsOpenPopup] = useState(false)
@@ -24,21 +25,10 @@ const Giveup = () => {
 			<AnimatePresence>
 				{isOpenPopup && (
 					<>
-						<motion.div 
-							className="fixed inset-0 bg-black opacity-50"
-							initial={{ opacity: 0 }}
-							animate={{ opacity: 0.5 }}
-							exit={{ opacity: 0 }}
-						/>
-						<motion.div 
-							className="fixed inset-0 flex justify-center items-center"
-							initial={{ opacity: 0, scale: 0.8 }}
-							animate={{ opacity: 1, scale: 1 }}
-							exit={{ opacity: 0, scale: 0.8 }}
-							transition={{ duration: 0.3, ease: "easeInOut" }}
-						>
-							<GiveupPopup onClose={togglePopup}/>
-						</motion.div>
+							<FadeOverlay/>
+							<PopupWrapper>
+								<GiveupPopup onClose={togglePopup}/>
+							</PopupWrapper>
 					</>
 				)}
 			</AnimatePresence>
