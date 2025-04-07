@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom"
 
-interface GameMenuPopupProps {
+interface GiveupPopupProps {
   onClose: () => void
 }
 
-const MenuPopup: React.FC<GameMenuPopupProps> = ({ onClose }) => {
+const GiveupPopup: React.FC<GiveupPopupProps> = ({ onClose }) => {
   const navigate = useNavigate();
 
   const YesClick = () => {
@@ -32,4 +32,4 @@ const MenuPopup: React.FC<GameMenuPopupProps> = ({ onClose }) => {
   );
 }
 
-export default MenuPopup
+export default GiveupPopup

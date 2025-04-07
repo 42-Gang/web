@@ -1,17 +1,22 @@
-import Paddle from "./Paddle";
-import Ball from "./Ball";
+const Field = (ctx: CanvasRenderingContext2D) => {
+  // 배경 색상
+  ctx.fillStyle = "gray";
+  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-const Field = () => {
-  return (
-    <div
-      className="w-[800px] h-[430px] bg-gray-600 border-white
-        border-4 absolute left-1/2 -translate-x-1/2 bottom-[20px]">
-      <div className="absolute left-1/2 top-0 h-full w-[2px] border-r-4 border-dashed border-white"/>
-      <Paddle side="left"/>
-      <Paddle side="right"/>
-      <Ball />
-    </div>
-  );
-}
+  // 중앙선 (점선)
+  ctx.setLineDash([10, 10]);
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(ctx.canvas.width / 2, 0);
+  ctx.lineTo(ctx.canvas.width / 2, ctx.canvas.height);
+  ctx.stroke();
 
-export default Field
+  // 테두리 (굵은 하얀색)
+  ctx.setLineDash([]);
+  ctx.lineWidth = 8;
+  ctx.strokeStyle = "white";
+  ctx.strokeRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+};
+
+export default Field;

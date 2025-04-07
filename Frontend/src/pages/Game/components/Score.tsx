@@ -6,7 +6,7 @@ const Score = () => {
 
   return (
     <div className="font-['Sixtyfour'] font-[15px] text-white">
-      <span className="absolute right-[278px] top-[100px]">You {playerScore} : {opponentScore} NAME</span>
+      <span>You {playerScore} : {opponentScore} NAME</span>
     </div>
   )
 }
