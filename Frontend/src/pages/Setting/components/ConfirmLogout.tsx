@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import ConfirmLogoutPopup from "./components/ConfirmLogoutPopup"
+import ConfirmLogoutPopup from "./ConfirmLogoutPopup"
 
 const ConfirmLogout = () => {
   const [isOpenConfirmLogout, setIsOpenConfirmLogout] = useState(false)
