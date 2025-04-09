@@ -7,24 +7,30 @@ interface Contact {
 	id: number
 	name: string
 	avatarUrl: string
-	isOnline: boolean
+	status: 'online' | 'gaming' | 'away' | 'offline'
+}
+
+interface ContactListProps {
+	searchTerm: string
 }
 
 const contacts: Contact[] = [
-	{ id: 1, name: "PONG", avatarUrl: BasicProfile1, isOnline: true },
-	{ id: 2, name: "JACK", avatarUrl: BasicProfile2, isOnline: false },
-	{ id: 3, name: "PING", avatarUrl: BasicProfile1, isOnline: true },
-	{ id: 4, name: "Seou", avatarUrl: BasicProfile2, isOnline: false },
-	{ id: 5, name: "Hyehan", avatarUrl: BasicProfile2, isOnline: false },
-	{ id: 6, name: "jungslee", avatarUrl: BasicProfile1, isOnline: false },
-	{ id: 7, name: "JD", avatarUrl: BasicProfile2, isOnline: false },
+	{ id: 1, name: "PONG", avatarUrl: BasicProfile1, status: 'gaming' },
+	{ id: 2, name: "JACK", avatarUrl: BasicProfile2, status: 'offline' },
+	{ id: 3, name: "PING", avatarUrl: BasicProfile1, status: 'online' },
+	{ id: 4, name: "Seou", avatarUrl: BasicProfile2, status: 'away' },
+	{ id: 5, name: "Hyehan", avatarUrl: BasicProfile2, status: 'offline' },
+	{ id: 6, name: "jungslee", avatarUrl: BasicProfile1, status: 'gaming' },
+	{ id: 7, name: "JD", avatarUrl: BasicProfile2, status: 'online' },
 ]
 
 
-const ContactList = () => {
+const ContactList = ({ searchTerm }: ContactListProps) => {
+	const filteredContacts = contacts.filter(contact => contact.name.toLowerCase().includes(searchTerm.toLowerCase()))
+
 	return (
 		<div className="font-['Galmuri7'] bg-black w-full text-white max-h-[397px] overflow-y-auto custom-scrollbar">
-			{contacts.map((contact) => (
+			{filteredContacts.map((contact) => (
 				<div
 					key={contact.id}
 					className="flex items-center justify-between p-[17px] border-b-[2px] border-white"
@@ -39,7 +45,7 @@ const ContactList = () => {
 						
 						<div className="flex items-center w-[150px] justify-between">
 							<span className="text-[20px]">{contact.name}</span>
-							<LinkState isOnline={contact.isOnline} />
+							<LinkState status={contact.status} />
 						</div>
 					</div>
 					<Message />
