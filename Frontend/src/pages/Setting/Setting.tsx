@@ -3,7 +3,7 @@ import Container from "./components/Container"
 import Cancel from "./components/Cancel"
 import Profile from "./components/Profile"
 import UserInformation from "./components/UserInformation"
-import ConfirmLogout from "./ConfirmLogout"
+import ConfirmLogout from "./components/ConfirmLogout"
 
 const Setting = () => {
   const [nickname, setNickname] = useState("")

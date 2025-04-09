@@ -21,8 +21,8 @@ const ErrorMessage = ({ message, setError }: {
 
 	return message ? (
 		<div
-			className={`text-red-500 font-['Galmuri7'] absolute left-1/2 -translate-x-1/2
-				text-[20px] top-[10px] transition-opacity duration-500
+			className={`text-red-500 w-[415px] font-['Galmuri7'] absolute left-1/2 -translate-x-1/2
+				text-[20px] top-[10px] text-center transition-opacity duration-500
 				${visible ? "opacity-100" : "opacity-0"}`}
 		>
 			{message}

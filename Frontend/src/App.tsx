@@ -10,6 +10,7 @@ import AutoGameModeSelect from "./pages/GameModeSelect/AutoGameModeSelect.tsx";
 import CustomGameModeSelect from "./pages/GameModeSelect/CustomGameModeSelect.tsx";
 import GameHistory from "./pages/GameHistory/GameHistory.tsx";
 import Setting from "./pages/Setting/Setting.tsx";
+import FriendList from "./pages/FriendList/FriendList.tsx";
 import GameScreen from "./pages/Game/GameScreen.tsx";
 import Tournament from "./pages/Tournament/Tournament.tsx";
 import Invitation from "./pages/Tournament/Invitation.tsx";
@@ -53,6 +54,8 @@ const App = () => {
           />
           {/* 히스토리 페이지 */}
           <Route path="/GameHistory" element={<GameHistory />} />
+					{/* 친구 목록 */}
+					<Route path="/FriendList" element={<FriendList />} />
           {/* 세팅 페이지 */}
           <Route path="/Setting" element={<Setting />} />
           {/* 게임 페이지 */}
