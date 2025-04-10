@@ -1,33 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react"
+import { AnimatePresence } from "framer-motion"
+import { ErrorMessageWrapper } from "./Animation"
 
-const ErrorMessage = ({ message, setError }: { 
-	message: string; setError: (msg: string) => void; 
-}) => {
-	const [visible, setVisible] = useState(false);
+interface ErrorMessageProps {
+	message: string
+	setError: (message: string) => void
+}
 
+const ErrorMessage = ({ message, setError }: ErrorMessageProps) => {
 	useEffect(() => {
-		if (message) {
-			setVisible(true); // 메시지를 나타나게 함
+		if (!message) return
 
-			const hideTimer = setTimeout(() => setVisible(false), 2500); // 2.5초 후 서서히 사라짐
-			const removeTimer = setTimeout(() => setError(""), 3000); // 애니메이션 끝난 후 메시지 삭제
+		const timer = setTimeout(() => setError(""), 3000)
+		return () => clearTimeout(timer)
+	}, [message, setError])
 
-			return () => {
-				clearTimeout(hideTimer);
-				clearTimeout(removeTimer);
-			};
-		}
-	}, [message, setError]);
+	const className = "text-red-500 w-[600px] font-['Galmuri7'] text-[20px] text-center"
 
-	return message ? (
-		<div
-			className={`text-red-500 w-[415px] font-['Galmuri7'] absolute left-1/2 -translate-x-1/2
-				text-[20px] top-[10px] text-center transition-opacity duration-500
-				${visible ? "opacity-100" : "opacity-0"}`}
-		>
-			{message}
-		</div>
-	) : null;
-};
+	return (
+		<AnimatePresence>
+			{message && (
+				<ErrorMessageWrapper>
+					<div className={className}>{message}</div>
+				</ErrorMessageWrapper>
+			)}
+		</AnimatePresence>
+	)
+}
 
-export default ErrorMessage;
+export default ErrorMessage
