@@ -40,7 +40,7 @@ app.post('/api/login', (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
-      path: '/auth/refresh',
+      path: '/auth/refresh-token',
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7일
     })
 
