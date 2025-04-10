@@ -23,11 +23,11 @@ const ActionButton = ({ email, password, setError }: ActionButtonProps) => {
 	}
 
 	const handleGoogleSignup = () => {
-		navigate('/Register') // 이후에 페이지 구현 후 라우팅
+		navigate('/RegisterWithGoogle') // 임시(수정하려면 수정해도 됩니다)
 	}
 
 	const handleLocalSignup = () => {
-		navigate('/Register')
+		navigate('/RegisterWithEmail')
 	}
 
 	const buttonClass = "cursor-pointer flex gap-[10px] -ml-[40px] group justify-center items-center"

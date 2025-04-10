@@ -1,12 +1,12 @@
 const MainTitle = () => {
-  return (
-    <div className="ColorC96565 font-['SuperPixel'] w-[450px] text-6xl text-center
-            absolute right-1/2 translate-x-1/2 top-[90px] space-y-[12px]"
-    >
-      <h1>PING PONG</h1>
-      <h1>GANG</h1>
-    </div>
-  )
+	return (
+		<div className="w-[416px]">
+			<p className="ColorC96565 font-['SuperPixel'] text-[60px] text-center leading-[75px]">
+				PING PONG<br/>
+				GANG
+			</p>
+		</div>
+	)
 }
 
 export default MainTitle
