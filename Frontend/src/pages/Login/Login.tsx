@@ -13,8 +13,12 @@ const Login = () => {
 
 	return (
 		<Container>
-			<MainTitle/>
-			<ErrorMessage message={error} setError={setError}/>
+			<div className="absolute left-1/2 -translate-x-1/2 top-[85px]">
+				<MainTitle/>
+			</div>
+			<div className="absolute left-1/2 -translate-x-1/2 top-[10px]">
+				<ErrorMessage message={error} setError={setError}/>
+			</div>
 			<div className="flex flex-col items-center justify-center space-y-[26px] absolute left-[200px] top-[270px]">
 				<InputField
 					label="EMAIL"
@@ -34,7 +38,7 @@ const Login = () => {
 			<div className="absolute left-1/2 -translate-x-1/2 top-[370px]">
 				<ActionButton email={email} password={password} setError={setError}/>
 			</div>
-			<div className="absolute right-1/2 w-[630px] translate-x-1/2 bottom-[35px]">
+			<div className="absolute left-1/2 -translate-x-1/2 w-[630px] bottom-[35px]">
 				<Credit />
 			</div>
 		</Container>

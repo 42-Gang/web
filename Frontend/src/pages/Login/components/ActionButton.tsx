@@ -1,52 +1,76 @@
-import { useNavigate } from "react-router-dom" 
-import SelectHighlight from '../../../assets/image/SelectHighlight.svg'
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import useLogin from "./useLogin"
+import SelectHighlight from "../../../assets/image/SelectHighlight.svg"
 
-// 임시 유저 mock
-const mockUser = {
-	email: "test@gmail.com",
-	password: "password0311"
+interface ActionButtonProps {
+	email: string
+	password: string
+	setError: (message: string) => void
 }
 
-const ActionButton = ({ email, password, setError}: {
-	email: string, password: string, setError: (message: string) => void
-}) => {
+const ActionButton = ({ email, password, setError }: ActionButtonProps) => {
 	const navigate = useNavigate()
+	const [mode, setMode] = useState<"default" | "signupOptions">("default")
+	const login = useLogin(setError)
 
-	const handleButtonClick = (type: 'signIn' | 'signUp') => {
-		if (type === 'signIn') {
-			if (!email || !password) {
-				setError("Please enter your email or password.")
-				return
-			} else if (email !== mockUser.email || password !== mockUser.password) {
-				setError("The email or password does not match.")
-			} else {
-				setError("")
-				navigate('/Home')
-			}
+	const handleButtonClick = (action: "signIn" | "signUp") => {
+		if (action === "signIn") {
+			login(email, password)
 		} else {
-			navigate('/Register')
+			setMode("signupOptions")
 		}
 	}
 
-	const buttonClass = "cursor-pointer flex gap-[10px] -ml-[30px] group"
-	const imgClass = "opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+	const handleGoogleSignup = () => {
+		navigate('/Register') // 이후에 페이지 구현 후 라우팅
+	}
+
+	const handleLocalSignup = () => {
+		navigate('/Register')
+	}
+
+	const buttonClass = "cursor-pointer flex gap-[10px] -ml-[40px] group justify-center items-center"
+	const imgClass = "opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+	const textClass = "text-white font-['QuinqueFive'] text-[15px]"
 
 	return (
-		<div className="text-white font-['QuinqueFive'] text-[15px] flex flex-col space-y-[10px]">
-			{['signIn', 'signUp'].map((action) => (
-				<button
-					key={action}
-					onClick={() => handleButtonClick(action as 'signIn' | 'signUp')}
-					className={buttonClass}
-				>
-					<img
-						src={SelectHighlight}
-						alt="SelectHighlight"
-						className={imgClass}
-					/>
-						{action === 'signIn' ? 'SIGN IN' : 'SIGN UP'}
-				</button>
-			))}
+		<div className="flex flex-col space-y-[10px]">
+			{mode === "default" && (
+				<>
+					{["signIn", "signUp"].map((action) => (
+						<button
+							key={action}
+							onClick={() => handleButtonClick(action as "signIn" | "signUp")}
+							className={buttonClass}
+						>
+							<img src={SelectHighlight} alt="highlight" className={imgClass} />
+							<span className={textClass}>
+								{action === "signIn" ? "SIGN IN" : "SIGN UP"}
+							</span>
+						</button>
+					))}
+				</>
+			)}
+
+			{mode === "signupOptions" && (
+				<>
+					<button onClick={handleGoogleSignup} className={buttonClass}>
+						<img src={SelectHighlight} alt="highlight" className={imgClass} />
+						<span className={textClass}>CONTINUE WITH GOOGLE</span>
+					</button>
+
+					<button onClick={handleLocalSignup} className={buttonClass}>
+						<img src={SelectHighlight} alt="highlight" className={imgClass} />
+						<span className={textClass}>SIGN UP WITH EMAIL</span>
+					</button>
+
+					<button onClick={() => setMode("default")} className={buttonClass}>
+						<img src={SelectHighlight} alt="highlight" className={imgClass} />
+						<span className={textClass}>GO BACK</span>
+					</button>
+				</>
+			)}
 		</div>
 	)
 }
