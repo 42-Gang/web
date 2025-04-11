@@ -3,7 +3,8 @@ import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import GlobalStyle from "./styles/GlobalStyles";
 import Login from "./pages/Login/Login.tsx";
-import Register from "./pages/Register/Register.tsx";
+import RegisterWithEmail from "./pages/Register/RegisterWithEmail.tsx";
+import RegisterWithGoggle from './pages/Register/RegisterWithGoggle.tsx'
 import Home from "./pages/Home/Home.tsx";
 import GameOptionSelect from "./pages/GameOptionSelect/GameOptionSelect.tsx";
 import AutoGameModeSelect from "./pages/GameModeSelect/AutoGameModeSelect.tsx";
@@ -40,7 +41,8 @@ const App = () => {
           {/* 로그인 페이지 */}
           <Route path="/" element={<Login />} />
           {/* 회원가입 페이지 */}
-          <Route path="/Register" element={<Register />} />
+          <Route path="/RegisterWithEmail" element={<RegisterWithEmail />} />
+					<Route path="/RegisterWithGoogle" element={<RegisterWithGoggle />} />
           {/* 메인 홈페이지 */}
           <Route path="/Home" element={<Home />} />
           {/* 게임 옵션 선택 페이지 */}

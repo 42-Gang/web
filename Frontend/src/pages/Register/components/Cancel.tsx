@@ -1,20 +1,23 @@
-import { useNavigate } from 'react-router-dom'
-import CancelButton from '../../../assets/image/CancelButton1.svg'
+import { useNavigate } from "react-router-dom"
+import CancelButton from "../../../assets/image/CancelButton1.svg"
 
 const Cancel = () => {
   const navigate = useNavigate()
 
-  const CloseRegister = () => {
-    navigate('/');
+  const handleGoBackPage = () => {
+    navigate("/");
   }
 
   return (
     <div className="absolute left-[5px] top-[5px]">
       <button
-        onClick={CloseRegister}
+        onClick={handleGoBackPage}
         className="cursor-pointer opacity-60 hover:opacity-100 transition-opacity duration-300"
       >
-        <img src={CancelButton} alt="CancelButton"/>
+        <img
+					src={CancelButton}
+					alt="CancelButton"
+				/>
       </button>
     </div>
   )
