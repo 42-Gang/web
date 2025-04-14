@@ -19,7 +19,6 @@ const useLogin = (setError: (msg: string) => void) => {
 				headers: {
 					"Content-Type": "application/json"
 				},
-				credentials: "include", // ← 쿠키 사용 위해 필수
 				body: JSON.stringify({ email, password })
 			}) // POST 요청을 백엔드로 보냄
 

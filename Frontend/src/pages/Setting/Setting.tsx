@@ -1,23 +1,74 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Container from "./components/Container"
 import Cancel from "./components/Cancel"
 import Profile from "./components/Profile"
 import UserInformation from "./components/UserInformation"
 import ConfirmLogout from "./components/ConfirmLogout"
+import authFetch from "../../utils/authFetch"
 
 const Setting = () => {
-  const [nickname, setNickname] = useState("")
+	const [wins, setWins] = useState<number>(0)
+	const [losses, setLosses] = useState<number>(0)
+	const [tournamentWins, setTournamentwins] = useState<number>(0)
+  const [nickname, setNickname] = useState<string>("")
 
-  const example1 = {
-    nickname: "Jasalskd",
-    wins: 919,
-    losses: 20,
-    tournamentWins: 545
-  }
+	useEffect(() => {
+		const fetchUserData = async () => {
+			try {
+				const token = localStorage.getItem("accessToken")
+				console.log("📦 Stored token:", token)
+				
+				if (!token) {
+					console.error("No access token found")
+					return
+				}
+
+				const res = await authFetch("http://localhost:3001/users/1", {
+					headers: {
+						Authorization: `Bearer ${token}`
+					}
+				})
+				
+				if (!res)
+					return
+
+				console.log("🌐 Response status:", res.status)
+				const result = await res.json()
+				console.log("🌐 Response body:", result)
+
+				if (res.ok && result.data) {
+					const data = result.data
+					setNickname(data.nickname)
+					setWins(data.wins)
+					setLosses(data.losses)
+					setTournamentwins(data.tournamentWins)
+				} else {
+					console.error("Failed to fetch user data:", result.message)
+				}
+			} catch(err) {
+				console.error("Error fetching user data:", err) // 에러 처리(코드값에 따라서)
+			}
+		}
+
+		fetchUserData()
+	}, [])
 
   const ChangeNickname = (newNickname: string) => {
     setNickname(newNickname)
   }
+
+  useEffect(() => {
+    console.log("Nickname changed:", nickname)
+  }, [nickname])
+  useEffect(() => {
+    console.log("Wins changed:", wins)
+  }, [wins])
+  useEffect(() => {
+    console.log("Losses changed:", losses)
+  }, [losses])
+  useEffect(() => {
+    console.log("Tournament wins changed:", tournamentWins)
+  }, [tournamentWins])
 
   return (
     <Container>
@@ -29,10 +80,10 @@ const Setting = () => {
       </div>
       <div className="absolute right-[60px] top-[225px]">
         <UserInformation
-          nickname={nickname || example1.nickname}
-          wins={example1.wins}
-          losses={example1.losses}
-          tournamentWins={example1.tournamentWins}
+          nickname={nickname}
+          wins={wins}
+          losses={losses}
+          tournamentWins={tournamentWins}
           onChangeNickname={ChangeNickname}/>
       </div>
       <div className="absolute left-[60px] bottom-[30px]">
