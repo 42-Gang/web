@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser')
 
 const app = express()
 
+// CORS 설정
 app.use(cors({
   origin: 'http://localhost:5173',
   credentials: true
@@ -22,14 +23,20 @@ const users = [
   }
 ]
 
-app.post('/api/login', (req, res) => {
+// 로그인 테스트
+app.post('/v1/auth/login', (req, res) => {
   const { email, password } = req.body
+
+// 콘솔에 입력값 로그 출력
+	console.log("로그인 요청 받음:")
+	console.log("이메일:", email)
+	console.log("비밀번호:", password)
 
   if (!email || !password) {
     return res.status(400).json({
       status: 'error',
       code: 400,
-      message: 'Missing email or password.'
+      message: "Missing email or password."
     })
   }
 
@@ -40,9 +47,11 @@ app.post('/api/login', (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
-      path: '/auth/refresh',
+      path: '/v1/auth/refresh-token',
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7일
     })
+		
+		console.log("로그인 성공!")
 
     return res.status(200).json({
       status: 'success',
@@ -53,6 +62,8 @@ app.post('/api/login', (req, res) => {
       }
     })
   }
+
+		console.log("로그인 실패!")
 
   return res.status(401).json({
     status: 'error',
