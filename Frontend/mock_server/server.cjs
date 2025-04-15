@@ -1,14 +1,16 @@
+require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const jwt = require('jsonwebtoken')
-const cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser')
 const app = express()
 
 // CORS 설정
 app.use(cors({
-	origin: 'http://localhost:5173',
+  origin: 'http://localhost:5173',
   credentials: true
 }))
+
 app.use(express.json())
 app.use(cookieParser())
 
@@ -17,27 +19,22 @@ const users = [
   {
     id: 1,
     email: 'test@gmail.com',
-    password: '0311',
-    accessToken: 'jwt_access_token',
-    refreshToken: 'jwt_refresh_token'
+    password: '0311'
   },
-	{
-		id: 2,
-		email: 'hyehan@gamil.com',
-		password: '517624',
-		accessToken: 'jwt_access_token',
-		refreshToken: 'jwt_refresh_token'
-	}
+  {
+    id: 2,
+    email: 'hyehan@gmail.com',
+    password: '517624'
+  }
 ]
 
 // 로그인 테스트
-app.post('/v1/auth/login', (req, res) => { // req: 요청 객체(클라이언트 측) res: 응답 객체(서버 측)
+app.post('/v1/auth/login', (req, res) => {
   const { email, password } = req.body
 
-// 콘솔에 입력값 로그 출력
-	console.log("로그인 요청 받음:")
-	console.log("이메일:", email)
-	console.log("비밀번호:", password)
+  console.log("로그인 요청 받음:")
+  console.log("이메일:", email)
+  console.log("비밀번호:", password)
 
   if (!email || !password) {
     return res.status(400).json({
@@ -47,34 +44,33 @@ app.post('/v1/auth/login', (req, res) => { // req: 요청 객체(클라이언트
     })
   }
 
-  const user = users.find(u => u.email === email && u.password === password) // 일치하는 유저가 있는지 탐색
+  const user = users.find(u => u.email === email && u.password === password)
 
   if (user) {
-		const accessToken = jwt.sign({ userId: user.id }, 'secretKey', { expiresIn: '5s' }) // 5초
-		const refreshToken = jwt.sign({ userId: user.id }, 'refreshSecretKey', { expiresIn: '10s' }) // 10초
-		user.refreshToken = refreshToken
+    const accessToken = jwt.sign({ userId: user.id }, 'secretKey', { expiresIn: '1h' })
+    const refreshToken = jwt.sign({ userId: user.id }, 'refreshSecretKey', { expiresIn: '7d' })
 
-    res.cookie('refreshToken', user.refreshToken, {
+    res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      secure: false,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       path: '/',
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7일
     })
-		
-		console.log("로그인 성공!")
+
+    console.log("Login Success!");
 
     return res.status(200).json({
       status: 'success',
       code: 200,
       message: 'Login success',
       data: {
-        accessToken: accessToken
+        accessToken
       }
-    })
+    });
   }
 
-		console.log("로그인 실패!")
+  console.log("Login Failure!");
 
   return res.status(401).json({
     status: 'error',
@@ -83,44 +79,33 @@ app.post('/v1/auth/login', (req, res) => { // req: 요청 객체(클라이언트
   })
 })
 
+// 리프레시 토큰을 통한 accessToken 재발급
 app.post('/v1/auth/refresh-token', (req, res) => {
   const refreshToken = req.cookies.refreshToken
 
   if (!refreshToken) {
-    console.log("❌ 리프레시 토큰 없음");
+    console.log("❌ 리프레시 토큰 없음")
     return res.status(401).json({
       status: 'error',
       code: 401,
-      message: 'No refresh token provided'
-    });
+      message: 'No refresh token provided.'
+    })
   }
 
-  jwt.verify(refreshToken, 'refreshSecretKey', (err, decoded) => {
-    if (err) {
-      console.log("❌ 리프레시 토큰 검증 실패:", err.message)
-      return res.status(403).json({
-        status: 'error',
-        code: 403,
-        message: 'Invalid or expired refresh token'
-      });
-    }
-
-    const userId = decoded.userId;
-    const user = users.find(u => u.id === userId)
+  try {
+    const decoded = jwt.verify(refreshToken, 'refreshSecretKey')
+    const user = users.find(u => u.id === decoded.userId)
 
     if (!user) {
-      console.log("❌ 유저 없음 (refreshToken으로)");
-      return res.status(404).json({
+      console.log("❌ 유저 없음")
+      return res.status(401).json({
         status: 'error',
-        code: 404,
-        message: 'User not found'
-      });
+        code: 401,
+        message: 'Invalid refresh token.'
+      })
     }
 
-    // 새 엑세스 토큰 발급
-    const newAccessToken = jwt.sign({ userId: user.id }, 'secretKey', { expiresIn: '5s' })
-    user.accessToken = newAccessToken // 유저 객체 업데이트
-
+    const newAccessToken = jwt.sign({ userId: user.id }, 'secretKey', { expiresIn: '1h' })
     console.log("🔄 새 accessToken 발급:", newAccessToken)
 
     return res.status(200).json({
@@ -130,10 +115,39 @@ app.post('/v1/auth/refresh-token', (req, res) => {
       data: {
         accessToken: newAccessToken
       }
-    });
-  });
-});
+    })
+  } catch (err) {
+    console.log("❌ 리프레시 토큰 만료 또는 오류:", err.message);
+    return res.status(401).json({
+      status: 'error',
+      code: 401,
+      message: 'Invalid or expired refresh token.'
+    })
+  }
+})
 
+// 로그아웃 처리
+app.post('/v1/auth/logout', (req, res) => {
+  try {
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/'
+    })
+
+    console.log("로그아웃 처리됨: refreshToken 삭제됨")
+
+    return res.status(200).json({
+      status: 'success',
+      code: 200,
+      message: 'Logout successful. Refresh token cleared.'
+    })
+  } catch (error) {
+    console.error('로그아웃 처리 중 에러:', error);
+    return res.status(500).json({ message: 'Logout error' })
+  }
+})
 
 // 유저 프로필 조회 테스트
 app.get('/users/:id', (req, res) => {
@@ -183,9 +197,8 @@ app.get('/users/:id', (req, res) => {
   })
 })
 
-app.listen(3001, () => {
-  console.log('✅ Mock server running at http://localhost:3001')
-})
+const apiUrl = process.env.API_URL
 
-// 리프레쉬 토큰은 쿠키로 저장됨
-// 리프레쉬 토큰 가져올 수 없게 함 (요청에 포함되도록 함-옵션이 따로 있다)
+app.listen(3001, () => {
+  console.log(`✅ Mock server running at ${apiUrl}`)
+})

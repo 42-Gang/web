@@ -1,6 +1,7 @@
 import "./index.css";
 import { useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation} from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify"
 import GlobalStyle from "./styles/GlobalStyles";
 import Login from "./pages/Login/Login.tsx";
 import RegisterWithEmail from "./pages/Register/RegisterWithEmail.tsx";
@@ -20,6 +21,44 @@ import Matching from "./pages/Tournament/Matching.tsx";
 import SemiFinalWaiting from "./pages/Tournament/SemiFinalWaiting.tsx";
 import SoloMatch from "./pages/SoloMatch/SoloMatch.tsx";
 
+const SessionChecker = () => {
+	const location = useLocation()
+
+	useEffect(() => {
+		const excludedPaths = ["/", "/RegisterWithEmail", "/RegisterWithGoogle"]
+
+		if (excludedPaths.includes(location.pathname)) return
+
+		const checkSession = () => {
+			const token = localStorage.getItem("accessToken")
+			const apiUrl = process.env.REACT_APP_API_URL
+			
+			if (!token) {
+				toast.warn("세션 만료. 다시 로그인 해주세요.", {
+					position: "top-center",
+					onClose: () => {
+						setTimeout(() => {
+							fetch(`${apiUrl}/v1/auth/logout`, {
+								method: "POST",
+								credentials: "include"
+							}).then(() => {
+								localStorage.removeItem("accessToken")
+								window.location.href = "/"
+							})
+						}, 1000)
+					}
+				})
+			}
+		}
+
+		const interval = setInterval(checkSession, 60000)
+
+		return () => clearInterval(interval)
+	}, [location.pathname])
+
+	return null
+}
+
 const App = () => {
   useEffect(() => {
     const lockWindowSize = () => {
@@ -34,10 +73,14 @@ const App = () => {
     };
   }, []);
 
+
+
   return (
     <>
       <GlobalStyle />
+			<ToastContainer/>
       <Router>
+				<SessionChecker/>
         <Routes>
           {/* 로그인 페이지 */}
           <Route path="/" element={<Login />} />
