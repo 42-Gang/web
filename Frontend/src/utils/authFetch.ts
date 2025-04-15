@@ -23,7 +23,7 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
   }
 
   // 2. accessToken이 없거나 만료됐을 경우 → refresh-token 요청
-	const apiUrl = process.env.REACT_APP_API_URL
+	const apiUrl = import.meta.env.VITE_API_URL
   const refreshRes = await fetch(`${apiUrl}/v1/auth/refresh-token`, {
     method: "POST",
     credentials: "include",

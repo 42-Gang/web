@@ -14,7 +14,7 @@ const useLogin = (setError: (msg: string) => void) => {
 
 	const login = async (email: string, password: string) => {
 		try {
-			const apiUrl = process.env.REACT_APP_API_URL
+			const apiUrl = import.meta.env.VITE_API_URL;
 			const res = await fetch(`${apiUrl}/v1/auth/login`, {
 				method: "POST",
 				headers: {

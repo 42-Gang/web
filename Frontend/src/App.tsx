@@ -31,7 +31,7 @@ const SessionChecker = () => {
 
 		const checkSession = () => {
 			const token = localStorage.getItem("accessToken")
-			const apiUrl = process.env.REACT_APP_API_URL
+			const apiUrl = import.meta.env.VITE_API_URL
 			
 			if (!token) {
 				toast.warn("세션 만료. 다시 로그인 해주세요.", {

@@ -197,8 +197,6 @@ app.get('/users/:id', (req, res) => {
   })
 })
 
-const apiUrl = process.env.API_URL
-
 app.listen(3001, () => {
-  console.log(`✅ Mock server running at ${apiUrl}`)
+  console.log("✅ Mock server running at http://localhost:3001")
 })
