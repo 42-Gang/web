@@ -7,12 +7,16 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "mock-server": "nodemon mock_server/server.cjs"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.0.12",
     "@tailwindcss/vite": "^4.0.12",
     "@types/react-router-dom": "^5.3.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
     "firebase": "^11.6.0",
     "framer-motion": "^12.6.5",
     "jsonwebtoken": "^9.0.2",
@@ -33,6 +37,7 @@
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
+    "nodemon": "^3.1.9",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.0.12",
     "typescript": "^5.8.2",

@@ -1,51 +1,37 @@
 const express = require('express')
 const cors = require('cors')
 const jwt = require('jsonwebtoken')
-
+const cookieParser = require('cookie-parser');
 const app = express()
 
 // CORS 설정
 app.use(cors({
-  origin: 'http://localhost:5173',
+	origin: 'http://localhost:5173',
   credentials: true
 }))
-
 app.use(express.json())
-app.use((req, res, next) => {
-  console.log('📥 요청 받음')
-  console.log('🔗 Method:', req.method)
-  console.log('📄 URL:', req.originalUrl)
-  console.log('🧾 Headers:', req.headers)
-  if (Object.keys(req.body).length) {
-    console.log('📦 Body:', req.body)
-  }
-  console.log('🍪 Cookies:', req.headers.cookie)
-	const authHeader = req.headers.authorization
-
-  if (authHeader && authHeader.startsWith('Bearer ')) {
-    const accessToken = authHeader.split(' ')[1]
-    console.log('🔐 accessToken:', accessToken)
-  } else {
-    console.log('🔐 accessToken 없음 또는 형식이 잘못됨')
-  }
-
-  console.log('-----------------------------------')
-  next()
-})
+app.use(cookieParser())
 
 // Mock user DB
 const users = [
   {
     id: 1,
     email: 'test@gmail.com',
-    password: 'password0311',
+    password: '0311',
     accessToken: 'jwt_access_token',
     refreshToken: 'jwt_refresh_token'
-  }
+  },
+	{
+		id: 2,
+		email: 'hyehan@gamil.com',
+		password: '517624',
+		accessToken: 'jwt_access_token',
+		refreshToken: 'jwt_refresh_token'
+	}
 ]
 
 // 로그인 테스트
-app.post('/v1/auth/login', (req, res) => {
+app.post('/v1/auth/login', (req, res) => { // req: 요청 객체(클라이언트 측) res: 응답 객체(서버 측)
   const { email, password } = req.body
 
 // 콘솔에 입력값 로그 출력
@@ -64,8 +50,8 @@ app.post('/v1/auth/login', (req, res) => {
   const user = users.find(u => u.email === email && u.password === password) // 일치하는 유저가 있는지 탐색
 
   if (user) {
-		const accessToken = jwt.sign({ userId: user.id }, 'secretKey', { expiresIn: '5s' }) // 1시간
-		const refreshToken = jwt.sign({ userId: user.id }, 'refreshSecretKey', { expiresIn: '10s' })
+		const accessToken = jwt.sign({ userId: user.id }, 'secretKey', { expiresIn: '5s' }) // 5초
+		const refreshToken = jwt.sign({ userId: user.id }, 'refreshSecretKey', { expiresIn: '10s' }) // 10초
 		user.refreshToken = refreshToken
 
     res.cookie('refreshToken', user.refreshToken, {
@@ -83,7 +69,7 @@ app.post('/v1/auth/login', (req, res) => {
       code: 200,
       message: 'Login success',
       data: {
-        accessToken: user.accessToken
+        accessToken: accessToken
       }
     })
   }
@@ -93,7 +79,7 @@ app.post('/v1/auth/login', (req, res) => {
   return res.status(401).json({
     status: 'error',
     code: 401,
-    message: 'Invalid email or password.'
+    message: 'Invalid credentials.'
   })
 })
 
