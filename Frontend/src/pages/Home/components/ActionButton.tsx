@@ -8,7 +8,7 @@ const ActionButton = () => {
     { label: "START GAME", onClick: () => navigate('/GameOptionSelect') },
     { label: "GAME HISTORY", onClick: () => navigate('/GameHistory') },
     { label: "FRIEND", onClick: () => navigate('/FriendList') },
-    { label: "SETTING", onClick: () => navigate('/Setting') },
+    { label: "Profile", onClick: () => navigate('/Setting') },
   ]
 
   const buttonClass ="cursor-pointer flex gap-[10px] -ml-[30px] group"
