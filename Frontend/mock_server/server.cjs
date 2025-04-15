@@ -1,4 +1,3 @@
-require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const jwt = require('jsonwebtoken')
@@ -28,6 +27,10 @@ const users = [
   }
 ]
 
+// 비밀키와 리프레시 비밀키 직접 하드코딩
+const SECRET_KEY = 'yourSecretKey'
+const REFRESH_SECRET_KEY = 'yourRefreshSecretKey'
+
 // 로그인 테스트
 app.post('/v1/auth/login', (req, res) => {
   const { email, password } = req.body
@@ -47,12 +50,12 @@ app.post('/v1/auth/login', (req, res) => {
   const user = users.find(u => u.email === email && u.password === password)
 
   if (user) {
-    const accessToken = jwt.sign({ userId: user.id }, 'secretKey', { expiresIn: '1h' })
-    const refreshToken = jwt.sign({ userId: user.id }, 'refreshSecretKey', { expiresIn: '7d' })
+    const accessToken = jwt.sign({ userId: user.id }, SECRET_KEY, { expiresIn: '1h' })
+    const refreshToken = jwt.sign({ userId: user.id }, REFRESH_SECRET_KEY, { expiresIn: '7d' })
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === 'production',  // production 환경에서는 secure 설정
       sameSite: 'strict',
       path: '/',
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7일
@@ -93,7 +96,7 @@ app.post('/v1/auth/refresh-token', (req, res) => {
   }
 
   try {
-    const decoded = jwt.verify(refreshToken, 'refreshSecretKey')
+    const decoded = jwt.verify(refreshToken, REFRESH_SECRET_KEY)
     const user = users.find(u => u.id === decoded.userId)
 
     if (!user) {
@@ -105,8 +108,18 @@ app.post('/v1/auth/refresh-token', (req, res) => {
       })
     }
 
-    const newAccessToken = jwt.sign({ userId: user.id }, 'secretKey', { expiresIn: '1h' })
-    console.log("🔄 새 accessToken 발급:", newAccessToken)
+    const newAccessToken = jwt.sign({ userId: user.id }, SECRET_KEY, { expiresIn: '1h' })
+    const newRefreshToken = jwt.sign({ userId: user.id }, REFRESH_SECRET_KEY, { expiresIn: '7d' })
+
+    res.cookie('refreshToken', newRefreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7일
+    })
+
+    console.log("🔄 새 accessToken 및 refreshToken 발급:", newAccessToken)
 
     return res.status(200).json({
       status: 'success',
