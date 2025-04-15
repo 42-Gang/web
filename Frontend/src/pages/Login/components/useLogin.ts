@@ -14,11 +14,13 @@ const useLogin = (setError: (msg: string) => void) => {
 
 	const login = async (email: string, password: string) => {
 		try {
-			const res = await fetch("http://localhost:3001/api/login", {
+			const res = await fetch("http://localhost:3001/v1/auth/login", {
 				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				credentials: "include",
-				body: JSON.stringify({ email, password }),
+				headers: {
+					"Content-Type": "application/json"
+				},
+				credentials: "include", // ← 쿠키 사용 위해 필수
+				body: JSON.stringify({ email, password })
 			}) // POST 요청을 백엔드로 보냄
 
 			const result: LoginResponse = await res.json() // 백엔드가 응답으로 JSON을 내려주면 받아서 저장
