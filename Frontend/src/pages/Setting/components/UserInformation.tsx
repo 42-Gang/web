@@ -38,7 +38,7 @@ const UserInformation: React.FC<UserInformationProps> =
         <button
           onClick={togglePopup}
           className="cursor-pointer opacity-60 hover:opacity-100
-            absolute -right-[20px] -top-[2px] transition-opacity duration-300"
+            absolute -right-[40px] -top-[2px] transition-opacity duration-300"
         >
           <img src={ChangeNicknameButton} alt="ChangeNicknameButton"/>
         </button>
