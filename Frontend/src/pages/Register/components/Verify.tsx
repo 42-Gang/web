@@ -5,30 +5,44 @@ interface VerifyProps {
 }
 
 const Verify = ({ email }: VerifyProps) => {
-	const generateVerifyCode = () => {
-		return Math.floor(100000 + Math.random() * 900000).toString()
-	}
-
 	const handleClick = async () => {
 		if (!email) {
 			alert("이메일을 입력해주세요.")
 			return
 		}
 	
-		const verifyCode = generateVerifyCode()
-	
 		try {
-			// DB에 저장하는 로직을 삭제하고, 알람만 띄웁니다.
-			alert(`임시 인증 코드가 ${email}에 전송되었습니다.`)
+			// 1️⃣ 이메일 중복 여부 확인
+			const userRes = await fetch("http://localhost:3001/users")
+			const userList = await userRes.json()
 	
-			// 이메일 전송 로직은 그냥 콘솔로 확인
-			console.log(`인증 코드 ${verifyCode}가 ${email}로 전송되었습니다.`)
+			const isTaken = userList.some((u: { email: string }) => u.email === email)
+			if (isTaken) {
+				alert("이미 가입된 이메일입니다. 다른 이메일을 입력해주세요.")
+				return
+			}
 	
+			// 2️⃣ 인증 코드 요청
+			const res = await fetch("http://localhost:3001/v1/auth/mail", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({ email })
+			})
+	
+			const result = await res.json()
+	
+			if (res.status !== 200) {
+				alert(result.message || "인증 코드 전송 실패")
+				return
+			}
+			console.log(`📩 ${email} → 인증 코드: ${result.data?.verifyCode}`)
 		} catch (err) {
-			console.error("인증 에러:", err)
-			alert("인증 중 에러 발생")
+			console.error("인증 요청 에러:", err)
+			alert("인증 요청 중 오류가 발생했습니다.")
 		}
-	}
+	}	
 
 	const imgClass = "absolute inset-0 transition-opacity duration-300"
 
@@ -37,10 +51,11 @@ const Verify = ({ email }: VerifyProps) => {
 			<img
 				src={VerifyButtonOn}
 				alt="VerifyOn"
-				className={`${imgClass} opacity-85 group-hover:opacity-100`}/>
+				className={`${imgClass} opacity-85 group-hover:opacity-100`}
+			/>
 			<span
 				className="font-['QuinqueFive'] text-white
-					text-[10px] absolute inset-0 right-[20px] top-[11px]">
+				text-[10px] absolute inset-0 right-[20px] top-[11px]">
 				verify
 			</span>
 		</button>

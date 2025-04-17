@@ -5,15 +5,7 @@ interface ConfirmProps {
   email: string
   verifyCode: string
   password: string
-	rePassword: string
-  nickname: string
-}
-
-interface User {
-  id: string
-  email: string
-  verifyCode: string
-  password: string
+  rePassword: string
   nickname: string
 }
 
@@ -21,50 +13,42 @@ const Confirm = ({ email, verifyCode, password, rePassword, nickname }: ConfirmP
   const navigate = useNavigate()
 
   const handleRegister = async () => {
-		try {
-			// 비밀번호 불일치 검사
-			if (password !== rePassword) {
-				alert("비밀번호가 일치하지 않습니다!")
-				return
-			}
-
-			// 이미 존재하는 유저인지 검사
-			const checkRes = await fetch(`http://localhost:3001/users`)
-			const users: User[] = await checkRes.json()
-			
-			const isEmailTaken = users.some((user) => user.email === email)
-			const isNicknameTaken = users.some((user) => user.nickname === nickname)
-
-      if (isEmailTaken) {
-        alert("이미 사용 중인 이메일입니다.")
+    try {
+      // 1. 필수 항목 누락 확인
+      if (!email || !verifyCode || !password || !rePassword || !nickname) {
+        alert("모든 항목을 입력해 주세요.")
         return
       }
 
-      if (isNicknameTaken) {
-        alert("이미 사용 중인 닉네임입니다.")
+      // 2. 비밀번호 일치 확인
+      if (password !== rePassword) {
+        alert("비밀번호가 일치하지 않습니다!")
         return
       }
 
-			// 회원가입 요청
-			const res = await fetch("http://localhost:3001/users", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify({
-					email: email,
-					verifyCode: verifyCode,
-					password: password,
-					nickname: nickname
-				})
-			})
-	
+      // 3. 서버에 회원가입 요청
+      const res = await fetch("http://localhost:3001/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          repassword: rePassword,
+          nickname,
+          verifyCode
+        })
+      })
+
       if (!res.ok) {
-        throw new Error("회원가입 실패")
+        const error = await res.json()
+        alert(error.message || "회원가입 실패")
+        return
       }
 
       const newUser = await res.json()
-			alert("회원가입 성공!")
+      alert("회원가입 성공!")
       console.log("회원가입 성공:", newUser)
       navigate("/")
 
