@@ -17,25 +17,29 @@ const Setting = () => {
 			try {
 				const token = localStorage.getItem("accessToken")
 				console.log("📦 Stored token:", token)
-				
+	
 				if (!token) {
 					console.error("No access token found")
 					return
 				}
-
-				const res = await authFetch("http://localhost:3001/users/1", {
+	
+				// 🧠 토큰에서 userId 꺼내기
+				const payload = JSON.parse(atob(token.split('.')[1]))
+				const userId = payload.userId
+				console.log("🧠 Decoded userId:", userId)
+	
+				const res = await authFetch(`http://localhost:3001/users/${userId}`, {
 					headers: {
 						Authorization: `Bearer ${token}`
 					}
 				})
-				
-				if (!res)
-					return
-
+	
+				if (!res) return
+	
 				console.log("🌐 Response status:", res.status)
 				const result = await res.json()
 				console.log("🌐 Response body:", result)
-
+	
 				if (res.ok && result.data) {
 					const data = result.data
 					setNickname(data.nickname)
@@ -45,14 +49,14 @@ const Setting = () => {
 				} else {
 					console.error("Failed to fetch user data:", result.message)
 				}
-			} catch(err) {
-				console.error("Error fetching user data:", err) // 에러 처리(코드값에 따라서)
+			} catch (err) {
+				console.error("Error fetching user data:", err)
 			}
 		}
-
+	
 		fetchUserData()
 	}, [])
-
+	
   const ChangeNickname = (newNickname: string) => {
     setNickname(newNickname)
   }
