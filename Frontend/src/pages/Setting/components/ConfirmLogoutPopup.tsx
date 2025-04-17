@@ -1,10 +1,10 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"
 
 interface ConfirmLogoutPopupProps {
   onClose: () => void
 }
 
-const SelectButton: React.FC<{ onClick: () => void; children: React.ReactNode}> = ({ onClick, children }) => (
+const SelectButton: React.FC<{ onClick: () => void; children: React.ReactNode }> = ({ onClick, children }) => (
   <button
     className="font-['Sixtyfour'] text-black text-2xl
       w-[550px] h-[80px] border-4 rounded-3xl cursor-pointer hover:border-red-500"
@@ -15,13 +15,29 @@ const SelectButton: React.FC<{ onClick: () => void; children: React.ReactNode}> 
 )
 
 const ConfirmLogoutPopup: React.FC<ConfirmLogoutPopupProps> = ({ onClose }) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const OkClick = () => {
-    localStorage.removeItem("token")
-    navigate('/')
+  const OkClick = async () => {
+    try {
+      const res = await fetch("http://localhost:3001/v1/auth/logout", {
+        method: "POST",
+        credentials: "include"
+      })
+
+      const result = await res.json()
+      if (res.ok) {
+        console.log("🚪 Logout success:", result.message)
+        localStorage.removeItem("accessToken")
+        navigate("/")
+      } else {
+        alert("Logout failed: " + result.message)
+      }
+    } catch (err) {
+      console.error("Logout error", err)
+      alert("Logout request failed")
+    }
   }
-  
+
   return (
     <div className="bg-white w-[602px] h-[256px] rounded-lg fixed
           top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col

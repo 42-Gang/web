@@ -118,8 +118,10 @@ app.post('/users', (req, res) => {
 		email,
 		password,
 		nickname,
-		verifyCode
+		verifyCode,
+		avatar: null
 	}
+	
 
 	users.push(newUser)
 
@@ -238,7 +240,8 @@ app.get('/users/:id', (req, res) => {
 		data: {
 			id: user.id,
 			email: user.email,
-			nickname: user.nickname, // ✅ 닉네임 포함됨
+			nickname: user.nickname,
+			avatar: user.avatar,
 			wins: 0,
 			losses: 0,
 			tournamentWins: 0
@@ -284,6 +287,73 @@ app.patch('/users/:id/nickname', (req, res) => {
     data: { nickname: user.nickname }
   })
 })
+
+// ✅ 프로필 사진 수정 API
+const multer = require('multer')
+const fs = require('fs')
+
+const upload = multer({
+	dest: 'uploads/',
+	limits: { fileSize: 5 * 1024 * 1024 } // 5MB 제한
+})
+
+// 업로드 폴더가 없다면 생성
+if (!fs.existsSync('uploads')) {
+	fs.mkdirSync('uploads')
+}
+
+// ✅ 프로필 이미지 수정 API
+app.post('/users/:id/avatar', upload.single('avatar'), (req, res) => {
+	const authHeader = req.headers.authorization
+	if (!authHeader || !authHeader.startsWith('Bearer ')) {
+		return res.status(401).json({ message: 'Unauthorized' })
+	}
+
+	let decoded
+	try {
+		decoded = jwt.verify(authHeader.split(' ')[1], SECRET_KEY)
+	} catch (err) {
+		return res.status(403).json({ message: 'Invalid or expired token' })
+	}
+
+	const userId = req.params.id
+	if (userId !== decoded.userId) {
+		return res.status(403).json({ message: 'Forbidden' })
+	}
+
+	const user = users.find(u => u.id === userId)
+	if (!user) {
+		return res.status(404).json({ message: 'User not found' })
+	}
+
+	if (req.body.delete === 'true') {
+		console.log(`🗑️ [avatar delete] user=${user.email}`)
+		user.avatar = null
+		return res.status(200).json({
+			message: 'Avatar deleted successfully',
+			data: { avatar: null }
+		})
+	}
+	
+	if (req.file) {
+		const filename = req.file.filename
+		user.avatar = `http://localhost:3001/uploads/${filename}`
+	
+		console.log(`📤 [avatar upload] user=${user.email} filename=${filename} size=${req.file.size}B`)
+	
+		return res.status(200).json({
+			message: 'Avatar updated successfully',
+			data: { avatar: user.avatar }
+		})
+	}	
+
+	return res.status(400).json({ message: 'No file uploaded' })
+})
+
+
+// ✅ 업로드된 이미지 제공
+app.use('/uploads', express.static('uploads'))
+
 
 // ✅ 리프레시 토큰 발급
 app.post('/v1/auth/refresh-token', (req, res) => {
@@ -334,8 +404,6 @@ app.post('/v1/auth/refresh-token', (req, res) => {
 		})
 	}
 })
-
-// ✅ 프로필 사진 수정 API
 
 // ✅ 로그아웃
 app.post('/v1/auth/logout', (req, res) => {

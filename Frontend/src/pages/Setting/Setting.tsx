@@ -11,6 +11,7 @@ const Setting = () => {
 	const [losses, setLosses] = useState<number>(0)
 	const [tournamentWins, setTournamentwins] = useState<number>(0)
   const [nickname, setNickname] = useState<string>("")
+	const [profileImg, setProfileImg] = useState<File | string | null>(null)
 
 	useEffect(() => {
 		const fetchUserData = async () => {
@@ -73,14 +74,21 @@ const Setting = () => {
   useEffect(() => {
     console.log("Tournament wins changed:", tournamentWins)
   }, [tournamentWins])
-
+	useEffect(() => {
+		if (profileImg) {
+			console.log("Profile image changed (from Setting):", profileImg)
+		} else {
+			console.log("Profile image removed (from Setting)")
+		}
+	}, [profileImg])
+	
   return (
     <Container>
       <Cancel/>
       <h1 className="font-['Sixtyfour'] text-white text-[40px]
         absolute left-1/2 -translate-x-1/2 top-[50px]">Setting</h1>
       <div className="absolute left-[60px] top-[180px]">
-        <Profile/>
+			<Profile onChangeProfileImg={setProfileImg} />
       </div>
       <div className="absolute right-[80px] top-[225px]">
         <UserInformation
