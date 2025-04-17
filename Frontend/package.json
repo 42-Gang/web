@@ -8,20 +8,24 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start:mock": "json-server --watch db.json --port 4000"
+    "mock-server": "nodemon mock_server/server.cjs"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.0.12",
     "@tailwindcss/vite": "^4.0.12",
     "@types/react-router-dom": "^5.3.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "firebase": "^11.6.0",
-    "framer-motion": "^12.6.2",
+    "framer-motion": "^12.6.5",
+    "jsonwebtoken": "^9.0.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.3.0",
     "react-toastify": "^11.0.5",
-    "styled-components": "^6.1.15"
+    "styled-components": "^6.1.17"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
@@ -34,11 +38,11 @@
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
-    "json-server": "^1.0.0-beta.3",
+    "nodemon": "^3.1.9",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.0.12",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.24.1",
-    "vite": "^6.2.6"
+    "vite": "^6.2.0"
   }
 }

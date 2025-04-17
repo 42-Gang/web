@@ -28,7 +28,7 @@ const ActionButton = ({ setError }: ActionButtonProps) => {
       const user = result.user;
 
       const res = await fetch(
-        `http://localhost:4000/users?email=${user.email}`
+        `http://localhost:3001/users?email=${user.email}`
       );
       const existingUsers = await res.json();
 
@@ -36,7 +36,7 @@ const ActionButton = ({ setError }: ActionButtonProps) => {
         alert("🔐 기존 유저로 로그인되었습니다!");
         navigate("/Home");
       } else {
-        await fetch("http://localhost:4000/users", {
+        await fetch("http://localhost:3001/users", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

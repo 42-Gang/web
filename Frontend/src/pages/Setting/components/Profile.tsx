@@ -1,7 +1,8 @@
-import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { useState, useEffect } from "react"
+import { AnimatePresence } from "framer-motion"
 import ChangeProfileImg from '../../../assets/image/ChangeProfileImg.svg'
 import ChangeProfilePopup from "./ChangeProfilePopup"
+import { FadeOverlay, PopupWrapper } from "./Animation"
 
 const Profile = () => {
   const [profileImg, setProfileImg] = useState<File | null>(null)
@@ -9,6 +10,14 @@ const Profile = () => {
 
   const togglePopup = () => setIsOpenProfilePopup((prev) => !prev)
   
+	useEffect(() => {
+		if (profileImg) {
+			console.log("프로필 사진 업데이트", profileImg.name)
+		} else {
+			console.log("프로필 사진 선택되지 않음")
+		}
+	}, [profileImg])
+
   return (
     <div className="relative">
       {profileImg ? (
@@ -29,23 +38,12 @@ const Profile = () => {
       </button>
       <AnimatePresence>
         {isOpenProfilePopup && (
-          <>
-            <motion.div 
-              className="fixed inset-0 bg-black opacity-50 z-40"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.5 }}
-              exit={{ opacity: 0 }}
-            />
-            <motion.div 
-              className="fixed inset-0 flex justify-center items-center z-40"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-            >
-              <ChangeProfilePopup onClose={togglePopup} onChangeProfileImg={setProfileImg}/>
-            </motion.div>
-          </>
+					<div className="absolute z-40">
+					<FadeOverlay/>
+					<PopupWrapper>
+						<ChangeProfilePopup onClose={togglePopup} onChangeProfileImg={setProfileImg}/>
+					</PopupWrapper>
+				</div>          
         )}
       </AnimatePresence>
     </div>
