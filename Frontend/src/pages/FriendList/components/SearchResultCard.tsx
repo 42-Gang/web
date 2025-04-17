@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import AvailableAddFriend from '../../../assets/image/AvailableAddFriend.svg'
-import CompletedAddFriend from '../../../assets/image/CompletedAddFriend.svg'
+import Completed from '../../../assets/image/Completed.svg'
 
 interface User {
 	id: number
@@ -27,7 +27,7 @@ const SearchResultCard = ({ user }: { user: User }) => {
 			</div>
 			<button onClick={handleAddFriend} className="cursor-pointer">
 				<img
-					src={isAdded? CompletedAddFriend: AvailableAddFriend}
+					src={isAdded? Completed: AvailableAddFriend}
 					alt="AvailableAdd"
 					className="w-[30px] h-[30px]"
 				/>

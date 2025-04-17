@@ -1,32 +1,55 @@
 import VerifyButtonOn from '../../../assets/image/VerifyButtonOn.png'
+import { toast } from "react-toastify"
 
 interface VerifyProps {
 	email: string
 }
 
 const Verify = ({ email }: VerifyProps) => {
-	const generateVerifyCode = () => {
-		return Math.floor(100000 + Math.random() * 900000).toString()
-	}
-
 	const handleClick = async () => {
 		if (!email) {
-			alert("이메일을 입력해주세요.")
+			toast.warn("Please enter the email.")
 			return
 		}
-	
-		const verifyCode = generateVerifyCode()
-	
+
 		try {
-			// DB에 저장하는 로직을 삭제하고, 알람만 띄웁니다.
-			alert(`임시 인증 코드가 ${email}에 전송되었습니다.`)
-	
-			// 이메일 전송 로직은 그냥 콘솔로 확인
-			console.log(`인증 코드 ${verifyCode}가 ${email}로 전송되었습니다.`)
-	
+			// 1️⃣ 이메일 중복 체크
+			const userRes = await fetch("http://localhost:3001/users")
+			const userList = await userRes.json()
+			const isTaken = userList.some((u: { email: string }) => u.email === email)
+
+			if (isTaken) {
+				toast.error("This is an email that has already been signed up.", { autoClose: 2000})
+				return
+			}
+
+			// 2️⃣ 인증 코드 요청
+			const res = await fetch("http://localhost:3001/v1/auth/mail", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({ email })
+			})
+
+			const result = await res.json()
+
+			if (!res.ok) {
+				if (result.message) toast.error(result.message)
+				if (Array.isArray(result.errors)) {
+					result.errors.forEach((err: { field: string, message: string }) => {
+						toast.error(`[${err.field}] ${err.message}`, { autoClose: 2000 })
+					})
+				}
+				return
+			}
+
+			toast.success(result.message || "Verify code sent.")
+			console.log(`📩 ${email} → verify code: ${result.data?.verifyCode}`)
+
 		} catch (err) {
-			console.error("인증 에러:", err)
-			alert("인증 중 에러 발생")
+			console.error("Authentication request error:", err)
+			toast.error("An error occurred during authentication request.", { autoClose: 2000})
 		}
 	}
 
@@ -37,7 +60,8 @@ const Verify = ({ email }: VerifyProps) => {
 			<img
 				src={VerifyButtonOn}
 				alt="VerifyOn"
-				className={`${imgClass} opacity-85 group-hover:opacity-100`}/>
+				className={`${imgClass} opacity-85 group-hover:opacity-100`}
+			/>
 			<span
 				className="font-['QuinqueFive'] text-white
 					text-[10px] absolute inset-0 right-[20px] top-[11px]">
