@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import SelectHighlight from "../../../assets/image/SelectHighlight.svg"
+import { toast } from "react-toastify"
 
 interface ConfirmProps {
   email: string
@@ -14,19 +15,16 @@ const Confirm = ({ email, verifyCode, password, rePassword, nickname }: ConfirmP
 
   const handleRegister = async () => {
     try {
-      // 1. 필수 항목 누락 확인
       if (!email || !verifyCode || !password || !rePassword || !nickname) {
-        alert("모든 항목을 입력해 주세요.")
+        toast.warn("Please enter all the information.", { autoClose: 2000 })
         return
       }
 
-      // 2. 비밀번호 일치 확인
       if (password !== rePassword) {
-        alert("비밀번호가 일치하지 않습니다!")
+        toast.error("Password does not match!", { autoClose: 2000 })
         return
       }
 
-      // 3. 서버에 회원가입 요청
       const res = await fetch("http://localhost:3001/users", {
         method: "POST",
         headers: {
@@ -41,20 +39,27 @@ const Confirm = ({ email, verifyCode, password, rePassword, nickname }: ConfirmP
         })
       })
 
-      if (!res.ok) {
-        const error = await res.json()
-        alert(error.message || "회원가입 실패")
-        return
-      }
+      const result = await res.json()
 
-      const newUser = await res.json()
-      alert("회원가입 성공!")
-      console.log("회원가입 성공:", newUser)
+      if (!res.ok) {
+				if (Array.isArray(result.errors) && result.errors.length > 0) {
+					result.errors.forEach((err: { field: string, message: string }) => {
+						toast.error(err.message, { autoClose: 2000 })
+					})
+				} else if (result.message) {
+					toast.error(result.message, { autoClose: 2000 })
+				}
+			
+				return
+			}			
+
+      toast.success(result.message || "Successfully signed up for membership!", { autoClose: 2000 })
+      console.log("Successfully signed up for membership:", result)
       navigate("/")
 
     } catch (err) {
-      console.error("에러:", err)
-      alert("회원가입 중 문제가 발생했습니다.")
+      console.error("Error:", err)
+      toast.error("There was a problem signing up for membership.", { autoClose: 2000 })
     }
   }
 

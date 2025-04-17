@@ -1,4 +1,5 @@
 import VerifyButtonOn from '../../../assets/image/VerifyButtonOn.png'
+import { toast } from "react-toastify"
 
 interface VerifyProps {
 	email: string
@@ -7,21 +8,21 @@ interface VerifyProps {
 const Verify = ({ email }: VerifyProps) => {
 	const handleClick = async () => {
 		if (!email) {
-			alert("이메일을 입력해주세요.")
+			toast.warn("Please enter the email.")
 			return
 		}
-	
+
 		try {
-			// 1️⃣ 이메일 중복 여부 확인
+			// 1️⃣ 이메일 중복 체크
 			const userRes = await fetch("http://localhost:3001/users")
 			const userList = await userRes.json()
-	
 			const isTaken = userList.some((u: { email: string }) => u.email === email)
+
 			if (isTaken) {
-				alert("이미 가입된 이메일입니다. 다른 이메일을 입력해주세요.")
+				toast.error("This is an email that has already been signed up.", { autoClose: 2000})
 				return
 			}
-	
+
 			// 2️⃣ 인증 코드 요청
 			const res = await fetch("http://localhost:3001/v1/auth/mail", {
 				method: "POST",
@@ -30,19 +31,27 @@ const Verify = ({ email }: VerifyProps) => {
 				},
 				body: JSON.stringify({ email })
 			})
-	
+
 			const result = await res.json()
-	
-			if (res.status !== 200) {
-				alert(result.message || "인증 코드 전송 실패")
+
+			if (!res.ok) {
+				if (result.message) toast.error(result.message)
+				if (Array.isArray(result.errors)) {
+					result.errors.forEach((err: { field: string, message: string }) => {
+						toast.error(`[${err.field}] ${err.message}`, { autoClose: 2000 })
+					})
+				}
 				return
 			}
-			console.log(`📩 ${email} → 인증 코드: ${result.data?.verifyCode}`)
+
+			toast.success(result.message || "Verify code sent.")
+			console.log(`📩 ${email} → verify code: ${result.data?.verifyCode}`)
+
 		} catch (err) {
-			console.error("인증 요청 에러:", err)
-			alert("인증 요청 중 오류가 발생했습니다.")
+			console.error("Authentication request error:", err)
+			toast.error("An error occurred during authentication request.", { autoClose: 2000})
 		}
-	}	
+	}
 
 	const imgClass = "absolute inset-0 transition-opacity duration-300"
 
@@ -55,7 +64,7 @@ const Verify = ({ email }: VerifyProps) => {
 			/>
 			<span
 				className="font-['QuinqueFive'] text-white
-				text-[10px] absolute inset-0 right-[20px] top-[11px]">
+					text-[10px] absolute inset-0 right-[20px] top-[11px]">
 				verify
 			</span>
 		</button>

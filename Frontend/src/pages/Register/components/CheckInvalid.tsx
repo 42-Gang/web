@@ -29,7 +29,7 @@ const CheckInvalid = ({ label, value, email, password, rePassword }: Props) => {
         })
           .then(res => res.json())
           .then(data => {
-            setIsValid(data.status === "success")
+            setIsValid(data.status === "SUCCESS")
           })
           .catch(() => setIsValid(false))
 

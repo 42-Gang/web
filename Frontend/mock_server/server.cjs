@@ -33,6 +33,7 @@ const users = [
 const SECRET_KEY = 'yourSecretKey'
 const REFRESH_SECRET_KEY = 'yourRefreshSecretKey'
 
+// 로그인
 app.get('/users', (req, res) => {
   const usersWithoutPasswords = users.map(({ password, verifyCode, ...rest }) => rest)
   res.status(200).json(usersWithoutPasswords)
@@ -41,9 +42,9 @@ app.get('/users', (req, res) => {
 app.post('/v1/auth/login', (req, res) => {
   const { email, password } = req.body
 
-  console.log("로그인 요청 받음:")
-  console.log("이메일:", email)
-  console.log("비밀번호:", password)
+  console.log("Receive a login request:")
+  console.log("Email:", email)
+  console.log("Password:", password)
 
   if (!email || !password) {
     return res.status(400).json({
@@ -89,70 +90,84 @@ app.post('/v1/auth/login', (req, res) => {
 })
 
 // 회원가입 테스트
+// 회원가입
 app.post('/users', (req, res) => {
   const { email, password, repassword, nickname, verifyCode } = req.body;
 
-  // 1. 필드 확인
   if (!email || !password || !repassword || !nickname || !verifyCode) {
     return res.status(400).json({
-      status: 'error',
-      message: '모든 항목을 입력해 주세요.'
-    });
+      status: 'ERROR',
+      message: 'Missing required fields.',
+      errors: [
+        { field: 'form', message: 'Please enter all the information.' }
+      ],
+      data: null
+    })
   }
 
-  // 2. 비밀번호 일치
   if (password !== repassword) {
     return res.status(400).json({
-      status: 'error',
-      message: '비밀번호가 일치하지 않습니다.'
-    });
+      status: 'ERROR',
+      message: 'Password mismatch.',
+      errors: [
+        { field: 'repassword', message: 'Password does not match!' }
+      ],
+      data: null
+    })
   }
 
-  // 3. 이메일 중복
-  const emailTaken = users.find(u => u.email === email);
+  const emailTaken = users.find(u => u.email === email)
   if (emailTaken) {
     return res.status(409).json({
-      status: 'error',
-      message: '이미 사용 중인 이메일입니다.'
-    });
+      status: 'ERROR',
+      message: 'Validation failed.',
+      errors: [
+        { field: 'email', message: 'This email is already in use.' }
+      ],
+      data: null
+    })
   }
 
-  // 4. 닉네임 중복
-  const nicknameTaken = users.find(u => u.nickname === nickname);
+  const nicknameTaken = users.find(u => u.nickname === nickname)
   if (nicknameTaken) {
     return res.status(400).json({
-      status: 'error',
-      message: '이미 사용 중인 닉네임입니다.'
-    });
+      status: 'ERROR',
+      message: 'Validation failed.',
+      errors: [
+        { field: 'nickname', message: 'Nickname is already in use.' }
+      ],
+      data: null
+    })
   }
 
-  // 5. 인증 코드 확인 (pendingVerifications에서 검증)
-  const pending = pendingVerifications.find(v => v.email === email);
-
+  const pending = pendingVerifications.find(v => v.email === email)
   if (!pending || pending.verifyCode !== verifyCode) {
     return res.status(401).json({
-      status: 'error',
-      message: '잘못된 인증 코드입니다.'
-    });
+      status: 'ERROR',
+      message: 'Invalid verify code.',
+      errors: [
+        { field: 'verifyCode', message: 'The authentication code does not match.' }
+      ],
+      data: null
+    })
   }
 
-  // ✅ 검증 통과 후, 해당 인증 기록 제거 (1회성 사용)
   pendingVerifications = pendingVerifications.filter(v => v.email !== email)
 
-  // 6. 유저 등록
   const newUser = {
     id: String(Date.now()),
     email,
     password,
     nickname,
     verifyCode
-  };
+  }
 
   users.push(newUser)
 
   return res.status(201).json({
-    status: 'success',
-    message: '회원가입 완료',
+    status: 'SUCCESS',
+    message: 'Membership registration completed.',
+    errors: [],
     data: {
       id: newUser.id,
       email: newUser.email,
@@ -169,51 +184,63 @@ app.post('/v1/auth/mail', (req, res) => {
 
   if (!email) {
     return res.status(400).json({
-      status: 'error',
-      message: '이메일이 필요합니다.'
+      status: 'ERROR',
+      message: 'Missing required field.',
+      errors: [
+        { field: 'email', message: 'Please enter your email.' }
+      ],
+      data: null
     })
   }
 
-  // 🔍 인증 코드 확인 요청
   if (verifyCode) {
     const pending = pendingVerifications.find(v => v.email === email)
 
     if (!pending) {
       return res.status(404).json({
-        status: 'error',
-        message: '인증 요청 기록이 없습니다.'
+        status: 'ERROR',
+        message: 'No authentication request found.',
+        errors: [
+          { field: 'verifyCode', message: 'There is no history of authentication requests.' }
+        ],
+        data: null
       })
     }
 
     if (pending.verifyCode !== verifyCode) {
       return res.status(401).json({
-        status: 'error',
-        message: '인증 코드가 일치하지 않습니다.'
+        status: 'ERROR',
+        message: 'Authentication failed.',
+        errors: [
+          { field: 'verifyCode', message: 'The authentication code does not match.' }
+        ],
+        data: null
       })
     }
 
     return res.status(200).json({
-      status: 'success',
-      message: '인증 성공'
+      status: 'SUCCESS',
+      message: 'Authentication successful.',
+      errors: [],
+      data: {
+        verifyCode: pending.verifyCode
+      }
     })
   }
 
-  // ✅ 인증 코드 발급 요청
   const newCode = Math.floor(100000 + Math.random() * 900000).toString()
 
-  // 같은 이메일 있으면 제거
   pendingVerifications = pendingVerifications.filter(v => v.email !== email)
-
-  // 새 코드 저장
   pendingVerifications.push({ email, verifyCode: newCode })
 
-  console.log(`📨 인증 코드 발급: ${email} → ${newCode}`)
+  console.log(`📨 Issuance of authentication code: ${email} → ${newCode}`)
 
   return res.status(200).json({
-    status: 'success',
-    message: '인증 코드 발급 완료',
+    status: 'SUCCESS',
+    message: 'Authorization Code Is Issued.',
+    errors: [],
     data: {
-      verifyCode: newCode // 테스트용 반환
+      verifyCode: newCode
     }
   })
 })
@@ -223,7 +250,7 @@ app.post('/v1/auth/refresh-token', (req, res) => {
   const refreshToken = req.cookies.refreshToken
 
   if (!refreshToken) {
-    console.log("❌ 리프레시 토큰 없음")
+    console.log("❌ No refresh token")
     return res.status(401).json({
       status: 'error',
       code: 401,
@@ -236,7 +263,7 @@ app.post('/v1/auth/refresh-token', (req, res) => {
     const user = users.find(u => u.id === decoded.userId)
 
     if (!user) {
-      console.log("❌ 유저 없음")
+      console.log("❌ No User")
       return res.status(401).json({
         status: 'error',
         code: 401,
@@ -255,7 +282,7 @@ app.post('/v1/auth/refresh-token', (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
 
-    console.log("🔄 새 accessToken 및 refreshToken 발급:", newAccessToken)
+    console.log("🔄 Issue new access tokens and refresh tokens:", newAccessToken)
 
     return res.status(200).json({
       status: 'success',
@@ -266,7 +293,7 @@ app.post('/v1/auth/refresh-token', (req, res) => {
       }
     })
   } catch (err) {
-    console.log("❌ 리프레시 토큰 만료 또는 오류:", err.message);
+    console.log("❌ Refresh token expiration or error:", err.message);
     return res.status(401).json({
       status: 'error',
       code: 401,
@@ -284,7 +311,7 @@ app.post('/v1/auth/logout', (req, res) => {
       path: '/'
     })
 
-    console.log("로그아웃 처리됨: refreshToken 삭제됨")
+    console.log("Logout processed: refresh token deleted")
 
     return res.status(200).json({
       status: 'success',
@@ -292,7 +319,7 @@ app.post('/v1/auth/logout', (req, res) => {
       message: 'Logout successful. Refresh token cleared.'
     })
   } catch (error) {
-    console.error('로그아웃 처리 중 에러:', error);
+    console.error('Error processing logout:', error);
     return res.status(500).json({ message: 'Logout error' })
   }
 })
