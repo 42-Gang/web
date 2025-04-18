@@ -25,7 +25,7 @@ const Confirm = ({ email, verifyCode, password, rePassword, nickname }: ConfirmP
         return
       }
 
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/users`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
