@@ -13,8 +13,11 @@ export default defineConfig({
   },
   assetsInclude: ["**/*.svg", "**/*.png", "**/*.jpg", "**/*.jpeg"],
   server: {
-    port: 5173,
-    host: true,
-    strictPort: true,
+    proxy: {
+      '/api': {
+        target: '*', // 백엔드 서버 주소
+        changeOrigin: true,
+      },
+    },
   },
 });
