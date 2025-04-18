@@ -11,7 +11,7 @@ export default defineConfig({
   css: {
     postcss: './postcss.config.js',
   },
-  assetsInclude: ["**/*.svg"],
+  assetsInclude: ["**/*.svg", "**/*.png", "**/*.jpg", "**/*.jpeg"],
   server: {
     port: 5173,
     host: true,
