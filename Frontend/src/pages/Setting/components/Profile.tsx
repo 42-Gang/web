@@ -77,7 +77,7 @@ const Profile: React.FC<ProfileProps> = ({ onChangeProfileImg }) => {
         const formData = new FormData()
         formData.append("avatar", img)
 
-        const res = await fetch(`${import.meta.env.VITE_API_URL}users/${userId}/avatar`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/avatar`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`

@@ -24,11 +24,14 @@ app.use('/uploads', express.static('uploads'))
 // 라우트 등록
 const authRoutes = require('./routes/authRoutes.cjs')
 const userRoutes = require('./routes/userRoutes.cjs')
-const gameRoutes = require('./routes/gameRoutes.cjs')
+const friendRoutes = require('./routes/friendRoutes.cjs')
+
+// const gameRoutes = require('./routes/gameRoutes.cjs')
 
 app.use('/v1/auth', authRoutes)
 app.use('/users', userRoutes)
-app.use('/users', gameRoutes)
+app.use('/api/friends', friendRoutes)
+// app.use('/users', gameRoutes)
 
 app.listen(3001, () => {
 	console.log("✅ Mock server running at http://localhost:3001")

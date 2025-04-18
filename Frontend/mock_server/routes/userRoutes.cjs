@@ -19,12 +19,19 @@ if (!fs.existsSync('uploads')) {
 
 // 회원 가입 (등록)
 router.post('/', userController.register)
+
+// 유저 profile 조회
+router.get('/profile', authenticateToken, userController.getProfile)
+
 // 유저 전체 조회
 router.get('/', userController.getUsers)
-// 유저 정보 조회 (토큰 검증)
+
+// 유저 단건 조회 (id 기반)
 router.get('/:id', authenticateToken, userController.getUserById)
+
 // 닉네임 변경
 router.patch('/:id/nickname', authenticateToken, userController.updateNickname)
+
 // 아바타 변경/삭제
 router.post('/:id/avatar', authenticateToken, upload.single('avatar'), userController.updateAvatar)
 

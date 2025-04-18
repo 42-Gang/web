@@ -90,7 +90,7 @@ const Setting = () => {
       <div className="absolute left-[60px] top-[180px]">
 			<Profile onChangeProfileImg={setProfileImg} />
       </div>
-      <div className="absolute right-[80px] top-[225px]">
+      <div className="absolute right-[60px] top-[225px]">
         <UserInformation
           nickname={nickname}
           wins={wins}
