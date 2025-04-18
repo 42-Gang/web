@@ -108,10 +108,12 @@ export const InviteButton = styled.button<{ $isAccepted?: boolean }>`
   background-repeat: no-repeat;
   z-index: 9999;
 
-  &:hover {
-    background-color: ${(props) =>
-      props.$isAccepted ? "transparent" : "rgba(239, 255, 11, 0.69)"};
-    border-radius: ${(props) => (props.$isAccepted ? "0" : "50%")};
+  &:hover,
+  &:focus,
+  &:active {
+    outline: none;
+    box-shadow: none;
+    border: none;
   }
 `;
 
@@ -146,10 +148,7 @@ export const FriendProfileImage = styled.img<{ $isReady: boolean }>`
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
-  border: ${(props) =>
-    props.$isReady
-      ? "3px solid green"
-      : "none"}; // ✅ Ready 상태일 때 테두리 추가
+  border: ${(props) => (props.$isReady ? "3px solid green" : "none")};
 `;
 
 export const ReadyProfileImage = styled(FriendProfileImage)<{
@@ -157,6 +156,12 @@ export const ReadyProfileImage = styled(FriendProfileImage)<{
 }>`
   border: 3px solid ${(props) => (props.$isReady ? "red" : "green")};
   transition: border 0.3s ease-in-out;
+  outline: none;
+
+  &:hover,
+  &:focus {
+    outline: none;
+  }
 `;
 
 export const FriendName = styled.p`
@@ -248,4 +253,29 @@ export const LoadingIndicator = styled.div`
   border-top: 4px solid transparent;
   border-radius: 50%;
   animation: ${spin} 1s linear infinite;
+`;
+
+// 모두 다 Ready
+export const WideToastStyle = {
+  fontFamily: "'Sixtyfour', sans-serif",
+  fontSize: "14px",
+  backgroundColor: "#222",
+  color: "#fff",
+  borderRadius: "12px",
+  padding: "12px 18px",
+  minWidth: "360px",
+};
+
+export const MiniStatsPopup = styled.div`
+  position: absolute;
+  top: -60px;
+  background-color: white;
+  color: black;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-family: "Sixtyfour", sans-serif;
+  font-size: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  white-space: nowrap;
+  z-index: 1000;
 `;

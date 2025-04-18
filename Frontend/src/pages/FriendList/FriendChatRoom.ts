@@ -6,6 +6,7 @@ export const PageContainer = styled.div`
   display: flex;
   background-color: #000;
   position: relative;
+  overflow: visible;
 `;
 
 export const ChatBox = styled.div`
@@ -15,7 +16,8 @@ export const ChatBox = styled.div`
   display: flex;
   flex-direction: column;
   border-radius: 0px;
-  padding: 10px;
+  padding: 10px 10px 10px 10px;
+
   position: absolute;
   left: 0;
   bottom: 0;
@@ -60,6 +62,7 @@ export const ChatInput = styled.input`
   padding: 6px;
   font-size: 14px;
   border-radius: 5px;
+  outline: none;
 `;
 
 export const SendButton = styled.button`
@@ -108,18 +111,22 @@ export const FriendItem = styled.div<{ isOnline: boolean }>`
 
 export const ChatUserProfileWrapper = styled.div`
   position: absolute;
-  top: 40px;
+  top: 20px;
+  height: 60px;
+  padding-right: 12px;
+
   left: 15px;
   display: flex;
   align-items: center;
   z-index: 3;
+  gap: 20px;
 `;
 
 export const ChatUserImage = styled.img`
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
   border-radius: 50%;
-  margin-right: 12px;
 `;
 
 export const ChatUserNameText = styled.div`
