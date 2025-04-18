@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom"
-import authFetch from "../../../utils/authFetch" // authFetch 경로 맞춰주세요!
 import SelectHighlight from '../../../assets/image/SelectHighlight.svg'
 
 const ActionButton = () => {
