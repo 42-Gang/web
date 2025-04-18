@@ -29,7 +29,7 @@ const Setting = () => {
 				const userId = payload.userId
 				console.log("🧠 Decoded userId:", userId)
 	
-				const res = await authFetch(`http://localhost:3001/users/${userId}`, {
+				const res = await authFetch(`${import.meta.env.VITE_API_URL}/users/${userId}`, {
 					headers: {
 						Authorization: `Bearer ${token}`
 					}

@@ -39,7 +39,7 @@ const GameHistory = () => {
       const userId = payload.userId
 
       try {
-        const res = await fetch(`http://localhost:3001/users/${userId}/history?mode=${mode}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/history?mode=${mode}`, {
           headers: { Authorization: `Bearer ${token}` }
         })
         const result = await res.json()

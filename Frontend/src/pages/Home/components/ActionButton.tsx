@@ -17,8 +17,7 @@ const ActionButton = () => {
 
   const handleNavigation = async (path: string) => {
     // authFetch 호출하여 세션 상태를 처리
-    const apiUrl = import.meta.env.VITE_API_URL
-    const res = await authFetch(`${apiUrl}/v1/auth/ping`)
+    const res = await authFetch(`${import.meta.env.VITE_API_URL}/v1/auth/ping`)
 
     // authFetch가 정상적으로 처리되면 해당 페이지로 이동
     if (res) {

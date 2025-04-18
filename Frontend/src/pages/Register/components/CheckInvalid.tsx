@@ -22,7 +22,7 @@ const CheckInvalid = ({ label, value, email, password, rePassword }: Props) => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (label === "VERIFY CODE" && email && value) {
-        fetch("http://localhost:3001/v1/auth/mail", {
+        fetch(`${import.meta.env.VITE_API_URL}/v1/auth/mail`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, verifyCode: value })
@@ -36,7 +36,7 @@ const CheckInvalid = ({ label, value, email, password, rePassword }: Props) => {
       } else if ((label === "PASSWORD" || label === "RE-PASSWORD") && password && rePassword) {
         setIsValid(password === rePassword && password !== "")
       } else if (label === "NICKNAME" && value) {
-        fetch("http://localhost:3001/users")
+        fetch(`${import.meta.env.VITE_API_URL}/users`)
           .then(res => res.json())
           .then((data: User[]) => {
             const isTaken = data.some(u => u.nickname === value)

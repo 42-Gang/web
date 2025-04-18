@@ -19,7 +19,7 @@ const ConfirmLogoutPopup: React.FC<ConfirmLogoutPopupProps> = ({ onClose }) => {
 
   const OkClick = async () => {
     try {
-      const res = await fetch("http://localhost:3001/v1/auth/logout", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/v1/auth/logout`, {
         method: "POST",
         credentials: "include"
       })

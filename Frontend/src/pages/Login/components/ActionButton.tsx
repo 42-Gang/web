@@ -25,14 +25,14 @@ const ActionButton = ({ setError }: ActionButtonProps) => {
       const result = await signInWithPopup(auth, googleProvider)
       const user = result.user
 
-      const res = await fetch(`http://localhost:3001/users?email=${user.email}`)
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/users?email=${user.email}`)
       const existingUsers = await res.json()
 
       if (existingUsers.length > 0) {
         alert("🔐 기존 유저로 로그인되었습니다!")
         navigate("/Home")
       } else {
-        await fetch("http://localhost:3001/users", {
+        await fetch(`${import.meta.env.VITE_API_URL}/users`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

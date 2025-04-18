@@ -22,8 +22,7 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
   }
 
   // 2. accessToken이 없거나 만료됐을 경우 → 서버에 refresh 요청
-  const apiUrl = import.meta.env.VITE_API_URL
-  const refreshRes = await fetch(`${apiUrl}/v1/auth/refresh-token`, {
+  const refreshRes = await fetch(`${import.meta.env.VITE_API_URL}/v1/auth/refresh-token`, {
     method: "POST",
     credentials: "include", // 쿠키 포함해서 보냄
   })
@@ -40,7 +39,7 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
     localStorage.removeItem("accessToken")
 
     // 서버에 로그아웃 요청 보내기
-    await fetch(`${apiUrl}/v1/auth/logout`, {
+    await fetch(`${import.meta.env.VITE_API_URL}/v1/auth/logout`, {
       method: "POST",
       credentials: "include", // 쿠키 포함해서 보냄
     })
@@ -75,7 +74,7 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
   localStorage.removeItem("accessToken")
 
   // 서버에 로그아웃 요청 보내기
-  await fetch(`${apiUrl}/v1/auth/logout`, {
+  await fetch(`${import.meta.env.VITE_API_URL}/v1/auth/logout`, {
     method: "POST",
     credentials: "include", // 쿠키 포함해서 보냄
   })
