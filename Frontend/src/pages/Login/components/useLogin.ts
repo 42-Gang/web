@@ -14,16 +14,16 @@ const useLogin = (setError: (msg: string) => void) => {
 
 	const login = async (email: string, password: string) => {
 		try {
-			const res = await fetch(`${import.meta.env.VITE_API_URL}/v1/auth/login`, {
+			const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/login`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json"
 				},
-				credentials: "include",
 				body: JSON.stringify({ email, password })
 			})
 
 			const result: LoginResponse = await res.json()
+			console.log("Login result:", result)
 
 			if (result.code === 200) {
 				// 로그인 성공 시 accessToken 저장

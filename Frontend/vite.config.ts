@@ -15,8 +15,9 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: '*', // 백엔드 서버 주소
+        target: process.env.VITE_API_URL, // 백엔드 서버 주소
         changeOrigin: true,
+        rewrite: path => path.replace(/^\/api/, ''), // optional
       },
     },
   },
