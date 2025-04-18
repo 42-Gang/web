@@ -38,16 +38,21 @@ const UserInformation: React.FC<UserInformationProps> =
         <button
           onClick={togglePopup}
           className="cursor-pointer opacity-60 hover:opacity-100
-            absolute -right-[40px] -top-[2px] transition-opacity duration-300"
+            absolute -right-[5px] -top-[2px] transition-opacity duration-300"
         >
           <img src={ChangeNicknameButton} alt="ChangeNicknameButton"/>
         </button>
       </div>
       {stats.map(({ label, value }) => (
-        <div key={label}>
-          <span>{label}:{formattedValue(value)}</span>
-        </div>
-      ))}
+				<div key={label}>
+					<span>
+						{label}:
+						<span className="inline-block text-left w-[50px] ml-1">
+							{formattedValue(value)}
+						</span>
+					</span>
+				</div>
+			))}
       <AnimatePresence>
         {isOpenNicknamePopup && (
 					<>

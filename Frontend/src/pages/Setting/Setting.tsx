@@ -29,7 +29,7 @@ const Setting = () => {
 				const userId = payload.userId
 				console.log("🧠 Decoded userId:", userId)
 	
-				const res = await authFetch(`${import.meta.env.VITE_API_URL}/users/${userId}`, {
+				const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
 					headers: {
 						Authorization: `Bearer ${token}`
 					}
@@ -90,7 +90,7 @@ const Setting = () => {
       <div className="absolute left-[60px] top-[180px]">
 			<Profile onChangeProfileImg={setProfileImg} />
       </div>
-      <div className="absolute right-[80px] top-[225px]">
+      <div className="absolute right-[60px] top-[225px]">
         <UserInformation
           nickname={nickname}
           wins={wins}
