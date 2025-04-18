@@ -6,24 +6,14 @@ const ActionButton = () => {
   const navigate = useNavigate()
 
   const buttons = [
-    { label: "START GAME", onClick: () => handleNavigation('/GameOptionSelect') },
-    { label: "GAME HISTORY", onClick: () => handleNavigation('/GameHistory') },
-    { label: "FRIEND", onClick: () => handleNavigation('/FriendList') },
-    { label: "Profile", onClick: () => handleNavigation('/Setting') },
+    { label: "START GAME", onClick: () => navigate('/GameOptionSelect') },
+    { label: "GAME HISTORY", onClick: () => navigate('/GameHistory') },
+    { label: "FRIEND", onClick: () => navigate('/FriendList') },
+    { label: "Profile", onClick: () => navigate('/Setting') },
   ]
 
   const buttonClass = "cursor-pointer flex gap-[10px] -ml-[30px] group"
   const imgClass = "opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-
-  const handleNavigation = async (path: string) => {
-    // authFetch 호출하여 세션 상태를 처리
-    const res = await authFetch(`${import.meta.env.VITE_API_URL}/v1/auth/ping`)
-
-    // authFetch가 정상적으로 처리되면 해당 페이지로 이동
-    if (res) {
-      navigate(path)
-    }
-  }
 
   return (
     <div className="text-white font-['StWinterPixel'] text-[28px] flex flex-col">
