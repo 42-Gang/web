@@ -9,12 +9,38 @@ interface ChangeNicknamePopupProps {
 const ChangeNicknamePopup: React.FC<ChangeNicknamePopupProps> = ({ onClose, onChangeNickname }) => {
 	const [inputValue, setInputValue] = useState("");
 
-	const ChangeNickname = () => {
-		if (inputValue.trim().length > 0) {
-			onChangeNickname(inputValue);
-			onClose();
+	const ChangeNickname = async () => {
+		if (inputValue.trim().length === 0) return
+	
+		const token = localStorage.getItem("accessToken")
+		if (!token) return
+	
+		const payload = JSON.parse(atob(token.split('.')[1]))
+		const userId = payload.userId
+	
+		try {
+			const res = await fetch(`http://localhost:3001/users/${userId}/nickname`, {
+				method: "PATCH",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`
+				},
+				body: JSON.stringify({ nickname: inputValue })
+			})
+	
+			const result = await res.json()
+	
+			if (res.ok) {
+				onChangeNickname(result.data.nickname)
+				onClose()
+			} else {
+				alert(result.message || "Nickname update failed")
+			}
+		} catch (err) {
+			console.error("Nickname change error:", err)
+			alert("Error occurred while updating nickname.")
 		}
-	}
+	}	
 
 	return (
 		<div

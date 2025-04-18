@@ -5,7 +5,7 @@ interface ChangeProfileImgPopupProps {
   onChangeProfileImg: (newImg: File | null) => void
 }
 
-const SelectButton: React.FC<{ onClick: () => void; children: React.ReactNode}> = ({ onClick, children }) => (
+const SelectButton: React.FC<{ onClick: () => void; children: React.ReactNode }> = ({ onClick, children }) => (
   <button
     className="font-['Sixtyfour'] text-black text-2xl w-[550px] h-[80px]
       border-4 rounded-3xl cursor-pointer hover:border-red-500"
@@ -17,20 +17,37 @@ const SelectButton: React.FC<{ onClick: () => void; children: React.ReactNode}> 
 
 const ChangeProfilePopup: React.FC<ChangeProfileImgPopupProps> = ({ onClose, onChangeProfileImg }) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const isProcessing = useRef(false)
 
-  const ChangeProfileImg = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const ChangeProfileImg = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (isProcessing.current) return
+    isProcessing.current = true
+
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0]
-      onChangeProfileImg(file)
+      await onChangeProfileImg(file)
       onClose()
     }
+
+    setTimeout(() => {
+      isProcessing.current = false
+    }, 500)
   }
+
   const EditProfileImg = () => {
     fileInputRef.current?.click()
   }
-  const DeleteProfileImg = () => {
-    onChangeProfileImg(null)
+
+  const DeleteProfileImg = async () => {
+    if (isProcessing.current) return
+    isProcessing.current = true
+
+    await onChangeProfileImg(null)
     onClose()
+
+    setTimeout(() => {
+      isProcessing.current = false
+    }, 500)
   }
 
   return (

@@ -1,6 +1,8 @@
 import "./index.css";
 import { useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 import GlobalStyle from "./styles/GlobalStyles";
 import Login from "./pages/Login/Login.tsx";
 import RegisterWithEmail from "./pages/Register/RegisterWithEmail.tsx";
@@ -37,6 +39,7 @@ const App = () => {
   return (
     <>
       <GlobalStyle />
+			<ToastContainer/>
       <Router>
         <Routes>
           {/* 로그인 페이지 */}

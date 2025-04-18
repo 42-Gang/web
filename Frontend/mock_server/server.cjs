@@ -1,77 +1,35 @@
-const express = require('express')
-const cors = require('cors')
-const cookieParser = require('cookie-parser')
+// express기반 mocking 서버
+const express = require('express') // 웹 프레임워크
+const cors = require('cors') // 다른 도메인에서 요청을 허용하는 미들웨어
+const cookieParser = require('cookie-parser') // 요청 쿠키를 읽게 도와주는 미들웨어
+const fs = require('fs') // 디렉토리 파일을 만들거나 읽는 모듈
 
 const app = express()
 
-// CORS 설정
 app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true
+	origin: 'http://localhost:5173',
+	credentials: true // 쿠키 등을 포함한 인증 정보 허용
 }))
+
 app.use(express.json())
 app.use(cookieParser())
 
-// Mock user DB
-const users = [
-  {
-    id: 1,
-    email: 'test@gmail.com',
-    password: 'password0311',
-    accessToken: 'jwt_access_token',
-    refreshToken: 'jwt_refresh_token'
-  }
-]
+// 정적 파일(uploads 폴더) 제공
+if (!fs.existsSync('uploads')) {
+	fs.mkdirSync('uploads')
+}
 
-// 로그인 테스트
-app.post('/v1/auth/login', (req, res) => {
-  const { email, password } = req.body
+app.use('/uploads', express.static('uploads'))
 
-// 콘솔에 입력값 로그 출력
-	console.log("로그인 요청 받음:")
-	console.log("이메일:", email)
-	console.log("비밀번호:", password)
+// 라우트 등록
+const authRoutes = require('./routes/authRoutes.cjs')
+const userRoutes = require('./routes/userRoutes.cjs')
+const gameRoutes = require('./routes/gameRoutes.cjs')
 
-  if (!email || !password) {
-    return res.status(400).json({
-      status: 'error',
-      code: 400,
-      message: "Missing email or password."
-    })
-  }
-
-  const user = users.find(u => u.email === email && u.password === password) // 일치하는 유저가 있는지 탐색
-
-  if (user) {
-    res.cookie('refreshToken', user.refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-      path: '/v1/auth/refresh-token',
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7일
-    })
-		
-		console.log("로그인 성공!")
-
-    return res.status(200).json({
-      status: 'success',
-      code: 200,
-      message: 'Login success',
-      data: {
-        accessToken: user.accessToken
-      }
-    })
-  }
-
-		console.log("로그인 실패!")
-
-  return res.status(401).json({
-    status: 'error',
-    code: 401,
-    message: 'Invalid email or password.'
-  })
-})
+app.use('/v1/auth', authRoutes)
+app.use('/users', userRoutes)
+app.use('/users', gameRoutes)
 
 app.listen(3001, () => {
-  console.log('✅ Mock server running at http://localhost:3001')
+	console.log("✅ Mock server running at http://localhost:3001")
 })
