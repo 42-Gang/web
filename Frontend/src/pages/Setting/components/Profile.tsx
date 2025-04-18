@@ -29,7 +29,7 @@ const Profile: React.FC<ProfileProps> = ({ onChangeProfileImg }) => {
       const userId = payload.userId
 
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
           headers: { Authorization: `Bearer ${token}` }
         })
         const result = await res.json()
@@ -59,7 +59,7 @@ const Profile: React.FC<ProfileProps> = ({ onChangeProfileImg }) => {
 
     try {
       if (img === null) {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/avatar`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}/avatar`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -77,7 +77,7 @@ const Profile: React.FC<ProfileProps> = ({ onChangeProfileImg }) => {
         const formData = new FormData()
         formData.append("avatar", img)
 
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/avatar`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}/avatar`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`

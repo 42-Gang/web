@@ -29,7 +29,7 @@ const friendRoutes = require('./routes/friendRoutes.cjs')
 // const gameRoutes = require('./routes/gameRoutes.cjs')
 
 app.use('/v1/auth', authRoutes)
-app.use('/users', userRoutes)
+app.use('/api/users', userRoutes)
 app.use('/api/friends', friendRoutes)
 // app.use('/users', gameRoutes)
 
