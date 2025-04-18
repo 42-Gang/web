@@ -19,7 +19,7 @@ const ChangeNicknamePopup: React.FC<ChangeNicknamePopupProps> = ({ onClose, onCh
 		const userId = payload.userId
 	
 		try {
-			const res = await fetch(`http://localhost:3001/users/${userId}/nickname`, {
+			const res = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/nickname`, {
 				method: "PATCH",
 				headers: {
 					"Content-Type": "application/json",

@@ -14,7 +14,7 @@ const Verify = ({ email }: VerifyProps) => {
 
 		try {
 			// 1️⃣ 이메일 중복 체크
-			const userRes = await fetch("http://localhost:3001/users")
+			const userRes = await fetch(`${import.meta.env.VITE_API_URL}/users`)
 			const userList = await userRes.json()
 			const isTaken = userList.some((u: { email: string }) => u.email === email)
 
@@ -24,7 +24,7 @@ const Verify = ({ email }: VerifyProps) => {
 			}
 
 			// 2️⃣ 인증 코드 요청
-			const res = await fetch("http://localhost:3001/v1/auth/mail", {
+			const res = await fetch(`${import.meta.env.VITE_API_URL}/v1/auth/mail`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json"
