@@ -15,9 +15,11 @@ const RegisterWithEmail = () => {
   const [nickname, setNickname] = useState("")
 
 	useEffect(() => {
-		const timestamp = Date.now()
-		setEmail(`user${timestamp}@test.com`)
-		setNickname(`user${timestamp}`)
+		const timestamp = Date.now().toString()
+		const base = `user${timestamp}`
+	
+		setEmail(`${base}@test.com`)
+		setNickname(base.slice(0, 8))  // 🔥 닉네임 8글자 제한
 	}, [])	
 
   return (
