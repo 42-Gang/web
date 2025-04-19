@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import AvailableAddFriend from '../../../assets/image/AvailableAddFriend.svg'
@@ -13,25 +13,48 @@ interface User {
 }
 
 const SearchResultCard = ({ user }: { user: User }) => {
-	console.log("👤 받은 user:", user)
 	const [isAdded, setIsAdded] = useState(false)
+	const isProcessing = useRef(false)
 
-	const handleAddFriend = () => {
-		if (!isAdded) {
-			setIsAdded(true)
-			toast.success(`You sent a friend request to ${user.nickname}!`, {
-				position: "bottom-center",
-				autoClose: 2000,
-				style: {
-					fontSize: "17px",
-					padding: "20px",
-					minHeight: "80px",
-					width: "400px"
-				}
+	const handleAddFriend = async () => {
+		if (isProcessing.current || isAdded) return
+		isProcessing.current = true
+	
+		try {
+			const token = localStorage.getItem("accessToken")
+			const res = await fetch(`${import.meta.env.VITE_API_URL}/api/friends/${user.id}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+
+			const result = await res.json()
+
+			if (res.ok) {
+				setIsAdded(true)
+				toast.success(`You sent a friend request to ${user.nickname}!`, {
+          position: "bottom-center",
+          autoClose: 2000,
+          style: {
+            fontSize: "17px",
+            padding: "20px",
+            minHeight: "80px",
+            width: "400px"
+          }
 			})
+		} else {
+			toast.error(result.message || "Failed to sent friend request!")
+		}
+		} catch (err) {
+			console.error("Error in friend request.", err)
+			toast.error("Error requesting friend request")
+		} finally {
+			setTimeout(() => {
+				isProcessing.current = false
+			}, 500)
 		}
 	}
-
 	return (
 		<div className="flex items-center justify-between p-3 border-[2px]
 			border-white rounded-xl mt-1 hover:bg-blue-400 transition duration-300">

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { toast } from "react-toastify"
 import BasicProfile1 from '../../../assets/image/BasicProfile1.png'
 import LinkState from './LinkState'
 import Message from './Message'
@@ -34,9 +35,12 @@ const ContactList = ({ searchTerm, userId }: ContactListProps) => {
 				const result = await res.json()
 				if (res.ok && result.data?.friends) {
 					setContacts(result.data.friends)
+				} else {
+					toast.error(result.message || "Failed to load friend list.")
 				}
 			} catch (err) {
-				console.error('친구 목록 불러오기 실패:', err)
+				console.error("Failed to load friend list", err)
+				toast.error("Error requesting friend list.")
 			}
 		}
 		fetchFriends()

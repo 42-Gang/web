@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { toast } from "react-toastify"
 import CancelButton from "../../../assets/image/CancelButton2.svg"
 import Magnifier from "../../../assets/image/MagnifierAddFriend.svg"
 import SearchResultCard from "./SearchResultCard"
@@ -27,9 +28,7 @@ const AddFriendPopup: React.FC<AddFriendPopupProps> = ({ onClose }) => {
     const fetchUsers = async () => {
       try {
         const token = localStorage.getItem("accessToken")
-        const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/friends/search/${searchTerm}`,
-          {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/friends/search/${searchTerm}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -38,17 +37,18 @@ const AddFriendPopup: React.FC<AddFriendPopupProps> = ({ onClose }) => {
 
         const result = await res.json()
         if (res.ok) {
-          console.log("📦 서버 응답:", result.data)
+          console.log("📦 Server Response:", result.data)
           const exact = result.data?.find(
             (user: User) => user.nickname === searchTerm
           )
           console.log("🎯 exact match:", exact)
           setSearchResults(result.data || [])
         } else {
-          console.warn("❌ 검색 실패 응답:", result)
+          console.warn("❌ Search failed response:", result)
         }
       } catch (err) {
-        console.error("유저 검색 실패:", err)
+        console.error("Failed to search user", err)
+				toast.error("Network error: User Searching Failed")
       }
     }
 
