@@ -26,7 +26,7 @@ const ContactList = ({ searchTerm, userId }: ContactListProps) => {
 					['status', 'ACCEPTED'],
 					['status', 'BLOCKED']
 				])
-				const res = await fetch(`${import.meta.env.VITE_API_URL}/api/friends/me?${query.toString()}`, {
+				const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/me?${query.toString()}`, {
 					headers: {
 						Authorization: `Bearer ${token}`
 					}

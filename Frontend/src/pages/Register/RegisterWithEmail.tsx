@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Container from "./components/Container"
 import MainTitle from "./components/MainTitle"
 import Cancel from "./components/Cancel"
 import InputField from "./components/InputField"
 import Verify from "./components/Verify"
 import Confirm from "./components/Confirm"
-import CheckInvalid from "./components/CheckInvalid"
 
 const RegisterWithEmail = () => {
   const [email, setEmail] = useState("")
@@ -13,14 +12,6 @@ const RegisterWithEmail = () => {
   const [password, setPassword] = useState("")
   const [rePassword, setRePassword] = useState("")
   const [nickname, setNickname] = useState("")
-
-	useEffect(() => {
-		const timestamp = Date.now().toString()
-		const base = `user${timestamp}`
-	
-		setEmail(`${base}@test.com`)
-		setNickname(base.slice(0, 8))  // 🔥 닉네임 8글자 제한
-	}, [])	
 
   return (
     <Container>
@@ -44,17 +35,6 @@ const RegisterWithEmail = () => {
 							value={value}
 							onChange={e => setter(e.target.value)}
 						/>
-						{(label !== "EMAIL" && label !== "PASSWORD") && (
-							<div className="ml-15 self-center">
-								<CheckInvalid
-									label={label}
-									value={value}
-									email={email}
-									password={password}
-									rePassword={rePassword}
-								/>
-							</div>
-						)}
 					</div>
 				))}
 			</div>

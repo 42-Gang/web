@@ -13,7 +13,7 @@ const InputField = ({ label, value, onChange, type, width }: InputFieldProps) =>
 				{label}:
 			</p>
 			<input
-				className="font-['Galmuri7'] text-[24px] h-[25px]"
+				className="font-['Galmuri7'] text-[24px] h-[25px] focus:outline-none focus:border-b focus:border-white"
 				style={{ width }}
 				type={type}
 				value={value}

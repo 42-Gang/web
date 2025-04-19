@@ -15,7 +15,7 @@ const InputField = ({ label, type, width, value, onChange }: InputFieldProps) =>
 				type={type}
 				value={value}
 				onChange={onChange}
-				className="font-['Galmuri7'] text-[24px]"
+				className="font-['Galmuri7'] text-[24px] focus:outline-none focus:border-b focus:border-white"
 				/>
 		</div>
 	)
