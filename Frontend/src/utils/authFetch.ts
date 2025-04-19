@@ -1,8 +1,10 @@
 import { toast } from "react-toastify"
 
 const authFetch = async (url: string, options: RequestInit = {}) => {
+	// localStorage에서 토큰 가져와 사용
   const token = localStorage.getItem("accessToken")
 
+	// accessToken을 넣고 API 요청을 보냄
   const makeRequest = async (accessToken: string) => {
     return fetch(url, {
       ...options,
@@ -17,8 +19,8 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
   // 1. accessToken이 있을 경우 우선 요청
   if (token) {
     const res = await makeRequest(token)
-    if (res.status !== 401) return res
-    console.warn("accessToken 만료됨, refresh 시도")
+    if (res.status !== 401) return res // 응답이 정상이라면 응답 반환
+    console.warn("accessToken 만료됨, refresh 시도") // 401 Unauthorized이면 refresh-token을 요청
   }
 
   // 2. accessToken이 없거나 만료됐을 경우 → 서버에 refresh 요청
@@ -52,7 +54,7 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
     return null
   }
 
-  const refreshData = await refreshRes.json()
+  const refreshData = await refreshRes.json() // 백엔드에서 응답 받은 JSON 데이터를 객체로 변환
 
   // 3. 새 accessToken이 있다면 저장 후 다시 요청
   if (refreshData.data?.accessToken) {
