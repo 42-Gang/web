@@ -10,7 +10,7 @@ const ChangeNicknamePopup: React.FC<ChangeNicknamePopupProps> = ({ onClose, onCh
 	const [inputValue, setInputValue] = useState("");
 
 	const ChangeNickname = async () => {
-		if (inputValue.trim().length === 0) return
+		if (inputValue.trim().length === 0) return 
 	
 		const token = localStorage.getItem("accessToken")
 		if (!token) return
@@ -19,11 +19,11 @@ const ChangeNicknamePopup: React.FC<ChangeNicknamePopupProps> = ({ onClose, onCh
 		const userId = payload.userId
 	
 		try {
-			const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}/nickname`, {
+			const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
 				method: "PATCH",
 				headers: {
 					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`
+					Authorization: `Bearer ${token}` // 서버에 이 사용자가 로그인했음을 증명. 토큰이 없으면 401 unauthorized 발생
 				},
 				body: JSON.stringify({ nickname: inputValue })
 			})

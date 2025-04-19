@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react"
+import { toast } from "react-toastify"
 import { AnimatePresence } from "framer-motion"
 import ChangeProfileImg from '../../../assets/image/ChangeProfileImg.svg'
 import { FadeOverlay, PopupWrapper } from "./Animation"
@@ -58,27 +59,28 @@ const Profile: React.FC<ProfileProps> = ({ onChangeProfileImg }) => {
     const userId = payload.userId
 
     try {
-      if (img === null) {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}/avatar`, {
-          method: "POST",
+      if (img === null) { // 프로필 이미지 삭제
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
+          method: "PATCH", // 수정
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`
           },
-          body: JSON.stringify({ delete: "true" })
+          body: JSON.stringify({ avatar: null })
         })
         const result = await res.json()
         if (res.ok) {
           setBothProfileImg(null)
+					toast.success("Your avatar image has been deleted.")
         } else {
-          alert(result.message || "이미지 삭제 실패")
+          toast.error(result.message || "Failed to delete avatar image.")
         }
-      } else {
+      } else { // 프로필 이미지 업로드
         const formData = new FormData()
         formData.append("avatar", img)
 
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}/avatar`, {
-          method: "POST",
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
+          method: "PATCH",
           headers: {
             Authorization: `Bearer ${token}`
           },
@@ -88,13 +90,14 @@ const Profile: React.FC<ProfileProps> = ({ onChangeProfileImg }) => {
         const result = await res.json()
         if (res.ok) {
           setBothProfileImg(result.data.avatar)
+					toast.success("Your avatar image has been updated.")
         } else {
-          alert(result.message || "이미지 업로드 실패")
+          toast.error(result.message || "Image upload failed.")
         }
       }
     } catch (err) {
-      console.error("프로필 이미지 변경 오류", err)
-      alert("프로필 이미지 변경 중 오류 발생")
+      console.error("Avatar image Change Error", err)
+      toast.error("Error changing avatar image.")
     } finally {
       setTimeout(() => {
         isProcessing.current = false

@@ -31,13 +31,13 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
 
   // 2.1 refresh 실패 → 로그인으로 이동
   if (!refreshRes.ok) {
-    const toastId = toast.warn("세션 만료. 다시 로그인 해주세요.", {
+    const toastId = toast.warn("Session expired. Please log in again.", {
       position: "top-center",
       autoClose: 2000, // 2초 후 자동으로 닫힘
       closeOnClick: false, // 클릭으로 닫히지 않도록 설정
       draggable: false // 드래그로 이동하지 않도록 설정
     })
-    console.error("❌ refresh-token 요청 실패")
+    console.error("❌ refresh-token request failed!")
     localStorage.removeItem("accessToken")
 
     // 서버에 로그아웃 요청 보내기
@@ -60,7 +60,7 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
   if (refreshData.data?.accessToken) {
     const newAccessToken = refreshData.data.accessToken
     localStorage.setItem("accessToken", newAccessToken)
-    console.log("✅ accessToken 재발급 성공")
+    console.log("✅ accessToken successful re-issuance.")
 
     return makeRequest(newAccessToken)
   }
