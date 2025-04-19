@@ -7,7 +7,9 @@ const CustomGameModeSelect = () => {
   return (
     <Container>
       <Cancel/>
-      <MainTitle/>
+			<div className="absolute right-1/2 translate-x-1/2 top-[60px]">
+				<MainTitle/>
+			</div>
       <div className="absolute right-1/2 translate-x-1/2 bottom-[50px]">
         <SelectMode/>
       </div>
