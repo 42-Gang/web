@@ -1,6 +1,6 @@
 import { toast } from "react-toastify"
 
-const authFetch = async (url: string, options: RequestInit = {}) => {
+const authFetch = async (url: string, options: RequestInit = {}): Promise<Response | null>  => {
 	// localStorage에서 토큰 가져와 사용
   const token = localStorage.getItem("accessToken")
 
@@ -15,6 +15,8 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
       },
     })
   }
+
+	// 루트 경로에서 리프레쉬 토큰 있음 -> accesstoken 유효 확인
 
   // 1. accessToken이 있을 경우 우선 요청
   if (token) {

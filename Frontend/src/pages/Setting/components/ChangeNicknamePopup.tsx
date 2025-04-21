@@ -1,5 +1,7 @@
 import { useState } from "react"
 import CancelButton from '../../../assets/image/CancelButton2.svg'
+import authFetch from "../../../utils/authFetch"
+import {toast} from "react-toastify"
 
 interface ChangeNicknamePopupProps {
 	onClose: () => void
@@ -19,7 +21,7 @@ const ChangeNicknamePopup: React.FC<ChangeNicknamePopupProps> = ({ onClose, onCh
 		const userId = payload.userId
 	
 		try {
-			const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
+			const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
 				method: "PATCH",
 				headers: {
 					"Content-Type": "application/json",
@@ -27,7 +29,12 @@ const ChangeNicknamePopup: React.FC<ChangeNicknamePopupProps> = ({ onClose, onCh
 				},
 				body: JSON.stringify({ nickname: inputValue })
 			})
-	
+
+			if (!res) {
+						toast.error("Request failed: No Request from server.")
+						return
+					}
+
 			const result = await res.json()
 	
 			if (res.ok) {

@@ -1,5 +1,6 @@
 import VerifyButtonOn from '../../../assets/image/VerifyButtonOn.png'
 import { toast } from "react-toastify"
+import authFetch from '../../../utils/authFetch'
 
 interface VerifyProps {
 	email: string
@@ -13,13 +14,18 @@ const Verify = ({ email }: VerifyProps) => {
 		}
 
 		try {
-			const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/mail`, {
+			const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/mail`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({ email })
 			})
+
+			if (!res) {
+				toast.error("Request failed: No Request from server.")
+				return
+			}
 
 			const result = await res.json()
 

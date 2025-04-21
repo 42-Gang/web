@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import Completed from "../../../assets/image/Completed.svg"
+import authFetch from "../../../utils/authFetch"
 
 type Props = {
   label: string
@@ -14,32 +15,37 @@ const CheckInvalid = ({ label, value, email, password, rePassword }: Props) => {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-			if (label === "VERIFY CODE" && email && value.length === 6) { // 1, 인증 코드 확인
-				fetch(`${import.meta.env.VITE_API_URL}/v1/auth/mail`, {
-					method: "POST",
-					headers: { "Content-Type": "application/json"},
-					body: JSON.stringify({ email, verifyCode: value}) // 해당 값이 맞는지 확인 요청
-				})
-				.then(res => res.json())
-				.then(data => {
-					setIsValid(data.status?.toLowerCase() === "success")
-				})
-				.catch(() => setIsValid(false))
-			} else if ((label === "PASSWORD" || label === "RE-PASSWORD") && password && rePassword) { // 2. 비밀번호 확인
-				setIsValid(password === rePassword && password.length >= 6)
-			} else if (label === "NICKNAME" && value.length >= 1) { // 3. 닉네임 중복 확인
-				fetch(`${import.meta.env.VITE_API_URL}/api/users/check-nickname?nickname=${value}`)
-				.then(res => res.json())
-				.then((data) => { // data: res.json의 결과
-					setIsValid(data.isAvailable === true)
-				})
-				.catch(() => setIsValid(false))
-			} else {
-				setIsValid(false)
-			}
-		}, 300)
+      const check = async () => {
+        try {
+          if (label === "VERIFY CODE" && email && value.length === 6) {
+            const res = await authFetch(`${import.meta.env.VITE_API_URL}/v1/auth/mail`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, verifyCode: value })
+            })
+            if (!res) {
+							return setIsValid(false)
+						}
+            const data = await res.json()
+            setIsValid(data.status?.toLowerCase() === "success")
+          } else if ((label === "PASSWORD" || label === "RE-PASSWORD") && password && rePassword) {
+            setIsValid(password === rePassword && password.length >= 6)
+          } else if (label === "NICKNAME" && value.length >= 1) {
+            const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/users/check-nickname?nickname=${value}`)
+            if (!res) return setIsValid(false)
+            const data = await res.json()
+            setIsValid(data.isAvailable === true)
+          } else {
+            setIsValid(false)
+          }
+        } catch {
+          setIsValid(false)
+        }
+      }
+      check()
+    }, 300)
 
-		return () => clearTimeout(timeout)
+    return () => clearTimeout(timeout)
   }, [label, value, email, password, rePassword])
 
   return (

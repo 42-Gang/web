@@ -3,6 +3,7 @@ import { toast } from "react-toastify"
 import CancelButton from "../../../assets/image/CancelButton2.svg"
 import Magnifier from "../../../assets/image/MagnifierAddFriend.svg"
 import SearchResultCard from "./SearchResultCard"
+import authFetch from "../../../utils/authFetch"
 
 interface AddFriendPopupProps {
   onClose: () => void
@@ -26,31 +27,39 @@ const AddFriendPopup: React.FC<AddFriendPopupProps> = ({ onClose }) => {
     }
 
     const fetchUsers = async () => {
-      try {
-        const token = localStorage.getItem("accessToken")
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/friends/search/${searchTerm}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
+			try {
+				const token = localStorage.getItem("accessToken")
+				const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/friends/search/${searchTerm}`, {
+					headers: {
+						Authorization: `Bearer ${token}`, // accessToken을 갖고 있으므로 인증 요청
+					},
+				})
+		
+				if (!res) {
+					console.warn("❌ 검색 요청 실패: 서버 응답 없음")
+					return
+				}
+		
+				if (!res.ok) {
+					const result = await res.json().catch(() => null)
+					console.warn("❌ 서버 오류 응답:", result)
 
-        const result = await res.json()
-        if (res.ok) {
-          console.log("📦 Server Response:", result.data)
-          const exact = result.data?.find(
-            (user: User) => user.nickname === searchTerm
-          )
-          console.log("🎯 exact match:", exact)
-          setSearchResults(result.data || [])
-        } else {
-          console.warn("❌ Search failed response:", result)
-        }
-      } catch (err) {
-        console.error("Failed to search user", err)
-				toast.error("Network error: User Searching Failed")
-      }
-    }
+					return
+				}
+		
+				const result = await res.json()
+
+				const filtered = (result.data || []).filter((user: User) =>
+					user.nickname.startsWith(searchTerm) // ✅ 대소문자 구분
+				)
+
+				setSearchResults(filtered)
+				console.log("📦 검색 결과:", result.data)
+			} catch (err) {
+				console.error("🔴 네트워크 또는 코드 오류:", err)
+				toast.error("네트워크 오류가 발생했습니다.")
+			}
+		}		
 
     fetchUsers()
   }, [searchTerm])

@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import AvailableAddFriend from '../../../assets/image/AvailableAddFriend.svg'
 import Completed from '../../../assets/image/Completed.svg'
 import BasicProfile1 from '../../../assets/image/BasicProfile1.png'
+import authFetch from '../../../utils/authFetch'
 
 interface User {
 	id: string
@@ -22,12 +23,16 @@ const SearchResultCard = ({ user }: { user: User }) => {
 	
 		try {
 			const token = localStorage.getItem("accessToken")
-			const res = await fetch(`${import.meta.env.VITE_API_URL}/api/friends/${user.id}`, {
+			const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/friends/${user.id}`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
+			if (!res) {
+				toast.error("Request failed: No Request from server.")
+				return
+			}
 
 			const result = await res.json()
 

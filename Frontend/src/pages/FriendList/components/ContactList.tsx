@@ -3,6 +3,7 @@ import { toast } from "react-toastify"
 import BasicProfile1 from '../../../assets/image/BasicProfile1.png'
 import LinkState from './LinkState'
 import Message from './Message'
+import authFetch from '../../../utils/authFetch'
 
 interface Contact {
 	friend_id: string
@@ -23,15 +24,22 @@ const ContactList = ({ searchTerm, userId }: ContactListProps) => {
 		const fetchFriends = async () => {
 			try {
 				const token = localStorage.getItem('accessToken')
-				const query = new URLSearchParams([
+				const query = new URLSearchParams([ // URL 뒤에 붙는 key?={value}의 추가 조건을 전달 status=ACCEPTED&status=BLOCKED
 					['status', 'ACCEPTED'],
 					['status', 'BLOCKED']
 				])
-				const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/me?${query.toString()}`, {
+				const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/me?${query.toString()}`, { // query에 해당하는 데이터 요청
+					method: "GET",
 					headers: {
 						Authorization: `Bearer ${token}`
 					}
 				})
+				
+				if (!res) {
+					toast.error("Request failed: No Request from server.")
+					return
+				}
+
 				const result = await res.json()
 				if (res.ok && result.data?.friends) {
 					setContacts(result.data.friends)

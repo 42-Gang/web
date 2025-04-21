@@ -4,6 +4,7 @@ import { AnimatePresence } from "framer-motion"
 import ChangeProfileImg from '../../../assets/image/ChangeProfileImg.svg'
 import { FadeOverlay, PopupWrapper } from "./Animation"
 import ChangeProfilePopup from "./ChangeProfilePopup"
+import authFetch from "../../../utils/authFetch"
 
 interface ProfileProps {
   onChangeProfileImg?: (img: File | string | null) => void
@@ -30,9 +31,15 @@ const Profile: React.FC<ProfileProps> = ({ onChangeProfileImg }) => {
       const userId = payload.userId
 
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
+        const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
           headers: { Authorization: `Bearer ${token}` }
         })
+
+				if (!res) {
+					toast.error("Request failed: No Request from server.")
+					return
+				}
+				
         const result = await res.json()
         if (res.ok && result.data?.avatar) {
           setBothProfileImg(result.data.avatar)
