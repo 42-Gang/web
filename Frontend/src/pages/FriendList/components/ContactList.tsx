@@ -14,10 +14,9 @@ interface Contact {
 
 interface ContactListProps {
 	searchTerm: string
-	userId: string // 현재 로그인한 유저 ID 필요
 }
 
-const ContactList = ({ searchTerm, userId }: ContactListProps) => {
+const ContactList = ({ searchTerm }: ContactListProps) => {
 	const [contacts, setContacts] = useState<Contact[]>([])
 
 	useEffect(() => {
@@ -52,7 +51,7 @@ const ContactList = ({ searchTerm, userId }: ContactListProps) => {
 			}
 		}
 		fetchFriends()
-	}, [userId])
+	}, [])
 
 	const filteredContacts = contacts.filter(contact =>
 		contact.nickname.startsWith(searchTerm)

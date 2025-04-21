@@ -27,11 +27,8 @@ const Profile: React.FC<ProfileProps> = ({ onChangeProfileImg }) => {
       const token = localStorage.getItem("accessToken")
       if (!token) return
 
-      const payload = JSON.parse(atob(token.split('.')[1]))
-      const userId = payload.userId
-
       try {
-        const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
+        const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/users/me`, {
           headers: { Authorization: `Bearer ${token}` }
         })
 

@@ -24,15 +24,7 @@ const Setting = () => {
 					console.error("No access token found")
 					return
 				}
-	
-				// 🧠 토큰에서 userId 꺼내기
-				const payload = JSON.parse(atob(token.split('.')[1]))
-				// 디코딩된 payload 에서 userId 꺼내 API 요청 Url을 생성
-				// 프론트는 토큰 이외에 userId를 알 수 있는 방법이 없기 때문에 jwt를 통해 userId를 식별한다.
-				const userId = payload.userId
-				console.log("🧠 Decoded userId:", userId)
-	
-				const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
+				const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/users/me`, {
 					headers: {
 						Authorization: `Bearer ${token}`
 					}
