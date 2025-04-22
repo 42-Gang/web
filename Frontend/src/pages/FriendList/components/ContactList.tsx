@@ -33,7 +33,7 @@ const ContactList = ({ searchTerm }: ContactListProps) => {
 						Authorization: `Bearer ${token}`
 					}
 				})
-				
+				console.log(query.toString())
 				if (!res) {
 					toast.error("Request failed: No Request from server.")
 					return
