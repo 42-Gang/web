@@ -3,7 +3,7 @@ import ContactList from "./ContactList"
 import SearchFriend from "./SearchFriend"
 
 const FriendSection = () => {
-	const [searchTerm, setSearchTerm] = useState('')
+	const [searchTerm, setSearchTerm] = useState("")
 
 	return (
 		<div>
@@ -11,7 +11,7 @@ const FriendSection = () => {
 				<SearchFriend searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
 			</div>
 			<div className="absolute top-[203px] w-full">
-				<ContactList searchTerm={searchTerm}/>
+			<ContactList searchTerm={searchTerm}/>
 			</div>
 		</div>
 	)

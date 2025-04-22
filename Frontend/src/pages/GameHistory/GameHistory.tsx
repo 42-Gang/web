@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react"
+import { toast } from 'react-toastify'
 import Container from "./components/Container"
 import Cancel from "./components/Cancel"
 import ModeSelector from "./components/ModeSelector"
 import WinLossCounter from "./components/WinLossCounter"
 import GameRecord from "./components/GameRecord"
 import TotalWinsCounter from "./components/TotalWinsCounter"
+import authFetch from "../../utils/authFetch"
 
 type Game1vs1Data = {
   wins: number
@@ -39,9 +41,15 @@ const GameHistory = () => {
       const userId = payload.userId
 
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/history?mode=${mode}`, {
+        const res = await authFetch(`${import.meta.env.VITE_API_URL}/users/${userId}/history?mode=${mode}`, {
           headers: { Authorization: `Bearer ${token}` }
         })
+
+				if (!res) {
+					toast.error("Request failed: No Request from server.")
+					return
+				}
+				
         const result = await res.json()
         if (res.ok && result.status === "success") {
           setGameData(result.data)
