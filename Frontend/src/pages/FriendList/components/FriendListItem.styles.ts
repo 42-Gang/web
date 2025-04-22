@@ -29,10 +29,9 @@ export const Name = styled.span`
   font-size: 13px;
 `;
 
-export const StatusDot = styled.div<{ isOnline: boolean }>`
+export const StatusDot = styled.div<{ $isOnline: boolean }>`
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: ${({ isOnline }) => (isOnline ? "limegreen" : "red")};
-  margin-left: auto;
+  background-color: ${(props) => (props.$isOnline ? "green" : "gray")};
 `;
