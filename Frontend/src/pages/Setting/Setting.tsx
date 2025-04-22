@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { toast } from "react-toastify"
 import Container from "./components/Container"
 import Cancel from "./components/Cancel"
 import Profile from "./components/Profile"
@@ -23,13 +24,7 @@ const Setting = () => {
 					console.error("No access token found")
 					return
 				}
-	
-				// 🧠 토큰에서 userId 꺼내기
-				const payload = JSON.parse(atob(token.split('.')[1]))
-				const userId = payload.userId
-				console.log("🧠 Decoded userId:", userId)
-	
-				const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
+				const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/users/me`, {
 					headers: {
 						Authorization: `Bearer ${token}`
 					}
@@ -60,6 +55,7 @@ const Setting = () => {
 	
   const ChangeNickname = (newNickname: string) => {
     setNickname(newNickname)
+		toast.success("Nickname has been changed.")
   }
 
   useEffect(() => {

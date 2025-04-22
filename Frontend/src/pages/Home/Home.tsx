@@ -6,7 +6,9 @@ import ActionButton from "./components/ActionButton"
 const Home = () => {
   return (
     <Container>
-      <MainTitle/>
+      <div className="absolute left-1/2 -translate-x-1/2 top-[85px]">
+        <MainTitle />
+      </div>
       <div className="absolute left-1/2 -translate-x-1/2 top-[270px]">
         <ActionButton />
       </div>

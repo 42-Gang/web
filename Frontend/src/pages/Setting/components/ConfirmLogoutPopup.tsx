@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom"
-
+import { toast } from "react-toastify"
 interface ConfirmLogoutPopupProps {
   onClose: () => void
 }
@@ -26,15 +26,15 @@ const ConfirmLogoutPopup: React.FC<ConfirmLogoutPopupProps> = ({ onClose }) => {
 
       const result = await res.json()
       if (res.ok) {
-        console.log("🚪 Logout success:", result.message)
-        localStorage.removeItem("accessToken")
-        navigate("/")
-      } else {
+				localStorage.removeItem("accessToken")
+				toast.success(result.message || "Log out Success!")
+				navigate("/")
+			} else {	
         alert("Logout failed: " + result.message)
       }
     } catch (err) {
       console.error("Logout error", err)
-      alert("Logout request failed")
+      toast.error("Logout request failed")
     }
   }
 
