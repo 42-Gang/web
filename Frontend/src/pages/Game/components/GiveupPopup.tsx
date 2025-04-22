@@ -8,7 +8,7 @@ const GiveupPopup: React.FC<GiveupPopupProps> = ({ onClose }) => {
   const navigate = useNavigate();
 
   const YesClick = () => {
-    localStorage.removeItem("token")
+    localStorage.removeItem("accessToken")
     navigate('/')
   }
 

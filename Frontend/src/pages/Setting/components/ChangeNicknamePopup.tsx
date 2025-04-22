@@ -1,5 +1,7 @@
 import { useState } from "react"
 import CancelButton from '../../../assets/image/CancelButton2.svg'
+import authFetch from "../../../utils/authFetch"
+import {toast} from "react-toastify"
 
 interface ChangeNicknamePopupProps {
 	onClose: () => void
@@ -10,24 +12,26 @@ const ChangeNicknamePopup: React.FC<ChangeNicknamePopupProps> = ({ onClose, onCh
 	const [inputValue, setInputValue] = useState("");
 
 	const ChangeNickname = async () => {
-		if (inputValue.trim().length === 0) return
+		if (inputValue.trim().length === 0) return 
 	
 		const token = localStorage.getItem("accessToken")
 		if (!token) return
 	
-		const payload = JSON.parse(atob(token.split('.')[1]))
-		const userId = payload.userId
-	
 		try {
-			const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}/nickname`, {
+			const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/users/me`, {
 				method: "PATCH",
 				headers: {
 					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`
+					Authorization: `Bearer ${token}` // 서버에 이 사용자가 로그인했음을 증명. 토큰이 없으면 401 unauthorized 발생
 				},
 				body: JSON.stringify({ nickname: inputValue })
 			})
-	
+
+			if (!res) {
+						toast.error("Request failed: No Request from server.")
+						return
+					}
+
 			const result = await res.json()
 	
 			if (res.ok) {

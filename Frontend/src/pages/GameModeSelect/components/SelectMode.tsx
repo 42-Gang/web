@@ -1,10 +1,13 @@
+import { useNavigate } from 'react-router-dom'
 import VersusMatch from '../../../assets/image/VersusMatch.svg'
 import TournamentMatch from '../../../assets/image/TournamentMatch.svg'
 
 const SelectMode = () => {
+	const navigate = useNavigate()
+
   const buttons = [
-    { label: "1 VS 1", img: VersusMatch },
-    { label: "TOURNAMENT", img: TournamentMatch }
+    { label: "1 VS 1", img: VersusMatch, path: "/SoloMatch" },
+    { label: "TOURNAMENT", img: TournamentMatch, path: "/TournamentMain" }
   ]
 
     const buttonClass = "cursor-pointer w-[328px] h-[323px] border-white \
@@ -14,8 +17,12 @@ const SelectMode = () => {
     
   return (
     <div className="text-white font-['StWinterPixel'] text-[35px] flex gap-[30px]">
-      {buttons.map(({ label, img }) => (
-        <button key={label} className={buttonClass}>
+      {buttons.map(({ label, img, path }) => (
+        <button
+					key={label}
+					className={buttonClass}
+					onClick={() => navigate(path)}
+					>
           <img src={img} alt={label} className={imgClass}/>
           {label}
         </button>

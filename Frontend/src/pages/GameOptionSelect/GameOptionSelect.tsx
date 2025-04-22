@@ -6,7 +6,9 @@ import Credit from "./components/Credit"
 const GameOptionSelect = () => {
   return (
     <Container>
-      <MainTitle/>
+			<div className="absolute right-1/2 translate-x-1/2 top-[60px]">
+				<MainTitle/>
+			</div>
       <div className="absolute left-1/2 -translate-x-1/2 top-[220px]">
         <ActionButton />
       </div>
