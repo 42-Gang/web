@@ -40,7 +40,7 @@ const useLogin = (setError: (msg: string) => void) => {
 			}
 
 			if (response.status === 401) {
-				setError("The email or password is incorrect,")
+				setError("The email or password is incorrect.")
 				return
 			}
 

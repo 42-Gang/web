@@ -1,12 +1,33 @@
+import { useState } from 'react'
+import { AnimatePresence } from 'framer-motion'
 import AlarmIcon from '../../../assets/image/AlarmIcon.svg'
+import { FadeOverlay, PopupWrapper } from "./Animation"
+import AlarmPopup from './AlarmPopup'
 
 const Alarm = () => {
+	const [isOpenPopup, setIsOpenPopup] = useState(false)
+
+	const togglePopup = () => setIsOpenPopup((prev) => !prev)
+
 	return (
-		<button className="cursor-pointer">
-			<img
-				src={AlarmIcon}
-			/>
-		</button>
+		<div>
+			<button onClick={togglePopup} className="cursor-pointer">
+				<img
+					src={AlarmIcon}
+				/>
+			</button>
+			<AnimatePresence>
+				{isOpenPopup && (
+					<>
+						<FadeOverlay/>
+						<PopupWrapper>
+							<AlarmPopup onClose={togglePopup}/>
+						</PopupWrapper>
+					</>
+				)}
+			</AnimatePresence>
+		</div>
+
 	)
 }
 

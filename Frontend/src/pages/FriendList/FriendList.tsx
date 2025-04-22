@@ -7,13 +7,15 @@ import FriendSection from "./components/FriendSection"
 const FriendList = () => {
 	return(
 		<Container>
-			<Cancel/>
+			<div className="absolute left-[5px] top-[5px]">
+				<Cancel/>
+			</div>
 			<h1 className="font-['Sixtyfour'] text-white text-[30px]
 				absolute left-1/2 -translate-x-1/2 top-[40px]">Friend List</h1>
 				<div className="absolute left-[110px] top-[123px] z-20">
 					<AddFriend/>
 				</div>
-				<div className="absolute right-[28px] top-[150px]">
+				<div className="absolute right-[28px] top-[150px] z-30">
 					<Alarm/>
 				</div>
 				<div className="border-white border-[1px] absolute top-[200px] w-full z-10"/>

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import Completed from "../../../assets/image/Completed.svg"
-import authFetch from "../../../utils/authFetch"
 
 type Props = {
   label: string
@@ -18,12 +17,13 @@ const CheckInvalid = ({ label, value, email, password, rePassword }: Props) => {
       const check = async () => {
         try {
           if (label === "VERIFY CODE" && email && value.length === 6) {
-            const res = await authFetch(`${import.meta.env.VITE_API_URL}/v1/auth/mail`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/v1/auth/mail`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ email, verifyCode: value })
             })
-            if (!res) {
+
+            if (!res.ok) {
 							return setIsValid(false)
 						}
             const data = await res.json()
@@ -31,10 +31,14 @@ const CheckInvalid = ({ label, value, email, password, rePassword }: Props) => {
           } else if ((label === "PASSWORD" || label === "RE-PASSWORD") && password && rePassword) {
             setIsValid(password === rePassword && password.length >= 6)
           } else if (label === "NICKNAME" && value.length >= 1) {
-            const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/users/check-nickname?nickname=${value}`)
-            if (!res) return setIsValid(false)
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/users/search/${value}`)
+            if (!res.ok)	{
+							return setIsValid(false)
+						}
             const data = await res.json()
-            setIsValid(data.isAvailable === true)
+						const alreadyExists = Array.isArray(data.users) && data.users.some((u: { nickname: string }) => u.nickname === value)
+
+						setIsValid(!alreadyExists)
           } else {
             setIsValid(false)
           }
