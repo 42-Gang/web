@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import Completed from "../../../assets/image/Completed.svg"
-import authFetch from "../../../utils/authFetch"
 
 type Props = {
   label: string
@@ -10,39 +9,42 @@ type Props = {
   password?: string
 }
 
+type User = {
+  email: string
+  verifyCode: string
+  nickname?: string
+  password?: string
+}
+
 const CheckInvalid = ({ label, value, email, password, rePassword }: Props) => {
   const [isValid, setIsValid] = useState(false)
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      const check = async () => {
-        try {
-          if (label === "VERIFY CODE" && email && value.length === 6) {
-            const res = await authFetch(`${import.meta.env.VITE_API_URL}/v1/auth/mail`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ email, verifyCode: value })
-            })
-            if (!res) {
-							return setIsValid(false)
-						}
-            const data = await res.json()
-            setIsValid(data.status?.toLowerCase() === "success")
-          } else if ((label === "PASSWORD" || label === "RE-PASSWORD") && password && rePassword) {
-            setIsValid(password === rePassword && password.length >= 6)
-          } else if (label === "NICKNAME" && value.length >= 1) {
-            const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/users/check-nickname?nickname=${value}`)
-            if (!res) return setIsValid(false)
-            const data = await res.json()
-            setIsValid(data.isAvailable === true)
-          } else {
-            setIsValid(false)
-          }
-        } catch {
-          setIsValid(false)
-        }
+      if (label === "VERIFY CODE" && email && value) {
+        fetch(`${import.meta.env.VITE_API_URL}/v1/auth/mail`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, verifyCode: value })
+        })
+          .then(res => res.json())
+          .then(data => {
+            setIsValid(data.status === "SUCCESS")
+          })
+          .catch(() => setIsValid(false))
+
+      } else if ((label === "PASSWORD" || label === "RE-PASSWORD") && password && rePassword) {
+        setIsValid(password === rePassword && password !== "")
+      } else if (label === "NICKNAME" && value) {
+        fetch(`${import.meta.env.VITE_API_URL}/users`)
+          .then(res => res.json())
+          .then((data: User[]) => {
+            const isTaken = data.some(u => u.nickname === value)
+            setIsValid(!isTaken)
+          })
+      } else {
+        setIsValid(false)
       }
-      check()
     }, 300)
 
     return () => clearTimeout(timeout)

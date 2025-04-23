@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "mock-server": "nodemon mock_server/server.cjs"
+    "mock-server": "nodemon mock-server/server.cjs"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.0.12",
