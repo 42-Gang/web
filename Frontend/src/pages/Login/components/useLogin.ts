@@ -19,7 +19,6 @@ const useLogin = (setError: (msg: string) => void) => {
 				headers: {
 					"Content-Type": "application/json"
 				},
-				credentials: "include",
 				body: JSON.stringify({ email, password })
 			})
 
@@ -35,7 +34,7 @@ const useLogin = (setError: (msg: string) => void) => {
 			}
 
 			if (response.status === 400) {
-				setError("Please Check your email or password.")
+				setError("Please check your email or password.")
 				return
 			}
 
@@ -45,7 +44,7 @@ const useLogin = (setError: (msg: string) => void) => {
 			}
 
 			if (response.status === 500) {
-				setError("There was a server error, please try again in a moment.")
+				setError("There was a server error, please try again.")
 				return
 			}
 		} catch (error) {
