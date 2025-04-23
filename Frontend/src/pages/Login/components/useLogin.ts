@@ -34,17 +34,17 @@ const useLogin = (setError: (msg: string) => void) => {
 			}
 
 			if (response.status === 400) {
-				setError("이메일 또는 비밀번호를 확인해주세요.")
+				setError("Please check your email or password.")
 				return
 			}
 
 			if (response.status === 401) {
-				setError("이메일 또는 비밀번호가 틀렸어요.")
+				setError("The email or password is incorrect.")
 				return
 			}
 
 			if (response.status === 500) {
-				setError("서버 오류가 발생했어요. 잠시 후 다시 시도해주세요.")
+				setError("There was a server error, please try again.")
 				return
 			}
 		} catch (error) {

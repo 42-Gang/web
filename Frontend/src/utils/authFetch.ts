@@ -11,12 +11,12 @@ const authFetch = async (url: string, options: RequestInit = {}): Promise<Respon
       credentials: "include",
       headers: {
         ...options.headers,
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${accessToken}`, // bearer token과 header는 중복될 수 없음 (둘 중 하나 빼기)
       },
     })
   }
 
-	// 루트 경로에서 리프레쉬 토큰 있음 -> accesstoken 유효 확인
+	// 루트 경로에서 리프레쉬 토큰 있음 -> accessToken 유효 확인
 
   // 1. accessToken이 있을 경우 우선 요청
   if (token) {
