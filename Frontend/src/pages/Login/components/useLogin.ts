@@ -19,7 +19,6 @@ const useLogin = (setError: (msg: string) => void) => {
 				headers: {
 					"Content-Type": "application/json"
 				},
-				credentials: "include",
 				body: JSON.stringify({ email, password })
 			})
 
@@ -35,17 +34,17 @@ const useLogin = (setError: (msg: string) => void) => {
 			}
 
 			if (response.status === 400) {
-				setError("Please Check your email or password.")
+				setError("이메일 또는 비밀번호를 확인해주세요.")
 				return
 			}
 
 			if (response.status === 401) {
-				setError("The email or password is incorrect.")
+				setError("이메일 또는 비밀번호가 틀렸어요.")
 				return
 			}
 
 			if (response.status === 500) {
-				setError("There was a server error, please try again in a moment.")
+				setError("서버 오류가 발생했어요. 잠시 후 다시 시도해주세요.")
 				return
 			}
 		} catch (error) {

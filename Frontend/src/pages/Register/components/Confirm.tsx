@@ -1,7 +1,6 @@
 import {useNavigate} from "react-router-dom"
 import SelectHighlight from "../../../assets/image/SelectHighlight.svg"
 import {toast} from "react-toastify"
-import authFetch from "../../../utils/authFetch"
 
 interface ConfirmProps {
   email: string
@@ -26,7 +25,7 @@ const Confirm = ({email, verifyCode, password, rePassword, nickname}: ConfirmPro
         return
       }
 
-      const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/auth`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -38,8 +37,7 @@ const Confirm = ({email, verifyCode, password, rePassword, nickname}: ConfirmPro
           mailVerificationCode: verifyCode
         })
       })
-			if (!res) return
-			
+
       const result = await res.json()
 
       if (!res.ok) {
