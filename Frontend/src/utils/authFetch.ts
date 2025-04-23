@@ -10,8 +10,9 @@ const authFetch = async (url: string, options: RequestInit = {}): Promise<Respon
       ...options, // options 객체의 모든 속성들을 펼쳐서 포함
       // credentials: "include", // 쿠키를 포함하여 서버와의 세션 유지
       headers: {
-        ...options.headers, // options 객체에 포함된 headers 펼쳐서 사용
+        "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
+        ...options.headers, // options 객체에 포함된 headers 펼쳐서 사용
       },
     })
   }
