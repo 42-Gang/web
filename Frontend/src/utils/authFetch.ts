@@ -4,92 +4,81 @@ const authFetch = async (url: string, options: RequestInit = {}): Promise<Respon
 	// localStorage에서 토큰 가져와 사용
   const token = localStorage.getItem("accessToken")
 
-	// accessToken을 넣고 API 요청을 보냄
+	// accessToken을 포함한 요청을 보내는 함수. Authorization 헤더를 사용해 인증된 사용자만 접근할 수 있는 API에 접근할 때 사용.
   const makeRequest = async (accessToken: string) => {
     return fetch(url, {
-      ...options,
-      credentials: "include",
+      ...options, // options 객체의 모든 속성들을 펼쳐서 포함
+      credentials: "include", // 쿠키를 포함하여 서버와의 세션 유지
       headers: {
-        ...options.headers,
-        Authorization: `Bearer ${accessToken}`, // bearer token과 header는 중복될 수 없음 (둘 중 하나 빼기)
+        ...options.headers, // options 객체에 포함된 headers 펼쳐서 사용
+        Authorization: `Bearer ${accessToken}`,
       },
     })
   }
 
-	// 루트 경로에서 리프레쉬 토큰 있음 -> accessToken 유효 확인
+	try {
+		// Access Token이 존재할 경우 우선 요청
+		if (token) {
+			const response = await makeRequest(token)
+			if (!response.ok) {
+				throw new Error(`HTTP error: ${response.statusText}`)
+			}
+			if (response.status != 401) { // 응답이 정상일 경우 즉시 반환
+				return response
+			}
+			console.warn("Access Token expired. Attempted to refresh.")
+		}
 
-  // 1. accessToken이 있을 경우 우선 요청
-  if (token) {
-    const res = await makeRequest(token)
-    if (res.status !== 401) return res // 응답이 정상이라면 응답 반환
-    console.warn("accessToken 만료됨, refresh 시도") // 401 Unauthorized이면 refresh-token을 요청
-  }
+		// 401 Unauthorized일 경우 Refresh Token 요청
+		const refreshResponse = await fetch(`${import.meta.env.VITE_API_URL}/v1/auth/refresh-token`, {
+			method: "POST",
+			credentials: "include" // 쿠키 포함
+		})
+		
+		if (!refreshResponse.ok) { // Refresh Token 이용하여 재발급 실패
+			const toastId = toast.warn("Session expired. Please log in again.", {
+				position: "top-center",
+				autoClose: 2000, // 2초  자동으로 닫힘
+				closeOnClick: false,
+				draggable: false
+			})
 
-  // 2. accessToken이 없거나 만료됐을 경우 → 서버에 refresh 요청
-  const refreshRes = await fetch(`${import.meta.env.VITE_API_URL}/v1/auth/refresh-token`, {
-    method: "POST",
-    credentials: "include", // 쿠키 포함해서 보냄
-  })
+			console.error("❌ refresh-token request failed!")
+			localStorage.removeItem("accessToken")
 
-  // 2.1 refresh 실패 → 로그인으로 이동
-  if (!refreshRes.ok) {
-    const toastId = toast.warn("Session expired. Please log in again.", {
-      position: "top-center",
-      autoClose: 2000, // 2초 후 자동으로 닫힘
-      closeOnClick: false, // 클릭으로 닫히지 않도록 설정
-      draggable: false // 드래그로 이동하지 않도록 설정
-    })
-    console.error("❌ refresh-token request failed!")
-    localStorage.removeItem("accessToken")
+			// 서버에 로그아웃 요청
+			await fetch(`${import.meta.env.VITE_API_URL}/v1/auth/logout`, {
+				method: "POST",
+				credentials: "include",
+			})
 
-    // 서버에 로그아웃 요청 보내기
-    await fetch(`${import.meta.env.VITE_API_URL}/v1/auth/logout`, {
-      method: "POST",
-      credentials: "include", // 쿠키 포함해서 보냄
-    })
+			setTimeout(() => {
+				toast.dismiss(toastId)
+				window.location.href = "/"
+			}, 3000)
 
-    // 충분한 시간 후 페이지 이동
-    setTimeout(() => {
-      toast.dismiss(toastId) // 토스트를 명시적으로 닫음
-      window.location.href = "/" // 페이지 이동
-    }, 3000) // 2초 기다린 후 페이지 이동
-    return null
-  }
+			return null
+		}
 
-  const refreshData = await refreshRes.json() // 백엔드에서 응답 받은 JSON 데이터를 객체로 변환
+		const refreshData = await refreshResponse.json()
 
-  // 3. 새 accessToken이 있다면 저장 후 다시 요청
-  if (refreshData.data?.accessToken) {
-    const newAccessToken = refreshData.data.accessToken
-    localStorage.setItem("accessToken", newAccessToken)
-    console.log("✅ accessToken successful re-issuance.")
+		// 새 Access Token 발급받은 후 그 token으로 다시 요청
+		if (refreshData?.data?.accessToken) {
+			const newAccessToken = refreshData.data.accessToken
+			localStorage.setItem("accessToken", newAccessToken)
+			console.log("✅ accessToken successful re-issuance.")
 
-    return makeRequest(newAccessToken)
-  }
+			return makeRequest(newAccessToken)
+		} 
+	} catch (error) {
+		// 네트워크 오류나 예기치 않은 오류
+		console.error("❌ Network error: ", error)
+		toast.error("Network error. Please try again later.")
 
-  // 4. 그 외 실패 처리
-  const toastId = toast.warn("세션 만료. 다시 로그인 해주세요.", {
-    position: "top-center",
-    autoClose: 2000, // 2초 후 자동으로 닫힘
-    closeOnClick: false, // 클릭으로 닫히지 않도록 설정
-    draggable: false // 드래그로 이동하지 않도록 설정
-  })
-  console.error("❌ refreshToken 만료 → 로그인 이동")
-  localStorage.removeItem("accessToken")
+		return null
+	}
 
-  // 서버에 로그아웃 요청 보내기
-  await fetch(`${import.meta.env.VITE_API_URL}/v1/auth/logout`, {
-    method: "POST",
-    credentials: "include", // 쿠키 포함해서 보냄
-  })
-
-  // 충분한 시간 후 페이지 이동
-  setTimeout(() => {
-    toast.dismiss(toastId) // 토스트를 명시적으로 닫음
-    window.location.href = "/" // 페이지 이동
-  }, 3000) // 2초 기다린 후 페이지 이동
-
-  return null
+	return null
 }
 
 export default authFetch
