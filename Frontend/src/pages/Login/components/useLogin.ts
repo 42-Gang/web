@@ -2,58 +2,51 @@
 import { useNavigate } from "react-router-dom"
 
 interface LoginResponse {
-	code: number
-	message: string
-	data: {
-		accessToken: string
-	}
+  code: number
+  message: string
+  data: {
+    accessToken: string
+  }
 }
 
 const useLogin = (setError: (msg: string) => void) => {
-	const navigate = useNavigate()
+  const navigate = useNavigate()
 
-	const login = async (email: string, password: string) => {
-		try {
-			const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/login`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify({ email, password })
-			})
+  const login = async (email: string, password: string) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
+      })
 
-			const body: LoginResponse = await response.json()
-			if (response.status === 200) {
-				console.log("Login successful:", body)
-				// 로그인 성공 시 accessToken 저장
-				localStorage.setItem("accessToken", body.data?.accessToken || "")
+      const body: LoginResponse = await response.json()
 
-				// 바로 Home 페이지로 이동
-				navigate("/Home")
-				return
-			}
+      // 로그인 성공
+      if (response.status === 200) {
+        console.log ("Login successful: ", body)
+        // Access Token 저장
+        localStorage.setItem("accessToken", body.data?.accessToken || "")
+        // Home 페이지로 이동
+        navigate('/Home')
+        return
+      }
 
-			if (response.status === 400) {
-				setError("Please check your email or password.")
-				return
-			}
+      // 서버에서 넘겨주는 에러 메세지 그대로 출력
+      if (body.message) {
+        setError(body.message)
+      } else {
+        setError("An unexpected error occurred. Please try again.")
+      }
+    } catch (error) {
+      console.error("Login error:", error)
+      setError("An unexpected error occurred. Please try again.")
+    }
+  }
 
-			if (response.status === 401) {
-				setError("The email or password is incorrect.")
-				return
-			}
-
-			if (response.status === 500) {
-				setError("There was a server error, please try again.")
-				return
-			}
-		} catch (error) {
-			console.error("Login error:", error)
-			setError("An unexpected error occurred. Please try again.")
-		}
-	}
-
-	return login
+  return login
 }
 
 export default useLogin
