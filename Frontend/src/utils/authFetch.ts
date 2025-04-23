@@ -1,6 +1,6 @@
-import { toast } from "react-toastify"
+import {toast} from "react-toastify"
 
-const authFetch = async (url: string, options: RequestInit = {}): Promise<Response | null>  => {
+const authFetch = async (url: string, options: RequestInit = {}): Promise<Response | null> => {
   // localStorage에서 토큰 가져와 사용
   const token = localStorage.getItem("accessToken")
 
@@ -8,7 +8,7 @@ const authFetch = async (url: string, options: RequestInit = {}): Promise<Respon
   const makeRequest = async (accessToken: string) => {
     return fetch(url, {
       ...options, // options 객체의 모든 속성들을 펼쳐서 포함
-      credentials: "include", // 쿠키를 포함하여 서버와의 세션 유지
+      // credentials: "include", // 쿠키를 포함하여 서버와의 세션 유지
       headers: {
         ...options.headers, // options 객체에 포함된 headers 펼쳐서 사용
         Authorization: `Bearer ${accessToken}`,
@@ -20,9 +20,9 @@ const authFetch = async (url: string, options: RequestInit = {}): Promise<Respon
     // Access Token이 존재할 경우 우선 요청
     if (token) {
       const response = await makeRequest(token)
-      if (!response.ok) {
-        throw new Error(`HTTP error: ${response.statusText}`)
-      }
+      // if (!response.ok) {
+      //   throw new Error(`HTTP error: ${response.statusText}`)
+      // }
       if (response.status != 401) { // 응답이 정상일 경우 즉시 반환
         return response
       }
@@ -30,11 +30,11 @@ const authFetch = async (url: string, options: RequestInit = {}): Promise<Respon
     }
 
     // 401 Unauthorized일 경우 Refresh Token 요청
-    const refreshResponse = await fetch(`${import.meta.env.VITE_API_URL}/v1/auth/refresh-token`, {
+    const refreshResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/refresh-token`, {
       method: "POST",
       credentials: "include" // 쿠키 포함
     })
-    
+
     if (!refreshResponse.ok) { // Refresh Token 이용하여 재발급 실패
       const toastId = toast.warn("Session expired. Please log in again.", {
         position: "top-center",
@@ -69,7 +69,7 @@ const authFetch = async (url: string, options: RequestInit = {}): Promise<Respon
       console.log("✅ accessToken successful re-issuance.")
 
       return makeRequest(newAccessToken)
-    } 
+    }
   } catch (error) {
     // 네트워크 오류나 예기치 않은 오류
     console.error("❌ Network error: ", error)
