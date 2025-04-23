@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import CancelButton from "../../../assets/image/CancelButton2.svg"
 import BasicProfile1 from "../../../assets/image/BasicProfile1.png"
 import { toast } from "react-toastify"
+import authFetch from "../../../utils/authFetch.ts";
 
 interface AlarmPopupProps {
   onClose: () => void
@@ -48,17 +49,19 @@ const AlarmPopup = ({ onClose }: AlarmPopupProps) => {
   // 친구 요청 수락
   const handleAcceptRequest = async (friendId: string) => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/requests/${friendId}/accept`, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
+      const response = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/requests/${friendId}/accept`, {
+        method: "PATCH",
       })
 
-      const result = await res.json()
-      if (!res.ok) {
+      if (!response) {
+        toast.error("Request failed: No Request from server.")
+        return
+      }
+
+      const result = await response.json()
+
+      console.log(result)
+      if (!response.ok) {
         console.error("❌ Failed to accept:", result.message)
 				toast.error(`${result.message}`)
         return
@@ -76,28 +79,28 @@ const AlarmPopup = ({ onClose }: AlarmPopupProps) => {
   // 친구 요청 거절
   const handleRejectRequest = async (friendId: string) => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/requests/${friendId}/reject`, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
+      const response = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/requests/${friendId}/refact`, {
+        method: "PATCH",
       })
 
-      const result = await res.json()
-      if (!res.ok) {
-        console.error("❌ Failed to reject:", result.message)
-				toast.error(`${result.message}`)
+      if (!response) {
+        toast.error("Request failed: No Request from server.")
         return
       }
 
-      console.log("❌ Rejection success:", result.message)
+      const result = await response.json()
+      if (!response.ok) {
+        console.error("❌ Failed to accept:", result.message)
+        toast.error(`${result.message}`)
+        return
+      }
+
+      console.log("✅ Acceptance Success:", result.message)
       // 요청 목록에서 제거 or UI 갱신
       setRequest(prevRequest => prevRequest.filter(req => req.userId !== friendId))
-			toast.success("Friend request rejected!")
+      toast.success("Friend request accepted!")
     } catch (err) {
-      console.error("🚨 Error in rejection request:", err)
+      console.error("🚨 Error requesting acceptance:", err)
     }
   }
 
