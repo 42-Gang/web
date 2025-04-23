@@ -8,7 +8,7 @@ import axiosInstance from "./axiosInstance";
  */
 export const blockFriend = async (userId: string) => {
   try {
-    const res = await axiosInstance.patch(`/api/friends/${userId}/block`);
+    const res = await axiosInstance.patch(`/api/v1/friends/${userId}/block`);
     return res.data;
   } catch (err: any) {
     throw err.response?.data || err;
@@ -21,7 +21,7 @@ export const blockFriend = async (userId: string) => {
  */
 export const unblockFriend = async (userId: string) => {
   try {
-    const res = await axiosInstance.patch(`/api/friends/${userId}/unblock`);
+    const res = await axiosInstance.patch(`/api/v1/friends/${userId}/unblock`);
     return res.data;
   } catch (err: any) {
     throw err.response?.data || err;

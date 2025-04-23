@@ -119,9 +119,9 @@ const FriendChatRoom: React.FC = () => {
 
   // 4. 실시간 메시지 수신
   useEffect(() => {
-    socket.on("receive", (msg) => {
+    socket.on("message", (msg) => {
       if (
-        msg.action === "recieve" &&
+        msg.action === "receive" &&
         msg.resource === "direct_message" &&
         msg.data.roomId === roomId
       ) {
@@ -138,7 +138,7 @@ const FriendChatRoom: React.FC = () => {
     });
 
     return () => {
-      socket.off("receive");
+      socket.off("message");
     };
   }, [roomId]);
 
@@ -163,7 +163,8 @@ const FriendChatRoom: React.FC = () => {
       },
     };
 
-    socket.emit("send", payload);
+    console.log("전송 시도:", payload);
+    socket.emit("message", payload);
     setInputValue("");
   };
 
