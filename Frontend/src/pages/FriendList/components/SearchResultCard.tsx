@@ -40,32 +40,6 @@ const SearchResultCard = ({ user }: { user: User }) => {
 
 			setIsAdded(true)
 			toast.success(result.message)
-	
-			// if (res.ok) {
-			// 	setIsAdded(true)
-			// 	console.log(`✅ 친구 요청 성공: ${user.nickname} (id: ${user.id})`)
-			// 	toast.success(`You sent a friend request to ${user.nickname}!`, {
-			// 		position: "bottom-center",
-			// 		autoClose: 2000,
-			// 		style: {
-			// 			fontSize: "17px",
-			// 			padding: "20px",
-			// 			minHeight: "80px",
-			// 			width: "400px"
-			// 		}
-			// 	})
-			// } else {
-			// 	toast.error(result.message || "Failed to send friend request!", {
-			// 		position: "bottom-center",
-			// 		autoClose: 2000,
-			// 		style: {
-			// 			fontSize: "17px",
-			// 			padding: "20px",
-			// 			minHeight: "80px",
-			// 			width: "400px"
-			// 		}
-			// 	})
-			// }
 		} catch (err) {
 			console.error("Error in friend request.", err)
 			toast.error("Error requesting friend request")
