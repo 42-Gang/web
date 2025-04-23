@@ -16,12 +16,18 @@ const Confirm = ({email, verifyCode, password, rePassword, nickname}: ConfirmPro
   const handleRegister = async () => {
     try {
       if (!email || !verifyCode || !password || !rePassword || !nickname) {
-        toast.warn("Please enter all the information.", {autoClose: 2000})
+        console.log("❌ Registration conditions not met.")
+        toast.warn("Please enter all the information.", {
+          autoClose: 2000
+        })
         return
       }
 
       if (password !== rePassword) {
-        toast.error("Password does not match!", {autoClose: 2000})
+        console.log("❌ Password does not match.")
+        toast.error("Password does not match!", {
+          autoClose: 2000
+        })
         return
       }
 
@@ -41,24 +47,24 @@ const Confirm = ({email, verifyCode, password, rePassword, nickname}: ConfirmPro
       const result = await res.json()
 
       if (!res.ok) {
-        if (Array.isArray(result.errors) && result.errors.length > 0) {
-          result.errors.forEach((err: { field: string, message: string }) => {
-            toast.error(err.message, {autoClose: 2000})
-          })
-        } else if (result.message) {
-          toast.error(result.message, {autoClose: 2000})
+        if (result.message) {
+          console.log(`❌ ${result.message}`)
+          toast.error(result.message)
         }
-
         return
       }
 
-      toast.success(result.message || "Successfully signed up for membership!", {autoClose: 2000})
-      console.log("Successfully signed up for membership:", result)
+      console.log("✅ Successfully signed up!:", result)
+      toast.success(result.message || "Successfully signed up!", {
+        autoClose: 2000
+      })
       navigate("/")
 
-    } catch (err) {
-      console.error("Error:", err)
-      toast.error("There was a problem signing up for membership.", {autoClose: 2000})
+    } catch (error) {
+      console.error("Error:", error)
+      toast.error("Registration not possible.", {
+        autoClose: 2000
+      })
     }
   }
 

@@ -9,7 +9,7 @@ const Cancel = () => {
   }
 
   return (
-    <div className="absolute left-[5px] top-[5px]">
+    <div>
       <button
         onClick={handleGoBackPage}
         className="cursor-pointer opacity-60 hover:opacity-100 transition-opacity duration-300"
