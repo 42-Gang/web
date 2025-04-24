@@ -70,21 +70,21 @@ const FriendChatRoom: React.FC = () => {
   const [messages, setMessages] = useState<ChatData[]>([]);
   const [inputValue, setInputValue] = useState("");
   const myNickname = localStorage.getItem("nickname") || "";
-  useEffect(() => {
-    console.log("✅ 메시지 리스너 useEffect 실행됨");
+  // useEffect(() => {
+  //   console.log("✅ 메시지 리스너 useEffect 실행됨");
 
-    const listener = (msg: any) => {
-      console.log("🔥 수신된 메시지:", msg);
-    };
+  //   const listener = (msg: any) => {
+  //     console.log("🔥 수신된 메시지:", msg);
+  //   };
 
-    socket.on("message", listener);
-    console.log("🧩 소켓 on(message) 등록됨");
+  //   socket.on("message", listener);
+  //   console.log("🧩 소켓 on(message) 등록됨");
 
-    return () => {
-      socket.off("message", listener);
-      console.log("🧹 소켓 off(message) 해제됨");
-    };
-  }, []);
+  //   return () => {
+  //     socket.off("message", listener);
+  //     console.log("🧹 소켓 off(message) 해제됨");
+  //   };
+  // }, []);
 
   const [isBlocked, setIsBlocked] = useState(false);
   const [chatPartnerInfo, setChatPartnerInfo] = useState<UserInfo | null>(null);
@@ -155,10 +155,8 @@ const FriendChatRoom: React.FC = () => {
 
   // 4. 실시간 메시지 수신
   useEffect(() => {
-    socket.on("message", (msg) => {
-      const data = msg.data || msg;
-      console.log("✅ [message 수신]", msg);
-      console.log("📦 data:", data);
+    const handleMessage = (msg: any) => {
+      const data = msg?.data ?? msg;
 
       const {
         roomId: receivedRoomId,
@@ -168,24 +166,27 @@ const FriendChatRoom: React.FC = () => {
         time,
       } = data;
 
-      console.log("🆔 비교:", { receivedRoomId, roomId });
+      if (String(senderId) === MY_USER_ID) return;
+      // 메시지가 현재 채팅방의 것이 아닐 경우 무시
+      if (String(receivedRoomId) !== String(roomId)) return;
 
-      if (String(receivedRoomId) === String(roomId)) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: prev.length + 1,
-            senderId: String(senderId),
-            nickname: nickname ?? `USER_${senderId}`,
-            message: contents,
-            timestamp: time,
-          },
-        ]);
-      }
-    });
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: prev.length + 1,
+          senderId: String(senderId),
+          nickname: nickname ?? `USER_${senderId}`,
+          message: contents,
+          timestamp: time,
+        },
+      ]);
+    };
+
+    socket.off("message", handleMessage);
+    socket.on("message", handleMessage);
 
     return () => {
-      socket.off("message");
+      socket.off("message", handleMessage);
     };
   }, [roomId]);
 
