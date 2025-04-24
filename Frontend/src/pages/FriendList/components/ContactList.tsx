@@ -22,18 +22,13 @@ const ContactList = ({ searchTerm }: ContactListProps) => {
 	useEffect(() => {
 		const fetchFriends = async () => {
 			try {
-				const token = localStorage.getItem('accessToken')
 				const query = new URLSearchParams([ // URL 뒤에 붙는 key?={value}의 추가 조건을 전달 status=ACCEPTED&status=BLOCKED
 					['status', 'ACCEPTED'],
 					['status', 'BLOCKED']
 				])
 				const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/me?${query.toString()}`, { // query에 해당하는 데이터 요청
 					method: "GET",
-					headers: {
-						Authorization: `Bearer ${token}`
-					}
 				})
-				console.log(query.toString())
 				if (!res) {
 					toast.error("Request failed: No Request from server.")
 					return

@@ -20,9 +20,9 @@ const authFetch = async (url: string, options: RequestInit = {}): Promise<Respon
     // Access Token이 존재할 경우 우선 요청
     if (token) {
       const response = await makeRequest(token)
-
-      if (response.status != 401) return response // 응답이 정상일 경우 즉시 반환
-      
+      if (response.status != 401) { // 응답이 정상일 경우 즉시 반환
+        return response
+      }
       console.warn("Access Token expired. Attempted to refresh.")
     }
 
