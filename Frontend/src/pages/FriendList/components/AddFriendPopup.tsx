@@ -49,13 +49,9 @@ const AddFriendPopup: React.FC<AddFriendPopupProps> = ({ onClose }) => {
         }
 
         const result = await res.json()
-        const users = result.data?.users || []
+        const users = result.data.users
 
-        const filtered = users.filter((user: User) =>
-          user.nickname.startsWith(searchTerm)
-        )
-
-        setSearchResults(filtered)
+        setSearchResults(users)
         console.log("📦 검색 결과:", result.data)
       } catch (err) {
         console.error("🔴 네트워크 또는 코드 오류:", err)
