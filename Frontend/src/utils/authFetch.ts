@@ -1,6 +1,6 @@
-import { toast } from "react-toastify"
+import {toast} from "react-toastify"
 
-const authFetch = async (url: string, options: RequestInit = {}): Promise<Response | null>  => {
+const authFetch = async (url: string, options: RequestInit = {}): Promise<Response | null> => {
   // localStorage에서 토큰 가져와 사용
   const token = localStorage.getItem("accessToken")
 
@@ -8,11 +8,11 @@ const authFetch = async (url: string, options: RequestInit = {}): Promise<Respon
   const makeRequest = async (accessToken: string) => {
     return fetch(url, {
       ...options, // options 객체의 모든 속성들을 펼쳐서 포함
-      credentials: "include", // 쿠키를 포함하여 서버와의 세션 유지
       headers: {
-        ...options.headers, // options 객체에 포함된 headers 펼쳐서 사용
+        "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
-      },
+        ...options.headers, // options 객체에 포함된 headers 펼쳐서 사용
+      }
     })
   }
 
@@ -20,21 +20,18 @@ const authFetch = async (url: string, options: RequestInit = {}): Promise<Respon
     // Access Token이 존재할 경우 우선 요청
     if (token) {
       const response = await makeRequest(token)
-      if (!response.ok) {
-        throw new Error(`HTTP error: ${response.statusText}`)
-      }
-      if (response.status != 401) { // 응답이 정상일 경우 즉시 반환
-        return response
-      }
+
+      if (response.status != 401) return response // 응답이 정상일 경우 즉시 반환
+      
       console.warn("Access Token expired. Attempted to refresh.")
     }
 
     // 401 Unauthorized일 경우 Refresh Token 요청
-    const refreshResponse = await fetch(`${import.meta.env.VITE_API_URL}/v1/auth/refresh-token`, {
+    const refreshResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/refresh-token`, {
       method: "POST",
       credentials: "include" // 쿠키 포함
     })
-    
+
     if (!refreshResponse.ok) { // Refresh Token 이용하여 재발급 실패
       const toastId = toast.warn("Session expired. Please log in again.", {
         position: "top-center",
@@ -46,12 +43,13 @@ const authFetch = async (url: string, options: RequestInit = {}): Promise<Respon
       console.error("❌ refresh-token request failed!")
       localStorage.removeItem("accessToken")
 
-      // 서버에 로그아웃 요청
-      await fetch(`${import.meta.env.VITE_API_URL}/v1/auth/logout`, {
-        method: "POST",
-        credentials: "include",
+      // HttpOnly 쿠키는 js에서 직접 삭제 불가능 -> 서버에 삭제 요청
+      // 쿠키에 refresh token이 남아 있기만 하면 삭제 가능
+      await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/logout`, {
+        method: 'GET',
+        credentials: "include", // 쿠키 포함 (refreshToken 전송)
       })
-
+      
       setTimeout(() => {
         toast.dismiss(toastId)
         window.location.href = "/"
@@ -69,11 +67,10 @@ const authFetch = async (url: string, options: RequestInit = {}): Promise<Respon
       console.log("✅ accessToken successful re-issuance.")
 
       return makeRequest(newAccessToken)
-    } 
+    }
   } catch (error) {
     // 네트워크 오류나 예기치 않은 오류
-    console.error("❌ Network error: ", error)
-    toast.error("Network error. Please try again later.")
+    console.log("❌ No response from server: ", error)
 
     return null
   }

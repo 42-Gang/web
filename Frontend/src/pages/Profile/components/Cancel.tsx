@@ -11,7 +11,7 @@ const Cancel = () => {
   const buttonClass = "cursor-pointer opacity-60 hover:opacity-100 transition-opacity duration-300"
 
   return (
-    <div className="absolute left-[5px] top-[5px]">
+    <div>
       <button onClick={CloseRegister} className={buttonClass}>
         <img src={CancelButton} alt="CancelButton"/>
       </button>
