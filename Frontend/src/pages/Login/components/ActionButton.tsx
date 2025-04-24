@@ -3,14 +3,14 @@ import { useNavigate } from "react-router-dom"
 import SelectHighlight from "../../../assets/image/SelectHighlight.svg"
 import InputField from "./InputField"
 import useLogin from "./useLogin"
-import { signInWithPopup } from "firebase/auth"
-import { auth, googleProvider } from "../../../firebase"
+// import { signInWithPopup } from "firebase/auth"
+// import { auth, googleProvider } from "../../../firebase"
 
 interface ActionButtonProps {
   setError: (message: string) => void
 }
 
-const MOCK_CODE = "mock-code"
+// const MOCK_CODE = "mock-code"
 
 const ActionButton = ({ setError }: ActionButtonProps) => {
   const navigate = useNavigate()
@@ -21,40 +21,38 @@ const ActionButton = ({ setError }: ActionButtonProps) => {
   const login = useLogin(setError)
 
   const handleGoogleLogin = async () => {
-    try {
-      const result = await signInWithPopup(auth, googleProvider)
-      const user = result.user
+    // try {
+    //   const result = await signInWithPopup(auth, googleProvider)
+    //   const user = result.user
 
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/users?email=${user.email}`)
-      const existingUsers = await res.json()
+    //   const res = await fetch(`${import.meta.env.VITE_API_URL}/users?email=${user.email}`)
+    //   const existingUsers = await res.json()
 
-      if (existingUsers.length > 0) {
-        alert("🔐 기존 유저로 로그인되었습니다!")
-        navigate("/Home")
-      } else {
-        await fetch(`${import.meta.env.VITE_API_URL}/users`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: user.email,
-            nickname: user.displayName || "no_nickname",
-            password: user.uid,
-            mailVerificationCode: MOCK_CODE,
-          }),
-        })
-        alert("🎉 새 유저로 회원가입 완료!")
-        navigate("/Home")
-      }
-    } catch (error) {
-      console.error("❌ 구글 로그인 에러:", error)
-      setError("Google 로그인에 실패했어요!")
-    }
+    //   if (existingUsers.length > 0) {
+    //     alert("🔐 기존 유저로 로그인되었습니다!")
+    //     navigate("/Home")
+    //   } else {
+    //     await fetch(`${import.meta.env.VITE_API_URL}/users`, {
+    //       method: "POST",
+    //       headers: { "Content-Type": "application/json" },
+    //       body: JSON.stringify({
+    //         email: user.email,
+    //         nickname: user.displayName || "no_nickname",
+    //         password: user.uid,
+    //         mailVerificationCode: MOCK_CODE,
+    //       }),
+    //     })
+    //     alert("🎉 새 유저로 회원가입 완료!")
+    //     navigate("/Home")
+    //   }
+    // } catch (error) {
+    //   console.error("❌ 구글 로그인 에러:", error)
+    //   setError("Google 로그인에 실패했어요!")
+    // }
   }
 
-  const buttonClass =
-    "cursor-pointer flex gap-[10px] -ml-[40px] group justify-center items-center"
-  const imgClass =
-    "opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+  const buttonClass = "cursor-pointer flex gap-[10px] -ml-[40px] group justify-center items-center"
+  const imgClass = "opacity-0 group-hover:opacity-100 transition-opacity duration-500"
   const textClass = "text-white font-['QuinqueFive'] text-[15px]"
 
   const handleButtonClick = (action: "signIn" | "signUp") => {

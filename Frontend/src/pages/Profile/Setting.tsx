@@ -10,43 +10,53 @@ import authFetch from "../../utils/authFetch"
 const Setting = () => {
 	const [wins, setWins] = useState<number>(0)
 	const [losses, setLosses] = useState<number>(0)
-	const [tournamentWins, setTournamentwins] = useState<number>(0)
+	const [tournamentWins, setTournamentWins] = useState<number>(0)
   const [nickname, setNickname] = useState<string>("")
 	const [profileImg, setProfileImg] = useState<File | string | null>(null)
+
+  useEffect(() => {
+    if (typeof profileImg !== "string" && profileImg instanceof File) {
+      const objectUrl = URL.createObjectURL(profileImg)
+
+      return () => {
+        URL.revokeObjectURL(objectUrl)
+        console.log("🧹 Object URL revoked")
+      }
+    }
+  }, [profileImg])
 
 	useEffect(() => {
 		const fetchUserData = async () => {
 			try {
 				const token = localStorage.getItem("accessToken")
 				console.log("📦 Stored token:", token)
+
+				const response = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/users/me`, {
+          method: 'GET'
+        })
 	
-				if (!token) {
-					console.error("No access token found")
-					return
-				}
-				const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/users/me`, {
-					headers: {
-						Authorization: `Bearer ${token}`
-					}
-				})
+				if (!response) {
+          console.error("No Response from server.")
+          return
+        }
 	
-				if (!res) return
-	
-				console.log("🌐 Response status:", res.status)
-				const result = await res.json()
+				console.log("🌐 Response status:", response.status)
+				const result = await response.json()
 				console.log("🌐 Response body:", result)
 	
-				if (res.ok && result.data) {
+				if (response.ok && result.data) {
 					const data = result.data
 					setNickname(data.nickname)
 					setWins(data.wins)
 					setLosses(data.losses)
-					setTournamentwins(data.tournamentWins)
+					setTournamentWins(data.tournamentWins)
+          setProfileImg(result.data.avatar || data.avatar_url || null)
 				} else {
-					console.error("Failed to fetch user data:", result.message)
+					console.log("Failed to fetch user data:", result.message)
+          toast.error("Unable to load your information.")
 				}
-			} catch (err) {
-				console.error("Error fetching user data:", err)
+			} catch (error) {
+				console.error("❌ No response from server.", error)
 			}
 		}
 	
@@ -55,36 +65,38 @@ const Setting = () => {
 	
   const ChangeNickname = (newNickname: string) => {
     setNickname(newNickname)
-		toast.success("Nickname has been changed.")
+		toast.success("Nickname update!")
   }
 
   useEffect(() => {
-    console.log("Nickname changed:", nickname)
+    console.log("Nickname:", nickname)
   }, [nickname])
   useEffect(() => {
-    console.log("Wins changed:", wins)
+    console.log("Wins:", wins)
   }, [wins])
   useEffect(() => {
-    console.log("Losses changed:", losses)
+    console.log("Losses:", losses)
   }, [losses])
   useEffect(() => {
-    console.log("Tournament wins changed:", tournamentWins)
+    console.log("Tournament Wins:", tournamentWins)
   }, [tournamentWins])
 	useEffect(() => {
 		if (profileImg) {
-			console.log("Profile image changed (from Setting):", profileImg)
+			console.log("Profile image changed:", profileImg)
 		} else {
-			console.log("Profile image removed (from Setting)")
+			console.log("Profile avatar is empty.")
 		}
 	}, [profileImg])
 	
   return (
     <Container>
-      <Cancel/>
+      <div className="absolute left-[5px] top-[5px]">
+        <Cancel/>
+      </div>
       <h1 className="font-['Sixtyfour'] text-white text-[40px]
         absolute left-1/2 -translate-x-1/2 top-[50px]">Profile</h1>
       <div className="absolute left-[60px] top-[180px]">
-			<Profile onChangeProfileImg={setProfileImg} />
+			<Profile profileImg={profileImg} onChangeProfileImg={setProfileImg} />
       </div>
       <div className="absolute right-[60px] top-[225px]">
         <UserInformation

@@ -15,7 +15,9 @@ const RegisterWithEmail = () => {
 
   return (
     <Container>
-      <Cancel />
+      <div className="absolute left-[5px] top-[5px]">
+        <Cancel/>
+      </div>
       <div className="absolute left-1/2 -translate-x-1/2 top-[85px]">
         <MainTitle />
       </div>

@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
+
 interface ConfirmLogoutPopupProps {
   onClose: () => void
 }
@@ -19,8 +20,17 @@ const ConfirmLogoutPopup: React.FC<ConfirmLogoutPopupProps> = ({ onClose }) => {
 
   const OkClick = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/v1/auth/logout`, {
-        method: "POST",
+      const accessToken = localStorage.getItem("accessToken")
+      if (!accessToken) {
+        toast.error("You are not logged in.")
+        return
+      }
+      
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/logout`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
         credentials: "include"
       })
 
@@ -30,11 +40,10 @@ const ConfirmLogoutPopup: React.FC<ConfirmLogoutPopupProps> = ({ onClose }) => {
 				toast.success(result.message || "Log out Success!")
 				navigate("/")
 			} else {	
-        alert("Logout failed: " + result.message)
+        toast.error("Logout failed: " + result.message)
       }
     } catch (err) {
       console.error("Logout error", err)
-      toast.error("Logout request failed")
     }
   }
 

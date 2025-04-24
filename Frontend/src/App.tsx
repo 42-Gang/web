@@ -16,7 +16,7 @@ import GameOptionSelect from "./pages/GameOptionSelect/GameOptionSelect.tsx";
 import AutoGameModeSelect from "./pages/GameModeSelect/AutoGameModeSelect.tsx";
 import CustomGameModeSelect from "./pages/GameModeSelect/CustomGameModeSelect.tsx";
 import GameHistory from "./pages/GameHistory/GameHistory.tsx";
-import Setting from "./pages/Setting/Setting.tsx";
+import Setting from "./pages/Profile/Setting.tsx";
 import FriendList from "./pages/FriendList/FriendList.tsx";
 import FriendChatRoom from "./pages/FriendList/FriendChatRoom.tsx";
 import GameScreen from "./pages/Game/GameScreen.tsx";
