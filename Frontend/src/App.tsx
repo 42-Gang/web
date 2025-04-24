@@ -1,8 +1,8 @@
 import "./index.css";
 import { useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
-import { ToastContainer } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import GlobalStyle from "./styles/GlobalStyles";
 import Login from "./pages/Login/Login.tsx";
 import RegisterWithEmail from "./pages/Register/RegisterWithEmail.tsx";
@@ -39,7 +39,7 @@ const App = () => {
   return (
     <>
       <GlobalStyle />
-			<ToastContainer/>
+      <ToastContainer />
       <Router>
         <Routes>
           {/* 로그인 페이지 */}
@@ -62,6 +62,7 @@ const App = () => {
           <Route path="/GameHistory" element={<GameHistory />} />
           {/* 친구 목록 */}
           <Route path="/FriendList" element={<FriendList />} />
+          <Route path="/FriendChatRoom" element={<FriendChatRoom />} />
           <Route path="/FriendChatRoom/:roomId" element={<FriendChatRoom />} />
 
           {/* 세팅 페이지 */}

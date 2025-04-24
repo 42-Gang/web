@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { socket } from "../../socket/socket.ts";
 import { fetchChatHistory } from "../../api/chat.ts";
 
@@ -31,15 +31,19 @@ import UnblockImage from "../../assets/image/Unblock.png";
 import cancelButton from "../../assets/image/CancelButton1.svg";
 
 import { blockFriend, unblockFriend } from "../../api/friends";
+import { getAccessToken } from "../../utils/getAccessToken";
+import { decodeToken } from "../../utils/decodeToken";
 
 interface ChatData {
   id: number;
   senderId: string;
   nickname: string;
   message: string;
+  timestamp?: string;
 }
 
 interface UserInfo {
+  id: number;
   nickname: string;
   avatar: string;
   wins: number;
@@ -51,17 +55,37 @@ console.log("✨ 소켓 주소:", import.meta.env.VITE_BACKEND_SOCKET_URL);
 
 const FriendChatRoom: React.FC = () => {
   const params = useParams();
-  const location = useLocation();
   const roomId = params.roomId || "room-1";
-  const searchParams = new URLSearchParams(location.search);
 
-  const MY_USER_ID = searchParams.get("userId") || "1";
-  const MY_NICKNAME = MY_USER_ID === "1" ? "PONG" : "PING";
-  const CHAT_PARTNER_ID = MY_USER_ID === "1" ? "2" : "1";
-  const CHAT_PARTNER_NICKNAME = MY_USER_ID === "1" ? "PING" : "PONG";
+  const accessToken = getAccessToken();
+  const decoded = decodeToken(accessToken);
+
+  if (!decoded) {
+    console.error("❌ 유효하지 않은 토큰입니다.");
+    return;
+  }
+
+  const MY_USER_ID = decoded.userId.toString();
 
   const [messages, setMessages] = useState<ChatData[]>([]);
   const [inputValue, setInputValue] = useState("");
+  const myNickname = localStorage.getItem("nickname") || "";
+  useEffect(() => {
+    console.log("✅ 메시지 리스너 useEffect 실행됨");
+
+    const listener = (msg: any) => {
+      console.log("🔥 수신된 메시지:", msg);
+    };
+
+    socket.on("message", listener);
+    console.log("🧩 소켓 on(message) 등록됨");
+
+    return () => {
+      socket.off("message", listener);
+      console.log("🧹 소켓 off(message) 해제됨");
+    };
+  }, []);
+
   const [isBlocked, setIsBlocked] = useState(false);
   const [chatPartnerInfo, setChatPartnerInfo] = useState<UserInfo | null>(null);
   const [selectedUser, setSelectedUser] = useState<UserInfo | null>(null);
@@ -70,10 +94,19 @@ const FriendChatRoom: React.FC = () => {
 
   // 1. 소켓 등록 및 상대방 프로필 요청
   useEffect(() => {
+    console.log("✅ socket 네임스페이스:", (socket as any).nsp);
+
+    console.log("🔍 socket.connected 상태:", socket.connected);
     const handleRegister = () => {
       console.log("✅ [Socket] 연결됨:", socket.id);
       socket.emit("register", { userId: MY_USER_ID });
-      socket.emit("get_user_info", CHAT_PARTNER_NICKNAME);
+
+      if (!chatPartnerInfo?.nickname) {
+        const fallbackNickname = MY_USER_ID === "1" ? "PING" : "PONG";
+        socket.emit("get_user_info", fallbackNickname);
+      } else {
+        socket.emit("get_user_info", chatPartnerInfo.nickname);
+      }
     };
 
     if (socket.connected) {
@@ -85,7 +118,7 @@ const FriendChatRoom: React.FC = () => {
     return () => {
       socket.off("connect", handleRegister);
     };
-  }, [MY_USER_ID, CHAT_PARTNER_NICKNAME]);
+  }, [MY_USER_ID, chatPartnerInfo?.nickname]);
 
   // 2. 채팅 기록 불러오기 (REST API)
   useEffect(() => {
@@ -102,9 +135,12 @@ const FriendChatRoom: React.FC = () => {
     socket.on("user_info", (res) => {
       if (res.status === "success") {
         const user = res.data;
-        if (user.nickname === CHAT_PARTNER_NICKNAME) {
+
+        // 상대방 정보가 아직 없을 때 저장
+        if (!chatPartnerInfo || chatPartnerInfo.nickname === user.nickname) {
           setChatPartnerInfo(user);
         } else {
+          // 친구 목록 모달용 유저 정보
           setSelectedUser(user);
         }
       } else {
@@ -115,23 +151,34 @@ const FriendChatRoom: React.FC = () => {
     return () => {
       socket.off("user_info");
     };
-  }, [CHAT_PARTNER_NICKNAME]);
+  }, [chatPartnerInfo?.nickname]);
 
   // 4. 실시간 메시지 수신
   useEffect(() => {
     socket.on("message", (msg) => {
-      if (
-        msg.action === "receive" &&
-        msg.resource === "direct_message" &&
-        msg.data.roomId === roomId
-      ) {
+      const data = msg.data || msg;
+      console.log("✅ [message 수신]", msg);
+      console.log("📦 data:", data);
+
+      const {
+        roomId: receivedRoomId,
+        senderId,
+        nickname,
+        contents,
+        time,
+      } = data;
+
+      console.log("🆔 비교:", { receivedRoomId, roomId });
+
+      if (String(receivedRoomId) === String(roomId)) {
         setMessages((prev) => [
           ...prev,
           {
             id: prev.length + 1,
-            senderId: msg.data.senderId,
-            nickname: msg.data.nickname,
-            message: msg.data.contents,
+            senderId: String(senderId),
+            nickname: nickname ?? `USER_${senderId}`,
+            message: contents,
+            timestamp: time,
           },
         ]);
       }
@@ -145,22 +192,15 @@ const FriendChatRoom: React.FC = () => {
   // 5. 메시지 전송
   const handleSend = () => {
     if (isBlocked) {
-      alert("⚠️ 차단한 사용자에게 메시지를 보낼 수 없습니다! ⚠️");
+      alert("⚠️ 차단한 사용자에게 메시지를 보낼 수 없습니다!");
       return;
     }
 
     if (inputValue.trim() === "") return;
 
     const payload = {
-      action: "send",
-      resource: "direct_message",
-      data: {
-        roomId,
-        contents: inputValue,
-        senderId: MY_USER_ID,
-        receiverId: CHAT_PARTNER_ID,
-        senderNickname: MY_NICKNAME,
-      },
+      roomId,
+      contents: inputValue,
     };
 
     console.log("전송 시도:", payload);
@@ -176,11 +216,19 @@ const FriendChatRoom: React.FC = () => {
   // 7. 차단 / 차단 해제
   const toggleBlock = async () => {
     try {
+      const targetId = chatPartnerInfo?.id;
+      if (!targetId) {
+        alert("상대방 정보를 불러오지 못했어요.");
+        return;
+      }
+
+      const targetIdStr = targetId.toString();
+
       if (isBlocked) {
-        await unblockFriend(CHAT_PARTNER_ID);
+        await unblockFriend(targetIdStr);
         setIsBlocked(false);
       } else {
-        await blockFriend(CHAT_PARTNER_ID);
+        await blockFriend(targetIdStr);
         setIsBlocked(true);
       }
     } catch (err: any) {
@@ -209,7 +257,7 @@ const FriendChatRoom: React.FC = () => {
       <ChatUserProfileWrapper>
         <ChatUserImage src={avatarSrc} alt="상대방 프로필" />
         <ChatUserNameText>
-          {chatPartnerInfo?.nickname || CHAT_PARTNER_NICKNAME}
+          {chatPartnerInfo?.nickname || "상대방"}
         </ChatUserNameText>
       </ChatUserProfileWrapper>
 
@@ -223,7 +271,10 @@ const FriendChatRoom: React.FC = () => {
         <ChatMessages>
           {messages.map((msg) => (
             <ChatMessage key={msg.id}>
-              <strong>{msg.nickname}:</strong> {msg.message}
+              <strong>
+                {msg.nickname === myNickname ? myNickname : msg.nickname}:
+              </strong>{" "}
+              {msg.message}
             </ChatMessage>
           ))}
           <div ref={chatEndRef} />
