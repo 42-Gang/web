@@ -88,14 +88,28 @@ const ChangeProfilePopup: React.FC<ChangeProfileImgPopupProps> = ({ onClose, onC
       const result = await response.json()
 
       if (response.ok) {
-        toast.success("Profile avatar deleted!")
+        toast.success("Profile avatar deleted!", {
+          position: "top-center",
+          autoClose: 2000,
+          style: {
+            width: "350px",
+            textAlign: "center"
+          }
+        })
         onChangeProfileImg(null)
         onClose()
       } else {
-        toast.error(result.message || "Profile avatar update failed.")
+        toast.error(result.message || "Profile avatar update failed.", {
+          position: "top-center",
+          autoClose: 2000,
+          style: {
+            width: "350px",
+            textAlign: "center"
+          }
+        })
       }
     } catch (error) {
-      console.error("❌ No response from server:", error)
+      console.error("🚨 Unexpected error occurred: ", error)
     } finally {
       isProcessing.current = false
     }

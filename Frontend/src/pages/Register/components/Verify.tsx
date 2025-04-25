@@ -9,13 +9,20 @@ const Verify = ({ email }: VerifyProps) => {
   const handleClick = async () => {
     if (!email) {
       console.log("❌ Email field is empty.")
-      toast.warn("Please enter the email.")
+      toast.warn("Please enter the email.", {
+        position: "top-center",
+          autoClose: 2000,
+          style: {
+            width: "350px",
+            textAlign: "center"
+          }
+      })
       return
     }
 
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/mail`, {
-        method: "POST",
+        method: 'POST',
         headers: {
           "Content-Type": "application/json"
         },
@@ -27,18 +34,35 @@ const Verify = ({ email }: VerifyProps) => {
       if (!res.ok) {
         if (result.message) {
           console.log(`❌ ${result.message}`)
-          toast.error(result.message)
+          toast.error(result.message, {
+            position: "top-center",
+            autoClose: 2000,
+            style: {
+              width: "350px",
+              textAlign: "center"
+            }
+          })
         }
         return
       }
 
-      toast.success(result.message || "Verify code sent.")
-      console.log(`📩 ${email} → verify code: ${result.data?.verifyCode}`)
-
-    } catch (err) {
-      console.error("Authentication request error:", err)
+      toast.success(result.message || "Verify code sent.", {
+        position: "top-center",
+          autoClose: 2000,
+          style: {
+            width: "350px",
+            textAlign: "center"
+          }
+      })
+    } catch (error) {
+      console.error("🚨 Unexpected error occurred: ", error)
       toast.error("An error occurred during authentication request.", {
-        autoClose: 2000
+        position: "top-center",
+          autoClose: 2000,
+          style: {
+            width: "350px",
+            textAlign: "center"
+          }
       })
     }
   }

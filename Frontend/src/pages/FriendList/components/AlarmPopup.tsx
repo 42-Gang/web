@@ -68,7 +68,10 @@ const AlarmPopup = ({ onClose, onFriendAccepted }: AlarmPopupProps) => {
       toast.success(result.message, {
         position: "top-center",
         autoClose: 2000,
-        style: { width: "350px" }
+        style: {
+          width: "350px",
+          textAlign: "center"
+        }
       })
 
       onFriendAccepted()
@@ -97,7 +100,10 @@ const AlarmPopup = ({ onClose, onFriendAccepted }: AlarmPopupProps) => {
       toast.success(result.message, {
         position: "top-center",
         autoClose: 2000,
-        style: { width: "350px" }
+        style: {
+          width: "350px",
+          textAlign: "center"
+        }
       })
     } catch (error) {
       console.error("🚨 Unexpected error occurred: ", error)

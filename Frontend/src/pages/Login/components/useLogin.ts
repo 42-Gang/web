@@ -42,7 +42,7 @@ const useLogin = (setError: (msg: string) => void) => {
         setError("An unexpected error occurred. Please try again.")
       }
     } catch (error) {
-      console.error("Login error:", error)
+      console.error("🚨 Unexpected error occurred: ", error)
       setError("An unexpected error occurred. Please try again.")
     }
   }
