@@ -28,19 +28,19 @@ const AlarmPopup = ({ onClose, onFriendAccepted }: AlarmPopupProps) => {
           method: 'GET',
         })
 
-        if (!response) {
-          return
-        }
+        if (!response) return
 
         // 응답이 HTML로 오지 않도록 JSON 응답만 처리하도록 해야 합니다.
         const result = await response.json()
+
         if (response.ok) {
+          console.log("✅ Import friend request list successful.")
           setRequest(result.data?.requests || [])
         } else {
-          console.error("❌ Failed to call friend request:", result.message)
+          console.error("❌ Import list failure: ", result.message)
         }
-      } catch (err) {
-        console.error("🚨 Error retrieving friend requests:", err)
+      } catch (error) {
+        console.error("🚨 Unexpected error occurred: ", error)
       }
     }
 
@@ -55,24 +55,25 @@ const AlarmPopup = ({ onClose, onFriendAccepted }: AlarmPopupProps) => {
         method: 'PATCH'
       })
 
-      if (!response) {
-        return
-      }
+      if (!response) return
 
       const result = await response.json()
 
       if (!response.ok) {
-        console.error("❌ Failed to accept:", result.message)
-        toast.error(`${result.message}`)
+        console.error("❌ Request approval failed: ", result.message)
         return
       }
 
       setRequest(prevRequest => prevRequest.filter(req => req.userId !== friendId))
-      toast.success(result.message)
+      toast.success(result.message, {
+        position: "top-center",
+        autoClose: 2000,
+        style: { width: "350px" }
+      })
 
       onFriendAccepted()
-    } catch (err) {
-      console.error("🚨 Error requesting acceptance:", err)
+    } catch (error) {
+      console.error("🚨 Unexpected error occurred: ", error)
     }
   }
 
@@ -83,22 +84,23 @@ const AlarmPopup = ({ onClose, onFriendAccepted }: AlarmPopupProps) => {
         method: 'PATCH'
       })
 
-      if (!response) {
-        return
-      }
+      if (!response) return
 
       const result = await response.json()
 
       if (!response.ok) {
-        console.error("❌ Failed to accept:", result.message)
-        toast.error(`${result.message}`)
+        console.error("❌ Request reject failed: ", result.message)
         return
       }
 
       setRequest(prevRequest => prevRequest.filter(req => req.userId !== friendId))
-      toast.success(result.message)
-    } catch (err) {
-      console.error("🚨 Error requesting acceptance:", err)
+      toast.success(result.message, {
+        position: "top-center",
+        autoClose: 2000,
+        style: { width: "350px" }
+      })
+    } catch (error) {
+      console.error("🚨 Unexpected error occurred: ", error)
     }
   }
 

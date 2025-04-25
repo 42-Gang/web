@@ -38,12 +38,17 @@ const ContactList = ({ searchTerm , refreshTrigger }: ContactListProps) => {
       const result = await response.json()
 
       if (response.ok && result.data?.friends) {
+        console.log("✅ Import friend list successful.")
         setContacts(result.data.friends)
       } else {
-        toast.error(result.message || "Failed to load friend list.")
+        toast.error(result.message || "Failed to load friend list.", {
+          position: "top-center",
+          autoClose: 2000,
+          style: { width: "350px" }
+        })
       }
     } catch (error) {
-      console.error("Failed to load friend list", error)
+      console.error("🚨 Unexpected error occurred: ", error)
     }
   }, [])
 
