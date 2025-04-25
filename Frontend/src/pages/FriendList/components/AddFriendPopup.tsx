@@ -47,8 +47,8 @@ const AddFriendPopup: React.FC<AddFriendPopupProps> = ({ onClose }) => {
         } else {
           console.warn("❌ Search failed:", result.message)
         }
-      } catch (err) {
-        console.error("❌ Search error:", err)
+      } catch (error) {
+        console.error("🚨 Unexpected error occurred: ", error)
       }
     }
 
