@@ -41,7 +41,7 @@ const ChangeProfilePopup: React.FC<ChangeProfileImgPopupProps> = ({ onClose, onC
         })
 
         if (!response) {
-          console.log("❌ No response from server.")
+          console.log("❌ 1 No response from server.")
           isProcessing.current = false
           return
         }
@@ -56,7 +56,7 @@ const ChangeProfilePopup: React.FC<ChangeProfileImgPopupProps> = ({ onClose, onC
           toast.error(result.message || "Profile avatar update failed.")
         }
       } catch (error) {
-        console.error("❌ No response from server:", error)
+        console.error("❌ 2 No response from server:", error)
       } finally {
         isProcessing.current = false
       }
@@ -81,7 +81,7 @@ const ChangeProfilePopup: React.FC<ChangeProfileImgPopupProps> = ({ onClose, onC
       })
 
       if (!response) {
-        console.log("❌ No response from server.")
+        console.log("❌ 3 No response from server.")
         isProcessing.current = false
         return
       }
@@ -95,7 +95,7 @@ const ChangeProfilePopup: React.FC<ChangeProfileImgPopupProps> = ({ onClose, onC
         toast.error(result.message || "Profile avatar update failed.")
       }
     } catch (error) {
-      console.error("❌ No response from server:", error)
+      console.error("❌ 4 No response from server:", error)
     } finally {
       isProcessing.current = false
     }
