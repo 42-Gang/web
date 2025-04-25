@@ -18,7 +18,12 @@ const Confirm = ({email, verifyCode, password, rePassword, nickname}: ConfirmPro
       if (!email || !verifyCode || !password || !rePassword || !nickname) {
         console.log("❌ Registration conditions not met.")
         toast.warn("Please enter all the information.", {
-          autoClose: 2000
+          position: "top-center",
+          autoClose: 2000,
+          style: {
+            width: "350px",
+            textAlign: "center"
+          }
         })
         return
       }
@@ -26,7 +31,12 @@ const Confirm = ({email, verifyCode, password, rePassword, nickname}: ConfirmPro
       if (password !== rePassword) {
         console.log("❌ Password does not match.")
         toast.error("Password does not match!", {
-          autoClose: 2000
+          position: "top-center",
+          autoClose: 2000,
+          style: {
+            width: "350px",
+            textAlign: "center"
+          }
         })
         return
       }
@@ -49,21 +59,38 @@ const Confirm = ({email, verifyCode, password, rePassword, nickname}: ConfirmPro
       if (!res.ok) {
         if (result.message) {
           console.log(`❌ ${result.message}`)
-          toast.error(result.message)
+          toast.error(result.message, {
+            position: "top-center",
+            autoClose: 2000,
+            style: {
+              width: "350px",
+              textAlign: "center"
+            }
+          })
         }
         return
       }
 
       console.log("✅ Successfully signed up!:", result)
       toast.success(result.message || "Successfully signed up!", {
-        autoClose: 2000
+        position: "top-center",
+          autoClose: 2000,
+          style: {
+            width: "350px",
+            textAlign: "center"
+          }
       })
       navigate("/")
 
     } catch (error) {
-      console.error("Error:", error)
+      console.error("🚨 Unexpected error occurred: ", error)
       toast.error("Registration not possible.", {
-        autoClose: 2000
+        position: "top-center",
+          autoClose: 2000,
+          style: {
+            width: "350px",
+            textAlign: "center"
+          }
       })
     }
   }

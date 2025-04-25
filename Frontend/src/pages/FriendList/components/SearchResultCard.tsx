@@ -37,14 +37,20 @@ const SearchResultCard = ({ user }: { user: User }) => {
         toast.success(`You send a friend request to ${user.nickname}!`, {
           position: "bottom-center",
           autoClose: 2000,
-          style: { width: "350px" }
+          style: {
+            width: "350px",
+            textAlign: "center"
+          }
         })
         setIsRequested(true)
       } else {
         toast.error(result.message || "Friend request failed!", {
-          position: "top-center",
+          position: "bottom-center",
           autoClose: 2000,
-          style: { width: "350px" }
+          style: {
+            width: "350px",
+            textAlign: "center"
+          }
         })
       }
     } catch (error) {

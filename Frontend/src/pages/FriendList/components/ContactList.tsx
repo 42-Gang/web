@@ -44,7 +44,10 @@ const ContactList = ({ searchTerm , refreshTrigger }: ContactListProps) => {
         toast.error(result.message || "Failed to load friend list.", {
           position: "top-center",
           autoClose: 2000,
-          style: { width: "350px" }
+          style: {
+            width: "350px",
+            textAlign: "center"
+          }
         })
       }
     } catch (error) {

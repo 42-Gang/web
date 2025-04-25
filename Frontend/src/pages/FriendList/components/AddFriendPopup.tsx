@@ -30,7 +30,7 @@ const AddFriendPopup: React.FC<AddFriendPopupProps> = ({ onClose }) => {
         // ?status=NONE&exceptMe=1
         const params = new URLSearchParams({
           status: "NONE",
-          exceptMe: "1"
+          exceptMe: "true"
         })
 
         const response = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/users/search/${searchTerm}?${params}`, {

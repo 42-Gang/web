@@ -53,10 +53,17 @@ const Setting = () => {
           setProfileImg(result.data.avatar || data.avatar_url || null)
 				} else {
 					console.log("Failed to fetch user data:", result.message)
-          toast.error("Unable to load your information.")
+          toast.error("Unable to load your information.", {
+            position: "top-center",
+            autoClose: 2000,
+            style: {
+              width: "350px",
+              textAlign: "center"
+            }
+          })
 				}
 			} catch (error) {
-				console.error("❌ No response from server.", error)
+				console.error("🚨 Unexpected error occurred: ", error)
 			}
 		}
 	
@@ -65,7 +72,14 @@ const Setting = () => {
 	
   const ChangeNickname = (newNickname: string) => {
     setNickname(newNickname)
-		toast.success("Nickname update!")
+		toast.success("Nickname update!", {
+      position: "top-center",
+      autoClose: 2000,
+      style: {
+        width: "350px",
+        textAlign: "center"
+      }
+    })
   }
 
   useEffect(() => {
