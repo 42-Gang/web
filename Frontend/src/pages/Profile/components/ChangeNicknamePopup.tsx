@@ -33,7 +33,7 @@ const ChangeNicknamePopup: React.FC<ChangeNicknamePopupProps> = ({ onClose, onCh
       const result = await response.json()
   
       if (response.ok) { // 200 ~ 299 응답 성공
-        onChangeNickname(result.data.nickname)
+        onChangeNickname(result.data?.nickname?? inputValue)
         onClose()
       } else {
         console.error(result.message)

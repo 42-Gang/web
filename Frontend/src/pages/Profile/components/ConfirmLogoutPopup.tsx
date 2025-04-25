@@ -26,16 +26,17 @@ const ConfirmLogoutPopup: React.FC<ConfirmLogoutPopupProps> = ({ onClose }) => {
         return
       }
       
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/logout`, {
-        method: 'POST',
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/logout`, {
+        method: 'GET',
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
         credentials: "include"
       })
 
-      const result = await res.json()
-      if (res.ok) {
+      const result = await response.json()
+      
+      if (response.ok) {
 				localStorage.removeItem("accessToken")
 				toast.success(result.message || "Log out Success!")
 				navigate("/")
