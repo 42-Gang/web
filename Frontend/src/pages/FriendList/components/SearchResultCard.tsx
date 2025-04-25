@@ -1,77 +1,82 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 import AvailableAddFriend from '../../../assets/image/AvailableAddFriend.svg'
 import Completed from '../../../assets/image/Completed.svg'
 import BasicProfile1 from '../../../assets/image/BasicProfile1.png'
 import authFetch from '../../../utils/authFetch'
 
 interface User {
-	id: string
-	nickname: string
-	avatar: string | null
-	status: "online" | "offline" | "gaming" | "away"
+  id: string
+  nickname: string
+  avatar: string | null
+  status: "online" | "offline" | "gaming" | "away"
 }
 
 const SearchResultCard = ({ user }: { user: User }) => {
-	const [isAdded, setIsAdded] = useState(false)
-	const isProcessing = useRef(false)
+  const [isRequested, setIsRequested] = useState(false)
 
-	const handleAddFriend = async () => {
-		if (isProcessing.current || isAdded) return
-		isProcessing.current = true
-	
-		try {
-			const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/requests`, {
-				method: "POST",
-				body: JSON.stringify({ friendId: Number(user.id) })
-			})
-	
-			if (!res) {
-				toast.error("Request failed: No Request from server.")
-				return
-			}
+  const handleSendRequest = async () => {
+    if (isRequested) return
 
-			const result = await res.json()
-			if (!res.ok) {
-				console.error(result.data)
-				return
-			}
+    try {
+      const response = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/requests`, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          targetId: user.id
+        })
+      })
 
-			setIsAdded(true)
-			toast.success(result.message)
-		} catch (err) {
-			console.error("Error in friend request.", err)
-			toast.error("Error requesting friend request")
-		} finally {
-			setTimeout(() => {
-				isProcessing.current = false
-			}, 500)
-		}
-	}
-	
-	return (
-		<div className="flex items-center justify-between p-3 border-[2px]
-			border-white rounded-xl mt-1 hover:bg-blue-400 transition duration-300">
-			<div className="flex items-center gap-3">
-				<img
-					src={user.avatar || BasicProfile1}
-					className="w-[45px] h-[45px] rounded-full"
-					alt="avatar"
-				/>
-				<span className="text-[18px] font-['Galmuri7'] text-white">
-					{user.nickname}
-				</span>
-			</div>
-			<button onClick={handleAddFriend} className="cursor-pointer">
-				<img
-					src={isAdded ? Completed : AvailableAddFriend}
-					alt="AvailableAdd"
-					className="w-[30px] h-[30px]"
-				/>
-			</button>
-		</div>
-	)
+      if (!response) return
+
+      const result = await response.json()
+
+      if (response.ok) {
+        toast.success(`You send a friend request to ${user.nickname}!`, {
+          position: "bottom-center",
+          autoClose: 2000,
+          style: { width: "350px" }
+        })
+        setIsRequested(true)
+      } else {
+        toast.error(result.message || "Friend request failed!", {
+          position: "top-center",
+          autoClose: 2000,
+          style: { width: "350px" }
+        })
+      }
+    } catch (error) {
+      console.error("🚨 Unexpected error occurred: ", error)
+    }
+  }
+
+  return (
+    <div className="flex items-center justify-between p-3 border-[2px] border-white rounded-xl mt-1 hover:bg-blue-400 transition duration-300">
+      <div className="flex items-center gap-3">
+        <img
+          src={user.avatar || BasicProfile1}
+          className="w-[45px] h-[45px] rounded-full"
+          alt="avatar"
+        />
+        <span className="text-[18px] font-['Galmuri7'] text-white">
+          {user.nickname}
+        </span>
+      </div>
+      <button
+        onClick={handleSendRequest}
+        disabled={isRequested}
+        className="cursor-pointer"
+      >
+        <img
+          src={isRequested ? Completed : AvailableAddFriend}
+          alt={isRequested ? "Request completed Icon" : "Friend request Icon"}
+          className="w-[30px] h-[30px]"
+        />
+      </button>
+    </div>
+  )
 }
 
 export default SearchResultCard

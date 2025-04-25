@@ -27,38 +27,33 @@ const AddFriendPopup: React.FC<AddFriendPopupProps> = ({ onClose }) => {
 
     const fetchUsers = async () => {
       try {
-        const token = localStorage.getItem("accessToken")
-        const res = await authFetch(
-          `${import.meta.env.VITE_API_URL}/api/v1/users/search/${searchTerm}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
+        // ?status=NONE&exceptMe=1
+        const params = new URLSearchParams({
+          status: "NONE",
+          exceptMe: "1"
+        })
 
-        if (!res) {
-          console.warn("❌ 검색 요청 실패: 서버 응답 없음")
-          return
+        const response = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/users/search/${searchTerm}?${params}`, {
+          method: 'GET'
+        })
+
+        if (!response) return
+
+        const result = await response.json()
+
+        if (response.ok && result.data?.users) {
+          // data.users가 있으면 검색 결과를 저장
+          setSearchResults(result.data.users)
+        } else {
+          console.warn("❌ Search failed:", result.message)
         }
-
-        if (!res.ok) {
-          const result = await res.json().catch(() => null)
-          console.warn("❌ 서버 오류 응답:", result)
-          return
-        }
-
-        const result = await res.json()
-        const users = result.data.users
-
-        setSearchResults(users)
-        console.log("📦 검색 결과:", result.data)
-      } catch (err) {
-        console.error("🔴 네트워크 또는 코드 오류:", err)
+      } catch (error) {
+        console.error("🚨 Unexpected error occurred: ", error)
       }
     }
 
     fetchUsers()
+
   }, [searchTerm])
 
   return (
