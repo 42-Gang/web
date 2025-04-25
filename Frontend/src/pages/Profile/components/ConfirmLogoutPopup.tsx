@@ -22,7 +22,14 @@ const ConfirmLogoutPopup: React.FC<ConfirmLogoutPopupProps> = ({ onClose }) => {
     try {
       const accessToken = localStorage.getItem("accessToken")
       if (!accessToken) {
-        toast.error("You are not logged in.")
+        toast.error("You are not logged in.", {
+          position: "top-center",
+          autoClose: 2000,
+          style: {
+            width: "350px",
+            textAlign: "center"
+          }
+        })
         return
       }
       
@@ -38,13 +45,27 @@ const ConfirmLogoutPopup: React.FC<ConfirmLogoutPopupProps> = ({ onClose }) => {
       
       if (response.ok) {
 				localStorage.removeItem("accessToken")
-				toast.success(result.message || "Log out Success!")
+				toast.success(result.message || "Log out Success!", {
+          position: "top-center",
+          autoClose: 2000,
+          style: {
+            width: "350px",
+            textAlign: "center"
+          }
+        })
 				navigate("/")
 			} else {	
-        toast.error("Logout failed: " + result.message)
+        toast.error("Logout failed: " + result.message, {
+          position: "top-center",
+          autoClose: 2000,
+          style: {
+            width: "350px",
+            textAlign: "center"
+          }
+        })
       }
-    } catch (err) {
-      console.error("Logout error", err)
+    } catch (error) {
+      console.error("🚨 Unexpected error occurred: ", error)
     }
   }
 
