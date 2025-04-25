@@ -58,7 +58,7 @@ const authFetch = async (url: string, options: RequestInit = {}): Promise<Respon
       // HttpOnly 쿠키는 js에서 직접 삭제 불가능 -> 서버에 삭제 요청
       // 쿠키에 refresh token이 남아 있기만 하면 삭제 가능
       await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/logout`, {
-        method: 'POST',
+        method: 'GET',
         credentials: "include", // 쿠키 포함 (refreshToken 전송)
       })
       
