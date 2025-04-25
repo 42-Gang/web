@@ -1,11 +1,14 @@
 import {useState, useEffect} from "react"
+import {toast} from "react-toastify"
 import CancelButton from "../../../assets/image/CancelButton2.svg"
 import BasicProfile1 from "../../../assets/image/BasicProfile1.png"
-import {toast} from "react-toastify"
+import Accept from '../../../assets/image/Accept.svg'
+import Reject from '../../../assets/image/Reject.svg'
 import authFetch from "../../../utils/authFetch.ts";
 
 interface AlarmPopupProps {
   onClose: () => void
+  onFriendAccepted: () => void
 }
 
 interface Request {
@@ -14,24 +17,24 @@ interface Request {
   avatarUrl: string | null
 }
 
-const AlarmPopup = ({onClose}: AlarmPopupProps) => {
+const AlarmPopup = ({ onClose, onFriendAccepted }: AlarmPopupProps) => {
   const [request, setRequest] = useState<Request[]>([])
 
   // 서버에서 친구 요청 데이터 가져오기
   useEffect(() => {
     const fetchFriendRequests = async () => {
       try {
-        const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/requests`, {
-          method: "GET",
+        const response = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/requests`, {
+          method: 'GET',
         })
 
-        if (!res) {
+        if (!response) {
           return
         }
 
         // 응답이 HTML로 오지 않도록 JSON 응답만 처리하도록 해야 합니다.
-        const result = await res.json()
-        if (res.ok) {
+        const result = await response.json()
+        if (response.ok) {
           setRequest(result.data?.requests || [])
         } else {
           console.error("❌ Failed to call friend request:", result.message)
@@ -49,18 +52,15 @@ const AlarmPopup = ({onClose}: AlarmPopupProps) => {
   const handleAcceptRequest = async (friendId: string) => {
     try {
       const response = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/requests/${friendId}/accept`, {
-        method: "PATCH",
-        body: "{}"
+        method: 'PATCH'
       })
 
       if (!response) {
-        toast.error("Request failed: No Request from server.")
         return
       }
 
       const result = await response.json()
 
-      console.log(result)
       if (!response.ok) {
         console.error("❌ Failed to accept:", result.message)
         toast.error(`${result.message}`)
@@ -69,6 +69,8 @@ const AlarmPopup = ({onClose}: AlarmPopupProps) => {
 
       setRequest(prevRequest => prevRequest.filter(req => req.userId !== friendId))
       toast.success(result.message)
+
+      onFriendAccepted()
     } catch (err) {
       console.error("🚨 Error requesting acceptance:", err)
     }
@@ -78,17 +80,17 @@ const AlarmPopup = ({onClose}: AlarmPopupProps) => {
   const handleRejectRequest = async (friendId: string) => {
     try {
       const response = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/requests/${friendId}/reject`, {
-        method: "PATCH",
-        body: "{}"
+        method: 'PATCH'
       })
 
       if (!response) {
-        toast.error("Request failed: No Request from server.")
         return
       }
 
       const result = await response.json()
+
       if (!response.ok) {
+        console.error("❌ Failed to accept:", result.message)
         toast.error(`${result.message}`)
         return
       }
@@ -132,16 +134,16 @@ const AlarmPopup = ({onClose}: AlarmPopupProps) => {
                 </div>
                 <div className="flex gap-2">
                   <button
-                      className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
+                      className="cursor-pointer opacity-60 hover:opacity-100"
                       onClick={() => handleAcceptRequest(req.userId)}
                   >
-                    Accept
+                    <img src={Accept} alt="accept"/>
                   </button>
                   <button
-                      className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
+                      className="cursor-pointer opacity-60 hover:opacity-100"
                       onClick={() => handleRejectRequest(req.userId)}
                   >
-                    Reject
+                    <img src={Reject} alt="reject"/>
                   </button>
                 </div>
               </div>

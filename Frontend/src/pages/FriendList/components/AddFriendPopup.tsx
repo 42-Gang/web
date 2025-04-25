@@ -3,6 +3,8 @@ import CancelButton from "../../../assets/image/CancelButton2.svg"
 import Magnifier from "../../../assets/image/MagnifierAddFriend.svg"
 import SearchResultCard from "./SearchResultCard"
 import authFetch from "../../../utils/authFetch"
+import useFriendIds from "./useFriendIds"
+import usePendingRequestIds from "./usePendingRequestIds"
 
 interface AddFriendPopupProps {
   onClose: () => void
@@ -19,6 +21,10 @@ const AddFriendPopup: React.FC<AddFriendPopupProps> = ({ onClose }) => {
   const [searchTerm, setSearchTerm] = useState("")
   const [searchResults, setSearchResults] = useState<User[]>([])
 
+  const friendIds = useFriendIds()
+  const requestedIds = usePendingRequestIds()
+  const currentUserId = JSON.parse(atob(localStorage.getItem("accessToken")!.split('.')[1])).userId
+
   useEffect(() => {
     if (searchTerm.length === 0) {
       setSearchResults([])
@@ -27,39 +33,37 @@ const AddFriendPopup: React.FC<AddFriendPopupProps> = ({ onClose }) => {
 
     const fetchUsers = async () => {
       try {
-        const token = localStorage.getItem("accessToken")
-        const res = await authFetch(
-          `${import.meta.env.VITE_API_URL}/api/v1/users/search/${searchTerm}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
+        const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/users/search/${searchTerm}`, {
+          method: 'GET'
+        })
 
-        if (!res) {
-          console.warn("❌ 검색 요청 실패: 서버 응답 없음")
-          return
-        }
+        if (!res) return
 
         if (!res.ok) {
           const result = await res.json().catch(() => null)
-          console.warn("❌ 서버 오류 응답:", result)
+          console.warn("❌ Server error response:", result)
           return
         }
 
         const result = await res.json()
-        const users = result.data.users
+        const users: User[] = result.data.users
 
-        setSearchResults(users)
-        console.log("📦 검색 결과:", result.data)
+        const filtered = users.filter((user: User) =>
+          user.id !== currentUserId &&
+          !friendIds.includes(user.id) &&
+          !requestedIds.includes(user.id) &&
+          user.nickname.startsWith(searchTerm)
+        )
+
+        setSearchResults(filtered)
+        console.log("📦 Searching result:", result.data)
       } catch (err) {
-        console.error("🔴 네트워크 또는 코드 오류:", err)
+        console.error("❌ No response from server:", err)
       }
     }
 
     fetchUsers()
-  }, [searchTerm])
+  }, [searchTerm, friendIds, requestedIds, currentUserId])
 
   return (
     <div className="relative w-[723px] h-[385px] bg-black rounded-lg">

@@ -63,7 +63,6 @@ const App = () => {
           {/* 친구 목록 */}
           <Route path="/FriendList" element={<FriendList />} />
           <Route path="/FriendChatRoom/:roomId" element={<FriendChatRoom />} />
-
           {/* 세팅 페이지 */}
           <Route path="/Setting" element={<Setting />} />
           {/* 게임 페이지 */}

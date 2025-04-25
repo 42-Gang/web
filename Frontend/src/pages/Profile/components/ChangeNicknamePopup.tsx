@@ -39,8 +39,8 @@ const ChangeNicknamePopup: React.FC<ChangeNicknamePopupProps> = ({ onClose, onCh
         console.error(result.message)
         toast.error(result.message || "Nickname update failed.")
       }
-    } catch (err) {
-      console.error("❌ No response from server:", err)
+    } catch (error) {
+      console.error("❌ No response from server:", error)
     }
   }	
 

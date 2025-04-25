@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import AvailableAddFriend from '../../../assets/image/AvailableAddFriend.svg'
@@ -6,49 +6,53 @@ import Completed from '../../../assets/image/Completed.svg'
 import BasicProfile1 from '../../../assets/image/BasicProfile1.png'
 import authFetch from '../../../utils/authFetch'
 
-interface User {
-	id: string
-	nickname: string
-	avatar: string | null
-	status: "online" | "offline" | "gaming" | "away"
-}
+const SearchResultCard = ({ user }: {
+  user: {
+    id: string
+    nickname: string
+    avatar: string | null
+    status: "online" | "offline" | "gaming" | "away"
+  }}) => {
+    const [isRequested, setIsRequested] = useState(false) // 친구 요청 중복 클릭 방지
 
-const SearchResultCard = ({ user }: { user: User }) => {
-	const [isAdded, setIsAdded] = useState(false)
-	const isProcessing = useRef(false)
+    const sendFriendRequest = async () => {
+      if (isRequested) return
 
-	const handleAddFriend = async () => {
-		if (isProcessing.current || isAdded) return
-		isProcessing.current = true
-	
-		try {
-			const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/requests`, {
-				method: "POST",
-				body: JSON.stringify({ friendId: Number(user.id) })
-			})
-	
-			if (!res) {
-				toast.error("Request failed: No Request from server.")
-				return
-			}
+      try {
+        const response = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/requests`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            targetId: user.id
+          })
+        })
 
-			const result = await res.json()
-			if (!res.ok) {
-				console.error(result.data)
-				return
-			}
+        if (!response) {
+          
+          return
+        }
 
-			setIsAdded(true)
-			toast.success(result.message)
-		} catch (err) {
-			console.error("Error in friend request.", err)
-			toast.error("Error requesting friend request")
-		} finally {
-			setTimeout(() => {
-				isProcessing.current = false
-			}, 500)
-		}
-	}
+        const result = await response.json()
+
+        if (response.ok) {
+          console.log("✅ Friend request success.")
+          toast.success(`You send a friend request to ${user.nickname}!`, {
+            position: "bottom-center",
+            autoClose: 2000,
+            style: {
+              width: "350px"
+            }
+          })
+          setIsRequested(true)
+        } else {
+            toast.error(result.message || "Friend request failed!")
+        }
+      } catch (error) {
+        console.error("❌ No response from server:", error)
+      }
+    }
 	
 	return (
 		<div className="flex items-center justify-between p-3 border-[2px]
@@ -63,10 +67,14 @@ const SearchResultCard = ({ user }: { user: User }) => {
 					{user.nickname}
 				</span>
 			</div>
-			<button onClick={handleAddFriend} className="cursor-pointer">
+			<button
+        onClick={sendFriendRequest}
+        disabled={isRequested}
+        className="cursor-pointer"
+        >
 				<img
-					src={isAdded ? Completed : AvailableAddFriend}
-					alt="AvailableAdd"
+					src={isRequested ? Completed : AvailableAddFriend}
+					alt={isRequested ? "Request completed Icon" : "Friend request Icon"}
 					className="w-[30px] h-[30px]"
 				/>
 			</button>
