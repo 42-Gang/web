@@ -12,9 +12,6 @@ const FriendList = () => {
     setRefreshVersion((prev) => prev + 1) // 매번 증가
   }, [])
   
-  const handleRefreshEnd = useCallback(() => {}, []) // 이제 필요 없음
-  
-
 	return(
 		<Container>
 			<div className="absolute left-[5px] top-[5px]">
