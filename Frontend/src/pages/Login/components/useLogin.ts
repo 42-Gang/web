@@ -17,7 +17,7 @@ const useLogin = (setError: (msg: string) => void) => {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/login`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          'Content-Type': 'application/json'
         },
         credentials: "include",
         body: JSON.stringify({ email, password })

@@ -9,7 +9,7 @@ const FriendList = () => {
   const [refreshVersion, setRefreshVersion] = useState(0)
 
   const handleFriendAccepted = useCallback(() => {
-    setRefreshVersion((prev) => prev + 1) // 매번 증가
+    setRefreshVersion((prev) => prev + 1) // 친구 승인될 때마다 1씩 증가
   }, [])
   
 	return(
@@ -26,7 +26,7 @@ const FriendList = () => {
 					<Alarm onFriendAccepted={handleFriendAccepted}/>
 				</div>
 				<div className="border-white border-[1px] absolute top-[200px] w-full z-10"/>
-				<FriendSection refreshContacts={refreshVersion} onRefreshEnd={() => {}} />
+				<FriendSection refreshContacts={refreshVersion}/>
 		</Container>
 	)
 }

@@ -44,7 +44,7 @@ const Confirm = ({email, verifyCode, password, rePassword, nickname}: ConfirmPro
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           email,
