@@ -18,7 +18,7 @@ const authFetch = async (url: string, options: RequestInit = {}): Promise<Respon
     // JSON 요청일 때만 Content-Type 명시
     // body가 FormData가 아니라면 일반적인 JSON 요청이라 Content-type을 직접 명시해줘야 함
     // FormData는 절대 명시 X 브라우저가 자동 생성
-    if (!isFormData && options.body !== undefined) { // GET일 때 Content-Type 붙이기 않기
+    if (!isFormData && options.body !== undefined) { // body가 없을 때 Content-Type 붙이기 않기
       baseHeaders["Content-Type"] = 'application/json'
     }
 
