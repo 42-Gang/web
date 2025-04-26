@@ -20,6 +20,8 @@ interface ContactListProps {
 const ContactList = ({ searchTerm , refreshTrigger }: ContactListProps) => {
 	const [contacts, setContacts] = useState<Contact[]>([])
 
+  // 처음 mount 되면 무조건 한 번 실행 됨 -> 최초 렌더링 Ok
+  // 이후 부터는 친구 승인 될 때마다 친구 목록 업데이트
   useEffect(() => {
     const fetchFriends = async () => {
       try {
@@ -74,7 +76,6 @@ const ContactList = ({ searchTerm , refreshTrigger }: ContactListProps) => {
 							alt={contact.nickname}
 							className="w-[65px] h-[65px] rounded-full"
 						/>
-
 						<div className="flex items-center w-[150px] justify-between">
 							<span className="text-[20px]">{contact.nickname}</span>
 							<LinkState status={contact.status} />

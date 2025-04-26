@@ -85,7 +85,8 @@ const AlarmPopup = ({ onClose, onFriendAccepted }: AlarmPopupProps) => {
   const handleRejectRequest = async (friendId: string) => {
     try {
       const response = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/requests/${friendId}/reject`, {
-        method: 'PATCH'
+        method: 'PATCH',
+        body: '{}'
       })
 
       if (!response) return

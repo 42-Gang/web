@@ -25,7 +25,7 @@ const SearchResultCard = ({ user }: { user: User }) => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          targetId: user.id
+          friendId: user.id
         })
       })
 

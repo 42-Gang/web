@@ -18,7 +18,7 @@ const authFetch = async (url: string, options: RequestInit = {}): Promise<Respon
     // JSON 요청일 때만 Content-Type 명시
     // body가 FormData가 아니라면 일반적인 JSON 요청이라 Content-type을 직접 명시해줘야 함
     // FormData는 절대 명시 X 브라우저가 자동 생성
-    if (!isFormData) {
+    if (!isFormData && options.method !== 'GET') { // GET일 때 Content-Type 붙이기 않기
       baseHeaders["Content-Type"] = 'application/json'
     }
 
@@ -57,10 +57,14 @@ const authFetch = async (url: string, options: RequestInit = {}): Promise<Respon
 
       // HttpOnly 쿠키는 js에서 직접 삭제 불가능 -> 서버에 삭제 요청
       // 쿠키에 refresh token이 남아 있기만 하면 삭제 가능
-      await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/logout`, {
+      try {
+        await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/logout`, {
         method: 'GET',
-        credentials: "include", // 쿠키 포함 (refreshToken 전송)
-      })
+          credentials: "include", // 쿠키 포함 (refreshToken 전송)
+        })
+      } catch(error) {
+        console.log("⚠️ Logout request failed: ", error)
+      }
       
       setTimeout(() => {
         toast.dismiss(toastId)

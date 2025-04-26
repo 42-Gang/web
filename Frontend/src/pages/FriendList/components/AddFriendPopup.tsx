@@ -27,7 +27,7 @@ const AddFriendPopup: React.FC<AddFriendPopupProps> = ({ onClose }) => {
 
     const fetchUsers = async () => {
       try {
-        // ?status=NONE&exceptMe=1
+        // ?status=NONE&exceptMe=true (본인 검색 결과에서 빠짐, 서로 아무 이벤트가 일어나지 않은 유저 목록)
         const params = new URLSearchParams({
           status: "NONE",
           exceptMe: "true"
