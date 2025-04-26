@@ -73,7 +73,7 @@ const ChangeProfilePopup: React.FC<ChangeProfileImgPopupProps> = ({ onClose, onC
       const response = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/users/me`, {
         method: 'PATCH',
         headers: {
-          "Content-Type": "application/json"
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           avatar: null

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from "react-toastify"
 import BasicProfile1 from '../../../assets/image/BasicProfile1.png'
 import LinkState from './LinkState'
@@ -15,57 +15,53 @@ interface Contact {
 interface ContactListProps {
   searchTerm: string
   refreshTrigger: number
-  onRefreshEnd: () => void
 }
 
 const ContactList = ({ searchTerm , refreshTrigger }: ContactListProps) => {
 	const [contacts, setContacts] = useState<Contact[]>([])
 
-  // 친구 목록 가져옴
-  const fetchFriends = useCallback(async () => {
-    try {
-      const query = new URLSearchParams([
-        ['status', 'ACCEPTED'],
-        ['status', 'BLOCKED']
-      ])
+  useEffect(() => {
+    const fetchFriends = async () => {
+      try {
+        const query = new URLSearchParams([
+          ['status', 'ACCEPTED'],
+          ['status', 'BLOCKED']
+        ])
 
-      const response = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/me?${query.toString()}`, {
-        method: 'GET'
-      })
-
-      if (!response) return
-
-      const result = await response.json()
-
-      if (response.ok && result.data?.friends) {
-        console.log("✅ Import friend list successful.")
-        setContacts(result.data.friends)
-      } else {
-        toast.error(result.message || "Failed to load friend list.", {
-          position: "top-center",
-          autoClose: 2000,
-          style: {
-            width: "350px",
-            textAlign: "center"
-          }
+        const response = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/me?${query.toString()}`, {
+          method: 'GET'
         })
+
+        if (!response) return
+
+        const result = await response.json()
+
+        if (response.ok && result.data?.friends) {
+          setContacts(result.data.friends)
+          console.log("✅ Import friend list successful.")
+        } else {
+          toast.error(result.message || "Failed to load friend list.", {
+            position: "top-center",
+            autoClose: 2000,
+            style: {
+              width: "350px",
+              textAlign: "center"
+            }
+          })
+        }
+      } catch (error) {
+        console.error("🚨 Unexpected error occurred: ", error)
       }
-    } catch (error) {
-      console.error("🚨 Unexpected error occurred: ", error)
+
     }
-  }, [])
 
-  // 최초 렌더링
-  useEffect(() => {
     fetchFriends()
-  }, [fetchFriends])
+    
+  }, [refreshTrigger])
 
-  // refreshTrigger 변경 시
-  useEffect(() => {
-    fetchFriends()
-  }, [refreshTrigger, fetchFriends])
-
-  const filteredContacts = contacts.filter(contact => contact.nickname.startsWith(searchTerm))
+  const filteredContacts = searchTerm.trim()
+  ? contacts.filter(contact => contact.nickname.startsWith(searchTerm))
+  : contacts
 
 	return (
 		<div className="font-['Galmuri7'] bg-black w-full text-white max-h-[397px] overflow-y-auto custom-scrollbar">

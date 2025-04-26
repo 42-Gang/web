@@ -4,10 +4,9 @@ import SearchFriend from "./SearchFriend"
 
 interface FriendSectionProps {
   refreshContacts: number
-  onRefreshEnd: () => void
 }
 
-const FriendSection = ({ refreshContacts, onRefreshEnd }: FriendSectionProps) => {
+const FriendSection = ({ refreshContacts }: FriendSectionProps) => {
 	const [searchTerm, setSearchTerm] = useState("")
   
 	return (
@@ -16,7 +15,7 @@ const FriendSection = ({ refreshContacts, onRefreshEnd }: FriendSectionProps) =>
 				<SearchFriend searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
 			</div>
 			<div className="absolute top-[203px] w-full">
-			<ContactList searchTerm={searchTerm} refreshTrigger={refreshContacts} onRefreshEnd={onRefreshEnd}/>
+			<ContactList searchTerm={searchTerm} refreshTrigger={refreshContacts}/>
 			</div>
 		</div>
 	)
