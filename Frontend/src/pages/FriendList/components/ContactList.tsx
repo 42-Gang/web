@@ -38,18 +38,21 @@ const ContactList = ({ searchTerm , refreshTrigger }: ContactListProps) => {
 
         const result = await response.json()
 
-      if (response.ok && result.data?.friends) {
-        console.log("✅ Import friend list successful.")
-        setContacts(result.data.friends)
-      } else {
-        toast.error(result.message || "Failed to load friend list.", {
-          position: "top-center",
-          autoClose: 2000,
-          style: {
-            width: "350px",
-            textAlign: "center"
-          }
-        })
+        if (response.ok && result.data?.friends) {
+          setContacts(result.data.friends)
+          console.log("✅ Import friend list successful.")
+        } else {
+          toast.error(result.message || "Failed to load friend list.", {
+            position: "top-center",
+            autoClose: 2000,
+            style: {
+              width: "350px",
+              textAlign: "center"
+            }
+          })
+        }
+      } catch (error) {
+        console.error("🚨 Unexpected error occurred: ", error)
       }
 
     }
