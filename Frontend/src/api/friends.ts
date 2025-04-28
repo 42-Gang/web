@@ -1,6 +1,6 @@
 // Friends List - Block/UnBlock 상태 관리
 
-import axios from "axios";
+import axiosInstance from "./axiosInstance";
 
 /**
  * 친구 차단 요청
@@ -8,7 +8,7 @@ import axios from "axios";
  */
 export const blockFriend = async (userId: string) => {
   try {
-    const res = await axios.patch(`/api/friends/${userId}/block`);
+    const res = await axiosInstance.patch(`/api/v1/friends/${userId}/block`);
     return res.data;
   } catch (err: any) {
     throw err.response?.data || err;
@@ -21,7 +21,7 @@ export const blockFriend = async (userId: string) => {
  */
 export const unblockFriend = async (userId: string) => {
   try {
-    const res = await axios.patch(`/api/friends/${userId}/unblock`);
+    const res = await axiosInstance.patch(`/api/v1/friends/${userId}/unblock`);
     return res.data;
   } catch (err: any) {
     throw err.response?.data || err;

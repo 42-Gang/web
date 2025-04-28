@@ -18,7 +18,7 @@ const FriendListItem: React.FC<FriendListItemProps> = ({
     <Wrapper onClick={onClick}>
       <Avatar src={profileImage} alt="profile" />
       <Name>{name}</Name>
-      <StatusDot isOnline={isOnline} />
+      <StatusDot $isOnline={isOnline} />
     </Wrapper>
   );
 };
