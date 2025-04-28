@@ -1,25 +1,31 @@
 import { useState } from "react"
+import { useRecoilValue } from "recoil"
+import { friendStatusAtom } from "./FriendStatusAtom"
 
 interface LinkStateProps {
-	status: 'online' | 'gaming' | 'away' | 'offline'
+  friendId: number
 }
 
-const statusColorMap: Record<LinkStateProps['status'], string> = {
-	online: 'bg-green-400',
-	gaming: 'bg-red-400',
-	away: 'bg-yellow-300',
-	offline: 'bg-gray-400'
+const statusColorMap: Record<string, string> = {
+  ONLINE: 'bg-green-400',
+  GAME: 'bg-red-400',
+  AWAY: 'bg-yellow-300',
+  OFFLINE: 'bg-gray-400'
 }
 
-const statusLabelMap: Record<LinkStateProps['status'], string> = {
-	online: 'online',
-	gaming: 'gaming',
-	away: 'away',
-	offline: 'offline'
+const statusLabelMap: Record<string, string> = {
+  ONLINE: 'online',
+  GAME: 'gaming',
+  AWAY: 'away',
+  OFFLINE: 'offline'
 }
 
-const LinkState = ({ status }: LinkStateProps) => {
+
+const LinkState = ({ friendId }: LinkStateProps) => {
 	const [showTooltip, setShowTooltip] = useState(false)
+  const friendStatusMap = useRecoilValue(friendStatusAtom) // 전체 친구 상태 가져옴
+  const rawStatus = friendStatusMap[friendId] || 'OFFLINE'
+  const status = rawStatus === 'LOBBY' ? 'ONLINE' : rawStatus
 
 	return (
 		<div className="relative flex items-center justify-center">
@@ -36,7 +42,7 @@ const LinkState = ({ status }: LinkStateProps) => {
 					${showTooltip ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}
 				`}
 			>
-				{statusLabelMap[status]}
+				{statusLabelMap[status] || 'offline'}
 			</div>
 		</div>
 	)

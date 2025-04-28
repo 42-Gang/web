@@ -1,5 +1,6 @@
-// src/hooks/useLogin.ts
 import { useNavigate } from "react-router-dom"
+import { useContext } from "react"
+import { WebSocketContext } from "../../../contexts/WebSocketContext"
 
 interface LoginResponse {
   code: number
@@ -11,6 +12,8 @@ interface LoginResponse {
 
 const useLogin = (setError: (msg: string) => void) => {
   const navigate = useNavigate()
+  const webSocketContext = useContext(WebSocketContext)
+  const connect = webSocketContext?.connect
 
   const login = async (email: string, password: string) => {
     try {
@@ -28,9 +31,17 @@ const useLogin = (setError: (msg: string) => void) => {
       // 로그인 성공
       if (response.status === 200) {
         console.log ("Login successful: ", body)
+        
+        const accessToken = body.data?.accessToken
+        
         // Access Token 저장
         localStorage.setItem("accessToken", body.data?.accessToken || "")
-        // Home 페이지로 이동
+
+        if (accessToken && connect) {
+          connect(accessToken) // ✅ WebSocket 연결
+        }
+
+        // 연결 시도 후 Home으로 이동
         navigate('/Home')
         return
       }

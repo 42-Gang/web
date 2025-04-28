@@ -1,11 +1,18 @@
 import { useNavigate } from 'react-router-dom'
 import MessageIcon from '../../../assets/image/MessageIcon.svg'
+import { Contact } from './ContactList'
 
-const Message = () => {
+interface MessageProps {
+  contact: Contact
+}
+
+const Message = ({ contact }: MessageProps) => {
 	const navigate = useNavigate()
 
 	const handleClickMessage = () => {
-		navigate('/FriendChatRoom')
+		navigate('/FriendChatRoom', {
+      state: { contact }
+    })
 	}
 	return (
 		<button

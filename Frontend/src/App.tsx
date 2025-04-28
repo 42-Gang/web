@@ -1,8 +1,9 @@
 import "./index.css";
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import { ToastContainer } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
+import { WebSocketProvider } from "./contexts/WebSocketProvider.tsx";
+import { WebSocketContext } from "./contexts/WebSocketContext.tsx";
 import GlobalStyle from "./styles/GlobalStyles";
 import Login from "./pages/Login/Login.tsx";
 import RegisterWithEmail from "./pages/Register/RegisterWithEmail.tsx";
@@ -23,6 +24,9 @@ import SemiFinalWaiting from "./pages/Tournament/SemiFinalWaiting.tsx";
 import SoloMatch from "./pages/SoloMatch/SoloMatch.tsx";
 
 const App = () => {
+  const webSocketContext = useContext(WebSocketContext)
+  const connect = webSocketContext?.connect
+
   useEffect(() => {
     const lockWindowSize = () => {
       window.resizeTo(800, 600);
@@ -36,46 +40,58 @@ const App = () => {
     };
   }, []);
 
+  // localStorage의 accessToken을 확인하고 reconnect 시도
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken")
+    if (accessToken && connect) {
+      console.log("🔄 Auto reconnecting WebSocket after reload...")
+      connect(accessToken)
+    }
+  }, [connect])
+
   return (
     <>
-      <GlobalStyle />
-			<ToastContainer/>
-      <Router>
-        <Routes>
-          {/* 로그인 페이지 */}
-          <Route path="/" element={<Login />} />
-          {/* 회원가입 페이지 */}
-          <Route path="/RegisterWithEmail" element={<RegisterWithEmail />} />
-          <Route path="/RegisterWithGoogle" element={<RegisterWithGoggle />} />
-          {/* 메인 홈페이지 */}
-          <Route path="/Home" element={<Home />} />
-          {/* 게임 옵션 선택 페이지 */}
-          <Route path="/GameOptionSelect" element={<GameOptionSelect />} />
-          {/* 오토 게임 모드 선택 페이지 */}
-          <Route path="/AutoGameModeSelect" element={<AutoGameModeSelect />} />
-          {/* 커스텀 게임 모드 선택 페이지 */}
-          <Route
-            path="/CustomGameModeSelect"
-            element={<CustomGameModeSelect />}
-          />
-          {/* 히스토리 페이지 */}
-          <Route path="/GameHistory" element={<GameHistory />} />
-          {/* 친구 목록 */}
-          <Route path="/FriendList" element={<FriendList />} />
-          <Route path="/FriendChatRoom/:roomId" element={<FriendChatRoom />} />
-          {/* 세팅 페이지 */}
-          <Route path="/Setting" element={<Setting />} />
-          {/* 게임 페이지 */}
-          <Route path="/GameScreen" element={<GameScreen />} />
-          {/* 토너먼트 */}
-          <Route path="/Tournament" element={<Tournament />} />
-          <Route path="/Invitation" element={<Invitation />} />
-          <Route path="/TournamentMain" element={<Matching />} />
-          <Route path="/SemiFinalWaiting" element={<SemiFinalWaiting />} />
-          {/* 개인전 */}
-          <Route path="/SoloMatch" element={<SoloMatch />} />
-        </Routes>
-      </Router>
+      <WebSocketProvider>
+
+        <GlobalStyle />
+        <ToastContainer/>
+        <Router>
+          <Routes>
+            {/* 로그인 페이지 */}
+            <Route path="/" element={<Login />} />
+            {/* 회원가입 페이지 */}
+            <Route path="/RegisterWithEmail" element={<RegisterWithEmail />} />
+            <Route path="/RegisterWithGoogle" element={<RegisterWithGoggle />} />
+            {/* 메인 홈페이지 */}
+            <Route path="/Home" element={<Home />} />
+            {/* 게임 옵션 선택 페이지 */}
+            <Route path="/GameOptionSelect" element={<GameOptionSelect />} />
+            {/* 오토 게임 모드 선택 페이지 */}
+            <Route path="/AutoGameModeSelect" element={<AutoGameModeSelect />} />
+            {/* 커스텀 게임 모드 선택 페이지 */}
+            <Route
+              path="/CustomGameModeSelect"
+              element={<CustomGameModeSelect />}
+            />
+            {/* 히스토리 페이지 */}
+            <Route path="/GameHistory" element={<GameHistory />} />
+            {/* 친구 목록 */}
+            <Route path="/FriendList" element={<FriendList />} />
+            <Route path="/FriendChatRoom/:roomId" element={<FriendChatRoom />} />
+            {/* 세팅 페이지 */}
+            <Route path="/Setting" element={<Setting />} />
+            {/* 게임 페이지 */}
+            <Route path="/GameScreen" element={<GameScreen />} />
+            {/* 토너먼트 */}
+            <Route path="/Tournament" element={<Tournament />} />
+            <Route path="/Invitation" element={<Invitation />} />
+            <Route path="/TournamentMain" element={<Matching />} />
+            <Route path="/SemiFinalWaiting" element={<SemiFinalWaiting />} />
+            {/* 개인전 */}
+            <Route path="/SoloMatch" element={<SoloMatch />} />
+          </Routes>
+        </Router>
+      </WebSocketProvider>
     </>
   );
 };
