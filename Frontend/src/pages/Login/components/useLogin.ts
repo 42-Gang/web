@@ -17,7 +17,7 @@ const useLogin = (setError: (msg: string) => void) => {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/login`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          'Content-Type': 'application/json'
         },
         credentials: "include",
         body: JSON.stringify({ email, password })
@@ -42,7 +42,7 @@ const useLogin = (setError: (msg: string) => void) => {
         setError("An unexpected error occurred. Please try again.")
       }
     } catch (error) {
-      console.error("Login error:", error)
+      console.error("🚨 Unexpected error occurred: ", error)
       setError("An unexpected error occurred. Please try again.")
     }
   }

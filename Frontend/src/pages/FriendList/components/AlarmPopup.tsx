@@ -1,43 +1,46 @@
 import {useState, useEffect} from "react"
+import {toast} from "react-toastify"
 import CancelButton from "../../../assets/image/CancelButton2.svg"
 import BasicProfile1 from "../../../assets/image/BasicProfile1.png"
-import {toast} from "react-toastify"
+import Accept from '../../../assets/image/Accept.svg'
+import Reject from '../../../assets/image/Reject.svg'
 import authFetch from "../../../utils/authFetch.ts";
 
 interface AlarmPopupProps {
   onClose: () => void
+  onFriendAccepted: () => void
 }
 
 interface Request {
-  userId: string
+  friendId: string
   nickname: string
   avatarUrl: string | null
 }
 
-const AlarmPopup = ({onClose}: AlarmPopupProps) => {
+const AlarmPopup = ({ onClose, onFriendAccepted }: AlarmPopupProps) => {
   const [request, setRequest] = useState<Request[]>([])
 
   // 서버에서 친구 요청 데이터 가져오기
   useEffect(() => {
     const fetchFriendRequests = async () => {
       try {
-        const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/requests`, {
-          method: "GET",
+        const response = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/requests`, {
+          method: 'GET',
         })
 
-        if (!res) {
-          return
-        }
+        if (!response) return
 
         // 응답이 HTML로 오지 않도록 JSON 응답만 처리하도록 해야 합니다.
-        const result = await res.json()
-        if (res.ok) {
+        const result = await response.json()
+
+        if (response.ok) {
+          console.log("✅ Import friend request list successful.")
           setRequest(result.data?.requests || [])
         } else {
-          console.error("❌ Failed to call friend request:", result.message)
+          console.error("❌ Import list failure: ", result.message)
         }
-      } catch (err) {
-        console.error("🚨 Error retrieving friend requests:", err)
+      } catch (error) {
+        console.error("🚨 Unexpected error occurred: ", error)
       }
     }
 
@@ -49,28 +52,32 @@ const AlarmPopup = ({onClose}: AlarmPopupProps) => {
   const handleAcceptRequest = async (friendId: string) => {
     try {
       const response = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/requests/${friendId}/accept`, {
-        method: "PATCH",
-        body: "{}"
+        method: 'PATCH',
+        body: '{}'
       })
 
-      if (!response) {
-        toast.error("Request failed: No Request from server.")
-        return
-      }
+      if (!response) return
 
       const result = await response.json()
 
-      console.log(result)
       if (!response.ok) {
-        console.error("❌ Failed to accept:", result.message)
-        toast.error(`${result.message}`)
+        console.error("❌ Request approval failed: ", result.message)
         return
       }
 
-      setRequest(prevRequest => prevRequest.filter(req => req.userId !== friendId))
-      toast.success(result.message)
-    } catch (err) {
-      console.error("🚨 Error requesting acceptance:", err)
+      setRequest(prevRequest => prevRequest.filter(req => req.friendId !== friendId))
+      toast.success(result.message, {
+        position: "top-center",
+        autoClose: 2000,
+        style: {
+          width: "350px",
+          textAlign: "center"
+        }
+      })
+
+      onFriendAccepted() // call back 호출
+    } catch (error) {
+      console.error("🚨 Unexpected error occurred: ", error)
     }
   }
 
@@ -78,25 +85,30 @@ const AlarmPopup = ({onClose}: AlarmPopupProps) => {
   const handleRejectRequest = async (friendId: string) => {
     try {
       const response = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/requests/${friendId}/reject`, {
-        method: "PATCH",
-        body: "{}"
+        method: 'PATCH',
+        body: '{}'
       })
 
-      if (!response) {
-        toast.error("Request failed: No Request from server.")
-        return
-      }
+      if (!response) return
 
       const result = await response.json()
+
       if (!response.ok) {
-        toast.error(`${result.message}`)
+        console.error("❌ Request reject failed: ", result.message)
         return
       }
 
-      setRequest(prevRequest => prevRequest.filter(req => req.userId !== friendId))
-      toast.success(result.message)
-    } catch (err) {
-      console.error("🚨 Error requesting acceptance:", err)
+      setRequest(prevRequest => prevRequest.filter(req => req.friendId !== friendId))
+      toast.success(result.message, {
+        position: "top-center",
+        autoClose: 2000,
+        style: {
+          width: "350px",
+          textAlign: "center"
+        }
+      })
+    } catch (error) {
+      console.error("🚨 Unexpected error occurred: ", error)
     }
   }
 
@@ -117,7 +129,7 @@ const AlarmPopup = ({onClose}: AlarmPopupProps) => {
         <div className="mt-[80px] space-y-4 max-h-[250px] overflow-y-auto custom-scrollbar">
           {request.map((req) => (
               <div
-                  key={req.userId}
+                  key={req.friendId}
                   className="flex items-center justify-between px-4 py-3 border-b border-white"
               >
                 <div className="flex items-center gap-4">
@@ -132,16 +144,16 @@ const AlarmPopup = ({onClose}: AlarmPopupProps) => {
                 </div>
                 <div className="flex gap-2">
                   <button
-                      className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
-                      onClick={() => handleAcceptRequest(req.userId)}
+                      className="cursor-pointer opacity-60 hover:opacity-100"
+                      onClick={() => handleAcceptRequest(req.friendId)} // 수락하면 함수 호출
                   >
-                    Accept
+                    <img src={Accept} alt="accept"/>
                   </button>
                   <button
-                      className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
-                      onClick={() => handleRejectRequest(req.userId)}
+                      className="cursor-pointer opacity-60 hover:opacity-100"
+                      onClick={() => handleRejectRequest(req.friendId)} // 수락하면 함수 호출
                   >
-                    Reject
+                    <img src={Reject} alt="reject"/>
                   </button>
                 </div>
               </div>

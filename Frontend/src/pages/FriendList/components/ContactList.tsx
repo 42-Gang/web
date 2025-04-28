@@ -13,44 +13,57 @@ interface Contact {
 }
 
 interface ContactListProps {
-	searchTerm: string
+  searchTerm: string
+  refreshTrigger: number
 }
 
-const ContactList = ({ searchTerm }: ContactListProps) => {
+const ContactList = ({ searchTerm , refreshTrigger }: ContactListProps) => {
 	const [contacts, setContacts] = useState<Contact[]>([])
 
-	useEffect(() => {
-		const fetchFriends = async () => {
-			try {
-				const query = new URLSearchParams([ // URL 뒤에 붙는 key?={value}의 추가 조건을 전달 status=ACCEPTED&status=BLOCKED
-					['status', 'ACCEPTED'],
-					['status', 'BLOCKED']
-				])
-				const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/me?${query.toString()}`, { // query에 해당하는 데이터 요청
-					method: "GET",
-				})
-				if (!res) {
-					toast.error("Request failed: No Request from server.")
-					return
-				}
+  // 처음 mount 되면 무조건 한 번 실행 됨 -> 최초 렌더링 Ok
+  // 이후 부터는 친구 승인 될 때마다 친구 목록 업데이트
+  useEffect(() => {
+    const fetchFriends = async () => {
+      try {
+        const query = new URLSearchParams([
+          ['status', 'ACCEPTED'],
+          ['status', 'BLOCKED']
+        ])
 
-				const result = await res.json()
-				if (res.ok && result.data?.friends) {
-					setContacts(result.data.friends)
-				} else {
-					toast.error(result.message || "Failed to load friend list.")
-				}
-			} catch (err) {
-				console.error("Failed to load friend list", err)
-				toast.error("Error requesting friend list.")
-			}
-		}
-		fetchFriends()
-	}, [])
+        const response = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/me?${query.toString()}`, {
+          method: 'GET'
+        })
 
-	const filteredContacts = contacts.filter(contact =>
-		contact.nickname.startsWith(searchTerm)
-	)	
+        if (!response) return
+
+        const result = await response.json()
+
+        if (response.ok && result.data?.friends) {
+          setContacts(result.data.friends)
+          console.log("✅ Import friend list successful.")
+        } else {
+          toast.error(result.message || "Failed to load friend list.", {
+            position: "top-center",
+            autoClose: 2000,
+            style: {
+              width: "350px",
+              textAlign: "center"
+            }
+          })
+        }
+      } catch (error) {
+        console.error("🚨 Unexpected error occurred: ", error)
+      }
+
+    }
+
+    fetchFriends()
+    
+  }, [refreshTrigger])
+
+  const filteredContacts = searchTerm.trim()
+  ? contacts.filter(contact => contact.nickname.startsWith(searchTerm))
+  : contacts
 
 	return (
 		<div className="font-['Galmuri7'] bg-black w-full text-white max-h-[397px] overflow-y-auto custom-scrollbar">
@@ -66,7 +79,6 @@ const ContactList = ({ searchTerm }: ContactListProps) => {
 							alt={contact.nickname}
 							className="w-[65px] h-[65px] rounded-full"
 						/>
-
 						<div className="flex items-center w-[150px] justify-between">
 							<span className="text-[20px]">{contact.nickname}</span>
 							<LinkState status={contact.status} />

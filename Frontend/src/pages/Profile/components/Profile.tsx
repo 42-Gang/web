@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { AnimatePresence } from "framer-motion"
 import ChangeProfileImg from '../../../assets/image/ChangeProfileImg.svg'
 import { FadeOverlay, PopupWrapper } from "./Animation"
@@ -14,6 +14,16 @@ const Profile: React.FC<ProfileProps> = ({ profileImg, onChangeProfileImg }) => 
 
   const togglePopup = () => setIsOpenProfilePopup(prev => !prev)
 
+  useEffect(() => {
+    if (profileImg instanceof File) {
+      const objectUrl = URL.createObjectURL(profileImg)
+      return () => {
+        URL.revokeObjectURL(objectUrl)
+        console.log("🧹 Object URL revoked from Profile.tsx")
+      }
+    }
+  }, [profileImg])
+  
   return (
     <div className="relative">
       {profileImg ? (

@@ -18,7 +18,7 @@ const ChangeNicknamePopup: React.FC<ChangeNicknamePopupProps> = ({ onClose, onCh
       const response = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/users/me`, {
         method: 'PATCH',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           nickname: inputValue
@@ -33,14 +33,14 @@ const ChangeNicknamePopup: React.FC<ChangeNicknamePopupProps> = ({ onClose, onCh
       const result = await response.json()
   
       if (response.ok) { // 200 ~ 299 응답 성공
-        onChangeNickname(result.data.nickname)
+        onChangeNickname(result.data?.nickname?? inputValue)
         onClose()
       } else {
         console.error(result.message)
         toast.error(result.message || "Nickname update failed.")
       }
-    } catch (err) {
-      console.error("❌ No response from server:", err)
+    } catch (error) {
+      console.error("❌ No response from server:", error)
     }
   }	
 

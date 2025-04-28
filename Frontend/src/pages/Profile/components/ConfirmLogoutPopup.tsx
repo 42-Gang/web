@@ -22,28 +22,50 @@ const ConfirmLogoutPopup: React.FC<ConfirmLogoutPopupProps> = ({ onClose }) => {
     try {
       const accessToken = localStorage.getItem("accessToken")
       if (!accessToken) {
-        toast.error("You are not logged in.")
+        toast.error("You are not logged in.", {
+          position: "top-center",
+          autoClose: 2000,
+          style: {
+            width: "350px",
+            textAlign: "center"
+          }
+        })
         return
       }
       
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/logout`, {
-        method: 'POST',
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/logout`, {
+        method: 'GET',
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
         credentials: "include"
       })
 
-      const result = await res.json()
-      if (res.ok) {
+      const result = await response.json()
+      
+      if (response.ok) {
 				localStorage.removeItem("accessToken")
-				toast.success(result.message || "Log out Success!")
+				toast.success(result.message || "Log out Success!", {
+          position: "top-center",
+          autoClose: 2000,
+          style: {
+            width: "350px",
+            textAlign: "center"
+          }
+        })
 				navigate("/")
 			} else {	
-        toast.error("Logout failed: " + result.message)
+        toast.error("Logout failed: " + result.message, {
+          position: "top-center",
+          autoClose: 2000,
+          style: {
+            width: "350px",
+            textAlign: "center"
+          }
+        })
       }
-    } catch (err) {
-      console.error("Logout error", err)
+    } catch (error) {
+      console.error("🚨 Unexpected error occurred: ", error)
     }
   }
 

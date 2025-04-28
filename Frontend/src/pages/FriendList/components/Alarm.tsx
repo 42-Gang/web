@@ -4,7 +4,11 @@ import AlarmIcon from '../../../assets/image/AlarmIcon.svg'
 import { FadeOverlay, PopupWrapper } from "./Animation"
 import AlarmPopup from './AlarmPopup'
 
-const Alarm = () => {
+interface AlarmProps {
+  onFriendAccepted: () => void
+}
+
+const Alarm = ({onFriendAccepted}: AlarmProps) => {
 	const [isOpenPopup, setIsOpenPopup] = useState(false)
 
 	const togglePopup = () => setIsOpenPopup((prev) => !prev)
@@ -21,7 +25,7 @@ const Alarm = () => {
 					<>
 						<FadeOverlay/>
 						<PopupWrapper>
-							<AlarmPopup onClose={togglePopup}/>
+							<AlarmPopup onClose={togglePopup} onFriendAccepted={onFriendAccepted}/>
 						</PopupWrapper>
 					</>
 				)}
