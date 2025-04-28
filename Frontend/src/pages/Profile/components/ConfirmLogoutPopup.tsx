@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
+import { useContext } from "react"
+import { WebSocketContext } from "../../../contexts/WebSocketContext"
 
 interface ConfirmLogoutPopupProps {
   onClose: () => void
@@ -17,6 +19,8 @@ const SelectButton: React.FC<{ onClick: () => void; children: React.ReactNode }>
 
 const ConfirmLogoutPopup: React.FC<ConfirmLogoutPopupProps> = ({ onClose }) => {
   const navigate = useNavigate()
+  const webSocketContext = useContext(WebSocketContext)
+  const disconnect = webSocketContext?.disconnect
 
   const OkClick = async () => {
     try {
@@ -44,7 +48,12 @@ const ConfirmLogoutPopup: React.FC<ConfirmLogoutPopupProps> = ({ onClose }) => {
       const result = await response.json()
       
       if (response.ok) {
+        // 1. AccessToken 삭제
 				localStorage.removeItem("accessToken")
+        // 2. WebSocket 연결 끊기
+        if (typeof disconnect === 'function') {
+          disconnect()
+        }
 				toast.success(result.message || "Log out Success!", {
           position: "top-center",
           autoClose: 2000,

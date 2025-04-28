@@ -5,10 +5,10 @@ import LinkState from './LinkState'
 import Message from './Message'
 import authFetch from '../../../utils/authFetch'
 
-interface Contact {
-	friend_id: string
+export interface Contact {
+	friendId: string
 	nickname: string
-	avatar_url: string | null
+	avatarUrl: string | null
 	status: 'online' | 'gaming' | 'away' | 'offline'
 }
 
@@ -69,22 +69,22 @@ const ContactList = ({ searchTerm , refreshTrigger }: ContactListProps) => {
 		<div className="font-['Galmuri7'] bg-black w-full text-white max-h-[397px] overflow-y-auto custom-scrollbar">
 			{filteredContacts.map((contact) => (
 				<div
-					key={contact.friend_id}
+					key={contact.friendId}
 					className="flex items-center justify-between p-[17px] border-b-[2px] border-white"
 				>
 					{/* 프로필 + 닉네임 + 상태 표시 */}
 					<div className="flex items-center space-x-[20px]">
 						<img
-							src={contact.avatar_url || BasicProfile1}
+							src={contact.avatarUrl || BasicProfile1}
 							alt={contact.nickname}
 							className="w-[65px] h-[65px] rounded-full"
 						/>
 						<div className="flex items-center w-[150px] justify-between">
 							<span className="text-[20px]">{contact.nickname}</span>
-							<LinkState status={contact.status} />
+							<LinkState friendId={Number(contact.friendId)} />
 						</div>
 					</div>
-					<Message />
+					<Message contact={contact}/>
 				</div>
 			))}
 		</div>
