@@ -1,5 +1,4 @@
-// src/contexts/WebSocketProvider.tsx
-import { WebSocketContext } from './WebSocketContext' // ✅ Context import
+import { WebSocketContext } from './WebSocketContext'
 import { useSetRecoilState } from 'recoil'
 import { friendStatusAtom } from '../pages/FriendList/components/FriendStatusAtom'
 import { useRef } from 'react'
@@ -26,48 +25,44 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
     const socket = new WebSocket(`${import.meta.env.VITE_WS_URL}?token=${accessToken}`)
 
-    socket.onopen = () => {
+    socketRef.current = socket
+
+    socket.addEventListener('open', () => {
       console.log("✅ WebSocket connected successfully.")
-    }
+    });
 
-    socket.onmessage = (event) => {
+    // friend-status 이벤트 듣기
+    socket.addEventListener('message', (event) => {
       try {
-        const data = JSON.parse(event.data)
-        if (data.type === 'friend-status') {
-          const payload = data.payload as FriendStatusPayload
-          console.log("Status update:", payload.friendId, payload.status)
+        const parsed = JSON.parse(event.data);
 
-          setFriendStatus((prev: Record<number, FriendStatusPayload['status']>) => ({
+        if (parsed.event === 'friend-status') {
+          const { friendId, status } = parsed.data as FriendStatusPayload;
+          console.log("📨 Friend status update:", friendId, status);
+
+          setFriendStatus((prev) => ({
             ...prev,
-            [payload.friendId]: payload.status
+            [friendId]: status
           }))
         }
       } catch (error) {
-        console.error("🚨 Error parsing WebSocket message:", error)
+        console.error("🚨 Error parsing message:", error);
       }
-    }
+    });
 
-    socket.onerror = (error) => {
-      console.error("🚨 WebSocket error:", error)
-
-      // 실패 감지 후 자동 로그아웃 처리
+    socket.addEventListener('error', (error) => {
+      console.error("🚨 WebSocket error:", error);
       localStorage.removeItem("accessToken")
       console.warn("🚪 AccessToken deleted due to WebSocket error.")
-
-      // 페이지 강제 이동
       window.location.href = "/"
+      socketRef.current?.close();
+      socketRef.current = null;
+    });
 
-      // 소켓 연결 끊기
-      socketRef.current?.close()
-      socketRef.current = null
-    }
-
-    socket.onclose = (event) => {
-      console.warn("🔌 WebSocket disconnected:", event.reason)
-      socketRef.current = null
-    }
-
-    socketRef.current = socket
+    socket.addEventListener('close', (event) => {
+      console.warn("🔌 WebSocket disconnected:", event.reason);
+      socketRef.current = null;
+    });
   }
 
   const disconnect = () => {
@@ -76,8 +71,6 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       socketRef.current = null
       console.log("🔌 WebSocket manually disconnected.")
     }
-
-    // 친구 상태 초기화
     setFriendStatus({})
   }
 
