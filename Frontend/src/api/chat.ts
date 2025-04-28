@@ -9,7 +9,7 @@ interface ChatHistoryItem {
 }
 export const fetchChatHistory = async (roomId: string) => {
   try {
-    const response = await axiosInstance.get(`/v1/chat/${roomId}/messages`);
+    const response = await axiosInstance.get(`/api/v1/chat/${roomId}/messages`);
 
     const chatHistory: ChatHistoryItem[] =
       response?.data?.data?.chatHistory || [];

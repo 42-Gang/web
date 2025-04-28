@@ -43,9 +43,9 @@ instance.interceptors.response.use(
 
       try {
         const res = await axios.post(
-          `${import.meta.env.VITE_API_URL}/v1/auth/refresh-token`,
+          `${import.meta.env.VITE_API_URL}/api/v1/auth/refresh-token`,
           {},
-          // 쿠키에서 refreshToken 사용
+          // refresh token 사용
           { withCredentials: true }
         );
 
