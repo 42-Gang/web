@@ -3,11 +3,14 @@ import { createRoot } from "react-dom/client";
 import { RecoilRoot } from "recoil";
 import "./index.css";
 import App from "./App.tsx";
+import { WebSocketProvider } from "./contexts/WebSocketProvider.tsx";
 
 // 웹 소켓으로 유저 상태 전역 관리
 createRoot(document.getElementById("root")!).render(
   <RecoilRoot>
-    <App />
+    <WebSocketProvider>
+      <App />
+    </WebSocketProvider>
   </RecoilRoot>
 )
 

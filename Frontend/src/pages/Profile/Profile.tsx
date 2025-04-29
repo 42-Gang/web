@@ -2,12 +2,12 @@ import { useState, useEffect } from "react"
 import { toast } from "react-toastify"
 import Container from "./components/Container"
 import Cancel from "./components/Cancel"
-import Profile from "./components/Profile"
+import ProfileSection from "./components/ProfileSection"
 import UserInformation from "./components/UserInformation"
 import ConfirmLogout from "./components/ConfirmLogout"
 import authFetch from "../../utils/authFetch"
 
-const Setting = () => {
+const Profile = () => {
 	const [wins, setWins] = useState<number>(0)
 	const [losses, setLosses] = useState<number>(0)
 	const [tournamentWins, setTournamentWins] = useState<number>(0)
@@ -110,7 +110,7 @@ const Setting = () => {
       <h1 className="font-['Sixtyfour'] text-white text-[40px]
         absolute left-1/2 -translate-x-1/2 top-[50px]">Profile</h1>
       <div className="absolute left-[60px] top-[180px]">
-			<Profile profileImg={profileImg} onChangeProfileImg={setProfileImg} />
+			<ProfileSection profileImg={profileImg} onChangeProfileImg={setProfileImg} />
       </div>
       <div className="absolute right-[60px] top-[225px]">
         <UserInformation
@@ -127,4 +127,4 @@ const Setting = () => {
   )
 }
 
-export default Setting
+export default Profile
