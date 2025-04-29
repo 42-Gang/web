@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+/* font */
+@font-face {
+	font-family: 'SuperPixel';
+	src: url('assets/fonts/SuperPixel.ttf');
+}
+
+@font-face {
+	font-family: 'QuinqueFive';
+	src: url('assets/fonts/QuinqueFive.ttf');
+}
+
+@font-face {
+	font-family: 'StWinterPixel';
+	src: url('assets/fonts/StWinterPixel.otf');
+}
+
+@font-face {
+	font-family: 'Sixtyfour';
+	src: url('assets/fonts/Sixtyfour.ttf');
+}
+
+@font-face {
+	font-family: 'Inter';
+	src: url('assets/fonts/Inter.ttf');
+}
+
+@font-face {
+	font-family: 'Galmuri7';
+	src: url('assets/fonts/Galmuri7.ttf');
+}
+
+/* Color */
+@layer base {
+	:root {
+    --C96565: #C96565;
+	}
+}
+
+@layer components {
+	.ColorC96565 {
+    color: var(--C96565);
+	}
+}
+
+@layer base {
+	:root {
+    --827E7C: #827E7C;
+	}
+}
+
+@layer components {
+	.Color827E7C {
+    color: var(--827E7C);
+	}
+}
+
+@layer base {
+	:root {
+    --BF5E5E: #BF5E5E;
+	}
+}
+
+@layer components {
+	.ColorBF5E5E {
+    color: var(--BF5E5E);
+	}
+}
+
+@layer base {
+	:root {
+    --F2856D: #F2856D;
+	}
+}
+
+@layer components {
+	.ColorF2856D {
+    color: var(--F2856D);
+	}
+}
+
+/* 좌우 반전 css */
+.flip-image {
+	transform: scaleX(-1);
+}
+
+/* Custom Scrollbar Styling - Square (네모 형태) */
+.custom-scrollbar::-webkit-scrollbar {
+	width: 8px; /* 스크롤바 너비 */
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+	background: #f1f1f1; /* 트랙 색상 */
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+	background: #888; /* 스크롤바 색상 */
+	border-radius: 0; /* 네모 형태로 설정 */
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+	background: #555; /* 스크롤바 hover 시 색상 */
+  }
+  
