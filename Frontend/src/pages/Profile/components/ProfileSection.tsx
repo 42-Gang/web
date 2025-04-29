@@ -4,12 +4,12 @@ import ChangeProfileImg from '../../../assets/image/ChangeProfileImg.svg'
 import { FadeOverlay, PopupWrapper } from "./Animation"
 import ChangeProfilePopup from "./ChangeProfilePopup"
 
-interface ProfileProps {
+interface ProfileSectionProps {
   profileImg?: File | string | null
   onChangeProfileImg: (img: File | string | null) => void
 }
 
-const Profile: React.FC<ProfileProps> = ({ profileImg, onChangeProfileImg }) => {
+const Profile: React.FC<ProfileSectionProps> = ({ profileImg, onChangeProfileImg }) => {
   const [isOpenProfilePopup, setIsOpenProfilePopup] = useState(false)
 
   const togglePopup = () => setIsOpenProfilePopup(prev => !prev)
