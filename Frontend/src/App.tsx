@@ -27,31 +27,6 @@ import Matching from "./pages/Tournament/Matching.tsx";
 import SemiFinalWaiting from "./pages/Tournament/SemiFinalWaiting.tsx";
 import SoloMatch from "./pages/SoloMatch/SoloMatch.tsx";
 
-const AppContent = () => {
-  return (
-    <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/RegisterWithEmail" element={<RegisterWithEmail />} />
-      <Route path="/RegisterWithGoogle" element={<RegisterWithGoggle />} />
-      <Route path="/Home" element={<Home />} />
-      <Route path="/GameOptionSelect" element={<GameOptionSelect />} />
-      <Route path="/AutoGameModeSelect" element={<AutoGameModeSelect />} />
-      <Route path="/CustomGameModeSelect" element={<CustomGameModeSelect />} />
-      <Route path="/GameHistory" element={<GameHistory />} />
-      <Route path="/FriendList" element={<FriendList />} />
-      <Route path="/FriendChatRoom" element={<FriendChatRoom />} />
-      <Route path="/FriendChatRoom/:roomId" element={<FriendChatRoom />} />
-      <Route path="/Setting" element={<Setting />} />
-      <Route path="/GameScreen" element={<GameScreen />} />
-      <Route path="/Tournament" element={<Tournament />} />
-      <Route path="/Invitation" element={<Invitation />} />
-      <Route path="/TournamentMain" element={<Matching />} />
-      <Route path="/SemiFinalWaiting" element={<SemiFinalWaiting />} />
-      <Route path="/SoloMatch" element={<SoloMatch />} />
-    </Routes>
-  );
-};
-
 const App = () => {
   const webSocketContext = useContext(WebSocketContext)
   const connect = webSocketContext?.connect
@@ -96,7 +71,6 @@ const App = () => {
       <WebSocketProvider>
         <GlobalStyle />
         <ToastContainer/>
-        <AppContent/>
         <Router>
           <Routes>
             {/* 로그인 페이지 */}
