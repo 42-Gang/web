@@ -12,7 +12,7 @@ interface AlarmPopupProps {
 }
 
 interface Request {
-  friendId: string
+  userId: string
   nickname: string
   avatarUrl: string | null
 }
@@ -49,9 +49,9 @@ const AlarmPopup = ({ onClose, onFriendAccepted }: AlarmPopupProps) => {
 
 
   // 친구 요청 수락
-  const handleAcceptRequest = async (friendId: string) => {
+  const handleAcceptRequest = async (userId: string) => {
     try {
-      const response = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/requests/${friendId}/accept`, {
+      const response = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/requests/${userId}/accept`, {
         method: 'PATCH',
         body: '{}'
       })
@@ -65,7 +65,7 @@ const AlarmPopup = ({ onClose, onFriendAccepted }: AlarmPopupProps) => {
         return
       }
 
-      setRequest(prevRequest => prevRequest.filter(req => req.friendId !== friendId))
+      setRequest(prevRequest => prevRequest.filter(req => req.userId !== userId))
       toast.success(result.message, {
         position: "top-center",
         autoClose: 2000,
@@ -82,9 +82,9 @@ const AlarmPopup = ({ onClose, onFriendAccepted }: AlarmPopupProps) => {
   }
 
   // 친구 요청 거절
-  const handleRejectRequest = async (friendId: string) => {
+  const handleRejectRequest = async (userId: string) => {
     try {
-      const response = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/requests/${friendId}/reject`, {
+      const response = await authFetch(`${import.meta.env.VITE_API_URL}/api/v1/friends/requests/${userId}/reject`, {
         method: 'PATCH',
         body: '{}'
       })
@@ -98,7 +98,7 @@ const AlarmPopup = ({ onClose, onFriendAccepted }: AlarmPopupProps) => {
         return
       }
 
-      setRequest(prevRequest => prevRequest.filter(req => req.friendId !== friendId))
+      setRequest(prevRequest => prevRequest.filter(req => req.userId !== userId))
       toast.success(result.message, {
         position: "top-center",
         autoClose: 2000,
@@ -129,7 +129,7 @@ const AlarmPopup = ({ onClose, onFriendAccepted }: AlarmPopupProps) => {
         <div className="mt-[80px] space-y-4 max-h-[250px] overflow-y-auto custom-scrollbar">
           {request.map((req) => (
               <div
-                  key={req.friendId}
+                  key={req.userId}
                   className="flex items-center justify-between px-4 py-3 border-b border-white"
               >
                 <div className="flex items-center gap-4">
@@ -145,13 +145,13 @@ const AlarmPopup = ({ onClose, onFriendAccepted }: AlarmPopupProps) => {
                 <div className="flex gap-2">
                   <button
                       className="cursor-pointer opacity-60 hover:opacity-100"
-                      onClick={() => handleAcceptRequest(req.friendId)} // 수락하면 함수 호출
+                      onClick={() => handleAcceptRequest(req.userId)} // 수락하면 함수 호출
                   >
                     <img src={Accept} alt="accept"/>
                   </button>
                   <button
                       className="cursor-pointer opacity-60 hover:opacity-100"
-                      onClick={() => handleRejectRequest(req.friendId)} // 수락하면 함수 호출
+                      onClick={() => handleRejectRequest(req.userId)} // 수락하면 함수 호출
                   >
                     <img src={Reject} alt="reject"/>
                   </button>
