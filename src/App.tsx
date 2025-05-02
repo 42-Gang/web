@@ -1,4 +1,3 @@
-import { domAnimation, LazyMotion } from 'motion/react';
 import {
   createBrowserRouter,
   Navigate,
@@ -61,9 +60,7 @@ const App = () => {
         <QueryClientProvider>
           <GlobalStyle />
           <ThemeProvider>
-            <LazyMotion features={domAnimation}>
-              <Outlet />
-            </LazyMotion>
+            <Outlet />
           </ThemeProvider>
         </QueryClientProvider>
       ),
