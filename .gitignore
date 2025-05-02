@@ -245,4 +245,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Build directories
+dist
+
 # End of https://www.toptal.com/developers/gitignore/api/react,visualstudiocode,webstorm,nextjs,windows,macos
