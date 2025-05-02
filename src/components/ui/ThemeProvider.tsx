@@ -2,11 +2,11 @@ import { ThemeProvider as BaseThemeProvider } from '@emotion/react';
 import { PropsWithChildren } from 'react';
 import { Toaster } from 'sonner';
 
-import palette from './palette';
+import { palette } from '@/styles';
 
 const theme = { palette };
 
-export const UIProvider = ({ children }: PropsWithChildren) => (
+export const ThemeProvider = ({ children }: PropsWithChildren) => (
   <BaseThemeProvider theme={theme}>
     {children}
     <Toaster />

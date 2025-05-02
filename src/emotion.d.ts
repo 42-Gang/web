@@ -1,6 +1,6 @@
 import '@emotion/react';
 
-import { palette } from '@/components/ui/UIProvidier/palette';
+import { palette } from '@/styles';
 
 declare module '@emotion/react' {
   export interface Theme {

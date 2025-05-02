@@ -1,1 +1,1 @@
-export * from './UIProvidier';
+export * from './ThemeProvider';
