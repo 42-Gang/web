@@ -1,9 +1,6 @@
 import { atom, useAtom } from 'jotai';
 
-const LOCAL_STORAGE = {
-  ACCESS_TOKEN: 'accessToken',
-  REFRESH_TOKEN: 'refreshToken',
-};
+import { LOCAL_STORAGE } from '@/api';
 
 const storageMethod = {
   getItem: (key: string, initialValue: string | null) => {
