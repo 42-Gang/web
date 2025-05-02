@@ -14,6 +14,8 @@ import { UIProvider } from '@/components/ui';
 import { PATH } from '@/constants/routes';
 import { HomePage, LoginPage } from '@/pages';
 
+import { GlobalStyle } from './GlobalStyle';
+
 const App = () => {
   const publicRoutes = [
     {
@@ -57,6 +59,7 @@ const App = () => {
     {
       element: (
         <QueryClientProvider>
+          <GlobalStyle />
           <UIProvider>
             <LazyMotion features={domAnimation}>
               <Outlet />
