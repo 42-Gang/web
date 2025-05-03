@@ -52,7 +52,7 @@ export const instance = ky.create({
             }
 
             if (e instanceof Error) {
-              console.warn(`[fether.ts] ${e.name} (${e.message})`);
+              console.warn(`[fetcher.ts] ${e.name} (${e.message})`);
             }
           } finally {
             tokenRefreshMutex.release();

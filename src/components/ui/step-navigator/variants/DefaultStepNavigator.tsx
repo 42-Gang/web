@@ -1,23 +1,28 @@
-/** @jsxImportSource @emotion/react */
-import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
+import { ComponentProps } from 'react';
 
 import { StepNavigator } from '@/components/ui';
+import { layout } from '@/styles';
 
-type DefaultStepNavigatorProps = {
+type DefaultStepNavigatorProps = Omit<ComponentProps<'div'>, 'onSelect'> & {
   items: string[];
   onSelect: (index: number) => void;
   initial?: number;
 };
 
-export const DefaultStepNavigator = ({ items, onSelect, initial }: DefaultStepNavigatorProps) => {
+export const DefaultStepNavigator = ({
+  items,
+  onSelect,
+  initial,
+  ...props
+}: DefaultStepNavigatorProps) => {
   return (
     <StepNavigator
       items={items}
       onSelect={onSelect}
       initial={initial}
-      renderContainer={({ children, css }) => (
-        <Nav aria-label="단계 네비게이터" css={css} role="navigation">
+      renderContainer={({ children }) => (
+        <Nav aria-label="단계 네비게이터" role="navigation" {...props}>
           <List role="list">{children}</List>
         </Nav>
       )}
@@ -53,40 +58,23 @@ export const DefaultStepNavigator = ({ items, onSelect, initial }: DefaultStepNa
   );
 };
 
-const fadeSlide = keyframes`
-  from {
-    transform: translateX(-6px);
-    opacity: 0.3;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-`;
-
 const Nav = styled.nav`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
+  ${layout.center};
   color: white;
   font-family: 'Tiny5', sans-serif;
   font-size: 32px;
 `;
 
 const List = styled.ul`
+  ${layout.columnCenterY};
   margin: 0;
   padding: 0;
   list-style: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   min-width: 200px;
 `;
 
 const Item = styled.li`
-  display: flex;
-  justify-content: center;
+  ${layout.centerX};
   width: 100%;
 `;
 
@@ -94,7 +82,7 @@ const Button = styled.button`
   position: relative;
   display: inline-flex;
   align-items: center;
-  padding: 10px 8px;
+  padding: 2px 8px;
   font: inherit;
   color: inherit;
   line-height: 1.2;
@@ -104,13 +92,11 @@ const Button = styled.button`
 `;
 
 const IndicatorWrapper = styled.span`
+  ${layout.center};
   position: absolute;
-  left: -28px;
+  left: -30px;
   top: 50%;
   transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 1em;
   height: 1em;
   pointer-events: none;
@@ -120,9 +106,13 @@ const Indicator = styled.span<{ active?: boolean }>`
   display: inline-block;
   font-size: 24px;
   opacity: ${(p) => (p.active ? 1 : 0)};
-  animation: ${(p) => (p.active ? fadeSlide : 'none')} 250ms ease;
-  transition: opacity 250ms ease;
+  transform: translateX(${(p) => (p.active ? '0' : '-6px')});
+  transition:
+    transform 250ms ease,
+    opacity 250ms ease;
   will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
 `;
 
 const Text = styled.span`

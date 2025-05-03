@@ -1,9 +1,10 @@
 import { css } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { Flex } from '@/components/system';
-import { Branding, GameLicense } from '@/components/ui';
-import { DefaultStepNavigator } from '@/components/ui/step-navigator';
+import { Branding, GameLicense, DefaultStepNavigator } from '@/components/ui';
+import { PATH } from '@/constants';
 
 export const SignInPage = () => {
   const navigate = useNavigate();
@@ -11,10 +12,10 @@ export const SignInPage = () => {
   const handleSelect = (index: number) => {
     switch (index) {
       case 0:
-        navigate('/signin');
+        toast('Google sign-in is not implemented yet');
         break;
       case 1:
-        navigate('/signup');
+        navigate(PATH.SIGNIN_EMAIL);
         break;
       case 2:
         navigate(-1);
@@ -35,3 +36,5 @@ export const SignInPage = () => {
     </Flex>
   );
 };
+
+export { EmailSignInPage } from './EmailLoginPage';
