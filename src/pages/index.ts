@@ -1,3 +1,4 @@
-export * from '@/pages/HomePage';
-export * from '@/pages/LandingPage';
-export * from '@/pages/LoginPage';
+export * from './HomePage';
+export * from './LandingPage';
+export * from './SignInPage';
+export * from './SignUpPage';

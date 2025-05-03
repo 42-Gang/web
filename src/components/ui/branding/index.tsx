@@ -1,4 +1,4 @@
-import * as styles from './branding.styles';
+import * as styles from './styles.ts';
 
 export const Branding = () => {
   return (

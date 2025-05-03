@@ -11,7 +11,7 @@ import { QueryClientProvider } from '@/api';
 import { useAuthAtom } from '@/atoms/useAuthAtom';
 import { ThemeProvider, GlobalStyle } from '@/components/ui';
 import { PATH } from '@/constants/routes';
-import { HomePage, LandingPage, LoginPage } from '@/pages';
+import { HomePage, LandingPage, SignInPage, SignUpPage } from '@/pages';
 
 const App = () => {
   const PublicRoute = () => {
@@ -34,7 +34,8 @@ const App = () => {
       element: <PublicRoute />,
       children: [
         { path: PATH.LANDING, element: <LandingPage /> },
-        { path: PATH.LOGIN, element: <LoginPage /> },
+        { path: PATH.SIGNIN, element: <SignInPage /> },
+        { path: PATH.SIGNUP, element: <SignUpPage /> },
         { path: '*', element: <Navigate to={PATH.LANDING} replace /> },
       ],
     },
