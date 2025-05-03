@@ -12,8 +12,10 @@ const defaultOption: Options = {
   credentials: 'include',
 };
 
+const baseURL: string = `${import.meta.env.VITE_API_URL}/${import.meta.env.VITE_API_VERSION}`;
+
 export const instance = ky.create({
-  prefixUrl: '/api',
+  prefixUrl: baseURL,
   headers: { 'content-type': 'application/json' },
   hooks: {
     beforeRequest: [
@@ -52,7 +54,7 @@ export const instance = ky.create({
             }
 
             if (e instanceof Error) {
-              console.warn(`[fether.ts] ${e.name} (${e.message})`);
+              console.warn(`[fetcher.ts] ${e.name} (${e.message})`);
             }
           } finally {
             tokenRefreshMutex.release();
