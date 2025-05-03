@@ -1,5 +1,3 @@
-/** @jsxImportSource @emotion/react */
-import { Interpolation, Theme } from '@emotion/react';
 import { ReactNode } from 'react';
 
 import { useNavigation } from './hooks/useNavigation';
@@ -8,7 +6,6 @@ type StepNavigatorProps = {
   items: string[];
   onSelect: (index: number) => void;
   initial?: number;
-  css?: Interpolation<Theme>;
   renderItem: (props: {
     text: string;
     index: number;
@@ -20,14 +17,13 @@ type StepNavigatorProps = {
     onBlur: () => void;
     onClick: () => void;
   }) => ReactNode;
-  renderContainer: (props: { children: ReactNode; css?: Interpolation<Theme> }) => ReactNode;
+  renderContainer: (props: { children: ReactNode }) => ReactNode;
 };
 
 const StepNavigator = ({
   items,
   onSelect,
   initial = 0,
-  css,
   renderItem,
   renderContainer,
 }: StepNavigatorProps) => {
@@ -51,11 +47,9 @@ const StepNavigator = ({
     }),
   );
 
-  return renderContainer({
-    children: itemsList,
-    css,
-  });
+  return renderContainer({ children: itemsList });
 };
 
 export { StepNavigator };
+
 export { DefaultStepNavigator } from './variants/DefaultStepNavigator';

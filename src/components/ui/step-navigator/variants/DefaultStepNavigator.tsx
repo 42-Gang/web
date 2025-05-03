@@ -1,23 +1,28 @@
-/** @jsxImportSource @emotion/react */
 import styled from '@emotion/styled';
+import { ComponentProps } from 'react';
 
 import { StepNavigator } from '@/components/ui';
 import { layout } from '@/styles';
 
-type DefaultStepNavigatorProps = {
+type DefaultStepNavigatorProps = Omit<ComponentProps<'div'>, 'onSelect'> & {
   items: string[];
   onSelect: (index: number) => void;
   initial?: number;
 };
 
-export const DefaultStepNavigator = ({ items, onSelect, initial }: DefaultStepNavigatorProps) => {
+export const DefaultStepNavigator = ({
+  items,
+  onSelect,
+  initial,
+  ...props
+}: DefaultStepNavigatorProps) => {
   return (
     <StepNavigator
       items={items}
       onSelect={onSelect}
       initial={initial}
-      renderContainer={({ children, css }) => (
-        <Nav aria-label="단계 네비게이터" css={css} role="navigation">
+      renderContainer={({ children }) => (
+        <Nav aria-label="단계 네비게이터" role="navigation" {...props}>
           <List role="list">{children}</List>
         </Nav>
       )}

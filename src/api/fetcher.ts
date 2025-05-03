@@ -12,10 +12,8 @@ const defaultOption: Options = {
   credentials: 'include',
 };
 
-const baseURL: string = `${import.meta.env.VITE_API_URL}/${import.meta.env.VITE_API_VERSION}`;
-
 export const instance = ky.create({
-  prefixUrl: baseURL,
+  prefixUrl: '/api',
   headers: { 'content-type': 'application/json' },
   hooks: {
     beforeRequest: [
