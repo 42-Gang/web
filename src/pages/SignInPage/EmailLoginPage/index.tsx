@@ -3,10 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { Flex } from '@/components/system';
-import { Branding, GameLicense, DefaultStepNavigator } from '@/components/ui';
-import { PATH } from '@/constants';
+import { Branding, DefaultStepNavigator, GameLicense } from '@/components/ui';
 
-export const SignInPage = () => {
+export const EmailSignInPage = () => {
   const navigate = useNavigate();
 
   const handleSelect = (index: number) => {
@@ -15,9 +14,6 @@ export const SignInPage = () => {
         toast('Google sign-in is not implemented yet');
         break;
       case 1:
-        navigate(PATH.SIGNIN_EMAIL);
-        break;
-      case 2:
         navigate(-1);
         break;
       default:
@@ -28,13 +24,10 @@ export const SignInPage = () => {
   return (
     <Flex direction="column" justifyContent="space-between" style={{ height: '100%' }}>
       <Branding css={css({ marginTop: '74px' })} />
-      <DefaultStepNavigator
-        items={['CONTINUE WITH GOOGLE', 'CONTINUE WITH EMAIL', 'GO BACK']}
-        onSelect={handleSelect}
-      />
+      <Flex direction="column" justifyContent="center">
+        <DefaultStepNavigator items={['CONTINUE', 'GO BACK']} onSelect={handleSelect} />
+      </Flex>
       <GameLicense />
     </Flex>
   );
 };
-
-export { EmailSignInPage } from './EmailLoginPage';

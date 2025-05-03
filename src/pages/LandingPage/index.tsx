@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Flex } from '@/components/system';
 import { Branding, GameLicense } from '@/components/ui';
 import { DefaultStepNavigator } from '@/components/ui/step-navigator';
+import { PATH } from '@/constants/routes.ts';
 
 export const LandingPage = () => {
   const navigate = useNavigate();
@@ -11,10 +12,10 @@ export const LandingPage = () => {
   const handleSelect = (index: number) => {
     switch (index) {
       case 0:
-        navigate('/signin');
+        navigate(PATH.SIGNIN);
         break;
       case 1:
-        navigate('/signup');
+        navigate(PATH.SIGNUP);
         break;
       default:
         break;
