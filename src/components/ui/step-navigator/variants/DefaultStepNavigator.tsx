@@ -56,11 +56,9 @@ export const DefaultStepNavigator = ({ items, onSelect, initial }: DefaultStepNa
 const fadeSlide = keyframes`
   from {
     transform: translateX(-6px);
-    opacity: 0.3;
   }
   to {
     transform: translateX(0);
-    opacity: 1;
   }
 `;
 
@@ -120,9 +118,11 @@ const Indicator = styled.span<{ active?: boolean }>`
   display: inline-block;
   font-size: 24px;
   opacity: ${(p) => (p.active ? 1 : 0)};
-  animation: ${(p) => (p.active ? fadeSlide : 'none')} 250ms ease;
-  transition: opacity 250ms ease;
+  transform: translateX(${(p) => (p.active ? '0' : '-6px')});
+  transition: transform 250ms ease, opacity 250ms ease;
   will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
 `;
 
 const Text = styled.span`

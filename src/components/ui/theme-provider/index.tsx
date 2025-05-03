@@ -9,7 +9,7 @@ const theme = { palette };
 export const ThemeProvider = ({ children }: PropsWithChildren) => (
   <BaseThemeProvider theme={theme}>
     {children}
-    <Toaster />
+    <Toaster position="top-right" />
   </BaseThemeProvider>
 );
 
