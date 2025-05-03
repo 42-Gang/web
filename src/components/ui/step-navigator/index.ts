@@ -51,10 +51,7 @@ const StepNavigator = ({
     }),
   );
 
-  return renderContainer({
-    children: itemsList,
-    css,
-  });
+  return renderContainer({ children: itemsList, css });
 };
 
 export { StepNavigator };
