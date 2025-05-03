@@ -248,4 +248,7 @@ $RECYCLE.BIN/
 # Build directories
 dist
 
+# SWC
+.swc
+
 # End of https://www.toptal.com/developers/gitignore/api/react,visualstudiocode,webstorm,nextjs,windows,macos
