@@ -8,14 +8,10 @@ interface Response {
 }
 
 const postRefreshToken = async () => {
-  const refreshToken = window.localStorage.getItem(LOCAL_STORAGE.REFRESH_TOKEN);
-
-  if (refreshToken) {
-    const response = await ky.post(`/api/v1/auth/refresh-token`, {
-      credentials: 'include',
-    });
-    return await response.json<HttpResponse<Response>>();
-  }
+  const response = await ky.post(`/api/v1/auth/refresh-token`, {
+    credentials: 'include',
+  });
+  return await response.json<HttpResponse<Response>>();
 };
 
 export async function refreshAccessToken() {
