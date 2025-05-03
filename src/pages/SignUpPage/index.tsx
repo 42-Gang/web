@@ -1,21 +1,55 @@
 import { css } from '@emotion/react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
+import { useMailVerification, useRegister } from '@/api';
 import { Flex } from '@/components/system';
 import { Branding } from '@/components/ui';
 
 export const SignUpPage = () => {
-  const navigate = useNavigate();
-
   const [email, setEmail] = useState<string>('');
-  const [verificationCode, setVerificationCode] = useState<string>('');
+  const [mailVerificationCode, setMailVerificationCode] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [nickname, setNickname] = useState<string>('');
 
+  const { mutateAsync: mailVerifyMutation } = useMailVerification();
+  const { mutateAsync: registerMutation } = useRegister();
+
+  const handleMailVerify = () => {
+    if (!email) {
+      alert('Please enter your email');
+      return;
+    }
+
+    mailVerifyMutation({ email })
+      .then(() => {
+        alert('Verification code sent to your email');
+      })
+      .catch((error) => {
+        console.error('Error sending verification code:', error);
+        alert('Failed to send verification code');
+      });
+  };
+
   const handleSelect = () => {
-    navigate(-1);
+    if (!email || !mailVerificationCode || !password || !confirmPassword || !nickname) {
+      alert('Please fill in all fields');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+
+    registerMutation({ email, password, nickname, mailVerificationCode })
+      .then(() => {
+        alert('Registration successful');
+      })
+      .catch((error) => {
+        console.error('Error during registration:', error);
+        alert('Registration failed');
+      });
   };
 
   return (
@@ -27,14 +61,26 @@ export const SignUpPage = () => {
         <Flex justifyContent="center" style={{ color: 'white' }}>
           <label htmlFor="email">EMAIL: </label>
           <input id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <button type="button" onClick={handleMailVerify}>
+            verify
+          </button>
         </Flex>
         <Flex justifyContent="center" style={{ color: 'white' }}>
           <label htmlFor="verificationCode">VERIFY CODE: </label>
-          <input id="verificationCode" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} />
+          <input
+            id="verificationCode"
+            value={mailVerificationCode}
+            onChange={(e) => setMailVerificationCode(e.target.value)}
+          />
         </Flex>
         <Flex justifyContent="center" style={{ color: 'white' }}>
           <label htmlFor="password">PASSWORD: </label>
-          <input id="password" value={password} onChange={(e) => setPassword(e.target.value)} type="password" />
+          <input
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            type="password"
+          />
         </Flex>
         <Flex justifyContent="center" style={{ color: 'white' }}>
           <label htmlFor="confirmPassword">RE-PASSWORD: </label>
