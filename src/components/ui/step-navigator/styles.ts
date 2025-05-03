@@ -65,15 +65,15 @@ export const IndicatorWrapper = styled.span`
 export const Indicator = styled.span<{ active: boolean }>`
   display: inline-block;
   font-size: 24px;
-  
+
   opacity: ${(p) => (p.active ? 1 : 0)};
-  animation: ${(p) => (p.active ? fadeSlide : 'none')} 200ms ease;
-  transition: opacity 200ms ease;
+  animation: ${(p) => (p.active ? fadeSlide : 'none')} 250ms ease;
+  transition: opacity 250ms ease;
 `;
 
 export const Text = styled.span`
   display: inline-block;
   font-weight: inherit;
   text-align: center;
-  transition: font-weight 200ms ease;
+  transition: font-weight 250ms ease;
 `;

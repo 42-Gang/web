@@ -1,8 +1,15 @@
+/** @jsxImportSource @emotion/react */
+import { Interpolation, Theme } from '@emotion/react';
+
 import * as styles from './styles.ts';
 
-export const Branding = () => {
+type BrandingProps = {
+  css?: Interpolation<Theme>;
+};
+
+export const Branding = ({ css }: BrandingProps) => {
   return (
-    <styles.Brand>
+    <styles.Brand css={css}>
       PING PONG
       <br />
       Gang

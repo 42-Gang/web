@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { Branding, StepNavigator } from '@/components/ui';
 
+import * as styles from './styles.ts';
+
 export const LandingPage = () => {
   const navigate = useNavigate();
 
@@ -20,13 +22,16 @@ export const LandingPage = () => {
   };
 
   return (
-    <>
-      <Branding />
-      <StepNavigator
-        css={css({ marginTop: '80px' })}
-        items={['SIGN IN', 'SIGN UP']}
-        onSelect={handleSelect}
-      />
-    </>
+    <styles.Container>
+      <Branding css={css({ marginTop: '74px' })} />
+      <StepNavigator items={['SIGN IN', 'SIGN UP']} onSelect={handleSelect} />
+      <styles.LicenseText>
+        TH & C 1980 1993 NAMCO LTD.
+        <br />
+        NAMCO HOMETEK, INC.
+        <br />
+        LICENSED BY NINTENDO
+      </styles.LicenseText>
+    </styles.Container>
   );
 };
