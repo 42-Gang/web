@@ -1,9 +1,8 @@
 import { css } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 
-import { Branding, StepNavigator } from '@/components/ui';
-
-import * as styles from './styles.ts';
+import { Flex } from '@/components/system';
+import { Branding, StepNavigator, GameLicense } from '@/components/ui';
 
 export const LandingPage = () => {
   const navigate = useNavigate();
@@ -22,16 +21,10 @@ export const LandingPage = () => {
   };
 
   return (
-    <styles.Container>
+    <Flex direction="column" justifyContent="space-between" style={{ height: '100%' }}>
       <Branding css={css({ marginTop: '74px' })} />
       <StepNavigator items={['SIGN IN', 'SIGN UP']} onSelect={handleSelect} />
-      <styles.License>
-        TH & C 1980 1993 NAMCO LTD.
-        <br />
-        NAMCO HOMETEK, INC.
-        <br />
-        LICENSED BY NINTENDO
-      </styles.License>
-    </styles.Container>
+      <GameLicense />
+    </Flex>
   );
 };

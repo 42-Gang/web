@@ -26,23 +26,27 @@ export const List = styled.ul`
   margin: 0;
   padding: 0;
   list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 200px;
 `;
 
 export const Item = styled.li`
-  margin: 6px 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
 `;
 
 export const Button = styled.button`
   position: relative;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  padding: 4px 8px;
-
+  padding: 10px 8px;
   font: inherit;
   color: inherit;
   line-height: 1.2;
   cursor: pointer;
-  
   border: none;
   background: none;
 `;
@@ -50,29 +54,26 @@ export const Button = styled.button`
 export const IndicatorWrapper = styled.span`
   position: absolute;
   left: -28px;
-  top: 0;
-  bottom: 0;
-
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
-
   width: 1em;
-  height: 100%;
+  height: 1em;
   pointer-events: none;
 `;
 
 export const Indicator = styled.span<{ active: boolean }>`
   display: inline-block;
   font-size: 24px;
-
   opacity: ${(p) => (p.active ? 1 : 0)};
   animation: ${(p) => (p.active ? fadeSlide : 'none')} 250ms ease;
   transition: opacity 250ms ease;
+  will-change: transform, opacity;
 `;
 
 export const Text = styled.span`
-  display: inline-block;
   font-weight: inherit;
   text-align: center;
   transition: font-weight 250ms ease;
