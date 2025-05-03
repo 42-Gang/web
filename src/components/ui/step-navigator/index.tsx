@@ -1,0 +1,61 @@
+/** @jsxImportSource @emotion/react */
+import { Interpolation, Theme } from '@emotion/react';
+import { ReactNode } from 'react';
+
+import { useNavigation } from './hooks/useNavigation';
+
+type StepNavigatorProps = {
+  items: string[];
+  onSelect: (index: number) => void;
+  initial?: number;
+  css?: Interpolation<Theme>;
+  renderItem: (props: {
+    text: string;
+    index: number;
+    isSelected: boolean;
+    isCurrent: boolean;
+    onMouseEnter: () => void;
+    onMouseLeave: () => void;
+    onFocus: () => void;
+    onBlur: () => void;
+    onClick: () => void;
+  }) => ReactNode;
+  renderContainer: (props: { children: ReactNode; css?: Interpolation<Theme> }) => ReactNode;
+};
+
+const StepNavigator = ({
+  items,
+  onSelect,
+  initial = 0,
+  css,
+  renderItem,
+  renderContainer,
+}: StepNavigatorProps) => {
+  const { state, current, actions } = useNavigation({ items, onSelect, initial });
+
+  if (items.length === 0) {
+    return null;
+  }
+
+  const itemsList = items.map((text, i) =>
+    renderItem({
+      text,
+      index: i,
+      isSelected: i === state.selected,
+      isCurrent: i === current,
+      onMouseEnter: () => actions.onHover(i),
+      onMouseLeave: () => actions.onHover(null),
+      onFocus: () => actions.onFocus(i),
+      onBlur: () => actions.onFocus(null),
+      onClick: () => actions.onSelect(i),
+    }),
+  );
+
+  return renderContainer({
+    children: itemsList,
+    css,
+  });
+};
+
+export { StepNavigator };
+export { DefaultStepNavigator } from './variants/DefaultStepNavigator';

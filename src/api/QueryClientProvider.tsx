@@ -1,0 +1,19 @@
+import { QueryClient, QueryClientProvider as BaseQueryClientProvider } from '@tanstack/react-query';
+import { PropsWithChildren, useState } from 'react';
+
+export function QueryClientProvider({ children }: PropsWithChildren) {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            refetchOnWindowFocus: false,
+            retry: false,
+            staleTime: 5000,
+          },
+        },
+      }),
+  );
+
+  return <BaseQueryClientProvider client={queryClient}>{children}</BaseQueryClientProvider>;
+}
