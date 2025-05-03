@@ -25,28 +25,29 @@ export const SignUpPage = () => {
       {/* TODO: Implement UI */}
       <Flex direction="column" justifyContent="center">
         <Flex justifyContent="center" style={{ color: 'white' }}>
-          <p>EMAIL: </p>
-          <input value={email} onChange={(e) => setEmail(e.target.value)} />
+          <label htmlFor="email">EMAIL: </label>
+          <input id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         </Flex>
         <Flex justifyContent="center" style={{ color: 'white' }}>
-          <p>VERIFY CODE: </p>
-          <input value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} />
+          <label htmlFor="verificationCode">VERIFY CODE: </label>
+          <input id="verificationCode" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} />
         </Flex>
         <Flex justifyContent="center" style={{ color: 'white' }}>
-          <p>PASSWORD: </p>
-          <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" />
+          <label htmlFor="password">PASSWORD: </label>
+          <input id="password" value={password} onChange={(e) => setPassword(e.target.value)} type="password" />
         </Flex>
         <Flex justifyContent="center" style={{ color: 'white' }}>
-          <p>RE-PASSWORD: </p>
+          <label htmlFor="confirmPassword">RE-PASSWORD: </label>
           <input
+            id="confirmPassword"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             type="password"
           />
         </Flex>
         <Flex justifyContent="center" style={{ color: 'white' }}>
-          <p>NICKNAME: </p>
-          <input value={nickname} onChange={(e) => setNickname(e.target.value)} />
+          <label htmlFor="nickname">NICKNAME: </label>
+          <input id="nickname" value={nickname} onChange={(e) => setNickname(e.target.value)} />
         </Flex>
         <button type="button" onClick={handleSelect}>
           REGISTER
