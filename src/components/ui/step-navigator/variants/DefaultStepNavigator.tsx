@@ -10,7 +10,7 @@ type DefaultStepNavigatorProps = {
   initial?: number;
 };
 
-const DefaultStepNavigator = ({ items, onSelect, initial }: DefaultStepNavigatorProps) => {
+export const DefaultStepNavigator = ({ items, onSelect, initial }: DefaultStepNavigatorProps) => {
   return (
     <StepNavigator
       items={items}
@@ -130,5 +130,3 @@ const Text = styled.span`
   text-align: center;
   transition: font-weight 250ms ease;
 `;
-
-export { DefaultStepNavigator };
