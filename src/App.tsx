@@ -9,25 +9,33 @@ import {
 
 import { QueryClientProvider } from '@/api';
 import { useAuthAtom } from '@/atoms/useAuthAtom';
-import { ThemeProvider } from '@/components/ui';
+import { ThemeProvider, GlobalStyle } from '@/components/ui';
 import { PATH } from '@/constants/routes';
-import { HomePage, LoginPage } from '@/pages';
-
-import { GlobalStyle } from './GlobalStyle';
+import { HomePage, LandingPage, LoginPage } from '@/pages';
 
 const App = () => {
+  const PublicRoute = () => {
+    const { isLogin } = useAuthAtom();
+
+    if (isLogin()) {
+      return <Navigate to={PATH.HOME} replace />;
+    }
+
+    return (
+      <>
+        <ScrollRestoration />
+        <Outlet />
+      </>
+    );
+  };
+
   const publicRoutes = [
     {
-      element: (
-        <>
-          <ScrollRestoration />
-          <Outlet />
-        </>
-      ),
+      element: <PublicRoute />,
       children: [
-        { path: PATH.INDEX, element: <HomePage /> },
+        { path: PATH.LANDING, element: <LandingPage /> },
         { path: PATH.LOGIN, element: <LoginPage /> },
-        { path: '*', element: <Navigate to={PATH.INDEX} replace /> },
+        { path: '*', element: <Navigate to={PATH.LANDING} replace /> },
       ],
     },
   ];
@@ -36,7 +44,7 @@ const App = () => {
     const { isLogin } = useAuthAtom();
 
     if (!isLogin()) {
-      return <Navigate to={PATH.LOGIN} replace />;
+      return <Navigate to={PATH.LANDING} replace />;
     }
 
     return (

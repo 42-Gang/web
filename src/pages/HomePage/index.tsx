@@ -1,3 +1,10 @@
+import { Branding } from '@/components/ui';
+
 export const HomePage = () => {
-  return <>Home</>;
+  return (
+    <>
+      <Branding />
+      <p style={{ fontFamily: 'StWinterPixel', color: 'white' }}>asdfasfas</p>
+    </>
+  );
 };

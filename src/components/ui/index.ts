@@ -1,1 +1,2 @@
-export * from './ThemeProvider';
+export * from './branding';
+export * from './theme-provider';
