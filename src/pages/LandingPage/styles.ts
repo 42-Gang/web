@@ -7,7 +7,7 @@ export const Container = styled.div`
   height: 100%;
 `;
 
-export const LicenseText = styled.p`
+export const License = styled.p`
   margin-bottom: 36px;
   width: 100%;
   color: white;

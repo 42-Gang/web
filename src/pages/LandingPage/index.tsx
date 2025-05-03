@@ -25,13 +25,13 @@ export const LandingPage = () => {
     <styles.Container>
       <Branding css={css({ marginTop: '74px' })} />
       <StepNavigator items={['SIGN IN', 'SIGN UP']} onSelect={handleSelect} />
-      <styles.LicenseText>
+      <styles.License>
         TH & C 1980 1993 NAMCO LTD.
         <br />
         NAMCO HOMETEK, INC.
         <br />
         LICENSED BY NINTENDO
-      </styles.LicenseText>
+      </styles.License>
     </styles.Container>
   );
 };
