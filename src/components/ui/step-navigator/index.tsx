@@ -46,7 +46,9 @@ export const StepNavigator = ({ items, onSelect, initial = 0, css }: StepNavigat
               aria-current={i === selected}
               aria-label={`${text} 단계 선택`}
             >
-              <styles.Indicator active={i === current}>▶</styles.Indicator>
+              <styles.IndicatorWrapper>
+                <styles.Indicator active={i === current}>▶</styles.Indicator>
+              </styles.IndicatorWrapper>
               <styles.Text>{text}</styles.Text>
             </styles.Button>
           </styles.Item>

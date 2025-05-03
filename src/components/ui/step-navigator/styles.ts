@@ -1,9 +1,9 @@
 import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 
-const move = keyframes`
+const fadeSlide = keyframes`
   from {
-    transform: translateX(-4px);
+    transform: translateX(-6px);
     opacity: 0.3;
   }
   to {
@@ -16,15 +16,16 @@ export const Nav = styled.nav`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  color: white;
   font-family: 'Tiny5', sans-serif;
   font-size: 32px;
-  color: white;
 `;
 
 export const List = styled.ul`
-  list-style: none;
-  padding: 0;
   margin: 0;
+  padding: 0;
+  list-style: none;
 `;
 
 export const Item = styled.li`
@@ -32,28 +33,47 @@ export const Item = styled.li`
 `;
 
 export const Button = styled.button`
+  position: relative;
   display: flex;
   align-items: center;
   padding: 4px 8px;
 
-  color: inherit;
   font: inherit;
+  color: inherit;
+  line-height: 1.2;
   cursor: pointer;
+  
   border: none;
   background: none;
-  gap: 8px;
+`;
+
+export const IndicatorWrapper = styled.span`
+  position: absolute;
+  left: -28px;
+  top: 0;
+  bottom: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 1em;
+  height: 100%;
+  pointer-events: none;
 `;
 
 export const Indicator = styled.span<{ active: boolean }>`
   display: inline-block;
-  width: 1em;
-  font-size: 20px;
+  font-size: 24px;
+  
   opacity: ${(p) => (p.active ? 1 : 0)};
-  animation: ${(p) => (p.active ? move : 'none')} 200ms ease-in-out;
-  transition: opacity 200ms ease-in-out;
+  animation: ${(p) => (p.active ? fadeSlide : 'none')} 200ms ease;
+  transition: opacity 200ms ease;
 `;
 
 export const Text = styled.span`
-  transition: font-weight 200ms ease-in-out;
+  display: inline-block;
   font-weight: inherit;
+  text-align: center;
+  transition: font-weight 200ms ease;
 `;
