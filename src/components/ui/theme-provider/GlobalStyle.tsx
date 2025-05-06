@@ -1,6 +1,6 @@
 import { css, Global } from '@emotion/react';
 
-import { palette, reset } from '@/styles';
+import { palette, reset, spacing } from '@/styles';
 
 const fonts = [
   {
@@ -25,8 +25,8 @@ const styles = css`
     left: 50%;
     transform: translate(-50%, -50%);
 
-    width: 800px;
-    height: 600px;
+    width: ${spacing.appWidth};
+    height: ${spacing.appHeight};
     margin: 0;
     padding: 0;
 

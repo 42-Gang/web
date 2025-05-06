@@ -5,6 +5,7 @@ import { Flex } from '@/components/system';
 import { Branding, GameLicense } from '@/components/ui';
 import { DefaultStepNavigator } from '@/components/ui/step-navigator';
 import { PATH } from '@/constants/routes.ts';
+import { spacing } from '@/styles';
 
 export const LandingPage = () => {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ export const LandingPage = () => {
 
   return (
     <Flex direction="column" justifyContent="space-between" style={{ height: '100%' }}>
-      <Branding css={css({ marginTop: '74px' })} />
+      <Branding css={css({ marginTop: spacing.brandingTopMargin })} />
       <DefaultStepNavigator items={['SIGN IN', 'SIGN UP']} onSelect={handleSelect} />
       <GameLicense />
     </Flex>

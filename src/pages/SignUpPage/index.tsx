@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useMailVerification, useRegister } from '@/api';
 import { Flex } from '@/components/system';
 import { Branding } from '@/components/ui';
+import { spacing } from '@/styles';
 
 export const SignUpPage = () => {
   const [email, setEmail] = useState<string>('');
@@ -54,7 +55,7 @@ export const SignUpPage = () => {
 
   return (
     <Flex direction="column" justifyContent="space-between" style={{ height: '100%' }}>
-      <Branding css={css({ marginTop: '74px' })} />
+      <Branding css={css({ marginTop: spacing.brandingTopMargin })} />
 
       {/* TODO: Implement UI */}
       <Flex direction="column" justifyContent="center">
