@@ -11,16 +11,16 @@ export const HomePage = () => {
   const handleSelect = (index: number) => {
     switch (index) {
       case 0:
-        navigate(PATH.SIGNIN_EMAIL);
+        navigate(PATH.GAME);
         break;
       case 1:
-        navigate(PATH.SIGNIN_EMAIL);
+        navigate(PATH.GAME_HISTORY);
         break;
       case 2:
-        navigate(-1);
+        navigate(PATH.FRIEND);
         break;
       case 3:
-        navigate(-1);
+        navigate(PATH.PROFILE);
         break;
       default:
         break;
