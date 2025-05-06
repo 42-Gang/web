@@ -6,6 +6,7 @@ import { useLogin } from '@/api';
 import { useAuthAtom } from '@/atoms/useAuthAtom';
 import { Flex } from '@/components/system';
 import { Branding, DefaultStepNavigator, GameLicense } from '@/components/ui';
+import { spacing } from '@/styles';
 
 export const EmailSignInPage = () => {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ export const EmailSignInPage = () => {
 
   return (
     <Flex direction="column" justifyContent="space-between" style={{ height: '100%' }}>
-      <Branding css={css({ marginTop: '74px' })} />
+      <Branding css={css({ marginTop: spacing.brandingTopMargin })} />
 
       {/* TODO: Implement UI */}
       <Flex direction="column" justifyContent="center">

@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { Flex } from '@/components/system';
 import { Branding, GameLicense, DefaultStepNavigator } from '@/components/ui';
 import { PATH } from '@/constants';
+import { spacing } from '@/styles';
 
 export const SignInPage = () => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ export const SignInPage = () => {
 
   return (
     <Flex direction="column" justifyContent="space-between" style={{ height: '100%' }}>
-      <Branding css={css({ marginTop: '74px' })} />
+      <Branding css={css({ marginTop: spacing.brandingTopMargin })} />
       <DefaultStepNavigator
         items={['CONTINUE WITH GOOGLE', 'CONTINUE WITH EMAIL', 'GO BACK']}
         onSelect={handleSelect}
