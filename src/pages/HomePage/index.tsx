@@ -9,21 +9,9 @@ export const HomePage = () => {
   const navigate = useNavigate();
 
   const handleSelect = (index: number) => {
-    switch (index) {
-      case 0:
-        navigate(PATH.GAME);
-        break;
-      case 1:
-        navigate(PATH.GAME_HISTORY);
-        break;
-      case 2:
-        navigate(PATH.FRIEND);
-        break;
-      case 3:
-        navigate(PATH.PROFILE);
-        break;
-      default:
-        break;
+    const paths = [PATH.GAME, PATH.GAME_HISTORY, PATH.FRIEND, PATH.PROFILE];
+    if (index >= 0 && index < paths.length) {
+      navigate(paths[index]);
     }
   };
 
