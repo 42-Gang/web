@@ -5,4 +5,9 @@ export const PATH = {
   SIGNIN_EMAIL: '/signin/email',
   SIGNUP: '/signup',
   HISTORY: '/history',
+  GAME: '/game',
+  GAME_HISTORY: '/game/history',
+
+  FRIEND: '/friend',
+  PROFILE: '/profile',
 } as const;
