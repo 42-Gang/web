@@ -4,4 +4,5 @@ export const PATH = {
   SIGNIN: '/signin',
   SIGNIN_EMAIL: '/signin/email',
   SIGNUP: '/signup',
+  HISTORY: '/history',
 } as const;
