@@ -1,4 +1,4 @@
-import { useUserInformation } from '@/api/queries/useUserInformation.ts';
+import { useUserInformation } from '@/api';
 
 import { OneVsOneSummary } from './one-vs-one-summary/index.tsx';
 
