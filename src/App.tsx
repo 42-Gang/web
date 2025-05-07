@@ -11,7 +11,14 @@ import { QueryClientProvider } from '@/api';
 import { useAuthAtom } from '@/atoms/useAuthAtom';
 import { ThemeProvider, GlobalStyle } from '@/components/ui';
 import { PATH } from '@/constants/routes';
-import { EmailSignInPage, HomePage, LandingPage, SignInPage, SignUpPage } from '@/pages';
+import {
+  EmailSignInPage,
+  FriendPage,
+  HomePage,
+  LandingPage,
+  SignInPage,
+  SignUpPage,
+} from '@/pages';
 
 const App = () => {
   const PublicRoute = () => {
@@ -60,7 +67,10 @@ const App = () => {
   const privateRoutes = [
     {
       element: <PrivateRoute />,
-      children: [{ path: PATH.HOME, element: <HomePage /> }],
+      children: [
+        { path: PATH.HOME, element: <HomePage /> },
+        { path: PATH.FRIEND, element: <FriendPage /> },
+      ],
     },
   ];
 
