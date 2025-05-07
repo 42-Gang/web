@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Flex } from '@/components/system';
 
 import { GoHomePage } from './components/go-home-page';
+import { OneVsOneStats } from './components/one-vs-one-stats';
 import { SectionTitle } from './components/section-title';
 import { ViewToggle } from './components/view-toggle';
 
@@ -32,6 +33,10 @@ export const HistoryPage = () => {
           onClick={() => handleToggle('TOURNAMENT')}
           isSelected={selected === 'TOURNAMENT'}
         />
+      </Flex>
+      <Flex justifyContent="center">
+        {selected === '1VS1' && <OneVsOneStats />}
+        {/* {selected === 'TOURNAMENT'} */}
       </Flex>
     </>
   );
