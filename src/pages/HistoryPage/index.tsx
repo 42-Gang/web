@@ -1,9 +1,10 @@
 import { useState } from 'react';
 
+import { Flex } from '@/components/system';
+
 import { GoHomePage } from './components/go-home-page';
 import { SectionTitle } from './components/section-title';
 import { ViewToggle } from './components/view-toggle';
-import { ToggleButtonGroup } from './components/view-toggle/ToggleButtonGroup';
 
 export const HistoryPage = () => {
   const [selected, setSelected] = useState<'1VS1' | 'TOURNAMENT' | null>(null);
@@ -20,7 +21,7 @@ export const HistoryPage = () => {
     <>
       <GoHomePage />
       <SectionTitle />
-      <ToggleButtonGroup>
+      <Flex justifyContent="center" gap="1rem">
         <ViewToggle
           label="1 VS 1"
           onClick={() => handleToggle('1VS1')}
@@ -31,7 +32,7 @@ export const HistoryPage = () => {
           onClick={() => handleToggle('TOURNAMENT')}
           isSelected={selected === 'TOURNAMENT'}
         />
-      </ToggleButtonGroup>
+      </Flex>
     </>
   );
 };

@@ -6,7 +6,6 @@ export const PATH = {
   SIGNUP: '/signup',
   HISTORY: '/history',
   GAME: '/game',
-  GAME_HISTORY: '/game/history',
 
   FRIEND: '/friend',
   PROFILE: '/profile',
