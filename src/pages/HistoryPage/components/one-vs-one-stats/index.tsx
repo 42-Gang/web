@@ -6,7 +6,7 @@ export const OneVsOneStats = () => {
   const { data, isLoading, isError } = useUserInformation();
 
   if (isLoading) return <p>Loading</p>;
-  if (isError || !data || !data.data) return <p>No data</p>;
+  if (isError || !data?.data) return <p>No data</p>;
 
   return <OneVsOneSummary wins={data.data.win} losses={data.data.lose} />;
 };
