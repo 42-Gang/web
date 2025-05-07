@@ -10,7 +10,7 @@ export const HomePage = () => {
   const navigate = useNavigate();
 
   const handleSelect = (index: number) => {
-    const paths = [PATH.GAME, PATH.GAME_HISTORY, PATH.FRIEND, PATH.PROFILE];
+    const paths = [PATH.GAME, PATH.HISTORY, PATH.FRIEND, PATH.PROFILE];
     if (index >= 0 && index < paths.length) {
       navigate(paths[index]);
     }
@@ -21,7 +21,7 @@ export const HomePage = () => {
       <Flex direction="column" justifyContent="space-between" style={{ height: '100%' }}>
         <Branding css={css({ marginTop: spacing.brandingTopMargin })} />
         <DefaultStepNavigator
-          items={['START GAME', 'GAME HISTORY', 'FRIEND', 'PROFILE']}
+          items={['START GAME', 'HISTORY', 'FRIEND', 'PROFILE']}
           onSelect={handleSelect}
         />
         <GameLicense />
