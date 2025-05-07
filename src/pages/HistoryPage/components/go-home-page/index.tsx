@@ -14,7 +14,7 @@ export const GoHomePage = ({ css }: GoHomePageProps) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(PATH.HISTORY);
+    navigate(PATH.HOME);
   };
 
   return (
