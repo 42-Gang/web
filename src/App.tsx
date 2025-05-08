@@ -18,6 +18,7 @@ import {
   LandingPage,
   SignInPage,
   SignUpPage,
+  HistoryPage,
 } from '@/pages';
 
 const App = () => {
@@ -44,6 +45,7 @@ const App = () => {
         { path: PATH.SIGNIN, element: <SignInPage /> },
         { path: PATH.SIGNIN_EMAIL, element: <EmailSignInPage /> },
         { path: PATH.SIGNUP, element: <SignUpPage /> },
+        { path: PATH.HISTORY, element: <HistoryPage /> },
         { path: '*', element: <Navigate to={PATH.LANDING} replace /> },
       ],
     },
