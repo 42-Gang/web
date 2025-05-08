@@ -45,7 +45,6 @@ const App = () => {
         { path: PATH.SIGNIN, element: <SignInPage /> },
         { path: PATH.SIGNIN_EMAIL, element: <EmailSignInPage /> },
         { path: PATH.SIGNUP, element: <SignUpPage /> },
-        { path: PATH.HISTORY, element: <HistoryPage /> },
         { path: '*', element: <Navigate to={PATH.LANDING} replace /> },
       ],
     },
@@ -71,6 +70,7 @@ const App = () => {
       element: <PrivateRoute />,
       children: [
         { path: PATH.HOME, element: <HomePage /> },
+        { path: PATH.HISTORY, element: <HistoryPage /> },
         { path: PATH.FRIEND, element: <FriendPage /> },
       ],
     },
