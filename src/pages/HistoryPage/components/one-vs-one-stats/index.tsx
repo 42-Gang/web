@@ -3,10 +3,10 @@ import { useUserInformation } from '@/api';
 import { OneVsOneSummary } from './one-vs-one-summary/index.tsx';
 
 export const OneVsOneStats = () => {
-  const { data, isLoading, isError } = useUserInformation();
+  const { data } = useUserInformation();
 
-  if (isLoading) return <p>Loading</p>;
-  if (isError || !data?.data) return <p>No data</p>;
+  const wins = data?.data?.win ?? null;
+  const losses = data?.data?.lose ?? null;
 
-  return <OneVsOneSummary wins={data.data.win} losses={data.data.lose} />;
+  return <OneVsOneSummary wins={wins} losses={losses} />;
 };

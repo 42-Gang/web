@@ -5,6 +5,7 @@ import { Flex } from '@/components/system';
 import { GoHomePage } from './components/go-home-page';
 import { OneVsOneStats } from './components/one-vs-one-stats';
 import { SectionTitle } from './components/section-title';
+import { TournamentStats } from './components/tournament-stats';
 import { ViewToggle } from './components/view-toggle';
 
 export const HistoryPage = () => {
@@ -22,7 +23,7 @@ export const HistoryPage = () => {
     <>
       <GoHomePage />
       <SectionTitle />
-      <Flex justifyContent="center" gap="1rem">
+      <Flex justifyContent="center" gap="3rem">
         <ViewToggle
           label="1 VS 1"
           onClick={() => handleToggle('1VS1')}
@@ -36,7 +37,7 @@ export const HistoryPage = () => {
       </Flex>
       <Flex justifyContent="center">
         {selected === '1VS1' && <OneVsOneStats />}
-        {/* {selected === 'TOURNAMENT'} */}
+        {selected === 'TOURNAMENT' && <TournamentStats />}
       </Flex>
     </>
   );

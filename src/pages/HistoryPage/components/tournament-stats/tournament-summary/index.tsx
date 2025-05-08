@@ -1,16 +1,14 @@
 /** @jsxImportSource @emotion/react */
 import * as styles from './styles.ts';
 
-type OneVsOneSummaryProps = {
-  wins: number | null;
-  losses: number | null;
+type TournamentSummaryProps = {
+  tournament: number | null;
 };
 
-export const OneVsOneSummary = ({ wins, losses }: OneVsOneSummaryProps) => {
+export const TournamentSummary = ({ tournament }: TournamentSummaryProps) => {
   return (
     <styles.summaryContainer>
-      <RateBox label="WIN" value={wins} labelColor="white" valueColor="yellow" />
-      <RateBox label="LOSE" value={losses} labelColor="white" valueColor="yellow" />
+      <RateBox label="Total Wins" value={tournament} labelColor="white" valueColor="yellow" />
     </styles.summaryContainer>
   );
 };

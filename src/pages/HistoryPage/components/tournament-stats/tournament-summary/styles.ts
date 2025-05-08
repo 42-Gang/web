@@ -6,8 +6,6 @@ type rateBoxProps = {
 };
 
 export const summaryContainer = styled.div`
-  display: flex;
-  gap: 8rem;
   margin-top: 20px;
 
   font-family: 'Tiny5', sans-serif;
@@ -16,12 +14,8 @@ export const summaryContainer = styled.div`
 `;
 
 export const rateBox = styled.div<rateBoxProps>`
-  width: 170px;
+  width: 270px;
   height: 120px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 
   & > div:first-of-type {
     font-size: 60px;
