@@ -1,34 +1,40 @@
-import LogoutButton from '@/pages/ProfilePage/components/logout-button';
-import ProfileImage from '@/pages/ProfilePage/components/profile-image';
+import { useNavigate } from 'react-router-dom';
 
-import * as S from './styles';
+import LogoutButton from '../logout-button';
+import ProfileImage from '../profile-image';
+import * as styles from './styles';
 
 const ProfileCard = () => {
+  const navigate = useNavigate();
   const nickname = 'PONG';
 
   const handleNicknameEdit = () => {};
 
+  const handleClose = () => {
+    navigate(-1);
+  };
+
   return (
-    <S.CardWrapper>
-      <S.CloseButton>×</S.CloseButton>
-      <S.Title>Profile</S.Title>
-      <S.Content>
+    <styles.CardWrapper>
+      <styles.CloseButton onClick={handleClose} />
+      <styles.Title>Profile</styles.Title>
+      <styles.Content>
         <ProfileImage />
-        <S.Info>
+        <styles.Info>
           <p>
             Nickname :
-            <S.NicknameWrapper>
+            <styles.NicknameWrapper>
               <strong>{nickname}</strong>
-              <S.EditButton onClick={handleNicknameEdit}>✏️</S.EditButton>
-            </S.NicknameWrapper>
+              <styles.EditButton onClick={handleNicknameEdit}>✏️</styles.EditButton>
+            </styles.NicknameWrapper>
           </p>
           <p>WIN : 45</p>
           <p>LOSE : 45</p>
           <p>Tournament : 897</p>
-        </S.Info>
-      </S.Content>
+        </styles.Info>
+      </styles.Content>
       <LogoutButton />
-    </S.CardWrapper>
+    </styles.CardWrapper>
   );
 };
 

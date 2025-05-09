@@ -1,7 +1,7 @@
-import * as S from './styles';
+import * as styles from './styles';
 
 const LogoutButton = () => {
-  return <S.Button>Logout</S.Button>;
+  return <styles.Button>Logout</styles.Button>;
 };
 
 export default LogoutButton;

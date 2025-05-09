@@ -17,9 +17,11 @@ export const CloseButton = styled.button`
   position: absolute;
   top: 10px;
   left: 10px;
-  font-size: 30px;
-  background: transparent;
-  color: white;
+  width: 36px;
+  height: 36px;
+  background: url('/assets/images/Go_back_page.svg') no-repeat center;
+  background-size: contain;
+
   border: none;
   cursor: pointer;
 `;

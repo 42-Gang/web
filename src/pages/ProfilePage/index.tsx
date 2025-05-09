@@ -1,12 +1,12 @@
 import ProfileCard from '@/pages/ProfilePage/components/profile-card';
 
-import * as S from './styles.ts';
+import * as styles from './styles.ts';
 
 const ProfilePage = () => {
   return (
-    <S.Container>
+    <styles.Container>
       <ProfileCard />
-    </S.Container>
+    </styles.Container>
   );
 };
 

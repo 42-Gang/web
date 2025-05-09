@@ -16,7 +16,7 @@ const fonts = [
       fontFamily: 'DungGeunMo',
       fontStyle: 'normal',
       fontWeight: 'normal',
-      src: `url('/assets/fonts/DungGeunMo.ttf') format('truetype')`,
+      src: `url('/assets/fonts/DungGeunMo.woff2') format('truetype')`,
     },
   },
 ];
