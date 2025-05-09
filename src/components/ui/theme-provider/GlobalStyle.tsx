@@ -11,12 +11,21 @@ const fonts = [
       src: `local('ST Winter Pixel 24 Regular'), url('/assets/fonts/StWinterPixel24Regular-w1e72.woff') format('woff')`,
     },
   },
+  {
+    '@font-face': {
+      fontFamily: 'DungGeunMo',
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      src: `url('/assets/fonts/DungGeunMo.woff2') format('truetype')`,
+    },
+  },
 ];
 
 const styles = css`
   ${reset}
   body {
     background-color: white;
+    font-family: 'DungGeunMo', sans-serif;
   }
 
   #root {
