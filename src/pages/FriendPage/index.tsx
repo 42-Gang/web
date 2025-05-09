@@ -1,25 +1,18 @@
-import { io } from 'socket.io-client';
-
-import { useAuthAtom } from '@/atoms/useAuthAtom.ts';
+import { useSocket } from '@/api/socket/useSocket';
 
 export const FriendPage = () => {
-  const { token } = useAuthAtom();
-
-  const socket = io(`https://217.142.135.254/status?token=${token}`, {
-    path: `/ws/user`,
-    autoConnect: false,
-    transports: ['websocket'],
+  const { socket, isConnected } = useSocket({
+    path: 'status',
+    handshake: '/ws/user',
+    withToken: true,
   });
 
   socket.connect();
 
-  socket.on('error', (error) => {
-    console.error('Socket error:', error);
-  });
-
-  socket.on('connect_error', (error) => {
-    console.error('Connection error:', error.message);
-  });
-
-  return <>friend</>;
+  return (
+    <div>
+      <p>Connection status: {isConnected ? 'Connected' : 'Disconnected'}</p>
+      <p>friend</p>
+    </div>
+  );
 };

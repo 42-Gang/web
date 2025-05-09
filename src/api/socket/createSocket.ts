@@ -1,18 +1,32 @@
 import { io, Socket } from 'socket.io-client';
 
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
+
+interface SocketOptions {
+  handshake: string;
+  withToken?: boolean;
+}
+
 const socketCache = new Map<string, Socket>();
 
-export const getSocket = (path: string, token?: string): Socket => {
-  const key = token ? `/${path}?token=${token}` : path;
+const buildSocketUrl = (path: string, options: SocketOptions, token?: string): string =>
+  `${SOCKET_URL}/${path}${options.withToken && token ? `?token=${token}` : ''}`;
+
+export const getSocket = (
+  path: string,
+  token: string | undefined,
+  options: SocketOptions,
+): Socket => {
+  const url = buildSocketUrl(path, options, token);
+  const key = url;
 
   if (socketCache.has(key)) {
     return socketCache.get(key)!;
   }
 
-  const socket = io(`https://217.142.135.254/status?token=${token}`, {
-    path: `/ws/user`,
+  const socket = io(url, {
+    path: options.handshake,
     autoConnect: false,
-    secure: false,
     transports: ['websocket'],
   });
 
