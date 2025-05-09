@@ -10,7 +10,6 @@ export const CardWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 30px;
-  box-sizing: border-box;
 `;
 
 export const CloseButton = styled.button`
@@ -30,7 +29,6 @@ export const Title = styled.h2`
   color: white;
   font-size: 42px;
   margin-bottom: 20px;
-  font-family: 'DungGeunMo', sans-serif;
 `;
 
 export const Content = styled.div`
@@ -46,7 +44,6 @@ export const Info = styled.div`
   padding-left: 60px;
   color: white;
   text-align: left;
-  font-family: 'DungGeunMo', sans-serif;
   font-size: 26px;
   line-height: 1.8;
 
