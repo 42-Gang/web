@@ -13,12 +13,12 @@ import { ThemeProvider, GlobalStyle } from '@/components/ui';
 import { PATH } from '@/constants/routes';
 import {
   EmailSignInPage,
-  FriendPage,
   HomePage,
   LandingPage,
   SignInPage,
   SignUpPage,
   HistoryPage,
+  ProfilePage,
 } from '@/pages';
 
 const App = () => {
@@ -71,7 +71,7 @@ const App = () => {
       children: [
         { path: PATH.HOME, element: <HomePage /> },
         { path: PATH.HISTORY, element: <HistoryPage /> },
-        { path: PATH.FRIEND, element: <FriendPage /> },
+        { path: PATH.PROFILE, element: <ProfilePage /> },
       ],
     },
   ];
