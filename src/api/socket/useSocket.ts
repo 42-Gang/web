@@ -2,7 +2,7 @@ import { useEffect, useCallback } from 'react';
 
 import { useAuthAtom } from '@/atoms/useAuthAtom';
 
-import { getSocket } from './createSocket';
+import { createSocket } from './createSocket';
 
 interface UseSocketOptions {
   path: string;
@@ -17,7 +17,7 @@ export const useSocket = (options: UseSocketOptions) => {
   const { token } = useAuthAtom();
   const { path, handshake, withToken = true, onConnect, onDisconnect, onError } = options;
 
-  const socket = getSocket(path, withToken && token ? token : undefined, {
+  const socket = createSocket(path, withToken && token ? token : undefined, {
     handshake,
     withToken,
   });

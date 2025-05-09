@@ -9,15 +9,12 @@ interface SocketOptions {
 
 const socketCache = new Map<string, Socket>();
 
-const buildSocketUrl = (path: string, options: SocketOptions, token?: string): string =>
-  `${SOCKET_URL}/${path}${options.withToken && token ? `?token=${token}` : ''}`;
-
-export const getSocket = (
+export const createSocket = (
   path: string,
   token: string | undefined,
   options: SocketOptions,
 ): Socket => {
-  const url = buildSocketUrl(path, options, token);
+  const url = `${SOCKET_URL}/${path}${options.withToken && token ? `?token=${token}` : ''}`;
   const key = url;
 
   if (socketCache.has(key)) {

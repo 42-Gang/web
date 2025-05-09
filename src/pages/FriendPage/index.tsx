@@ -1,4 +1,4 @@
-import { useSocket } from '@/api/socket/useSocket';
+import { useSocket } from '@/api/socket';
 
 export const FriendPage = () => {
   const { socket, isConnected } = useSocket({
