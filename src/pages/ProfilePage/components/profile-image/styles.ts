@@ -1,19 +1,19 @@
 import styled from '@emotion/styled';
 
 export const ImageContainer = styled.div`
-  position: relative;
-  width: 140px;
-  height: 140px;
-  margin-top: 30px;
+  position: absolute;
+  top: 10px;
+  left: 100px;
+  width: 200px;
+  height: 200px;
 `;
 
 export const ImageWrapper = styled.div`
   position: relative;
-  width: 140px;
-  height: 140px;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
   overflow: hidden;
-  background-color: black;
 `;
 
 export const Avatar = styled.img`
@@ -24,24 +24,23 @@ export const Avatar = styled.img`
 
 export const CameraIcon = styled.button`
   position: absolute;
-  bottom: 13px;
-  right: 20px;
-  transform: translate(50%, 50%);
-  width: 40px;
-  height: 40px;
-  font-size: 22px;
-
+  bottom: 0;
+  right: 10px;
+  width: 53px;
+  height: 53px;
+  padding: 0;
   background: white;
   border-radius: 50%;
   border: none;
   cursor: pointer;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
 
   display: flex;
   justify-content: center;
   align-items: center;
 
-  &:hover {
-    background-color: #eee;
+  img {
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
   }
 `;

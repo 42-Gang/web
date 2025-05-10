@@ -1,17 +1,26 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import LogoutButton from '../logout-button';
-import ProfileImage from '../profile-image';
 import * as styles from './styles';
+import EditNicknameModal from '../modals/EditNicknameModal';
+import LogoutConfirmModal from '../modals/LogoutConfirmModal';
+import ProfileImage from '../profile-image';
 
 const ProfileCard = () => {
   const navigate = useNavigate();
   const nickname = 'PONG';
 
-  const handleNicknameEdit = () => {};
+  const [isEditNicknameOpen, setIsEditNicknameOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
-  const handleClose = () => {
-    navigate(-1);
+  const handleNicknameEdit = () => setIsEditNicknameOpen(true);
+  const handleClose = () => navigate(-1);
+
+  const handleLogoutClick = () => setIsLogoutModalOpen(true);
+  const handleLogoutConfirm = () => {
+    setIsLogoutModalOpen(false);
+    alert('로그아웃 되었습니다');
   };
 
   return (
@@ -25,7 +34,7 @@ const ProfileCard = () => {
             Nickname :
             <styles.NicknameWrapper>
               <strong>{nickname}</strong>
-              <styles.EditButton onClick={handleNicknameEdit}>✏️</styles.EditButton>
+              <styles.EditButton onClick={handleNicknameEdit} />
             </styles.NicknameWrapper>
           </p>
           <p>WIN : 45</p>
@@ -33,7 +42,19 @@ const ProfileCard = () => {
           <p>Tournament : 897</p>
         </styles.Info>
       </styles.Content>
-      <LogoutButton />
+
+      <div onClick={handleLogoutClick}>
+        <LogoutButton />
+      </div>
+
+      {isEditNicknameOpen && <EditNicknameModal onClose={() => setIsEditNicknameOpen(false)} />}
+
+      {isLogoutModalOpen && (
+        <LogoutConfirmModal
+          onCancel={() => setIsLogoutModalOpen(false)}
+          onConfirm={handleLogoutConfirm}
+        />
+      )}
     </styles.CardWrapper>
   );
 };
