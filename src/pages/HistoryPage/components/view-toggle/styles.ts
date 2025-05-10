@@ -2,15 +2,15 @@ import styled from '@emotion/styled';
 
 export const Button = styled.button`
   position: relative;
-  width: 180px;
-  height: 40px;
+  width: 200px;
+  height: 45px;
 
   background: url('/assets/images/History_button_off.png') center/contain no-repeat;
   background-color: transparent;
 
   color: white;
   font-family: 'Tiny5', sans-serif;
-  font-size: 20px;
+  font-size: 23px;
 
   border: none;
   cursor: pointer;

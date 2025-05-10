@@ -30,6 +30,7 @@ const styles = css`
   textarea {
     font-family: 'DungGeunMo', sans-serif;
     background-color: white;
+    font-family: 'DungGeunMo', sans-serif;
   }
 
   #root {

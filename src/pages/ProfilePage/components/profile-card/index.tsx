@@ -6,7 +6,7 @@ import * as styles from './styles';
 import EditNicknameModal from '../modals/EditNicknameModal';
 import LogoutConfirmModal from '../modals/LogoutConfirmModal';
 import ProfileImage from '../profile-image';
-
+        
 const ProfileCard = () => {
   const navigate = useNavigate();
   const nickname = 'PONG';
@@ -42,7 +42,6 @@ const ProfileCard = () => {
           <p>Tournament : 897</p>
         </styles.Info>
       </styles.Content>
-
       <div onClick={handleLogoutClick}>
         <LogoutButton />
       </div>

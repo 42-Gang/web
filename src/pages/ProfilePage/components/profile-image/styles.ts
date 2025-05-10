@@ -44,3 +44,4 @@ export const CameraIcon = styled.button`
     object-fit: contain;
   }
 `;
+
