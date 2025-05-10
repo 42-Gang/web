@@ -1,17 +1,25 @@
+import { useEffect } from 'react';
+
 import { useSocket } from '@/api/socket';
 
 export const FriendPage = () => {
-  const { socket, isConnected } = useSocket({
+  const { isConnected, connect, disconnect } = useSocket({
     path: 'status',
     handshake: '/ws/user',
     withToken: true,
   });
 
-  socket.connect();
+  useEffect(() => {
+    connect();
+
+    return () => disconnect();
+  }, [connect, disconnect]);
 
   return (
     <div>
-      <p>Connection status: {isConnected ? 'Connected' : 'Disconnected'}</p>
+      <p style={{ color: 'white' }}>
+        Connection status: {isConnected ? 'Connected' : 'Disconnected'}
+      </p>
       <p>friend</p>
     </div>
   );
