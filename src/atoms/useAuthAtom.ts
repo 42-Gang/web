@@ -34,6 +34,7 @@ export const useAuthAtom = () => {
   const isLogin = () => !!accessToken;
 
   return {
+    token: accessToken,
     setToken,
     removeToken,
     isLogin,
