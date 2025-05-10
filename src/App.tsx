@@ -19,6 +19,7 @@ import {
   SignUpPage,
   HistoryPage,
   ProfilePage,
+  FriendPage,
 } from '@/pages';
 
 const App = () => {
@@ -72,6 +73,7 @@ const App = () => {
         { path: PATH.HOME, element: <HomePage /> },
         { path: PATH.HISTORY, element: <HistoryPage /> },
         { path: PATH.PROFILE, element: <ProfilePage /> },
+        { path: PATH.FRIEND, element: <FriendPage /> },
       ],
     },
   ];

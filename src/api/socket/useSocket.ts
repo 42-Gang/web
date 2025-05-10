@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 
 import { useAuthAtom } from '@/atoms/useAuthAtom';
 
@@ -22,6 +22,8 @@ export const useSocket = (options: UseSocketOptions) => {
     withToken,
   });
 
+  const [isConnected, setIsConnected] = useState(socket.connected);
+
   const connect = useCallback(() => {
     socket.connect();
   }, [socket]);
@@ -31,13 +33,18 @@ export const useSocket = (options: UseSocketOptions) => {
   }, [socket]);
 
   useEffect(() => {
-    if (onConnect) {
-      socket.on('connect', onConnect);
-    }
+    const handleConnect = () => {
+      setIsConnected(true);
+      onConnect?.();
+    };
 
-    if (onDisconnect) {
-      socket.on('disconnect', onDisconnect);
-    }
+    const handleDisconnect = () => {
+      setIsConnected(false);
+      onDisconnect?.();
+    };
+
+    socket.on('connect', handleConnect);
+    socket.on('disconnect', handleDisconnect);
 
     if (onError) {
       socket.on('error', onError);
@@ -45,8 +52,8 @@ export const useSocket = (options: UseSocketOptions) => {
     }
 
     return () => {
-      socket.off('connect', onConnect);
-      socket.off('disconnect', onDisconnect);
+      socket.off('connect', handleConnect);
+      socket.off('disconnect', handleDisconnect);
       socket.off('error', onError);
       socket.off('connect_error', onError);
     };
@@ -56,6 +63,6 @@ export const useSocket = (options: UseSocketOptions) => {
     socket,
     connect,
     disconnect,
-    isConnected: socket.connected,
+    isConnected,
   };
 };
