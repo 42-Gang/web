@@ -23,7 +23,12 @@ const fonts = [
 
 const styles = css`
   ${reset}
-  body {
+  body,
+  button,
+  input,
+  select,
+  textarea {
+    font-family: 'DungGeunMo', sans-serif;
     background-color: white;
     font-family: 'DungGeunMo', sans-serif;
   }
