@@ -1,11 +1,11 @@
 import ReactDOM from 'react-dom';
 
-import * as styles from './logout-confirm-modal.styles';
+import * as styles from './styles.ts';
 
-interface Props {
+type Props = {
   onCancel: () => void;
   onConfirm: () => void;
-}
+};
 
 const LogoutConfirmModal = ({ onCancel, onConfirm }: Props) => {
   return ReactDOM.createPortal(

@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 
 import LogoutButton from '../logout-button';
 import * as styles from './styles';
-import EditNicknameModal from '../modals/EditNicknameModal';
-import LogoutConfirmModal from '../modals/LogoutConfirmModal';
+import EditNicknameModal from '../edit-nickname-modal';
+import LogoutConfirmModal from '../logout-confirm-modal';
 import ProfileImage from '../profile-image';
-        
+
 const ProfileCard = () => {
   const navigate = useNavigate();
   const nickname = 'PONG';

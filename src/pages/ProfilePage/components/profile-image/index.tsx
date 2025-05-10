@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 
 import * as styles from './styles';
-import ImageOptionModal from '../modals/ImageOptionModal';
+import ImageOptionModal from '../image-option-modal';
 
 const ProfileImage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

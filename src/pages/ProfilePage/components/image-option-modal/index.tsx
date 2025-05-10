@@ -1,11 +1,11 @@
 import ReactDOM from 'react-dom';
 
-import * as styles from './image-option-modal.styles';
+import * as styles from './styles.ts';
 
-interface Props {
+type Props = {
   onClose: () => void;
   onEdit: () => void;
-}
+};
 
 const ImageOptionModal = ({ onClose, onEdit }: Props) => {
   return ReactDOM.createPortal(

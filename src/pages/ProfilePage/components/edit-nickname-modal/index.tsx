@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import ReactDOM from 'react-dom';
 
-import * as styles from './edit-nickname-modal.styles';
+import * as styles from './styles.ts';
 
-interface Props {
+type Props = {
   onClose: () => void;
-}
+};
 
 const EditNicknameModal = ({ onClose }: Props) => {
   const [nickname, setNickname] = useState('');
