@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 
+import { useFriendsMe } from '@/api/queries';
 import { useSocket } from '@/api/socket';
 
 export const FriendPage = () => {
-  const { isConnected, connect, disconnect } = useSocket({
+  const { connect, disconnect } = useSocket({
     path: 'status',
     handshake: '/ws/user',
     withToken: true,
@@ -15,12 +16,20 @@ export const FriendPage = () => {
     return () => disconnect();
   }, [connect, disconnect]);
 
+  const { data: friends } = useFriendsMe();
+  const friendList = friends?.data?.friends || [];
+
   return (
     <div>
-      <p style={{ color: 'white' }}>
-        Connection status: {isConnected ? 'Connected' : 'Disconnected'}
-      </p>
-      <p>friend</p>
+      <h1 style={{ color: 'white' }}>Friend List</h1>
+
+      <input />
+
+      {friendList.map((friend) => (
+        <div key={friend.friendId}>
+          <p style={{ color: 'white' }}>{friend.nickname}</p>
+        </div>
+      ))}
     </div>
   );
 };
