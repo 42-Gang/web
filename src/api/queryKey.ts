@@ -1,4 +1,4 @@
-import { HttpResponse, FriendList, UserInfo } from '@/api/types';
+import { HttpResponse, FriendList, UserInfo, TournamentGameList , TournamentRoundType } from '@/api/types';
 
 import { fetcher } from './fetcher';
 
@@ -19,7 +19,16 @@ const friendsQueryKeys = {
   }),
 };
 
+const gameQueryKeys = {
+  tournamentHistory: (type: TournamentRoundType) => ({
+    _def: 'tournament-history',
+    queryKey: ['tournament-history', type],
+    queryFn: () => fetcher.get<HttpResponse<TournamentGameList>>(`game/history/${type}`),
+  }),
+};
+
 export const queryKeys = {
   ...usersQueryKeys,
   ...friendsQueryKeys,
+  ...gameQueryKeys,
 };

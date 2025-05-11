@@ -7,3 +7,5 @@ export type TournamentGame = {
 export type TournamentGameList = {
   game_list: TournamentGame[];
 };
+
+export type TournamentRoundType = 'ROUND_2' | 'ROUND_4';
