@@ -28,7 +28,6 @@ export const createSocket = (
     path: options.handshake,
     autoConnect: false,
     transports: ['websocket'],
-    auth: { token },
   });
 
   socket.onAny((event, payload) => {
