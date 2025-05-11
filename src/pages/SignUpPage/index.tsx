@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { useMailVerification, useRegister } from '@/api';
 import { Flex } from '@/components/system';
@@ -7,14 +8,16 @@ import { Branding } from '@/components/ui';
 import * as styles from './styles.css';
 
 export const SignUpPage = () => {
-  const [email, setEmail] = useState<string>('');
-  const [mailVerificationCode, setMailVerificationCode] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [confirmPassword, setConfirmPassword] = useState<string>('');
-  const [nickname, setNickname] = useState<string>('');
+  const [email, setEmail] = useState('');
+  const [mailVerificationCode, setMailVerificationCode] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [nickname, setNickname] = useState('');
 
   const { mutateAsync: mailVerifyMutation } = useMailVerification();
   const { mutateAsync: registerMutation } = useRegister();
+
+  const navigate = useNavigate();
 
   const handleMailVerify = () => {
     if (!email) {
@@ -46,6 +49,7 @@ export const SignUpPage = () => {
     registerMutation({ email, password, nickname, mailVerificationCode })
       .then(() => {
         alert('Registration successful');
+        navigate('/login', { replace: true });
       })
       .catch((error) => {
         console.error('Error during registration:', error);
@@ -53,53 +57,87 @@ export const SignUpPage = () => {
       });
   };
 
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    handleSelect();
+  };
+
   return (
     <Flex direction="column" justifyContent="space-between" style={{ height: '100%' }}>
       <Branding className={styles.branding} />
 
-      {/* TODO: Implement UI */}
-      <Flex direction="column" justifyContent="center">
-        <Flex justifyContent="center" style={{ color: 'white' }}>
-          <label htmlFor="email">EMAIL: </label>
-          <input id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          <button type="button" onClick={handleMailVerify}>
-            verify
-          </button>
-        </Flex>
-        <Flex justifyContent="center" style={{ color: 'white' }}>
-          <label htmlFor="verificationCode">VERIFY CODE: </label>
+      <form className={styles.form} onSubmit={handleSubmit}>
+        <div className={styles.row}>
+          <label className={styles.label} htmlFor="email">
+            EMAIL:
+          </label>
+          <div className={styles.inputWrapper}>
+            <input
+              className={styles.input}
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <button className={styles.verifyButton} type="button" onClick={handleMailVerify}>
+              <span className={styles.buttonText}>VERIFY</span>
+            </button>
+          </div>
+        </div>
+
+        <div className={styles.row}>
+          <label className={styles.label} htmlFor="verificationCode">
+            VERIFY CODE:
+          </label>
           <input
+            className={styles.input}
             id="verificationCode"
             value={mailVerificationCode}
             onChange={(e) => setMailVerificationCode(e.target.value)}
           />
-        </Flex>
-        <Flex justifyContent="center" style={{ color: 'white' }}>
-          <label htmlFor="password">PASSWORD: </label>
+        </div>
+
+        <div className={styles.row}>
+          <label className={styles.label} htmlFor="password">
+            PASSWORD:
+          </label>
           <input
+            className={styles.input}
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             type="password"
           />
-        </Flex>
-        <Flex justifyContent="center" style={{ color: 'white' }}>
-          <label htmlFor="confirmPassword">RE-PASSWORD: </label>
+        </div>
+
+        <div className={styles.row}>
+          <label className={styles.label} htmlFor="confirmPassword">
+            RE-PASSWORD:
+          </label>
           <input
+            className={styles.input}
             id="confirmPassword"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             type="password"
           />
-        </Flex>
-        <Flex justifyContent="center" style={{ color: 'white' }}>
-          <label htmlFor="nickname">NICKNAME: </label>
-          <input id="nickname" value={nickname} onChange={(e) => setNickname(e.target.value)} />
-        </Flex>
-        <button type="button" onClick={handleSelect}>
+        </div>
+
+        <div className={styles.row}>
+          <label className={styles.label} htmlFor="nickname">
+            NICKNAME:
+          </label>
+          <input
+            className={styles.input}
+            id="nickname"
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+          />
+        </div>
+
+        <button className={styles.submitButton} type="button">
           REGISTER
         </button>
-      </Flex>
+      </form>
     </Flex>
   );
 };
