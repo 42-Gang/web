@@ -30,7 +30,21 @@ const styles = css`
   textarea {
     font-family: 'DungGeunMo', sans-serif;
     background-color: white;
-    font-family: 'DungGeunMo', sans-serif;
+  }
+
+  * {
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #bbb;
+      border-radius: 5px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
   }
 
   #root {

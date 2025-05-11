@@ -7,15 +7,6 @@ export const RecordListContainer = styled.div`
   flex-direction: column;
   gap: 6px;
   margin-top: 16px;
-
-  &::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: #bbb;
-    border-radius: 5px;
-  }
 `;
 
 export const RecordItem = styled.div`

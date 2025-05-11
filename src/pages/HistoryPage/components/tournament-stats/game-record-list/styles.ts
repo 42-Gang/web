@@ -7,15 +7,6 @@ export const ScrollContainer = styled.div`
   flex-direction: column;
   gap: 10px;
   margin-top: 15px;
-
-  &::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: #bbb;
-    border-radius: 4px;
-  }
 `;
 
 export const RecordItem = styled.div`
