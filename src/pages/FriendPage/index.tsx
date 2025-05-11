@@ -23,7 +23,7 @@ export const FriendPage = () => {
     <div>
       <h1 style={{ color: 'white' }}>Friend List</h1>
 
-      <input />
+      <input placeholder="Search friends" />
 
       {friendList.map((friend) => (
         <div key={friend.friendId}>
