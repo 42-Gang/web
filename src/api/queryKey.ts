@@ -1,12 +1,21 @@
-import { HttpResponse, UserInfo , TournamentGameList } from '@/api/types';
+import { HttpResponse, FriendList, UserInfo, TournamentGameList } from '@/api/types';
 
 import { fetcher } from './fetcher';
 
-const userQueryKeys = {
-  userInformation: () => ({
-    _def: 'user-information',
-    queryKey: ['user-information'],
-    queryFn: () => fetcher.get<HttpResponse<UserInfo>>(`/users/me`),
+const usersQueryKeys = {
+  usersMe: () => ({
+    _def: 'users-me',
+    queryKey: ['users-me'],
+    queryFn: () => fetcher.get<HttpResponse<UserInfo>>(`users/me`),
+  }),
+};
+
+const friendsQueryKeys = {
+  friendsMe: () => ({
+    _def: 'friend-me',
+    queryKey: ['friend-me'],
+    queryFn: () =>
+      fetcher.get<HttpResponse<FriendList>>(`friends/me?status=ACCEPTED&status=BLOCKED`),
   }),
 };
 
@@ -19,6 +28,7 @@ const gameQueryKeys = {
 };
 
 export const queryKeys = {
-  ...userQueryKeys,
+  ...usersQueryKeys,
+  ...friendsQueryKeys,
   ...gameQueryKeys,
 };

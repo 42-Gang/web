@@ -1,1 +1,2 @@
-export * from './useUserInformation';
+export * from './useFriendsMe';
+export * from './useUsersMe';

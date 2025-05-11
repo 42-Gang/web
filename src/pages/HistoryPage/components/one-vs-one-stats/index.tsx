@@ -1,14 +1,14 @@
-import { useUserInformation } from '@/api';
+import { useUsersMe } from '@/api';
 import { Flex } from '@/components/system/index.ts';
 
 import { GameRecordList } from './game-record-list/index.tsx';
 import { OneVsOneSummary } from './game-summary/index.tsx';
 
 export const OneVsOneStats = () => {
-  const { data: userData } = useUserInformation();
+  const { data } = useUsersMe();
 
-  const wins = userData?.data?.win ?? null;
-  const losses = userData?.data?.lose ?? null;
+  const wins = data?.data?.win ?? null;
+  const losses = data?.data?.lose ?? null;
 
   return (
     <Flex direction="column">

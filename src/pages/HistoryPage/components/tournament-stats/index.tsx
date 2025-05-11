@@ -1,11 +1,11 @@
-import { useUserInformation } from '@/api';
+import { useUsersMe } from '@/api';
 import { Flex } from '@/components/system';
 
 import { GameRecordList } from './game-record-list';
 import { TournamentSummary } from './game-summary';
 
 export const TournamentStats = () => {
-  const { data } = useUserInformation();
+  const { data } = useUsersMe();
 
   const tournament = data?.data?.tournament ?? null;
 
