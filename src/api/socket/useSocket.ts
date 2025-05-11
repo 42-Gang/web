@@ -1,28 +1,51 @@
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 
+import { refreshAccessToken } from '@/api';
 import { useAuthAtom } from '@/atoms/useAuthAtom';
 
-import { createSocket } from './createSocket';
+import { createSocket, destroySocket, SocketOptions } from './socketManager';
 
-interface UseSocketOptions {
+interface UseSocketOptions extends SocketOptions {
   path: string;
-  handshake: string;
-  withToken?: boolean;
   onConnect?: () => void;
   onDisconnect?: () => void;
   onError?: (error: Error) => void;
 }
 
 export const useSocket = (options: UseSocketOptions) => {
-  const { token } = useAuthAtom();
   const { path, handshake, withToken = true, onConnect, onDisconnect, onError } = options;
+  const { token, setToken } = useAuthAtom();
 
-  const socket = createSocket(path, withToken && token ? token : undefined, {
-    handshake,
-    withToken,
+  const [isConnected, setIsConnected] = useState(false);
+  const [socket, setSocket] = useState(() =>
+    createSocket(path, token || '', { handshake, withToken }),
+  );
+
+  const callbacksRef = useRef({ onConnect, onDisconnect, onError });
+  callbacksRef.current = { onConnect, onDisconnect, onError };
+
+  const handlersRef = useRef({
+    handleConnect: () => {
+      setIsConnected(true);
+      callbacksRef.current.onConnect?.();
+    },
+    handleDisconnect: () => {
+      setIsConnected(false);
+      callbacksRef.current.onDisconnect?.();
+    },
+    handleConnectError: async (error: Error) => {
+      console.warn('connect_error:', error);
+      const newToken = await refreshAccessToken();
+      if (newToken) {
+        setToken(newToken);
+        destroySocket(path, token ?? undefined, { handshake, withToken });
+        const newSocket = createSocket(path, newToken, { handshake, withToken });
+        setSocket(newSocket);
+        newSocket.connect();
+      }
+      callbacksRef.current.onError?.(error);
+    },
   });
-
-  const [isConnected, setIsConnected] = useState(socket.connected);
 
   const connect = useCallback(() => {
     socket.connect();
@@ -33,36 +56,18 @@ export const useSocket = (options: UseSocketOptions) => {
   }, [socket]);
 
   useEffect(() => {
-    const handleConnect = () => {
-      setIsConnected(true);
-      onConnect?.();
-    };
-
-    const handleDisconnect = () => {
-      setIsConnected(false);
-      onDisconnect?.();
-    };
+    const { handleConnect, handleDisconnect, handleConnectError } = handlersRef.current;
 
     socket.on('connect', handleConnect);
     socket.on('disconnect', handleDisconnect);
-
-    if (onError) {
-      socket.on('error', onError);
-      socket.on('connect_error', onError);
-    }
+    socket.on('connect_error', handleConnectError);
 
     return () => {
       socket.off('connect', handleConnect);
       socket.off('disconnect', handleDisconnect);
-      socket.off('error', onError);
-      socket.off('connect_error', onError);
+      socket.off('connect_error', handleConnectError);
     };
-  }, [socket, onConnect, onDisconnect, onError]);
+  }, [socket]);
 
-  return {
-    socket,
-    connect,
-    disconnect,
-    isConnected,
-  };
+  return { socket, connect, disconnect, isConnected };
 };

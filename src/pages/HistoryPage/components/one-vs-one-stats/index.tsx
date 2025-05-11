@@ -1,9 +1,9 @@
-import { useUserInformation } from '@/api';
+import { useUsersMe } from '@/api';
 
 import { OneVsOneSummary } from './one-vs-one-summary/index.tsx';
 
 export const OneVsOneStats = () => {
-  const { data } = useUserInformation();
+  const { data } = useUsersMe();
 
   const wins = data?.data?.win ?? null;
   const losses = data?.data?.lose ?? null;
