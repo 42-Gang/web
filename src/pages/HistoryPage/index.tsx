@@ -5,9 +5,9 @@ import { BackButton } from '@/components/ui';
 import { rem } from '@/styles';
 
 import { OneVsOneStats } from './components/one-vs-one-stats';
-import { SectionTitle } from './components/section-title';
 import { TournamentStats } from './components/tournament-stats';
 import { ViewToggle } from './components/view-toggle';
+import * as styles from './styles.css';
 
 export const HistoryPage = () => {
   const [selected, setSelected] = useState<'1VS1' | 'TOURNAMENT' | null>(null);
@@ -21,10 +21,11 @@ export const HistoryPage = () => {
   };
 
   return (
-    <>
+    <Flex direction="column" style={{ height: '100%' }}>
       <BackButton />
 
-      <SectionTitle />
+      <h2 className={styles.title}>Select game type</h2>
+
       <Flex justifyContent="center" style={{ gap: rem(48) }}>
         <ViewToggle
           label="1 VS 1"
@@ -37,10 +38,11 @@ export const HistoryPage = () => {
           isSelected={selected === 'TOURNAMENT'}
         />
       </Flex>
+
       <Flex justifyContent="center">
         {selected === '1VS1' && <OneVsOneStats />}
         {selected === 'TOURNAMENT' && <TournamentStats />}
       </Flex>
-    </>
+    </Flex>
   );
 };

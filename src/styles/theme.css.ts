@@ -71,6 +71,8 @@ const color = {
 
 const zIndex = {
   behind: '-1',
+  default: '0',
+  hover: '1',
   overlay: '100',
   header: '150',
   modal: '200',
