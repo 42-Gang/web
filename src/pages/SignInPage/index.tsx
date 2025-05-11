@@ -1,11 +1,11 @@
-import { css } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { Flex } from '@/components/system';
 import { Branding, GameLicense, DefaultStepNavigator } from '@/components/ui';
 import { PATH } from '@/constants';
-import { spacing } from '@/styles';
+
+import * as styles from './styles.css';
 
 export const SignInPage = () => {
   const navigate = useNavigate();
@@ -28,12 +28,14 @@ export const SignInPage = () => {
 
   return (
     <Flex direction="column" justifyContent="space-between" style={{ height: '100%' }}>
-      <Branding css={css({ marginTop: spacing.brandingTopMargin })} />
+      <Branding className={styles.branding} />
+
       <DefaultStepNavigator
         items={['CONTINUE WITH GOOGLE', 'CONTINUE WITH EMAIL', 'GO BACK']}
         onSelect={handleSelect}
       />
-      <GameLicense />
+
+      <GameLicense className={styles.license} />
     </Flex>
   );
 };

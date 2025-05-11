@@ -1,7 +1,14 @@
-import * as styles from './styles';
+import * as styles from './styles.css';
 
-const LogoutButton = () => {
-  return <styles.Button>Logout</styles.Button>;
+export const LogoutButton = () => {
+  return (
+    <button className={styles.button}>
+      <span>L</span>
+      <span>o</span>
+      <span>g</span>
+      <span>o</span>
+      <span>u</span>
+      <span>t</span>
+    </button>
+  );
 };
-
-export default LogoutButton;

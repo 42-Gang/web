@@ -1,3 +1,4 @@
+import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
 import react from '@vitejs/plugin-react-swc';
 import { defineConfig, loadEnv } from 'vite';
 
@@ -6,20 +7,7 @@ export default defineConfig(({ mode }) => {
   const API_URL = `${env.VITE_API_URL.replace(/\/$/, '')}/${env.VITE_API_VERSION.replace(/^\//, '')}`;
 
   return {
-    plugins: [
-      react({
-        plugins: [
-          [
-            '@swc/plugin-emotion',
-            {
-              sourceMap: false,
-              autoLabel: 'dev-only',
-              labelFormat: '[local]',
-            },
-          ],
-        ],
-      }),
-    ],
+    plugins: [react(), vanillaExtractPlugin()],
     resolve: {
       alias: [{ find: '@', replacement: '/src' }],
     },

@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-import * as styles from './styles';
+import * as styles from './styles.css';
 import ImageOptionModal from '../image-option-modal';
 
 const ProfileImage = () => {
@@ -22,6 +22,7 @@ const ProfileImage = () => {
     const formData = new FormData();
     formData.append('file', file);
 
+    // TODO: useMutation을 사용하는 방법으로 개선 필요
     try {
       const response = await fetch('/api/v1/images/uploads', {
         method: 'POST',
@@ -43,14 +44,14 @@ const ProfileImage = () => {
 
   return (
     <>
-      <styles.ImageContainer>
-        <styles.ImageWrapper>
-          <styles.Avatar src="/assets/images/sample-avatar.png" alt="sample image" />
-        </styles.ImageWrapper>
-        <styles.CameraIcon onClick={handleOpenModal}>
+      <div className={styles.container}>
+        <div className={styles.avatar}>
+          <img src="/assets/images/sample-avatar.png" alt="sample image" />
+        </div>
+        <div className={styles.changeButton} onClick={handleOpenModal}>
           <img src="/assets/images/cameraIcon.svg" alt="Camera Icon - Edit Avatar" />
-        </styles.CameraIcon>
-      </styles.ImageContainer>
+        </div>
+      </div>
 
       <input
         ref={fileInputRef}

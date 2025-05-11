@@ -1,10 +1,10 @@
-import { css } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 
 import { Flex } from '@/components/system';
 import { Branding, DefaultStepNavigator, GameLicense } from '@/components/ui';
 import { PATH } from '@/constants';
-import { spacing } from '@/styles';
+
+import * as styles from './styles.css';
 
 export const HomePage = () => {
   const navigate = useNavigate();
@@ -19,12 +19,12 @@ export const HomePage = () => {
   return (
     <>
       <Flex direction="column" justifyContent="space-between" style={{ height: '100%' }}>
-        <Branding css={css({ marginTop: spacing.brandingTopMargin })} />
+        <Branding className={styles.branding} />
         <DefaultStepNavigator
           items={['START GAME', 'HISTORY', 'FRIEND', 'PROFILE']}
           onSelect={handleSelect}
         />
-        <GameLicense />
+        <GameLicense className={styles.license} />
       </Flex>
     </>
   );

@@ -1,4 +1,3 @@
-import { css } from '@emotion/react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,7 +5,8 @@ import { useLogin } from '@/api';
 import { useAuthAtom } from '@/atoms/useAuthAtom';
 import { Flex } from '@/components/system';
 import { Branding, DefaultStepNavigator, GameLicense } from '@/components/ui';
-import { spacing } from '@/styles';
+
+import * as styles from './styles.css';
 
 export const EmailSignInPage = () => {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ export const EmailSignInPage = () => {
 
   return (
     <Flex direction="column" justifyContent="space-between" style={{ height: '100%' }}>
-      <Branding css={css({ marginTop: spacing.brandingTopMargin })} />
+      <Branding className={styles.branding} />
 
       {/* TODO: Implement UI */}
       <Flex direction="column" justifyContent="center">
@@ -53,7 +53,8 @@ export const EmailSignInPage = () => {
           onSelect={handleSelect}
         />
       </Flex>
-      <GameLicense />
+
+      <GameLicense className={styles.license} />
     </Flex>
   );
 };

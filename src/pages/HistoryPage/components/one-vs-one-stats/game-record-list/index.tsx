@@ -1,26 +1,25 @@
-/** @jsxImportSource @emotion/react */
-import * as styles from './styles.ts';
+import * as styles from './styles.css';
 
 type GameResult = {
   opponent: string;
   result: 'WIN' | 'LOSE';
 };
 
-type GameRecordProps = {
+type GameRecordListProps = {
   records: GameResult[];
 };
 
-export const GameRecordList = ({ records }: GameRecordProps) => {
+export const GameRecordList = ({ records }: GameRecordListProps) => {
   return (
-    <styles.RecordListContainer>
+    <ul className={styles.list}>
       {records.map((record, index) => (
-        <styles.RecordItem key={index}>
-          <styles.PlayerText>{record.opponent} VS PONG</styles.PlayerText>
-          <styles.ResultText result={record.result}>
+        <li key={index} className={styles.item}>
+          <p className={styles.player}>{record.opponent} VS PONG</p>
+          <p className={record.result === 'WIN' ? styles.win : styles.lose}>
             {record.result === 'WIN' ? 'WIN' : 'LOSE'}
-          </styles.ResultText>
-        </styles.RecordItem>
+          </p>
+        </li>
       ))}
-    </styles.RecordListContainer>
+    </ul>
   );
 };

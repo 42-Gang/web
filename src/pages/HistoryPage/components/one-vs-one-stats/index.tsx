@@ -7,8 +7,12 @@ import { OneVsOneSummary } from './game-summary/index.tsx';
 export const OneVsOneStats = () => {
   const { data } = useUsersMe();
 
-  const wins = data?.data?.win ?? null;
-  const losses = data?.data?.lose ?? null;
+  const wins = data?.data?.win;
+  const losses = data?.data?.lose;
+
+  if (!wins || !losses) {
+    return null;
+  }
 
   return (
     <Flex direction="column">

@@ -1,40 +1,23 @@
-/** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
+import { RecipeVariants } from '@vanilla-extract/recipes';
+import { clsx } from 'clsx';
 import { ComponentProps } from 'react';
 
-type FlexProps = {
-  direction?: 'row' | 'row-reverse' | 'column' | 'column-reverse';
-  justifyContent?:
-    | 'flex-start'
-    | 'flex-end'
-    | 'center'
-    | 'space-between'
-    | 'space-around'
-    | 'space-evenly';
-  alignItems?: 'flex-start' | 'flex-end' | 'center' | 'stretch' | 'baseline';
-  gap?: string;
-  wrap?: 'nowrap' | 'wrap' | 'wrap-reverse';
-} & ComponentProps<'div'>;
+import * as styles from './styles.css';
+
+type FlexProps = RecipeVariants<typeof styles.flex> & ComponentProps<'div'>;
 
 export const Flex = ({
-  direction = 'row',
-  justifyContent = 'flex-start',
-  alignItems = 'stretch',
-  gap = '0',
-  wrap = 'nowrap',
+  direction,
+  justifyContent,
+  alignItems,
+  wrap,
+  className,
   children,
   ...rest
 }: FlexProps) => {
   return (
     <div
-      css={css`
-        display: flex;
-        flex-direction: ${direction};
-        justify-content: ${justifyContent};
-        align-items: ${alignItems};
-        gap: ${gap};
-        flex-wrap: ${wrap};
-      `}
+      className={clsx(className, styles.flex({ direction, justifyContent, alignItems, wrap }))}
       {...rest}
     >
       {children}

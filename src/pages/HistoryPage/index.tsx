@@ -1,8 +1,9 @@
 import { useState } from 'react';
 
 import { Flex } from '@/components/system';
+import { BackButton } from '@/components/ui';
+import { rem } from '@/styles';
 
-import { GoHomePage } from './components/go-home-page';
 import { OneVsOneStats } from './components/one-vs-one-stats';
 import { SectionTitle } from './components/section-title';
 import { TournamentStats } from './components/tournament-stats';
@@ -21,9 +22,10 @@ export const HistoryPage = () => {
 
   return (
     <>
-      <GoHomePage />
+      <BackButton />
+
       <SectionTitle />
-      <Flex justifyContent="center" gap="3rem">
+      <Flex justifyContent="center" style={{ gap: rem(48) }}>
         <ViewToggle
           label="1 VS 1"
           onClick={() => handleToggle('1VS1')}
