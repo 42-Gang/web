@@ -1,4 +1,4 @@
-import * as styles from './styles.css';
+import * as styles from './styles.css.ts';
 
 type RateBoxProps = {
   label: string;

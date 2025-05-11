@@ -1,5 +1,5 @@
 import * as styles from './styles.css';
-import { RateBox } from '../rate-box';
+import { RateBox } from '../../rate-box';
 
 type OneVsOneSummaryProps = {
   wins: number;

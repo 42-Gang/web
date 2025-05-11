@@ -4,8 +4,8 @@ import { rem, theme } from '@/styles';
 
 export const container = style({
   ...theme.layout.columnCenter,
-  width: rem(170),
-  height: rem(120),
+  flex: 1,
+  lineHeight: 1,
 });
 
 globalStyle(`${container} > :first-of-type`, {

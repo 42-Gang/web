@@ -3,7 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { rem, theme } from '@/styles';
 
 export const title = style({
-  marginTop: rem(10),
+  marginTop: rem(32),
   marginBottom: rem(20),
   color: theme.color.white,
   fontFamily: theme.fontFamily.branding,

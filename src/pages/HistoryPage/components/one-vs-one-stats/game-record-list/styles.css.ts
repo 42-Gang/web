@@ -4,7 +4,7 @@ import { rem, theme } from '@/styles';
 
 export const list = style({
   ...theme.layout.column,
-  minHeight: rem(280),
+  maxHeight: rem(282),
   marginTop: rem(16),
   gap: rem(6),
   overflowY: 'auto',

@@ -33,7 +33,7 @@ export const HistoryPage = () => {
           isSelected={selected === '1VS1'}
         />
         <ViewToggle
-          label={'TOURNAMENT'}
+          label="TOURNAMENT"
           onClick={() => handleToggle('TOURNAMENT')}
           isSelected={selected === 'TOURNAMENT'}
         />
