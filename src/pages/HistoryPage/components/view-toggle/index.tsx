@@ -1,4 +1,4 @@
-import * as styles from './styles.css.ts';
+import * as styles from './styles.css';
 
 type ViewToggleProps = {
   label: string;
