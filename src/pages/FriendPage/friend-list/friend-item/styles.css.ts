@@ -22,10 +22,18 @@ export const userWrapper = style({
   flex: 1,
 });
 
+export const nicknameContainer = style({
+  position: 'relative',
+  width: rem(140),
+  marginRight: rem(500),
+});
+
 export const nickname = style({
   color: 'white',
-  fontSize: '20px',
-  marginRight: '10px',
+  fontSize: rem(20),
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
 });
 
 export const avatar = style({

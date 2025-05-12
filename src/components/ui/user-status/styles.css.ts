@@ -1,10 +1,15 @@
 import { style, styleVariants } from '@vanilla-extract/css';
 
+import { rem } from '@/styles';
+
 export const statusDotBase = style({
+  position: 'absolute',
+  top: '50%',
+  right: rem(-18),
+  transform: 'translateY(-50%)',
   width: '10px',
   height: '10px',
   borderRadius: '50%',
-  display: 'inline-block',
 });
 
 export const statusDot = styleVariants({
