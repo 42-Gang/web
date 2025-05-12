@@ -22,6 +22,7 @@ import {
   HistoryPage,
   ProfilePage,
   FriendPage,
+  FriendChatRoomPage,
 } from '@/pages';
 
 const App = () => {
@@ -76,6 +77,7 @@ const App = () => {
         { path: PATH.HISTORY, element: <HistoryPage /> },
         { path: PATH.PROFILE, element: <ProfilePage /> },
         { path: PATH.FRIEND, element: <FriendPage /> },
+        { path: PATH.FRIEND_DM, element: <FriendChatRoomPage /> },
       ],
     },
   ];
