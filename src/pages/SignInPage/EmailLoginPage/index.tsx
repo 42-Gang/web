@@ -10,10 +10,9 @@ import * as styles from './styles.css';
 
 export const EmailSignInPage = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const { setToken } = useAuthAtom();
-
   const { mutateAsync } = useLogin();
 
   const handleSelect = async (index: number) => {
@@ -36,16 +35,31 @@ export const EmailSignInPage = () => {
     <Flex direction="column" justifyContent="space-between" style={{ height: '100%' }}>
       <Branding className={styles.branding} />
 
-      {/* TODO: Implement UI */}
       <Flex direction="column" justifyContent="center">
-        <Flex justifyContent="center" style={{ color: 'white' }}>
-          <p>EMAIL : </p>
-          <input value={email} onChange={(e) => setEmail(e.target.value)} />
-        </Flex>
-        <Flex justifyContent="center" style={{ color: 'white' }}>
-          <p>PW : </p>
-          <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" />
-        </Flex>
+        <div className={styles.inputRow}>
+          <label htmlFor="email" className={styles.label}>
+            EMAIL :
+          </label>
+          <input
+            id="email"
+            className={styles.input}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+
+        <div className={styles.inputRow}>
+          <label htmlFor="password" className={styles.label}>
+            PW :
+          </label>
+          <input
+            id="password"
+            className={styles.input}
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
 
         <DefaultStepNavigator
           style={{ marginTop: '12px' }}
