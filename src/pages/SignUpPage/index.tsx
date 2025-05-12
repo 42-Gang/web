@@ -134,7 +134,7 @@ export const SignUpPage = () => {
           />
         </div>
 
-        <button className={styles.submitButton} type="button">
+        <button className={styles.submitButton} type="submit">
           REGISTER
         </button>
       </form>
