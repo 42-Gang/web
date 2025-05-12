@@ -12,25 +12,25 @@ const fadeOut = keyframes({
   '100%': { opacity: 0 },
 });
 
-const slideUpAndFade = keyframes({
+const scaleUpAndFade = keyframes({
   from: {
     opacity: 0,
-    transform: 'translate(-50%, -50%) translateY(4px)',
+    transform: 'translate(-50%, -50%) scale(0.95)',
   },
   to: {
     opacity: 1,
-    transform: 'translate(-50%, -50%)',
+    transform: 'translate(-50%, -50%) scale(1)',
   },
 });
 
-const slideDownAndFade = keyframes({
+const scaleDownAndFade = keyframes({
   from: {
     opacity: 1,
-    transform: 'translate(-50%, -50%)',
+    transform: 'translate(-50%, -50%) scale(1)',
   },
   to: {
     opacity: 0,
-    transform: 'translate(-50%, -50%) translateY(4px)',
+    transform: 'translate(-50%, -50%) scale(0.95)',
   },
 });
 
@@ -43,15 +43,15 @@ export const overlay = style({
   bottom: 0,
   left: 0,
   zIndex: theme.zIndex.modal,
-  backgroundColor: 'rgba(0, 0, 0, 0.05)',
+  backgroundColor: 'rgba(255, 255, 255, 0.2)',
   inset: 0,
 
   selectors: {
     '&[data-state="open"]': {
-      animation: `${fadeIn} 300ms ease-out`,
+      animation: `${fadeIn} 100ms ease-out`,
     },
     '&[data-state="closed"]': {
-      animation: `${fadeOut} 300ms ease-out`,
+      animation: `${fadeOut} 100ms ease-out`,
     },
   },
 });
@@ -65,17 +65,17 @@ export const content = style({
   maxWidth: rem(728),
   padding: rem(28),
   borderRadius: rem(20),
-  backgroundColor: theme.color.white,
+  backgroundColor: theme.color.black,
   boxShadow: `0 ${rem(16)} ${rem(70)} rgba(0, 0, 0, 0.2)`,
   transform: 'translate(-50%, -50%)',
   zIndex: theme.zIndex.modalContent,
 
   selectors: {
     '&[data-state="open"]': {
-      animation: `${slideUpAndFade} 300ms ease-out`,
+      animation: `${scaleUpAndFade} 100ms ease-out`,
     },
     '&[data-state="closed"]': {
-      animation: `${slideDownAndFade} 300ms ease-out`,
+      animation: `${scaleDownAndFade} 100ms ease-out`,
     },
   },
 });
@@ -87,7 +87,7 @@ export const close = style({
   borderRadius: '50%',
   backgroundColor: 'transparent',
   opacity: 1,
-  transition: 'opacity 300ms',
+  transition: 'opacity 250ms',
 
   ':hover': { opacity: 0.7 },
 });
