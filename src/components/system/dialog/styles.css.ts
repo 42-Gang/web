@@ -82,6 +82,9 @@ export const content = style({
 
 export const close = style({
   ...theme.layout.center,
+  position: 'absolute',
+  top: rem(12),
+  right: rem(12),
   width: rem(32),
   height: rem(32),
   borderRadius: '50%',
