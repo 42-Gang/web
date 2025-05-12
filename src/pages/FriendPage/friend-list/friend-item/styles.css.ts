@@ -16,10 +16,16 @@ export const messageIcon = style({
   background: "url('/assets/images/message.svg') center/contain no-repeat",
 });
 
+export const userWrapper = style({
+  display: 'flex',
+  alignItems: 'center',
+  flex: 1,
+});
+
 export const nickname = style({
   color: 'white',
   fontSize: '20px',
-  flex: 1,
+  marginRight: '10px',
 });
 
 export const avatar = style({
@@ -27,3 +33,5 @@ export const avatar = style({
   height: '67px',
   marginRight: '30px',
 });
+
+export const status = style({});
