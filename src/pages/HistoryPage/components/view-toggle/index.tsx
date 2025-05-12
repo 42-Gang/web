@@ -1,5 +1,4 @@
-/** @jsxImportSource @emotion/react */
-import * as styles from './styles.ts';
+import * as styles from './styles.css';
 
 type ViewToggleProps = {
   label: string;
@@ -9,8 +8,8 @@ type ViewToggleProps = {
 
 export const ViewToggle = ({ label, onClick, isSelected }: ViewToggleProps) => {
   return (
-    <styles.Button onClick={onClick} data-selected={isSelected}>
+    <button className={styles.button} onClick={onClick} data-selected={isSelected}>
       <span>{label}</span>
-    </styles.Button>
+    </button>
   );
 };

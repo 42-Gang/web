@@ -1,5 +1,4 @@
-/** @jsxImportSource @emotion/react */
-import * as styles from './styles.ts';
+import * as styles from './styles.css';
 
 type GameResult = {
   round: string;
@@ -13,20 +12,22 @@ type GameRecordProps = {
 
 export const GameRecordList = ({ records }: GameRecordProps) => {
   return (
-    <styles.ScrollContainer>
+    <div className={styles.scroll}>
       {records.map((record, index) => (
-        <styles.RecordItem key={index}>
-          <styles.RoundLabel>{record.round}</styles.RoundLabel>
-          <styles.PlayerList>
+        <div className={styles.record} key={index}>
+          <label className={styles.label}>{record.round}</label>
+          <div className={styles.playerList}>
             {record.players.map((player, i) => (
-              <styles.PlayerName key={i}>{player}</styles.PlayerName>
+              <p className={styles.playerName} key={i}>
+                {player}
+              </p>
             ))}
-          </styles.PlayerList>
-          <styles.ResultText result={record.result}>
+          </div>
+          <p className={record.result === 'WIN' ? styles.win : styles.lose}>
             {record.result === 'WIN' ? 'WIN' : 'LOSE'}
-          </styles.ResultText>
-        </styles.RecordItem>
+          </p>
+        </div>
       ))}
-    </styles.ScrollContainer>
+    </div>
   );
 };

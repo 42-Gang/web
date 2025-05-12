@@ -1,11 +1,10 @@
-import { css } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 
 import { Flex } from '@/components/system';
-import { Branding, GameLicense } from '@/components/ui';
-import { DefaultStepNavigator } from '@/components/ui/step-navigator';
-import { PATH } from '@/constants/routes.ts';
-import { spacing } from '@/styles';
+import { Branding, GameLicense, DefaultStepNavigator } from '@/components/ui';
+import { PATH } from '@/constants';
+
+import * as styles from './styles.css';
 
 export const LandingPage = () => {
   const navigate = useNavigate();
@@ -25,9 +24,9 @@ export const LandingPage = () => {
 
   return (
     <Flex direction="column" justifyContent="space-between" style={{ height: '100%' }}>
-      <Branding css={css({ marginTop: spacing.brandingTopMargin })} />
+      <Branding className={styles.branding} />
       <DefaultStepNavigator items={['SIGN IN', 'SIGN UP']} onSelect={handleSelect} />
-      <GameLicense />
+      <GameLicense className={styles.license} />
     </Flex>
   );
 };

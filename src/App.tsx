@@ -1,3 +1,5 @@
+import '@/styles/global.css';
+
 import {
   createBrowserRouter,
   Navigate,
@@ -6,10 +8,10 @@ import {
   RouterProvider,
   ScrollRestoration,
 } from 'react-router-dom';
+import { Toaster } from 'sonner';
 
 import { QueryClientProvider } from '@/api';
 import { useAuthAtom } from '@/atoms/useAuthAtom';
-import { ThemeProvider, GlobalStyle } from '@/components/ui';
 import { PATH } from '@/constants/routes';
 import {
   EmailSignInPage,
@@ -82,10 +84,8 @@ const App = () => {
     {
       element: (
         <QueryClientProvider>
-          <GlobalStyle />
-          <ThemeProvider>
-            <Outlet />
-          </ThemeProvider>
+          <Outlet />
+          <Toaster position="top-right" />
         </QueryClientProvider>
       ),
       children: [...publicRoutes, ...privateRoutes],

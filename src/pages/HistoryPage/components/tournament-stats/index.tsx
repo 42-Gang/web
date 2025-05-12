@@ -7,7 +7,7 @@ import { TournamentSummary } from './game-summary';
 export const TournamentStats = () => {
   const { data } = useUsersMe();
 
-  const tournament = data?.data?.tournament ?? null;
+  const tournament = data?.data?.tournament || 0;
 
   return (
     <Flex direction="column" alignItems="center">

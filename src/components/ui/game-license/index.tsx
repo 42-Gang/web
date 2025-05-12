@@ -1,20 +1,16 @@
-/** @jsxImportSource @emotion/react */
-import { Interpolation, Theme } from '@emotion/react';
+import { clsx } from 'clsx';
+import { ComponentProps } from 'react';
 
-import * as styles from './styles.ts';
+import * as styles from './styles.css';
 
-type GameLicenseProps = {
-  css?: Interpolation<Theme>;
-};
-
-export const GameLicense = ({ css }: GameLicenseProps) => {
+export const GameLicense = ({ className, ...props }: ComponentProps<'p'>) => {
   return (
-    <styles.License css={css}>
+    <p className={clsx(className, styles.license)} {...props}>
       TH & C 1980 1993 NAMCO LTD.
       <br />
       NAMCO HOMETEK, INC.
       <br />
       LICENSED BY NINTENDO
-    </styles.License>
+    </p>
   );
 };
