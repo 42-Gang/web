@@ -6,8 +6,8 @@ export const friendItem = style({
   display: 'flex',
   alignItems: 'center',
   padding: `${rem(12)} ${rem(16)}`,
-  borderTop: '1px solid white',
-  borderBottom: '1px solid white',
+  borderTop: `${rem(1)} solid white`,
+  borderBottom: `${rem(1)} solid white`,
 });
 
 export const messageIcon = style({

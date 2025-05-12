@@ -7,8 +7,8 @@ export const statusDotBase = style({
   top: '50%',
   right: rem(-18),
   transform: 'translateY(-50%)',
-  width: '10px',
-  height: '10px',
+  width: rem(10),
+  height: rem(10),
   borderRadius: '50%',
 });
 

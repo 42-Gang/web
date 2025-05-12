@@ -10,7 +10,7 @@ export const button = style({
   color: theme.color.white,
   fontFamily: "'Tiny5', sans-serif",
   fontSize: rem(23),
-  background: "url('/assets/images/base-button-off.png') center/contain no-repeat",
+  background: "url('/assets/images/base-button-normal.png') center/contain no-repeat",
   backgroundColor: 'transparent',
   zIndex: theme.zIndex.default,
 
@@ -22,7 +22,7 @@ export const button = style({
       opacity: 0,
       pointerEvents: 'none',
       transition: 'opacity 250ms ease',
-      background: "url('/assets/images/base-button-on.png') center/contain no-repeat",
+      background: "url('/assets/images/base-button-hover.png') center/contain no-repeat",
       zIndex: theme.zIndex.default,
     },
     '&:hover::after': { opacity: 1 },

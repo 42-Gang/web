@@ -5,10 +5,7 @@ import type { Friend } from '@/api/types';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
 
-import { AddFriend } from './add-friend/index.tsx';
-import { Alarm } from './alarm/index.tsx';
 import { FriendList } from './friend-list';
-import { SearchMyFriends } from './search-my-friends/index.tsx';
 import * as styles from './styles.css.ts';
 
 export const FriendPage = () => {
@@ -82,11 +79,16 @@ export const FriendPage = () => {
     <Flex direction="column" style={{ height: '100%' }}>
       <BackButton />
       <h2 className={styles.Title}>Friend List</h2>
+
       <div className={styles.FriendContainer}>
-        <AddFriend />
-        <SearchMyFriends />
+        <button className={styles.addFriend} />
+        <div className={styles.inputWrapper}>
+          <input className={styles.input} placeholder="Please enter your friend's nickname." />
+        </div>
       </div>
-      <Alarm />
+
+      <button className={styles.alarm} />
+
       <FriendList friends={friendList} />
       {/* {friendList.map((friend) => (
         <div key={friend.friendId}>

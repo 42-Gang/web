@@ -17,3 +17,33 @@ export const FriendContainer = style({
   marginLeft: rem(120),
   gap: rem(12),
 });
+
+export const inputWrapper = style({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: 'fit-content',
+});
+
+export const input = style({
+  width: rem(430),
+  height: rem(46),
+  fontSize: rem(18),
+  borderRadius: rem(15),
+  textAlign: 'center',
+});
+
+export const addFriend = style({
+  width: rem(56),
+  height: rem(46),
+  background: "url('/assets/images/add-friend.svg') center/contain no-repeat",
+  cursor: 'pointer',
+});
+
+export const alarm = style({
+  width: rem(32),
+  height: rem(32),
+  background: "url('/assets/images/alarm.svg') center/contain no-repeat",
+  cursor: 'pointer',
+  marginLeft: rem(739),
+});
