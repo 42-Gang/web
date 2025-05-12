@@ -37,9 +37,9 @@ export const nickname = style({
 });
 
 export const avatar = style({
-  width: '65px',
-  height: '67px',
-  marginRight: '30px',
+  width: rem(65),
+  height: rem(67),
+  marginRight: rem(30),
 });
 
 export const status = style({});
