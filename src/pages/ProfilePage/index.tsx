@@ -6,7 +6,7 @@ import EditNicknameModal from './components/edit-nickname-modal';
 import { LogoutButton } from './components/logout-button';
 import LogoutConfirmModal from './components/logout-confirm-modal';
 import ProfileImage from './components/profile-image';
-import * as styles from './styles.css.ts';
+import * as styles from './styles.css';
 
 export const ProfilePage = () => {
   const nickname = 'PONG';
