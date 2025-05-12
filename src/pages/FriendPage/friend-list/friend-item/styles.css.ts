@@ -5,7 +5,7 @@ import { rem } from '@/styles';
 export const friendItem = style({
   display: 'flex',
   alignItems: 'center',
-  padding: '12px 16px',
+  padding: `${rem(12)} ${rem(16)}`,
   borderTop: '1px solid white',
   borderBottom: '1px solid white',
 });
