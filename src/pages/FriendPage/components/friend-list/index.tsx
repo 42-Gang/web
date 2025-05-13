@@ -1,19 +1,19 @@
-import type { Friend } from '@/api/types';
-
-// import { useFriendsMe } from "@/api";
-import { FriendItem } from './friend-item';
 import * as styles from './styles.css';
 
-type FriendListProps = {
-  friends: Friend[];
-};
+const FRIENDS = ['PING', 'JACK', 'DING', 'PONG'];
 
-export const FriendList = ({ friends }: FriendListProps) => {
+export const FriendList = () => {
   return (
-    <div className={styles.friendListWrapper}>
-      {friends.map((friend) => (
-        <FriendItem key={friend.friendId} friend={friend} />
-      ))}
+    <div className={styles.friendList}>
+      <ul className={styles.list}>
+        <li className={styles.divider} />
+        {FRIENDS.map((friend) => (
+          <li key={friend} className={styles.item}>
+            <img src="/assets/images/sample-avatar.png" className={styles.avatar} />
+            <span>{friend}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
