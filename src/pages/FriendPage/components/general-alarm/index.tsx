@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import { Flex } from '@/components/system/index.ts';
 
 import * as styles from './styles.css.ts';
@@ -20,11 +22,17 @@ const mockUsers: User[] = [
 ];
 
 export const GeneralAlarm = () => {
+  const [alarmUsers, setAlarmUsers] = useState<User[]>(mockUsers);
+
+  const removeAlarm = (id: number) => {
+    setAlarmUsers((prev) => prev.filter((user) => user.id !== id));
+  };
+
   return (
     <Flex direction="column" alignItems="center">
       <h2 className={styles.title}>Invites & Requests</h2>
       <div className={styles.requestList}>
-        {mockUsers.map((user) => (
+        {alarmUsers.map((user) => (
           <div key={user.id} className={styles.userCard}>
             <Flex alignItems="center">
               <Flex alignItems="center">
@@ -32,8 +40,16 @@ export const GeneralAlarm = () => {
                 <span className={styles.nickname}>{user.nickname}</span>
               </Flex>
               <div className={styles.button}>
-                <button className={styles.rejection} />
-                <button className={styles.approval} />
+                <button
+                  className={styles.rejection}
+                  onClick={() => removeAlarm(user.id)}
+                  aria-label="Reject"
+                />
+                <button
+                  className={styles.approval}
+                  onClick={() => removeAlarm(user.id)}
+                  aria-label="Approve"
+                />
               </div>
             </Flex>
           </div>

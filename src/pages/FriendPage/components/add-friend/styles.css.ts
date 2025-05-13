@@ -62,3 +62,12 @@ export const friendRequest = style({
   marginRight: rem(20),
   background: "url('/assets/images/request-friend.svg') center/contain no-repeat",
 });
+
+export const requestedButton = style([
+  friendRequest,
+  {
+    background: "url('/assets/images/request-success.svg') center/contain no-repeat",
+    cursor: 'default',
+    opacity: 1,
+  },
+]);

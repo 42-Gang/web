@@ -19,10 +19,18 @@ const mockUsers: User[] = [
 
 export const AddFriend = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [requestedIds, setRequestedIds] = useState<number[]>([]);
 
   const filteredUsers = mockUsers.filter((user) => {
     return user.nickname.toLowerCase().startsWith(searchTerm.toLowerCase());
   });
+
+  const handleRequest = (id: number, nickname: string) => {
+    if (requestedIds.includes(id)) return;
+
+    setRequestedIds((prev) => [...prev, id]);
+    alert(`Friend request sent to ${nickname}`);
+  };
 
   return (
     <Flex direction="column" alignItems="center">
@@ -42,7 +50,13 @@ export const AddFriend = () => {
                 <img src={user.avatarUrl} alt={user.avatarUrl} className={styles.avatar} />
                 <span className={styles.nickname}>{user.nickname}</span>
               </Flex>
-              <button className={styles.friendRequest} aria-label="Send friend request" />
+              <button
+                className={
+                  requestedIds.includes(user.id) ? styles.requestedButton : styles.friendRequest
+                }
+                onClick={() => handleRequest(user.id, user.nickname)}
+                aria-label="Send friend request"
+              />
             </Flex>
           </div>
         ))}
