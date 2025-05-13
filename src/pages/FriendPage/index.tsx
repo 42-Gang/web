@@ -23,12 +23,6 @@ export const FriendPage = () => {
     return () => disconnect();
   }, [connect, disconnect]);
 
-  useEffect(() => {
-    connect();
-
-    return () => disconnect();
-  }, [connect, disconnect]);
-
   const { data: friends } = useFriendsMe();
 
   const friendList = useMemo(() => friends?.data?.friends || [], [friends]);
