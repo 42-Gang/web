@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { ChatBox } from './components/chat-box';
 import { FriendHeader } from './components/friend-header';
-import { FriendList } from './components/friend-list';
+// import { FriendList } from './components/friend-list';
 import * as styles from './FriendChatRoomPage.styles.css';
 
 export const FriendChatRoomPage = () => {
@@ -22,9 +22,7 @@ export const FriendChatRoomPage = () => {
             onClick={() => navigate('/friend')}
           />
         </div>
-        <div className={styles.friendListWrapper}>
-          <FriendList />
-        </div>
+        <div className={styles.friendListWrapper}>{/* <FriendList /> */}</div>
       </div>
     </div>
   );

@@ -9,10 +9,6 @@ type FriendListProps = {
 };
 
 export const FriendList = ({ friends }: FriendListProps) => {
-  // const { data } = useFriendsMe();
-
-  // const friends = data?.data?.friends || [];
-
   return (
     <div className={styles.friendListWrapper}>
       {friends.map((friend) => (
