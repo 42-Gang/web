@@ -55,6 +55,16 @@ export const alarm = style({
   height: rem(32),
   background: "url('/assets/images/alarm.svg') center/contain no-repeat",
   cursor: 'pointer',
+  transition: 'opacity 0.2s ease-in-out',
+
+  opacity: 0.6,
+
+  selectors: {
+    '&:hover': {
+      opacity: 1,
+    },
+  },
+
   marginLeft: rem(739),
 });
 

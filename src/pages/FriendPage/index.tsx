@@ -7,6 +7,7 @@ import { BackButton } from '@/components/ui';
 
 import { AddFriend } from './components/add-friend/index.tsx';
 import { FriendList } from './components/friend-list/index.tsx';
+import { GeneralAlarm } from './components/general-alarm/index.tsx';
 import { RequestListDialog } from './components/request-list-dialog';
 import * as styles from './styles.css.ts';
 
@@ -52,7 +53,9 @@ export const FriendPage = () => {
           />
         </div>
       </div>
-      <button className={styles.alarm} />
+      <RequestListDialog content={<GeneralAlarm />}>
+        <button className={styles.alarm} />
+      </RequestListDialog>
       <div className={styles.separatorLine} />
       <FriendList friends={filteredFriends} />
     </Flex>

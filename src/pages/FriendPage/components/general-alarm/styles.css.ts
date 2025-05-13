@@ -3,29 +3,19 @@ import { style } from '@vanilla-extract/css';
 import { rem, theme } from '@/styles';
 
 export const title = style({
-  marginBottom: rem(20),
+  marginBottom: rem(50),
   color: theme.color.white,
   fontFamily: theme.fontFamily.branding,
   fontSize: rem(30),
   lineHeight: 1.2,
 });
 
-export const input = style({
-  width: rem(430),
-  height: rem(46),
-  marginBottom: rem(25),
-  fontSize: rem(18),
-  borderRadius: rem(15),
-  textAlign: 'center',
-});
-
-export const userList = style({
+export const requestList = style({
   display: 'flex',
   flexDirection: 'column',
   maxHeight: rem(240),
   overflowY: 'auto',
   scrollbarGutter: 'stable',
-  border: rem(3),
   gap: rem(5),
 });
 
@@ -34,13 +24,6 @@ export const userCard = style({
   height: rem(80),
   border: `${rem(3)} solid white`,
   borderRadius: rem(10),
-  transition: 'background-color 0.2s ease-in-out',
-
-  selectors: {
-    '&:hover': {
-      backgroundColor: '#1E90FF',
-    },
-  },
 });
 
 export const avatar = style({
@@ -56,9 +39,40 @@ export const nickname = style({
   fontSize: rem(20),
 });
 
-export const friendRequest = style({
+export const approval = style({
   width: rem(40),
   height: rem(40),
-  marginRight: rem(20),
-  background: "url('/assets/images/request-friend.svg') center/contain no-repeat",
+  background: "url('/assets/images/approval.svg') center/contain no-repeat",
+  cursor: 'pointer',
+  opacity: 0.6,
+  transition: 'opacity 0.2s ease-in-out',
+
+  selectors: {
+    '&:hover': {
+      opacity: 1,
+    },
+  },
+});
+
+export const rejection = style({
+  width: rem(40),
+  height: rem(40),
+  background: "url('/assets/images/rejection.svg') center/contain no-repeat",
+  cursor: 'pointer',
+  opacity: 0.6,
+  transition: 'opacity 0.2s ease-in-out',
+
+  selectors: {
+    '&:hover': {
+      opacity: 1,
+    },
+  },
+});
+
+export const button = style({
+  marginLeft: 'auto',
+  display: 'flex',
+  gap: rem(8),
+  marginRight: rem(16),
+  alignItems: 'center',
 });
