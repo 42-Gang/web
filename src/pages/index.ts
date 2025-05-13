@@ -1,4 +1,5 @@
 export * from './FriendPage';
+export * from './FriendPage/FriendChatRoom';
 export * from './HomePage';
 export * from './LandingPage';
 export * from './SignInPage';
