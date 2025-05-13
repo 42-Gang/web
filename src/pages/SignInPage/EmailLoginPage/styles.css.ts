@@ -30,7 +30,6 @@ export const inputRow = style({
 export const input = style({
   background: 'none',
   border: 'none',
-  borderBottom: 'none',
   color: 'white',
   outline: 'none',
   width: rem(200),

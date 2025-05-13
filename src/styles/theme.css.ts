@@ -63,6 +63,8 @@ const color = {
   white: 'hsl(0, 0%, 100%)',
   black: 'hsl(0, 0%, 0%)',
   brand: 'hsl(0, 48%, 59%)',
+  orangeChat: 'hsl(14, 97%, 71%)',
+  grayHover: 'hsl(0, 0%, 20%)',
 
   win: '#2272FF',
   lose: '#C83A3A',
