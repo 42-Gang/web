@@ -1,15 +1,16 @@
 import { style } from '@vanilla-extract/css';
 
 import { rem } from '@/styles';
+import { theme } from '@/styles/theme.css';
+
 
 export const chatBox = style({
   width: '100%',
   height: rem(500),
-  backgroundColor: '#FD906F',
+  backgroundColor: theme.color.orangeChat,
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
-  boxSizing: 'border-box',
 });
 
 export const messages = style({
@@ -19,19 +20,6 @@ export const messages = style({
   display: 'flex',
   flexDirection: 'column',
   gap: rem(8),
-
-  selectors: {
-    '&::-webkit-scrollbar': {
-      width: rem(8),
-    },
-    '&::-webkit-scrollbar-thumb': {
-      backgroundColor: 'rgba(217, 217, 217, 0.5)',
-      borderRadius: rem(10),
-    },
-    '&::-webkit-scrollbar-track': {
-      backgroundColor: 'transparent',
-    },
-  },
 });
 
 export const messageBase = style({
@@ -67,9 +55,9 @@ export const input = style({
   flex: 1,
   fontSize: rem(16),
   padding: rem(4),
+  backgroundColor: 'transparent',
   border: 'none',
   outline: 'none',
-  color: 'black',
 });
 
 export const sendButton = style({

@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { rem } from '@/styles';
+import { theme } from '@/styles/theme.css';
 
 export const wrapper = style({
   display: 'flex',
@@ -8,7 +9,7 @@ export const wrapper = style({
   height: rem(600),
   margin: '0 auto',
   backgroundColor: '#111',
-  border: `${rem(2)} solid white`,
+  border: `${rem(2)} solid ${theme.color.white}`,
   overflow: 'hidden',
 });
 
@@ -25,7 +26,6 @@ export const sidebar = style({
   width: rem(200),
   display: 'flex',
   flexDirection: 'column',
-  backgroundColor: '#000',
   boxSizing: 'border-box',
 });
 
@@ -56,7 +56,7 @@ export const exitButton = style({
 export const divider = style({
   width: rem(200),
   height: rem(1),
-  backgroundColor: '#444',
+  backgroundColor: theme.color.white,
   marginBottom: 0,
   marginTop: 0,
 });

@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { rem } from '@/styles';
+import { theme } from '@/styles/theme.css';
 
 export const header = style({
   display: 'flex',
@@ -25,7 +26,7 @@ export const avatar = style({
 });
 
 export const nickname = style({
-  color: 'white',
+  color: theme.color.white,
   fontSize: rem(28),
   textTransform: 'uppercase',
   letterSpacing: rem(2),
@@ -34,13 +35,13 @@ export const nickname = style({
 export const blockButton = style({
   background: `url('/assets/images/base-button.png') no-repeat center`,
   backgroundSize: 'contain',
-  width: '100px',
-  height: '40px',
-  color: 'white',
+  width: rem(100),
+  height: rem(40),
+  color: theme.color.white,
   fontWeight: 'bold',
-  fontSize: '16px',
+  fontSize: rem(16),
   cursor: 'pointer',
   transition: 'opacity 0.2s ease',
   marginTop: rem(30),
-  textShadow: '0 0 4px rgba(0, 0, 0, 0.6)',
+  textShadow: '0 0 0.25rem rgba(0, 0, 0, 0.6)',
 });

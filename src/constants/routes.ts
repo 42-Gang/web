@@ -8,6 +8,6 @@ export const PATH = {
   GAME: '/game',
 
   FRIEND: '/friend',
-  FRIEND_DM: '/friend/dm',
+  FRIEND_CHATROOM: '/friend/chatroom',
   PROFILE: '/profile',
 } as const;
