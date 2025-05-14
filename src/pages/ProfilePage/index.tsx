@@ -1,39 +1,20 @@
 import { useState } from 'react';
 
-import { useLogout } from '@/api/mutations';
 import { useUsersMe } from '@/api/queries';
-import { useAuthAtom } from '@/atoms/useAuthAtom';
 import { BackButton } from '@/components/ui';
 
 import EditNicknameModal from './components/edit-nickname-modal';
 import { LogoutButton } from './components/logout-button';
-import LogoutConfirmModal from './components/logout-confirm-modal';
+import { LogoutDialog } from './components/logout-dialog';
 import ProfileImage from './components/profile-image';
 import * as styles from './styles.css';
 
 export const ProfilePage = () => {
   const [isEditNicknameOpen, setIsEditNicknameOpen] = useState(false);
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const { data, isLoading, isError } = useUsersMe();
-  const { mutate: logoutMutation } = useLogout();
-  const { removeToken } = useAuthAtom();
 
   const handleNicknameEdit = () => setIsEditNicknameOpen(true);
-  const handleLogoutClick = () => setIsLogoutModalOpen(true);
-
-  const handleLogoutConfirm = () => {
-    logoutMutation(undefined, {
-      onSuccess: () => {
-        setIsLogoutModalOpen(false);
-        removeToken();
-        window.location.href = '/';
-      },
-      onError: () => {
-        alert('Failed to logout.');
-      },
-    });
-  };
 
   if (isLoading) return <div className={styles.container}>Loading...</div>;
   if (isError || !data?.data)
@@ -64,18 +45,12 @@ export const ProfilePage = () => {
             <p>Tournament : {tournament ?? '-'}</p>
           </div>
         </div>
-        <div onClick={handleLogoutClick}>
+
+        <LogoutDialog>
           <LogoutButton />
-        </div>
+        </LogoutDialog>
 
         {isEditNicknameOpen && <EditNicknameModal onClose={() => setIsEditNicknameOpen(false)} />}
-
-        {isLogoutModalOpen && (
-          <LogoutConfirmModal
-            onCancel={() => setIsLogoutModalOpen(false)}
-            onConfirm={handleLogoutConfirm}
-          />
-        )}
       </div>
     </div>
   );
