@@ -57,7 +57,7 @@ export const ImageOptionDialog = ({ children }: PropsWithChildren) => {
   };
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogTrigger>{children}</DialogTrigger>
       <DialogOverlay />
       <DialogContent className={styles.content} aria-describedby={undefined}>
         <DialogTitle style={{ display: 'none' }}>Edit Profile Image Options</DialogTitle>
