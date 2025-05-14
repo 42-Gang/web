@@ -30,6 +30,7 @@ export const changeButton = style({
   height: rem(48),
   background: 'white',
   borderRadius: '50%',
+  cursor: 'pointer',
 });
 
 globalStyle(`${changeButton} img`, {
