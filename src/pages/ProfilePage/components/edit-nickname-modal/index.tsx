@@ -21,7 +21,6 @@ const EditNicknameModal = ({ onClose }: Props) => {
         onSuccess: () => {
           alert('닉네임 변경 완료');
           onClose();
-          // ETC: 필요하면 useUsersMe 쿼리 invalidate 처리
         },
         onError: () => {
           alert('닉네임 변경 실패');

@@ -1,12 +1,17 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { instance, resultify } from '@/api/fetcher';
+import { fetcher } from '@/api/fetcher';
+import { queryKeys } from '@/api/queryKey';
 
-const deleteAvatar = () =>
-  resultify<void>(
-    instance.delete('users/avatar', {
-      headers: undefined,
-    }),
-  );
+const deleteAvatar = () => fetcher.delete('users/avatar', { json: {} });
 
-export const useDeleteAvatar = () => useMutation({ mutationFn: deleteAvatar });
+export const useDeleteAvatar = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteAvatar,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ ...queryKeys.usersMe(), type: 'all' });
+    },
+  });
+};

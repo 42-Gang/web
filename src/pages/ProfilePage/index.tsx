@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-
 
 import { useLogout } from '@/api/mutations';
 import { useUsersMe } from '@/api/queries';
@@ -14,7 +12,6 @@ import ProfileImage from './components/profile-image';
 import * as styles from './styles.css';
 
 export const ProfilePage = () => {
-  const navigate = useNavigate();
   const [isEditNicknameOpen, setIsEditNicknameOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
@@ -30,7 +27,7 @@ export const ProfilePage = () => {
       onSuccess: () => {
         setIsLogoutModalOpen(false);
         removeToken();
-        navigate('/signin');
+        window.location.href = '/';
       },
       onError: () => {
         alert('Failed to logout.');
@@ -62,9 +59,9 @@ export const ProfilePage = () => {
                 <button className={styles.editButton} onClick={handleNicknameEdit} />
               </div>
             </div>
-            <p>WIN : {win}</p>
-            <p>LOSE : {lose}</p>
-            <p>Tournament : {tournament}</p>
+            <p>WIN : {win ?? '-'}</p>
+            <p>LOSE : {lose ?? '-'}</p>
+            <p>Tournament : {tournament ?? '-'}</p>
           </div>
         </div>
         <div onClick={handleLogoutClick}>

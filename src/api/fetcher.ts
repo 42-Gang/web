@@ -25,7 +25,6 @@ export const instance = ky.create({
         }
       },
     ],
-
     afterResponse: [
       async (request, options, response) => {
         if (!response.ok && response.status === 401 && !request.url.includes('logout')) {
@@ -72,15 +71,7 @@ export async function resultify<T>(response: ResponsePromise) {
 
 export const fetcher = {
   get: <T>(pathname: string, options?: Options) => resultify<T>(instance.get(pathname, options)),
-  post: <T>(pathname: string, options?: Options) => {
-    const isFormData = options?.body instanceof FormData;
-    const sanitizedOptions: Options = {
-      ...options,
-      headers: isFormData ? undefined : options?.headers,
-    };
-    return resultify<T>(instance.post(pathname, sanitizedOptions));
-  },
-
+  post: <T>(pathname: string, options?: Options) => resultify<T>(instance.post(pathname, options)),
   put: <T>(pathname: string, options?: Options) => resultify<T>(instance.put(pathname, options)),
   delete: <T>(pathname: string, options?: Options) =>
     resultify<T>(instance.delete(pathname, options)),

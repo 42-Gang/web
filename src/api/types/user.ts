@@ -1,4 +1,3 @@
-// 내 프로필 확인
 export type UserInfo = {
   id: number;
   nickname: string;
@@ -8,7 +7,6 @@ export type UserInfo = {
   tournament: number;
 };
 
-// 유저 정보 수정
 export type User = {
   id: number;
   nickname: string;
