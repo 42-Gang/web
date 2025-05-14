@@ -8,6 +8,6 @@ type Request = {
 };
 
 const postMailVerification = (payload: Request) =>
-  fetcher.post<HttpResponse>('auth/mail', { json: payload });
+  fetcher.post<HttpResponse>('v1/auth/mail', { json: payload });
 
 export const useMailVerification = () => useMutation({ mutationFn: postMailVerification });

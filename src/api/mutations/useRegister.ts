@@ -10,6 +10,6 @@ type Request = {
   mailVerificationCode: string;
 };
 
-const postRegister = (payload: Request) => fetcher.post<HttpResponse>('auth', { json: payload });
+const postRegister = (payload: Request) => fetcher.post<HttpResponse>('v1/auth', { json: payload });
 
 export const useRegister = () => useMutation({ mutationFn: postRegister });

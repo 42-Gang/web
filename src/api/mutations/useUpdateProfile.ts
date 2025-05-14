@@ -9,7 +9,7 @@ type Request = {
 };
 
 const patchUpdateProfile = (payload: Request) =>
-  fetcher.patch<HttpResponse<User>>('users/me', { json: payload });
+  fetcher.patch<HttpResponse<User>>('v1/users/me', { json: payload });
 
 export const useUpdateProfile = () => {
   const queryClient = useQueryClient();
