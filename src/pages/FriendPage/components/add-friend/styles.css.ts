@@ -32,13 +32,13 @@ export const userList = style({
 export const userCard = style({
   width: rem(630),
   height: rem(80),
-  border: `${rem(3)} solid white`,
+  border: `${rem(3)} solid ${theme.color.white}`,
   borderRadius: rem(10),
   transition: 'background-color 0.2s ease-in-out',
 
   selectors: {
     '&:hover': {
-      backgroundColor: '#1E90FF',
+      backgroundColor: theme.color.friendHover,
     },
   },
 });
@@ -52,7 +52,7 @@ export const avatar = style({
 });
 
 export const nickname = style({
-  color: 'white',
+  color: theme.color.white,
   fontSize: rem(20),
 });
 

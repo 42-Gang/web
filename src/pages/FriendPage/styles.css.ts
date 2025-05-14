@@ -71,6 +71,6 @@ export const alarm = style({
 export const separatorLine = style({
   width: '100%',
   height: rem(1),
-  backgroundColor: 'white',
+  backgroundColor: theme.color.white,
   marginTop: rem(12),
 });

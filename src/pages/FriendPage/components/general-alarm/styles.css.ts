@@ -22,7 +22,7 @@ export const requestList = style({
 export const userCard = style({
   width: rem(630),
   height: rem(80),
-  border: `${rem(3)} solid white`,
+  border: `${rem(3)} solid ${theme.color.white}`,
   borderRadius: rem(10),
 });
 
@@ -35,7 +35,7 @@ export const avatar = style({
 });
 
 export const nickname = style({
-  color: 'white',
+  color: theme.color.white,
   fontSize: rem(20),
 });
 

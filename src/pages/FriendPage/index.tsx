@@ -1,13 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { useFriendsMe } from '@/api/index.ts';
+import { useFriendsMe } from '@/api';
 import { useSocket } from '@/api/socket';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
 
-import { AddFriend } from './components/add-friend/index.tsx';
-import { FriendList } from './components/friend-list/index.tsx';
-import { GeneralAlarm } from './components/general-alarm/index.tsx';
+import { FriendList } from './components/friend-list';
 import { RequestListDialog } from './components/request-list-dialog';
 import * as styles from './styles.css.ts';
 
@@ -41,7 +39,7 @@ export const FriendPage = () => {
       <h2 className={styles.Title}>Friend List</h2>
 
       <div className={styles.FriendContainer}>
-        <RequestListDialog content={<AddFriend />}>
+        <RequestListDialog type="addFriend">
           <button className={styles.addFriend} />
         </RequestListDialog>
         <div className={styles.inputWrapper}>
@@ -53,7 +51,7 @@ export const FriendPage = () => {
           />
         </div>
       </div>
-      <RequestListDialog content={<GeneralAlarm />}>
+      <RequestListDialog type="alarm">
         <button className={styles.alarm} />
       </RequestListDialog>
       <div className={styles.separatorLine} />
