@@ -2,7 +2,15 @@ import { PropsWithChildren } from 'react';
 
 import { useLogout } from '@/api';
 import { useAuthAtom } from '@/atoms/useAuthAtom';
-import { Dialog, DialogTrigger, DialogOverlay, DialogContent } from '@/components/system';
+import {
+  Dialog,
+  DialogTrigger,
+  DialogOverlay,
+  DialogContent,
+  DialogClose,
+} from '@/components/system';
+
+import * as styles from './styles.css';
 
 export const LogoutDialog = ({ children }: PropsWithChildren) => {
   const { mutate } = useLogout();
@@ -24,10 +32,17 @@ export const LogoutDialog = ({ children }: PropsWithChildren) => {
     <Dialog>
       <DialogTrigger>{children}</DialogTrigger>
       <DialogOverlay />
-      <DialogContent>
-        <p>Do you really want to log out?</p>
-        <button onClick={handleLogout}>Logout</button>
-        <button onClick={() => window.location.reload()}>Cancel</button>
+      <DialogContent className={styles.content}>
+        <p className={styles.message}>Do you really want to log out?</p>
+
+        <div className={styles.group}>
+          <button className={styles.logout} onClick={handleLogout}>
+            O K
+          </button>
+          <DialogClose asChild>
+            <button className={styles.button}>Cancel</button>
+          </DialogClose>
+        </div>
       </DialogContent>
     </Dialog>
   );
