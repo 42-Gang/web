@@ -12,7 +12,7 @@ export const useUploadAvatar = () => {
   return useMutation({
     mutationFn: postUploadAvatar,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ ...queryKeys.usersMe(), type: 'all' });
+      await queryClient.invalidateQueries({ ...queryKeys.usersMe(), refetchType: 'all' });
     },
   });
 };
