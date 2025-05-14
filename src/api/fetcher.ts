@@ -14,7 +14,8 @@ const defaultOption: Options = {
 
 export const instance = ky.create({
   prefixUrl: '/api',
-  headers: { 'content-type': 'application/json' },
+  // application/json을 고정으로 지정하고 있어서, FormData를 보낼 때 문제 발생하여 아래 코드 주석 처리
+  // headers: { 'content-type': 'application/json' },
   hooks: {
     beforeRequest: [
       (request) => {
@@ -25,6 +26,7 @@ export const instance = ky.create({
         }
       },
     ],
+
     afterResponse: [
       async (request, options, response) => {
         if (!response.ok && response.status === 401 && !request.url.includes('logout')) {

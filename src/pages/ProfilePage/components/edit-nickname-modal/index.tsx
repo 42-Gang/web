@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import ReactDOM from 'react-dom';
 
+import { useUpdateProfile } from '@/api/mutations/useUpdateProfile';
+
 import * as styles from './styles.ts';
 
 type Props = {
@@ -9,6 +11,24 @@ type Props = {
 
 const EditNicknameModal = ({ onClose }: Props) => {
   const [nickname, setNickname] = useState('');
+
+  const { mutate: updateProfile } = useUpdateProfile();
+
+  const handleConfirm = () => {
+    updateProfile(
+      { nickname },
+      {
+        onSuccess: () => {
+          alert('닉네임 변경 완료');
+          onClose();
+          // ETC: 필요하면 useUsersMe 쿼리 invalidate 처리
+        },
+        onError: () => {
+          alert('닉네임 변경 실패');
+        },
+      },
+    );
+  };
 
   return ReactDOM.createPortal(
     <styles.Overlay>
@@ -26,9 +46,7 @@ const EditNicknameModal = ({ onClose }: Props) => {
           onChange={(e) => setNickname(e.target.value)}
         />
 
-        <styles.ConfirmButton onClick={() => alert(`닉네임: ${nickname}`)}>
-          Confirm
-        </styles.ConfirmButton>
+        <styles.ConfirmButton onClick={handleConfirm}>Confirm</styles.ConfirmButton>
       </styles.Modal>
     </styles.Overlay>,
     document.body,
