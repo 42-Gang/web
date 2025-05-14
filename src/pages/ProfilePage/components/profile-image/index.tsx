@@ -18,7 +18,7 @@ const ProfileImage = ({ src }: ProfileImageProps) => {
   const { mutate: uploadAvatarMutation } = useUploadAvatar();
   const { mutate: deleteAvatarMutation } = useDeleteAvatar();
 
-  const { data, refetch } = useUsersMe();
+  const { data } = useUsersMe();
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>(src);
 
   useEffect(() => {
@@ -44,22 +44,17 @@ const ProfileImage = ({ src }: ProfileImageProps) => {
     formData.append('avatar', file);
 
     uploadAvatarMutation(formData, {
-      onSuccess: () => {
-        refetch();
-      },
       onError: (err) => {
         console.error('이미지 업로드 실패:', err);
       },
     });
 
-    // 같은 파일 다시 선택 가능하도록 초기화
     event.target.value = '';
   };
 
   const handleDelete = () => {
     deleteAvatarMutation(undefined, {
       onSuccess: () => {
-        refetch();
         setIsModalOpen(false);
       },
       onError: (err) => {
