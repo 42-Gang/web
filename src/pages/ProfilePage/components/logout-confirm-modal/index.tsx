@@ -8,12 +8,16 @@ type Props = {
 };
 
 const LogoutConfirmModal = ({ onCancel, onConfirm }: Props) => {
+  const handleConfirm = () => {
+    onConfirm();
+  };
+
   return ReactDOM.createPortal(
     <styles.Overlay>
       <styles.Modal>
         <styles.Text>Do you really want to log out?</styles.Text>
         <styles.ButtonGroup>
-          <styles.ConfirmButton onClick={onConfirm}>O K</styles.ConfirmButton>
+          <styles.ConfirmButton onClick={handleConfirm}>O K</styles.ConfirmButton>
           <styles.CancelButton onClick={onCancel}>Cancel</styles.CancelButton>
         </styles.ButtonGroup>
       </styles.Modal>

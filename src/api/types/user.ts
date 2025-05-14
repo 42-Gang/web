@@ -1,14 +1,10 @@
 export type UserInfo = {
+  id: number;
   nickname: string;
-  avatar: string;
+  avatarUrl: string;
   win: number;
   lose: number;
   tournament: number;
-};
-
-export type UserProfile = {
-  nickname: string;
-  avatar: string;
 };
 
 export type User = {

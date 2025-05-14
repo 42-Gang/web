@@ -1,0 +1,18 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+import { fetcher } from '@/api';
+import { queryKeys } from '@/api/queryKey';
+
+const postUploadAvatar = (data: FormData) =>
+  fetcher.post('users/avatar', { body: data, headers: undefined });
+
+export const useUploadAvatar = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: postUploadAvatar,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ ...queryKeys.usersMe(), type: 'all' });
+    },
+  });
+};

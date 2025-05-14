@@ -1,5 +1,8 @@
 import { useState } from 'react';
 
+import { useLogout } from '@/api/mutations';
+import { useUsersMe } from '@/api/queries';
+import { useAuthAtom } from '@/atoms/useAuthAtom';
 import { BackButton } from '@/components/ui';
 
 import EditNicknameModal from './components/edit-nickname-modal';
@@ -9,18 +12,34 @@ import ProfileImage from './components/profile-image';
 import * as styles from './styles.css';
 
 export const ProfilePage = () => {
-  const nickname = 'PONG';
-
   const [isEditNicknameOpen, setIsEditNicknameOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
-  const handleNicknameEdit = () => setIsEditNicknameOpen(true);
+  const { data, isLoading, isError } = useUsersMe();
+  const { mutate: logoutMutation } = useLogout();
+  const { removeToken } = useAuthAtom();
 
+  const handleNicknameEdit = () => setIsEditNicknameOpen(true);
   const handleLogoutClick = () => setIsLogoutModalOpen(true);
+
   const handleLogoutConfirm = () => {
-    setIsLogoutModalOpen(false);
-    alert('로그아웃 되었습니다');
+    logoutMutation(undefined, {
+      onSuccess: () => {
+        setIsLogoutModalOpen(false);
+        removeToken();
+        window.location.href = '/';
+      },
+      onError: () => {
+        alert('Failed to logout.');
+      },
+    });
   };
+
+  if (isLoading) return <div className={styles.container}>Loading...</div>;
+  if (isError || !data?.data)
+    return <div className={styles.container}>Failed to load data. Please try again later...</div>;
+
+  const { nickname, avatarUrl, win, lose, tournament } = data.data;
 
   return (
     <div className={styles.container}>
@@ -30,7 +49,7 @@ export const ProfilePage = () => {
         <h1 className={styles.title}>Profile</h1>
         <div className={styles.content}>
           <div className={styles.profileImage}>
-            <ProfileImage />
+            <ProfileImage src={avatarUrl} />
           </div>
           <div className={styles.metadata}>
             <div>
@@ -40,9 +59,9 @@ export const ProfilePage = () => {
                 <button className={styles.editButton} onClick={handleNicknameEdit} />
               </div>
             </div>
-            <p>WIN : 45</p>
-            <p>LOSE : 45</p>
-            <p>Tournament : 897</p>
+            <p>WIN : {win ?? '-'}</p>
+            <p>LOSE : {lose ?? '-'}</p>
+            <p>Tournament : {tournament ?? '-'}</p>
           </div>
         </div>
         <div onClick={handleLogoutClick}>

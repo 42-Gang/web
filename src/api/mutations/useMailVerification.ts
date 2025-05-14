@@ -7,7 +7,7 @@ type Request = {
   email: string;
 };
 
-const postMailVerification = (body: Request) =>
-  fetcher.post<HttpResponse>('auth/mail', { json: body });
+const postMailVerification = (payload: Request) =>
+  fetcher.post<HttpResponse>('auth/mail', { json: payload });
 
 export const useMailVerification = () => useMutation({ mutationFn: postMailVerification });

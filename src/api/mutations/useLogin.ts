@@ -12,7 +12,7 @@ type Response = {
   accessToken: string;
 };
 
-const postLogin = (body: Request) =>
-  fetcher.post<HttpResponse<Response>>('auth/login', { json: body });
+const postLogin = (payload: Request) =>
+  fetcher.post<HttpResponse<Response>>('auth/login', { json: payload });
 
 export const useLogin = () => useMutation({ mutationFn: postLogin });
