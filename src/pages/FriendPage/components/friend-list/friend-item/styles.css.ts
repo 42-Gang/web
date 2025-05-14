@@ -14,6 +14,15 @@ export const messageIcon = style({
   width: rem(39),
   height: rem(39),
   background: "url('/assets/images/message.svg') center/contain no-repeat",
+  transition: 'opacity 0.2s ease-in-out',
+
+  opacity: 0.6,
+
+  selectors: {
+    '&:hover': {
+      opacity: 1,
+    },
+  },
 });
 
 export const userWrapper = style({
@@ -41,5 +50,3 @@ export const avatar = style({
   height: rem(67),
   marginRight: rem(30),
 });
-
-export const status = style({});

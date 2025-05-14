@@ -1,11 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
+import { useFriendsMe } from '@/api';
 import { useSocket } from '@/api/socket';
-import type { Friend } from '@/api/types';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
 
-import { FriendList } from './friend-list';
+import { FriendList } from './components/friend-list';
+import { RequestListDialog } from './components/request-list-dialog';
 import * as styles from './styles.css.ts';
 
 export const FriendPage = () => {
@@ -21,59 +22,16 @@ export const FriendPage = () => {
     return () => disconnect();
   }, [connect, disconnect]);
 
-  const friendList: Friend[] = [
-    {
-      friendId: 1,
-      nickname: 'DragonSlayer',
-      avatarUrl: '/assets/images/sample-avatar.png',
-      status: 'ACCEPTED',
-    },
-    {
-      friendId: 2,
-      nickname: 'PixelQueen',
-      avatarUrl: '/assets/images/sample-avatar.png',
-      status: 'ACCEPTED',
-    },
-    {
-      friendId: 3,
-      nickname: 'Knightmare',
-      avatarUrl: '/assets/images/sample-avatar.png',
-      status: 'ACCEPTED',
-    },
-    {
-      friendId: 4,
-      nickname: 'AFKMaster',
-      avatarUrl: '/assets/images/sample-avatar.png',
-      status: 'ACCEPTED',
-    },
-    {
-      friendId: 5,
-      nickname: 'SilentArrow',
-      avatarUrl: '/assets/images/sample-avatar.png',
-      status: 'ACCEPTED',
-    },
-    {
-      friendId: 6,
-      nickname: 'CodeWizard',
-      avatarUrl: '/assets/images/sample-avatar.png',
-      status: 'ACCEPTED',
-    },
-    {
-      friendId: 7,
-      nickname: 'BlazeRunner',
-      avatarUrl: '/assets/images/sample-avatar.png',
-      status: 'ACCEPTED',
-    },
-    {
-      friendId: 8,
-      nickname: 'Frostbite',
-      avatarUrl: '/assets/images/sample-avatar.png',
-      status: 'ACCEPTED',
-    },
-  ];
+  const { data: friends } = useFriendsMe();
 
-  // const { data: friends } = useFriendsMe();
-  // const friendList = friends?.data?.friends || [];
+  const friendList = useMemo(() => friends?.data?.friends || [], [friends]);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredFriends = useMemo(() => {
+    return friendList.filter((friend) =>
+      friend.nickname.toLowerCase().startsWith(searchTerm.toLowerCase()),
+    );
+  }, [friendList, searchTerm]);
 
   return (
     <Flex direction="column" style={{ height: '100%' }}>
@@ -81,20 +39,23 @@ export const FriendPage = () => {
       <h2 className={styles.Title}>Friend List</h2>
 
       <div className={styles.FriendContainer}>
-        <button className={styles.addFriend} />
+        <RequestListDialog type="addFriend">
+          <button className={styles.addFriend} />
+        </RequestListDialog>
         <div className={styles.inputWrapper}>
-          <input className={styles.input} placeholder="Please enter your friend's nickname." />
+          <input
+            className={styles.input}
+            placeholder="Please enter your friend's nickname."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
       </div>
-
-      <button className={styles.alarm} />
-
-      <FriendList friends={friendList} />
-      {/* {friendList.map((friend) => (
-        <div key={friend.friendId}>
-          <p style={{ color: 'white' }}>{friend.nickname}</p>
-        </div>
-      ))} */}
+      <RequestListDialog type="alarm">
+        <button className={styles.alarm} />
+      </RequestListDialog>
+      <div className={styles.separatorLine} />
+      <FriendList friends={filteredFriends} />
     </Flex>
   );
 };

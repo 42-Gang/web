@@ -1,7 +1,12 @@
 import { style } from '@vanilla-extract/css';
 
-import { rem } from '@/styles';
-import { theme } from '@/styles/theme.css';
+import { rem, theme } from '@/styles';
+
+export const friendListWrapper = style({
+  maxHeight: rem(369),
+  overflowY: 'auto',
+  marginTop: rem(10),
+});
 
 export const friendList = style({
   width: rem(200),
@@ -11,7 +16,6 @@ export const friendList = style({
   overflowY: 'auto',
   overflowX: 'hidden',
 });
-
 export const list = style({
   listStyle: 'none',
   padding: 0,
@@ -19,7 +23,6 @@ export const list = style({
   display: 'flex',
   flexDirection: 'column',
 });
-
 export const item = style({
   display: 'flex',
   alignItems: 'center',
@@ -31,19 +34,16 @@ export const item = style({
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
-
   ':hover': {
     backgroundColor: theme.color.grayHover,
   },
 });
-
 export const avatar = style({
   width: rem(42),
   height: rem(42),
   borderRadius: '50%',
   objectFit: 'cover',
 });
-
 export const divider = style({
   width: rem(200),
   height: rem(1),

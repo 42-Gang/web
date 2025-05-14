@@ -69,6 +69,8 @@ const color = {
   win: '#2272FF',
   lose: '#C83A3A',
   yellow: '#ECF411',
+
+  friendHover: '#1E90FF',
 };
 
 const zIndex = {
