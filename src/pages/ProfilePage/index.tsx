@@ -20,7 +20,7 @@ export const ProfilePage = () => {
   if (isError || !data?.data)
     return <div className={styles.container}>Failed to load data. Please try again later...</div>;
 
-  const { nickname, avatarUrl, win, lose, tournament } = data.data;
+  const { nickname, win, lose, tournament } = data.data;
 
   return (
     <div className={styles.container}>
@@ -30,7 +30,7 @@ export const ProfilePage = () => {
         <h1 className={styles.title}>Profile</h1>
         <div className={styles.content}>
           <div className={styles.profileImage}>
-            <ProfileImage src={avatarUrl} />
+            <ProfileImage />
           </div>
           <div className={styles.metadata}>
             <div>

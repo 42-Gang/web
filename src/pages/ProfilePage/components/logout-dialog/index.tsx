@@ -8,6 +8,7 @@ import {
   DialogOverlay,
   DialogContent,
   DialogClose,
+  DialogTitle,
 } from '@/components/system';
 
 import * as styles from './styles.css';
@@ -32,8 +33,8 @@ export const LogoutDialog = ({ children }: PropsWithChildren) => {
     <Dialog>
       <DialogTrigger>{children}</DialogTrigger>
       <DialogOverlay />
-      <DialogContent className={styles.content}>
-        <p className={styles.message}>Do you really want to log out?</p>
+      <DialogContent className={styles.content} aria-describedby={undefined}>
+        <DialogTitle className={styles.message}>Do you really want to log out?</DialogTitle>
 
         <div className={styles.group}>
           <button className={styles.logout} onClick={handleLogout}>
