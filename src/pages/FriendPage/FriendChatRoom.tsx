@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 
 import { ChatBox } from './components/chat-box';
-import { FriendHeader } from './components/friend-header';
-import { FriendList } from './components/friend-list';
+import { FriendHeader } from './components/chat-friend-header';
+import { FriendList } from './components/chat-friend-list';
 import * as styles from './FriendChatRoomPage.styles.css';
 
 export const FriendChatRoomPage = () => {
