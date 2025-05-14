@@ -7,7 +7,7 @@ type Request = {
   nickname: string;
 };
 
-export const useUpdateProfile = () =>
-  useMutation({
-    mutationFn: (body: Request) => fetcher.patch<HttpResponse<User>>('users/me', { json: body }),
-  });
+const patchUpdateProfile = (body: Request) =>
+  fetcher.patch<HttpResponse<User>>('users/me', { json: body });
+
+export const useUpdateProfile = () => useMutation({ mutationFn: patchUpdateProfile });

@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+
 import { useLogout } from '@/api/mutations';
 import { useUsersMe } from '@/api/queries';
+import { useAuthAtom } from '@/atoms/useAuthAtom';
 import { BackButton } from '@/components/ui';
 
 import EditNicknameModal from './components/edit-nickname-modal';
@@ -17,26 +19,28 @@ export const ProfilePage = () => {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const { data, isLoading, isError } = useUsersMe();
-  const { mutate: logout } = useLogout();
+  const { mutate: logoutMutation } = useLogout();
+  const { removeToken } = useAuthAtom();
 
   const handleNicknameEdit = () => setIsEditNicknameOpen(true);
   const handleLogoutClick = () => setIsLogoutModalOpen(true);
 
   const handleLogoutConfirm = () => {
-    logout(undefined, {
+    logoutMutation(undefined, {
       onSuccess: () => {
         setIsLogoutModalOpen(false);
-        localStorage.removeItem('accessToken');
+        removeToken();
         navigate('/signin');
       },
       onError: () => {
-        alert('로그아웃에 실패했습니다.');
+        alert('Failed to logout.');
       },
     });
   };
 
   if (isLoading) return <div className={styles.container}>Loading...</div>;
-  if (isError || !data?.data) return <div className={styles.container}>불러오기 실패</div>;
+  if (isError || !data?.data)
+    return <div className={styles.container}>Failed to load data. Please try again later...</div>;
 
   const { nickname, avatarUrl, win, lose, tournament } = data.data;
 

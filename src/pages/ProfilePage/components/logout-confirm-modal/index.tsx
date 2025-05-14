@@ -1,8 +1,5 @@
 import ReactDOM from 'react-dom';
 
-import { useLogout } from '@/api/mutations/useLogout';
-import { useAuthAtom } from '@/atoms/useAuthAtom';
-
 import * as styles from './styles.ts';
 
 type Props = {
@@ -11,21 +8,8 @@ type Props = {
 };
 
 const LogoutConfirmModal = ({ onCancel, onConfirm }: Props) => {
-  const { mutate: logout } = useLogout();
-  const { removeToken } = useAuthAtom();
-
   const handleConfirm = () => {
-    logout(undefined, {
-      onSuccess: () => {
-        removeToken();
-        window.location.href = '/signin';
-        onConfirm();
-      },
-      onError: (error) => {
-        console.error('로그아웃 실패:', error);
-        alert('로그아웃에 실패했습니다.');
-      },
-    });
+    onConfirm();
   };
 
   return ReactDOM.createPortal(

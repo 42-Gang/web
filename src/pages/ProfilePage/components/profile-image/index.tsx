@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import type { ChangeEvent } from 'react';
 
 import { useDeleteAvatar } from '@/api/mutations/useDeleteAvatar';
 import { useUploadAvatar } from '@/api/mutations/useUploadAvatar';
@@ -14,8 +15,9 @@ type ProfileImageProps = {
 const ProfileImage = ({ src }: ProfileImageProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { mutate: uploadAvatar } = useUploadAvatar();
-  const { mutate: deleteAvatar } = useDeleteAvatar();
+  const { mutate: uploadAvatarMutation } = useUploadAvatar();
+  const { mutate: deleteAvatarMutation } = useDeleteAvatar();
+
   const { data, refetch } = useUsersMe();
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>(src);
 
@@ -34,14 +36,14 @@ const ProfileImage = ({ src }: ProfileImageProps) => {
     handleCloseModal();
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     const formData = new FormData();
     formData.append('avatar', file);
 
-    uploadAvatar(formData, {
+    uploadAvatarMutation(formData, {
       onSuccess: () => {
         refetch();
       },
@@ -49,12 +51,13 @@ const ProfileImage = ({ src }: ProfileImageProps) => {
         console.error('이미지 업로드 실패:', err);
       },
     });
+
     // 같은 파일 다시 선택 가능하도록 초기화
     event.target.value = '';
   };
 
   const handleDelete = () => {
-    deleteAvatar(undefined, {
+    deleteAvatarMutation(undefined, {
       onSuccess: () => {
         refetch();
         setIsModalOpen(false);

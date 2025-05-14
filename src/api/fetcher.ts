@@ -14,8 +14,7 @@ const defaultOption: Options = {
 
 export const instance = ky.create({
   prefixUrl: '/api',
-  // application/json을 고정으로 지정하고 있어서, FormData를 보낼 때 문제 발생하여 아래 코드 주석 처리
-  // headers: { 'content-type': 'application/json' },
+  headers: { 'content-type': 'application/json' },
   hooks: {
     beforeRequest: [
       (request) => {
@@ -73,7 +72,15 @@ export async function resultify<T>(response: ResponsePromise) {
 
 export const fetcher = {
   get: <T>(pathname: string, options?: Options) => resultify<T>(instance.get(pathname, options)),
-  post: <T>(pathname: string, options?: Options) => resultify<T>(instance.post(pathname, options)),
+  post: <T>(pathname: string, options?: Options) => {
+    const isFormData = options?.body instanceof FormData;
+    const sanitizedOptions: Options = {
+      ...options,
+      headers: isFormData ? undefined : options?.headers,
+    };
+    return resultify<T>(instance.post(pathname, sanitizedOptions));
+  },
+
   put: <T>(pathname: string, options?: Options) => resultify<T>(instance.put(pathname, options)),
   delete: <T>(pathname: string, options?: Options) =>
     resultify<T>(instance.delete(pathname, options)),

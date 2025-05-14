@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import ReactDOM from 'react-dom';
 
-import { useUpdateProfile } from '@/api/mutations/useUpdateProfile';
+import { useUpdateProfile } from '@/api/mutations';
 
 import * as styles from './styles.ts';
 
@@ -12,10 +12,10 @@ type Props = {
 const EditNicknameModal = ({ onClose }: Props) => {
   const [nickname, setNickname] = useState('');
 
-  const { mutate: updateProfile } = useUpdateProfile();
+  const { mutate: updateProfileMutation } = useUpdateProfile();
 
   const handleConfirm = () => {
-    updateProfile(
+    updateProfileMutation(
       { nickname },
       {
         onSuccess: () => {
