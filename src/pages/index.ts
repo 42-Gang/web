@@ -6,3 +6,4 @@ export * from './SignInPage';
 export * from './SignUpPage';
 export * from './HistoryPage';
 export * from './ProfilePage';
+export * from './GameSelectPage';

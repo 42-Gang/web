@@ -71,6 +71,7 @@ const color = {
   yellow: '#ECF411',
 
   friendHover: '#1E90FF',
+  autoCustomHover: 'hsla(0, 0%, 100%, 0.2)',
 };
 
 const zIndex = {

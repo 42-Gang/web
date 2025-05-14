@@ -23,6 +23,7 @@ import {
   ProfilePage,
   FriendPage,
   FriendChatRoomPage,
+  GameSelectPage,
 } from '@/pages';
 
 const App = () => {
@@ -78,6 +79,7 @@ const App = () => {
         { path: PATH.PROFILE, element: <ProfilePage /> },
         { path: PATH.FRIEND, element: <FriendPage /> },
         { path: PATH.FRIEND_CHATROOM, element: <FriendChatRoomPage /> },
+        { path: PATH.GAME_SELECT, element: <GameSelectPage /> },
       ],
     },
   ];

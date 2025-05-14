@@ -1,7 +1,7 @@
 import type { Friend } from '@/api/types';
 
-import { FriendItem } from './friend-item';
 import * as styles from './styles.css';
+import { FriendItem } from '../friend-list/friend-item';
 
 type FriendListProps = {
   friends: Friend[];
