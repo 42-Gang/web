@@ -1,8 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
-import { rem } from '@/styles';
-import { theme } from '@/styles/theme.css';
-
+import { rem, theme } from '@/styles';
 
 export const chatBox = style({
   width: '100%',
@@ -70,5 +68,4 @@ export const sendButton = style({
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'center',
   backgroundSize: 'contain',
-  cursor: 'pointer',
 });

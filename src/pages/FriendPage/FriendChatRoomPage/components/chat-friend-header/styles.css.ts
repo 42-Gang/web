@@ -1,7 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
-import { rem } from '@/styles';
-import { theme } from '@/styles/theme.css';
+import { rem, theme } from '@/styles';
 
 export const header = style({
   display: 'flex',
@@ -33,14 +32,13 @@ export const nickname = style({
 });
 
 export const blockButton = style({
-  background: `url('/assets/images/base-button.png') no-repeat center`,
+  background: `url('/assets/images/base-button-hover.png') no-repeat center`,
   backgroundSize: 'contain',
   width: rem(100),
   height: rem(40),
   color: theme.color.white,
   fontWeight: 'bold',
   fontSize: rem(16),
-  cursor: 'pointer',
   transition: 'opacity 0.2s ease',
   marginTop: rem(30),
   textShadow: '0 0 0.25rem rgba(0, 0, 0, 0.6)',
