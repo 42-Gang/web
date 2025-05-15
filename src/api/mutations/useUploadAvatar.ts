@@ -4,7 +4,7 @@ import { fetcher } from '@/api';
 import { queryKeys } from '@/api/queryKey';
 
 const postUploadAvatar = (data: FormData) =>
-  fetcher.post('users/avatar', { body: data, headers: undefined });
+  fetcher.post('v1/users/avatar', { body: data, headers: undefined });
 
 export const useUploadAvatar = () => {
   const queryClient = useQueryClient();
