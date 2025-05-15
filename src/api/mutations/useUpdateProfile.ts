@@ -17,7 +17,7 @@ export const useUpdateProfile = () => {
   return useMutation({
     mutationFn: patchUpdateProfile,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ ...queryKeys.usersMe(), type: 'all' });
+      await queryClient.invalidateQueries({ ...queryKeys.usersMe(), refetchType: 'all' });
     },
   });
 };

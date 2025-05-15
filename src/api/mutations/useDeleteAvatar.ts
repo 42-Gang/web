@@ -11,7 +11,7 @@ export const useDeleteAvatar = () => {
   return useMutation({
     mutationFn: deleteAvatar,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ ...queryKeys.usersMe(), type: 'all' });
+      await queryClient.invalidateQueries({ ...queryKeys.usersMe(), refetchType: 'all' });
     },
   });
 };
