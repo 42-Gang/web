@@ -5,6 +5,7 @@ import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
 
 import * as styles from './styles.css';
+import { UserCard } from '../components/user-card';
 
 export const Game1vs1MatchingPage = () => {
   const { data } = useUsersMe();
@@ -15,38 +16,30 @@ export const Game1vs1MatchingPage = () => {
   const opponentAvatar = null;
   const isOpponentWaiting = !opponentAvatar;
 
-  const isPlayerFirst = !!playerAvatar && !opponentAvatar;
+  const [isPlayerFirst] = useState(() => {
+    return !opponentAvatar;
+  });
 
-  const PlayerCard = (
-    <div className={styles.playerCard}>
-      <div className={styles.avatar}>
-        <img src={playerAvatar} alt="My avatar" className={styles.avatarImage} />
-      </div>
-      <img
-        src="/assets/images/gun.svg"
-        alt="gun"
-        className={isPlayerFirst ? styles.gun : styles.gunReversed}
-      />
-      <p className={styles.nickname}>{playerNickname}</p>
-    </div>
+  const playerCard = (
+    <UserCard
+      userAvatar={playerAvatar ?? null}
+      userNickname={playerNickname ?? ''}
+      isPlayer={true}
+      isWaiting={false}
+      mode="1vs1"
+      position={isPlayerFirst ? 'left' : 'right'}
+    />
   );
 
-  const OpponentCard = (
-    <div className={styles.opponentCard}>
-      <div className={styles.avatar}>
-        {isOpponentWaiting ? (
-          <img src="/assets/images/spinner.svg" alt="spinner" className={styles.spinner} />
-        ) : (
-          <img src={opponentAvatar} alt="opponent avatar" className={styles.avatarImage} />
-        )}
-      </div>
-      <img
-        src="/assets/images/gun.svg"
-        alt="gun"
-        className={isPlayerFirst ? styles.gunReversed : styles.gun}
-      />
-      <p className={styles.nickname}>{isOpponentWaiting ? '-' : 'OPPONENT'}</p>
-    </div>
+  const opponentCard = (
+    <UserCard
+      userAvatar={opponentAvatar}
+      userNickname="OPPONENT"
+      isPlayer={false}
+      isWaiting={isOpponentWaiting}
+      mode="1vs1"
+      position={isPlayerFirst ? 'right' : 'left'}
+    />
   );
 
   const [dotCount, setDotCount] = useState(1);
@@ -74,15 +67,15 @@ export const Game1vs1MatchingPage = () => {
       <div className={styles.matchArea}>
         {isPlayerFirst ? (
           <>
-            {PlayerCard}
+            {playerCard}
             <span className={styles.vs}>VS</span>
-            {OpponentCard}
+            {opponentCard}
           </>
         ) : (
           <>
-            {OpponentCard}
+            {opponentCard}
             <span className={styles.vs}>VS</span>
-            {PlayerCard}
+            {playerCard}
           </>
         )}
       </div>
