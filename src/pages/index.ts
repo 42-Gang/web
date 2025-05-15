@@ -7,3 +7,4 @@ export * from './SignUpPage';
 export * from './HistoryPage';
 export * from './ProfilePage';
 export * from './GameSelectPage';
+export * from './GameMatchingPage';
