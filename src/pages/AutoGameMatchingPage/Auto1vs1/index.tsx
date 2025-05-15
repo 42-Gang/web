@@ -22,7 +22,11 @@ export const Game1vs1MatchingPage = () => {
       <div className={styles.avatar}>
         <img src={playerAvatar} alt="My avatar" className={styles.avatarImage} />
       </div>
-      <img src="/assets/images/gun.svg" alt="gun" className={styles.gun} />
+      <img
+        src="/assets/images/gun.svg"
+        alt="gun"
+        className={isPlayerFirst ? styles.gun : styles.gunReversed}
+      />
       <p className={styles.nickname}>{playerNickname}</p>
     </div>
   );
@@ -36,7 +40,11 @@ export const Game1vs1MatchingPage = () => {
           <img src={opponentAvatar} alt="opponent avatar" className={styles.avatarImage} />
         )}
       </div>
-      <img src="/assets/images/gun.svg" alt="gun" className={styles.gunReversed} />
+      <img
+        src="/assets/images/gun.svg"
+        alt="gun"
+        className={isPlayerFirst ? styles.gunReversed : styles.gun}
+      />
       <p className={styles.nickname}>{isOpponentWaiting ? '-' : 'OPPONENT'}</p>
     </div>
   );
