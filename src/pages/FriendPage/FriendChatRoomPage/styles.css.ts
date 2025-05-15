@@ -1,7 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
-import { rem } from '@/styles';
-import { theme } from '@/styles/theme.css';
+import { rem, theme } from '@/styles';
 
 export const wrapper = style({
   display: 'flex',
@@ -50,7 +49,6 @@ export const exitButton = style({
   width: rem(30),
   height: rem(30),
   border: 'none',
-  cursor: 'pointer',
 });
 
 export const divider = style({
