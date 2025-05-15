@@ -72,6 +72,11 @@ const color = {
 
   friendHover: '#1E90FF',
   autoCustomHover: 'hsla(0, 0%, 100%, 0.2)',
+
+  playerCard: '#A03434',
+  opponentCard: '#34A09B',
+  waiting: '#D2F474',
+  matched: '#E890C7',
 };
 
 const zIndex = {
@@ -84,6 +89,12 @@ const zIndex = {
   modalContent: '250',
 };
 
+const animation = {
+  spinnerSlow: '5s linear infinite',
+  spinnerMedium: '3s linear infinite',
+  spinnerFast: '1s linear infinite',
+};
+
 export const theme = createGlobalTheme(':root', {
   fontFamily,
   fontSize,
@@ -91,4 +102,5 @@ export const theme = createGlobalTheme(':root', {
   size,
   color,
   zIndex,
+  animation,
 });
