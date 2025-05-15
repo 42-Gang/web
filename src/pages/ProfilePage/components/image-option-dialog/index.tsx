@@ -41,7 +41,7 @@ export const ImageOptionDialog = ({ children }: PropsWithChildren) => {
     uploadAvatarMutation(formData, {
       onError: (err) => {
         console.error('이미지 업로드 실패:', err);
-        toast.error('Failed to delete image.');
+        toast.error('Failed to upload image.');
       },
       onSettled: () => setIsOpen(false),
     });
