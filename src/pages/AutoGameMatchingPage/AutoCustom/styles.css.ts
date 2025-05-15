@@ -24,18 +24,3 @@ export const vs = style({
   marginLeft: rem(80),
   marginRight: rem(80),
 });
-
-export const waiting = style({
-  fontFamily: 'Tiny5',
-  marginTop: rem(30),
-  textAlign: 'center',
-  fontSize: rem(40),
-});
-
-export const waitingPending = style({
-  color: theme.color.waiting,
-});
-
-export const waitingMatched = style({
-  color: theme.color.matched,
-});

@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react';
-
 import { useUsersMe } from '@/api';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
 
 import * as styles from './styles.css';
 import { UserCard } from '../components/user-card';
+import { WaitingMessage } from '../components/waiting-message';
 
 export const GameTournamentMatchingPage = () => {
   const { data } = useUsersMe();
@@ -15,20 +14,7 @@ export const GameTournamentMatchingPage = () => {
   // TODO: 상대방이 들어왔을 경우에 대한 처리
   const slots = ['/assets/images/sample1.png', playerAvatar, null, '/assets/images/sample2.png'];
 
-  const [dotCount, setDotCount] = useState(1);
   const allMatched = slots.every((avatar) => avatar !== null);
-
-  useEffect(() => {
-    if (allMatched) return;
-    const interval = setInterval(() => {
-      setDotCount((prev) => (prev % 5) + 1);
-    }, 500);
-    return () => clearInterval(interval);
-  }, [allMatched]);
-
-  const dots = '.'.repeat(dotCount);
-  const waitingClass = `${styles.waiting} ${allMatched ? styles.waitingMatched : styles.waitingPending}`;
-  const waitingMessage = allMatched ? "You're matched!" : `[ Waiting for opponents${dots} ]`;
 
   return (
     <Flex direction="column" style={{ height: '100%' }}>
@@ -56,7 +42,7 @@ export const GameTournamentMatchingPage = () => {
         })}
       </div>
 
-      <p className={waitingClass}>{waitingMessage}</p>
+      <WaitingMessage isWaiting={!allMatched} />
     </Flex>
   );
 };

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import { useUsersMe } from '@/api';
 import { Flex } from '@/components/system';
@@ -6,6 +6,7 @@ import { BackButton } from '@/components/ui';
 
 import * as styles from './styles.css';
 import { UserCard } from '../components/user-card';
+import { WaitingMessage } from '../components/waiting-message';
 
 export const Game1vs1MatchingPage = () => {
   const { data } = useUsersMe();
@@ -42,23 +43,6 @@ export const Game1vs1MatchingPage = () => {
     />
   );
 
-  const [dotCount, setDotCount] = useState(1);
-
-  useEffect(() => {
-    if (!isOpponentWaiting) return;
-
-    const interval = setInterval(() => {
-      setDotCount((prev) => (prev % 5) + 1);
-    }, 500);
-
-    return () => clearInterval(interval);
-  }, [isOpponentWaiting]);
-
-  const dots = '.'.repeat(dotCount);
-
-  const waitingClass = `${styles.waiting} ${isOpponentWaiting ? styles.waitingPending : styles.waitingMatched}`;
-  const waitingMessage = isOpponentWaiting ? `[ Waiting for opponents${dots} ]` : "You're matched!";
-
   return (
     <Flex direction="column" style={{ height: '100%' }}>
       <BackButton />
@@ -80,7 +64,7 @@ export const Game1vs1MatchingPage = () => {
         )}
       </div>
 
-      <p className={waitingClass}>{waitingMessage}</p>
+      <WaitingMessage isWaiting={isOpponentWaiting} />
     </Flex>
   );
 };
