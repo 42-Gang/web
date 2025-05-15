@@ -11,6 +11,7 @@ export const message = style({
   fontSize: rem(20),
   fontWeight: 700,
   textAlign: 'center',
+  lineHeight: 1,
 });
 
 export const group = style({

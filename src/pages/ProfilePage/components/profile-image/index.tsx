@@ -3,7 +3,7 @@ import { useUsersMe } from '@/api/queries';
 import * as styles from './styles.css';
 import { ImageOptionDialog } from '../image-option-dialog';
 
-const ProfileImage = () => {
+export const ProfileImage = () => {
   const { data } = useUsersMe();
 
   return (
@@ -21,5 +21,3 @@ const ProfileImage = () => {
     </>
   );
 };
-
-export default ProfileImage;

@@ -87,6 +87,7 @@ export const close = style({
   right: rem(12),
   width: rem(32),
   height: rem(32),
+  fontSize: rem(16),
   borderRadius: '50%',
   backgroundColor: 'transparent',
   opacity: 1,
