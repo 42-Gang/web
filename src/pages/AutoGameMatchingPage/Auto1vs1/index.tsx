@@ -36,7 +36,7 @@ export const Game1vs1MatchingPage = () => {
           <img src={opponentAvatar} alt="opponent avatar" className={styles.avatarImage} />
         )}
       </div>
-      <img src="/assets/images/gun.svg" alt="gun" className={styles.gun} />
+      <img src="/assets/images/gun.svg" alt="gun" className={styles.gunReversed} />
       <p className={styles.nickname}>{isOpponentWaiting ? '-' : 'OPPONENT'}</p>
     </div>
   );

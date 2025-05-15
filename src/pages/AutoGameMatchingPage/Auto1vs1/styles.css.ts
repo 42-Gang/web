@@ -1,4 +1,4 @@
-import { keyframes , style } from '@vanilla-extract/css';
+import { keyframes, style } from '@vanilla-extract/css';
 
 import { rem, theme } from '@/styles';
 
@@ -70,6 +70,13 @@ export const gun = style({
   width: rem(110),
   height: rem(110),
 });
+
+export const gunReversed = style([
+  gun,
+  {
+    transform: 'scaleX(-1)',
+  },
+]);
 
 export const nickname = style({
   color: theme.color.white,
