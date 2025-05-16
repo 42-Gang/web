@@ -3,7 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { rem, theme } from '@/styles';
 
 export const waiting = style({
-  fontFamily: 'Tiny5',
+  fontFamily: 'Tiny5, sans-serif',
   marginTop: rem(30),
   textAlign: 'center',
   fontSize: rem(40),
