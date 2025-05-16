@@ -3,8 +3,8 @@ import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
 
 import * as styles from './styles.css';
-import { UserCard } from '../components/user-card';
-import { WaitingMessage } from '../components/waiting-message';
+import { UserCard } from '../../components/user-card';
+import { WaitingMessage } from '../../components/waiting-message';
 
 export const GameTournamentMatchingPage = () => {
   const { data } = useUsersMe();
@@ -34,15 +34,18 @@ export const GameTournamentMatchingPage = () => {
                 isWaiting ? '-' : isPlayer ? (playerNickname ?? '') : `OPPONENT ${index + 1}`
               }
               isPlayer={isPlayer}
+              position={index % 2 === 0 ? 'left' : 'right'}
               isWaiting={isWaiting}
               mode="tournament"
-              position={index % 2 === 0 ? 'left' : 'right'}
+              option="auto"
+              isPlayerHost={false}
+              isHostUser={false}
             />
           );
         })}
       </div>
 
-      <WaitingMessage isWaiting={!allMatched} />
+      <WaitingMessage isWaiting={!allMatched} option="auto" isHost={false} />
     </Flex>
   );
 };

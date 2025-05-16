@@ -5,30 +5,35 @@ import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
 
 import * as styles from './styles.css';
-import { UserCard } from '../components/user-card';
-import { WaitingMessage } from '../components/waiting-message';
+import { UserCard } from '../../components/user-card';
+import { WaitingMessage } from '../../components/waiting-message';
 
 export const Game1vs1MatchingPage = () => {
   const { data } = useUsersMe();
   const playerAvatar = data?.data?.avatarUrl;
   const playerNickname = data?.data?.nickname;
 
-  // TODO: 상대방이 들어왔을 때의 로직 구현
+  // 상대방이 아직 안 들어온 상황
   const opponentAvatar = null;
   const isOpponentWaiting = !opponentAvatar;
 
+  // 입장 순서만 판단 (왼쪽인지 오른쪽인지 결정)
   const [isPlayerFirst] = useState(() => {
-    return !opponentAvatar;
+    return opponentAvatar; // 상대 없으면 내가 먼저 입장한 것
   });
 
   const playerCard = (
     <UserCard
       userAvatar={playerAvatar ?? null}
       userNickname={playerNickname ?? ''}
-      isPlayer={true}
+      position={isPlayerFirst ? 'left' : 'right'}
       isWaiting={false}
       mode="1vs1"
-      position={isPlayerFirst ? 'left' : 'right'}
+      option="auto"
+      isPlayer={true}
+      isCurrentUser={true}
+      isPlayerHost={false}
+      isHostUser={false}
     />
   );
 
@@ -36,10 +41,14 @@ export const Game1vs1MatchingPage = () => {
     <UserCard
       userAvatar={opponentAvatar}
       userNickname="OPPONENT"
-      isPlayer={false}
+      position={isPlayerFirst ? 'right' : 'left'}
       isWaiting={isOpponentWaiting}
       mode="1vs1"
-      position={isPlayerFirst ? 'right' : 'left'}
+      option="auto"
+      isPlayer={false}
+      isCurrentUser={false}
+      isPlayerHost={false}
+      isHostUser={false}
     />
   );
 
@@ -64,7 +73,7 @@ export const Game1vs1MatchingPage = () => {
         )}
       </div>
 
-      <WaitingMessage isWaiting={isOpponentWaiting} />
+      <WaitingMessage isWaiting={isOpponentWaiting} option="auto" isHost={false} />
     </Flex>
   );
 };
