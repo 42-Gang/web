@@ -19,3 +19,9 @@ export type User = {
 export type UserList = {
   users: User[];
 };
+
+export type UsersSearchPayload = {
+  nickname: string;
+  status: 'ACCEPTED' | 'NONE' | 'PENDING' | 'REJECTED' | 'BLOCKED';
+  exceptMe: boolean;
+};

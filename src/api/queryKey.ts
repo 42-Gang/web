@@ -1,9 +1,13 @@
+import { SearchParamsOption } from 'ky';
+
 import {
   HttpResponse,
   FriendList,
   UserInfo,
   TournamentGameList,
   TournamentRoundType,
+  UsersSearchPayload,
+  UserList,
 } from '@/api/types';
 
 import { fetcher } from './fetcher';
@@ -13,6 +17,19 @@ const usersQueryKeys = {
     _def: 'users-me',
     queryKey: ['users-me'],
     queryFn: () => fetcher.get<HttpResponse<UserInfo>>(`v1/users/me`),
+  }),
+  usersSearch: (payload: UsersSearchPayload) => ({
+    _def: 'users-search',
+    queryKey: ['users-search', payload],
+    queryFn: () => {
+      const searchParams: SearchParamsOption = {
+        status: payload.status,
+        exceptMe: payload.exceptMe,
+      };
+      return fetcher.get<HttpResponse<UserList>>(`v1/users/search/:nickname=${payload.nickname}`, {
+        searchParams,
+      });
+    },
   }),
 };
 
