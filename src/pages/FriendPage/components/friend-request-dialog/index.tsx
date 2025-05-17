@@ -1,7 +1,8 @@
-import { PropsWithChildren } from 'react';
+import { type PropsWithChildren } from 'react';
 
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogOverlay,
   DialogTitle,
@@ -16,7 +17,9 @@ export const FriendRequestDialog = ({ children }: PropsWithChildren) => {
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogOverlay />
       <DialogContent className={styles.content} aria-describedby={undefined}>
-        <DialogTitle></DialogTitle>
+        <DialogTitle>Invites & Requests</DialogTitle>
+
+        <DialogClose />
       </DialogContent>
     </Dialog>
   );

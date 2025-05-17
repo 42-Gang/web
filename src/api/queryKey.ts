@@ -26,10 +26,11 @@ const usersQueryKeys = {
         status: payload.status,
         exceptMe: payload.exceptMe,
       };
-      return fetcher.get<HttpResponse<UserList>>(`v1/users/search/:nickname=${payload.nickname}`, {
+      return fetcher.get<HttpResponse<UserList>>(`v1/users/search/${payload.nickname}`, {
         searchParams,
       });
     },
+    enabled: payload.nickname.length > 1,
   }),
 };
 

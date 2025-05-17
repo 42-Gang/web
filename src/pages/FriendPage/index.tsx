@@ -7,7 +7,8 @@ import { BackButton } from '@/components/ui';
 
 import { FriendList } from './components/friend-list';
 import { FriendRequestDialog } from './components/friend-request-dialog';
-import * as styles from './styles.css.ts';
+import { FriendSearchDialog } from './components/friend-search-dialog';
+import * as styles from './styles.css';
 
 export const FriendPage = () => {
   const { connect, disconnect } = useSocket({
@@ -39,7 +40,9 @@ export const FriendPage = () => {
       <h2 className={styles.Title}>Friend List</h2>
 
       <div className={styles.FriendContainer}>
-        <button className={styles.addFriend} />
+        <FriendSearchDialog>
+          <button className={styles.addFriend} />
+        </FriendSearchDialog>
         <div className={styles.inputWrapper}>
           <input
             className={styles.input}

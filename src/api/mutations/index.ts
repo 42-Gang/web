@@ -1,4 +1,5 @@
 export * from './useDeleteAvatar';
+export * from './useFriendsRequests';
 export * from './useLogin';
 export * from './useLogout';
 export * from './useMailVerification';
