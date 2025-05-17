@@ -18,6 +18,7 @@ export const title = style({
 export const list = style({
   ...theme.layout.column,
   flex: 1,
+  marginTop: rem(32),
   gap: rem(8),
 });
 
@@ -45,7 +46,13 @@ export const nickname = style({
   fontSize: rem(20),
 });
 
+export const buttonGroup = style({
+  ...theme.layout.centerY,
+  gap: rem(8),
+});
+
 export const button = style({
   width: rem(32),
   height: rem(32),
+  userSelect: 'none',
 });

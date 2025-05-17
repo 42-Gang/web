@@ -62,4 +62,5 @@ export const nickname = style({
 export const button = style({
   width: rem(32),
   height: rem(32),
+  userSelect: 'none',
 });

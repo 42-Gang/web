@@ -32,9 +32,23 @@ export const FriendRequestDialog = ({ children }: PropsWithChildren) => {
                   <span className={styles.nickname}>{request.nickname}</span>
                 </div>
 
-                <div>
-                  <button className={styles.button}>Decline</button>
-                  <button className={styles.button}>Accept</button>
+                <div className={styles.buttonGroup}>
+                  <button aria-label="Reject">
+                    <img
+                      className={styles.button}
+                      src="/assets/images/rejection.svg"
+                      alt="Reject Button"
+                      draggable={false}
+                    />
+                  </button>
+                  <button aria-label="Send request">
+                    <img
+                      className={styles.button}
+                      src="/assets/images/approval.svg"
+                      alt="Approve Button"
+                      draggable={false}
+                    />
+                  </button>
                 </div>
               </li>
             ))}

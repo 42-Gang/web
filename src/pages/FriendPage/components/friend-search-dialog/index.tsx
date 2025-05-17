@@ -70,14 +70,10 @@ export const FriendSearchDialog = ({ children }: PropsWithChildren) => {
               <li key={user.id} className={styles.item}>
                 <div className={styles.metadata}>
                   <img className={styles.avatar} src={user.avatarUrl} alt={user.nickname} />
-                  <p className={styles.nickname}>{user.nickname}</p>
+                  <span className={styles.nickname}>{user.nickname}</span>
                 </div>
 
-                <button
-                  className={styles.button}
-                  onClick={() => handleRequest(user.id)}
-                  aria-label="Send request"
-                >
+                <button onClick={() => handleRequest(user.id)} aria-label="Send request">
                   <img
                     className={styles.button}
                     src="/assets/images/request-friend.svg"
