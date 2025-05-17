@@ -1,6 +1,7 @@
 import { type PropsWithChildren } from 'react';
+import { toast } from 'sonner';
 
-import { useFriendsRequests } from '@/api';
+import { useAcceptFriendsRequests, useFriendsRequests, useRejectFriendsRequests } from '@/api';
 import {
   Dialog,
   DialogClose,
@@ -15,6 +16,39 @@ import * as styles from './styles.css';
 
 export const FriendRequestDialog = ({ children }: PropsWithChildren) => {
   const { data } = useFriendsRequests();
+
+  const { mutate: acceptFriendsRequestsMutation } = useAcceptFriendsRequests();
+  const { mutate: rejectFriendsRequestsMutation } = useRejectFriendsRequests();
+
+  const handleAccept = (id: number) => {
+    acceptFriendsRequestsMutation(
+      { id },
+      {
+        onSuccess: () => {
+          toast.success('Friend request accepted successfully.');
+        },
+        onError: (error) => {
+          console.error('Error accepting friend request:', error);
+          toast.error('Failed to accept friend request.');
+        },
+      },
+    );
+  };
+
+  const handleReject = (id: number) => {
+    rejectFriendsRequestsMutation(
+      { id },
+      {
+        onSuccess: () => {
+          toast.success('Friend request rejected successfully.');
+        },
+        onError: (error) => {
+          console.error('Error rejecting friend request:', error);
+          toast.error('Failed to reject friend request.');
+        },
+      },
+    );
+  };
 
   return (
     <Dialog>
@@ -33,7 +67,7 @@ export const FriendRequestDialog = ({ children }: PropsWithChildren) => {
                 </div>
 
                 <div className={styles.buttonGroup}>
-                  <button aria-label="Reject">
+                  <button aria-label="Reject" onClick={() => handleReject(request.userId)}>
                     <img
                       className={styles.button}
                       src="/assets/images/rejection.svg"
@@ -41,7 +75,7 @@ export const FriendRequestDialog = ({ children }: PropsWithChildren) => {
                       draggable={false}
                     />
                   </button>
-                  <button aria-label="Send request">
+                  <button aria-label="Send request" onClick={() => handleAccept(request.userId)}>
                     <img
                       className={styles.button}
                       src="/assets/images/approval.svg"

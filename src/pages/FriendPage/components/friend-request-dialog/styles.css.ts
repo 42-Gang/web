@@ -48,7 +48,7 @@ export const nickname = style({
 
 export const buttonGroup = style({
   ...theme.layout.centerY,
-  gap: rem(8),
+  gap: rem(16),
 });
 
 export const button = style({

@@ -5,17 +5,17 @@ import { queryKeys } from '@/api/queryKey';
 import { HttpResponse } from '@/api/types';
 
 type Request = {
-  friendId: number;
+  id: number;
 };
 
-const postFriendsRequests = (payload: Request) =>
-  fetcher.post<HttpResponse>('v1/friends/requests', { json: payload });
+const patchRejectFriendsRequests = (payload: Request) =>
+  fetcher.post<HttpResponse>(`v1/friends/requests/${payload.id}/reject`, { json: {} });
 
-export const useCreateFriendsRequests = () => {
+export const useRejectFriendsRequests = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: postFriendsRequests,
+    mutationFn: patchRejectFriendsRequests,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ ...queryKeys.friendsMe(), refetchType: 'all' });
       await queryClient.invalidateQueries({

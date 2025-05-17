@@ -1,5 +1,5 @@
 export type FriendRequestUser = {
-  userId: string;
+  userId: number;
   nickname: string;
   avatarUrl: string;
 };
