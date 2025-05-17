@@ -52,9 +52,10 @@ export const FriendPage = () => {
         </div>
       </div>
       <RequestListDialog type="alarm">
-        <button className={styles.alarm} />
+        <div className={styles.alarm} />
       </RequestListDialog>
-      <div className={styles.separatorLine} />
+      <hr className={styles.separatorLine} />
+
       <FriendList friends={filteredFriends} />
     </Flex>
   );

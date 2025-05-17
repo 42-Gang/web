@@ -51,26 +51,20 @@ export const addFriend = style({
 });
 
 export const alarm = style({
+  alignSelf: 'flex-end',
   width: rem(32),
   height: rem(32),
   background: "url('/assets/images/alarm.svg') center/contain no-repeat",
-  cursor: 'pointer',
-  transition: 'opacity 0.2s ease-in-out',
-
   opacity: 0.6,
+  transition: 'opacity 200ms ease-in-out',
 
-  selectors: {
-    '&:hover': {
-      opacity: 1,
-    },
-  },
-
-  marginLeft: rem(739),
+  ':hover': { opacity: 1 },
 });
 
 export const separatorLine = style({
   width: '100%',
   height: rem(1),
-  backgroundColor: theme.color.white,
   marginTop: rem(12),
+  border: 'none',
+  backgroundColor: theme.color.white,
 });

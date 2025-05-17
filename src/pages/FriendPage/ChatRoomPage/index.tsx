@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { ChatBox } from './components/chat-box';
 import { FriendHeader } from './components/chat-friend-header';
 import { FriendList } from './components/chat-friend-list';
-import * as styles from './styles.css.ts';
+import * as styles from './styles.css';
 
-export const FriendChatRoomPage = () => {
+export const ChatRoomPage = () => {
   const navigate = useNavigate();
 
   return (
@@ -14,14 +14,16 @@ export const FriendChatRoomPage = () => {
         <FriendHeader />
         <ChatBox />
       </div>
+
       <div className={styles.sidebar}>
         <div className={styles.header}>
           <button
             className={styles.exitButton}
-            aria-label="친구 DM 나가기"
-            onClick={() => navigate('/friend')}
+            aria-label="채팅 나가기"
+            onClick={() => navigate(-1)}
           />
         </div>
+
         <div className={styles.friendListWrapper}>
           <FriendList />
         </div>

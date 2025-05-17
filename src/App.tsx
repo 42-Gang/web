@@ -22,7 +22,7 @@ import {
   HistoryPage,
   ProfilePage,
   FriendPage,
-  FriendChatRoomPage,
+  ChatRoomPage,
   GameSelectPage,
   GameAutoMatchingPage,
 } from '@/pages';
@@ -79,7 +79,7 @@ const App = () => {
         { path: PATH.HISTORY, element: <HistoryPage /> },
         { path: PATH.PROFILE, element: <ProfilePage /> },
         { path: PATH.FRIEND, element: <FriendPage /> },
-        { path: PATH.FRIEND_CHATROOM, element: <FriendChatRoomPage /> },
+        { path: PATH.FRIEND_CHATROOM, element: <ChatRoomPage /> },
         { path: PATH.GAME_SELECT, element: <GameSelectPage /> },
         { path: PATH.GAME_AUTO_MATCHING, element: <GameAutoMatchingPage /> },
       ],
