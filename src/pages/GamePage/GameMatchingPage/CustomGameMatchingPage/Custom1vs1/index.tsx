@@ -8,14 +8,14 @@ import { WaitingMessage } from '../../components/waiting-message';
 
 // 테스트 시나리오
 const TEST_SCENARIO = {
-  opponentExists: false,
-  iAmHost: true,
+  opponentExists: true,
+  iAmHost: false,
 };
 
 export const Game1vs1MatchingPage = () => {
   const { data } = useUsersMe();
-  const playerAvatar = data?.data?.avatarUrl;
-  const playerNickname = data?.data?.nickname;
+  const playerAvatar = data?.data?.avatarUrl ?? null;
+  const playerNickname = data?.data?.nickname ?? '';
 
   const opponentAvatar: string | null = TEST_SCENARIO.opponentExists
     ? '/assets/images/sample-avatar.png'
@@ -23,68 +23,43 @@ export const Game1vs1MatchingPage = () => {
 
   const isOpponentWaiting = !opponentAvatar;
   const isPlayerHost = TEST_SCENARIO.iAmHost;
+  const opponentIsHost = !isPlayerHost;
 
   const handleInviteFriend = () => {
     console.error('Invite friend clicked');
   };
 
-  const leftCard = isPlayerHost ? (
-    <UserCard
-      userAvatar={playerAvatar ?? null}
-      userNickname={playerNickname ?? ''}
-      position="left"
-      isWaiting={false}
-      mode="1vs1"
-      option="custom"
-      isPlayer={true}
-      isCurrentUser={true}
-      isPlayerHost={true} // 내가 방장
-      isHostUser={true} // 내가 방장
-    />
-  ) : (
-    <UserCard
-      userAvatar={opponentAvatar}
-      userNickname="OPPONENT"
-      position="left"
-      isWaiting={isOpponentWaiting}
-      mode="1vs1"
-      option="custom"
-      isPlayer={false}
-      isCurrentUser={false}
-      isPlayerHost={true} // 상대가 방장
-      isHostUser={false} // 나는 방장 아님
-      onClickAdd={handleInviteFriend}
-    />
-  );
+  const playerProps = {
+    userAvatar: playerAvatar,
+    userNickname: playerNickname,
+    isPlayer: true,
+    isWaiting: false,
+    mode: '1vs1' as const,
+    option: 'custom' as const,
+    isHostUser: isPlayerHost,
+  };
 
-  const rightCard = isPlayerHost ? (
-    <UserCard
-      userAvatar={opponentAvatar}
-      userNickname="OPPONENT"
-      position="right"
-      isWaiting={isOpponentWaiting}
-      mode="1vs1"
-      option="custom"
-      isPlayer={false}
-      isCurrentUser={false}
-      isPlayerHost={false}
-      isHostUser={true} // 나는 방장
-      onClickAdd={handleInviteFriend}
-    />
-  ) : (
-    <UserCard
-      userAvatar={playerAvatar ?? null}
-      userNickname={playerNickname ?? ''}
-      position="right"
-      isWaiting={false}
-      mode="1vs1"
-      option="custom"
-      isPlayer={true}
-      isCurrentUser={true}
-      isPlayerHost={false}
-      isHostUser={false}
-    />
-  );
+  const opponentProps = {
+    userAvatar: opponentAvatar,
+    userNickname: 'OPPONENT',
+    isPlayer: false,
+    isWaiting: isOpponentWaiting,
+    mode: '1vs1' as const,
+    option: 'custom' as const,
+    isHostUser: isPlayerHost,
+    isPlayerHost: opponentIsHost,
+    onClickAdd: handleInviteFriend,
+  };
+
+  const [leftCard, rightCard] = isPlayerHost
+    ? [
+        <UserCard key="player" {...playerProps} position="left" />,
+        <UserCard key="opponent" {...opponentProps} position="right" />,
+      ]
+    : [
+        <UserCard key="opponent" {...opponentProps} position="left" />,
+        <UserCard key="player" {...playerProps} position="right" />,
+      ];
 
   return (
     <Flex direction="column" style={{ height: '100%' }}>

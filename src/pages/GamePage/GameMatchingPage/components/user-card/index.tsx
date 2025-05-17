@@ -3,14 +3,13 @@ import * as styles from './styles.css';
 type UserCardProps = {
   userAvatar: string | null;
   userNickname: string;
-  isPlayer: boolean;
-  isCurrentUser?: boolean;
+  isPlayer: boolean; // 현재 유저인지 여부
   isWaiting: boolean;
   mode: '1vs1' | 'tournament';
   option: 'auto' | 'custom';
-  position: 'left' | 'right';
-  isPlayerHost: boolean; // 카드 주인이 방장인지
+  position?: 'left' | 'right';
   isHostUser: boolean; // 현재 유저가 방장인지
+  isPlayerHost?: boolean;
   onClickAdd?: () => void;
 };
 
@@ -18,30 +17,29 @@ export const UserCard = ({
   userAvatar,
   userNickname,
   isPlayer,
-  isCurrentUser,
   isWaiting,
   mode,
   option,
   position,
-  isPlayerHost,
   isHostUser,
+  isPlayerHost,
   onClickAdd,
 }: UserCardProps) => {
   const shouldFlipGun = mode === '1vs1' && position === 'right';
 
+  const isCurrentUser = isPlayer;
+
+  // 카드 주인이 방장인지: 외부에서 전달되면 사용, 없으면 내부 계산
+  const isCardOwnerHost = isPlayerHost ?? (isPlayer && isHostUser);
+
   const userCardClass = [
-    styles.userCard[mode], // ✅ mode에 따라 variant style 적용됨
+    styles.userCard[mode],
     isPlayer ? styles.playerColor : styles.opponentColor,
-    isPlayerHost ? styles.hostBorder : '',
+    isCardOwnerHost ? styles.hostBorder : '',
   ].join(' ');
 
   const renderAvatar = () => {
-    if (
-      option === 'custom' &&
-      !isCurrentUser &&
-      isWaiting &&
-      isHostUser // 현재 유저가 방장일 때만 초대 버튼 표시
-    ) {
+    if (option === 'custom' && !isCurrentUser && isWaiting && isHostUser) {
       return <button className={styles.addButton} onClick={onClickAdd} />;
     }
 
@@ -66,7 +64,7 @@ export const UserCard = ({
     <div className={userCardClass}>
       <div className={styles.avatarWrapper}>
         <div className={styles.avatar}>{renderAvatar()}</div>
-        {isPlayerHost && <p className={styles.masterLabel}>Master</p>}
+        {isCardOwnerHost && <p className={styles.masterLabel}>Master</p>}
       </div>
 
       <div className={styles.gunWrapper}>

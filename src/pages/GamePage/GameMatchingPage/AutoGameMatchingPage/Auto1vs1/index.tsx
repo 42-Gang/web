@@ -10,47 +10,32 @@ import { WaitingMessage } from '../../components/waiting-message';
 
 export const Game1vs1MatchingPage = () => {
   const { data } = useUsersMe();
-  const playerAvatar = data?.data?.avatarUrl;
-  const playerNickname = data?.data?.nickname;
+  const playerAvatar = data?.data?.avatarUrl ?? null;
+  const playerNickname = data?.data?.nickname ?? '';
 
-  // 상대방이 아직 안 들어온 상황
-  const opponentAvatar = null;
+  const opponentAvatar: string | null = null;
   const isOpponentWaiting = !opponentAvatar;
+  const [isPlayerFirst] = useState(() => !opponentAvatar);
 
-  // 입장 순서만 판단 (왼쪽인지 오른쪽인지 결정)
-  const [isPlayerFirst] = useState(() => {
-    return opponentAvatar; // 상대 없으면 내가 먼저 입장한 것
-  });
+  const playerProps = {
+    userAvatar: playerAvatar,
+    userNickname: playerNickname,
+    isPlayer: true,
+    isWaiting: false,
+    mode: '1vs1' as const,
+    option: 'auto' as const,
+    isHostUser: false,
+  };
 
-  const playerCard = (
-    <UserCard
-      userAvatar={playerAvatar ?? null}
-      userNickname={playerNickname ?? ''}
-      position={isPlayerFirst ? 'left' : 'right'}
-      isWaiting={false}
-      mode="1vs1"
-      option="auto"
-      isPlayer={true}
-      isCurrentUser={true}
-      isPlayerHost={false}
-      isHostUser={false}
-    />
-  );
-
-  const opponentCard = (
-    <UserCard
-      userAvatar={opponentAvatar}
-      userNickname="OPPONENT"
-      position={isPlayerFirst ? 'right' : 'left'}
-      isWaiting={isOpponentWaiting}
-      mode="1vs1"
-      option="auto"
-      isPlayer={false}
-      isCurrentUser={false}
-      isPlayerHost={false}
-      isHostUser={false}
-    />
-  );
+  const opponentProps = {
+    userAvatar: opponentAvatar,
+    userNickname: 'OPPONENT',
+    isPlayer: false,
+    isWaiting: isOpponentWaiting,
+    mode: '1vs1' as const,
+    option: 'auto' as const,
+    isHostUser: false,
+  };
 
   return (
     <Flex direction="column" style={{ height: '100%' }}>
@@ -60,15 +45,15 @@ export const Game1vs1MatchingPage = () => {
       <div className={styles.matchArea}>
         {isPlayerFirst ? (
           <>
-            {playerCard}
+            <UserCard key="player" {...playerProps} position="left" />
             <span className={styles.vs}>VS</span>
-            {opponentCard}
+            <UserCard key="opponent" {...opponentProps} position="right" />
           </>
         ) : (
           <>
-            {opponentCard}
+            <UserCard key="opponent" {...opponentProps} position="left" />
             <span className={styles.vs}>VS</span>
-            {playerCard}
+            <UserCard key="player" {...playerProps} position="right" />
           </>
         )}
       </div>
