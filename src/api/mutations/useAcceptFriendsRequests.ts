@@ -9,7 +9,7 @@ type Request = {
 };
 
 const patchAcceptFriendsRequests = (payload: Request) =>
-  fetcher.post<HttpResponse>(`v1/friends/requests/${payload.id}/accept`, { json: {} });
+  fetcher.patch<HttpResponse>(`v1/friends/requests/${payload.id}/accept`, { json: {} });
 
 export const useAcceptFriendsRequests = () => {
   const queryClient = useQueryClient();

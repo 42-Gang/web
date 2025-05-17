@@ -9,7 +9,7 @@ type Request = {
 };
 
 const patchRejectFriendsRequests = (payload: Request) =>
-  fetcher.post<HttpResponse>(`v1/friends/requests/${payload.id}/reject`, { json: {} });
+  fetcher.patch<HttpResponse>(`v1/friends/requests/${payload.id}/reject`, { json: {} });
 
 export const useRejectFriendsRequests = () => {
   const queryClient = useQueryClient();
