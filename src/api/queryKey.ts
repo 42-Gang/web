@@ -8,6 +8,7 @@ import {
   TournamentRoundType,
   UsersSearchPayload,
   UserList,
+  FriendRequestUserList,
 } from '@/api/types';
 
 import { fetcher } from './fetcher';
@@ -40,6 +41,11 @@ const friendsQueryKeys = {
     queryKey: ['friend-me'],
     queryFn: () =>
       fetcher.get<HttpResponse<FriendList>>(`v1/friends/me?status=ACCEPTED&status=BLOCKED`),
+  }),
+  friendsRequests: () => ({
+    _def: 'friend-requests',
+    queryKey: ['friend-requests'],
+    queryFn: () => fetcher.get<HttpResponse<FriendRequestUserList>>(`v1/friends/requests`),
   }),
 };
 

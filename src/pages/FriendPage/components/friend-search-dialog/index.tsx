@@ -2,12 +2,13 @@ import { type PropsWithChildren, useState } from 'react';
 import { useDebounce } from 'react-simplikit';
 import { toast } from 'sonner';
 
-import { useFriendsRequests, useUsersSearch } from '@/api';
+import { useCreateFriendsRequests, useUsersSearch } from '@/api';
 import {
   Dialog,
   DialogClose,
   DialogContent,
   DialogOverlay,
+  DialogPortal,
   DialogTitle,
   DialogTrigger,
 } from '@/components/system';
@@ -28,7 +29,7 @@ export const FriendSearchDialog = ({ children }: PropsWithChildren) => {
     setNickname(value);
   }, 300);
 
-  const { mutate } = useFriendsRequests();
+  const { mutate } = useCreateFriendsRequests();
   const handleRequest = (id: number) => {
     mutate(
       { friendId: id },
@@ -49,45 +50,47 @@ export const FriendSearchDialog = ({ children }: PropsWithChildren) => {
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogOverlay />
-      <DialogContent className={styles.content} aria-describedby={undefined}>
-        <DialogTitle className={styles.title}>ADD Friend</DialogTitle>
+      <DialogPortal>
+        <DialogOverlay />
+        <DialogContent className={styles.content} aria-describedby={undefined}>
+          <DialogTitle className={styles.title}>ADD Friend</DialogTitle>
 
-        <input
-          className={styles.input}
-          value={value}
-          onChange={(e) => {
-            setValue(e.target.value);
-            debouncedNickname(e.target.value);
-          }}
-          placeholder="Please enter nickname."
-        />
+          <input
+            className={styles.input}
+            value={value}
+            onChange={(e) => {
+              setValue(e.target.value);
+              debouncedNickname(e.target.value);
+            }}
+            placeholder="Please enter nickname."
+          />
 
-        <ul className={styles.list} aria-label="Search result">
-          {data?.data?.users.map((user) => (
-            <li key={user.id} className={styles.item}>
-              <div className={styles.metadata}>
-                <img className={styles.avatar} src={user.avatarUrl} alt={user.nickname} />
-                <p className={styles.nickname}>{user.nickname}</p>
-              </div>
+          <ul className={styles.list} aria-label="Search result">
+            {data?.data?.users.map((user) => (
+              <li key={user.id} className={styles.item}>
+                <div className={styles.metadata}>
+                  <img className={styles.avatar} src={user.avatarUrl} alt={user.nickname} />
+                  <p className={styles.nickname}>{user.nickname}</p>
+                </div>
 
-              <button
-                className={styles.button}
-                onClick={() => handleRequest(user.id)}
-                aria-label="Send request"
-              >
-                <img
+                <button
                   className={styles.button}
-                  src="/assets/images/request-friend.svg"
-                  alt="Request Button"
-                  draggable={false}
-                />
-              </button>
-            </li>
-          ))}
-        </ul>
-        <DialogClose />
-      </DialogContent>
+                  onClick={() => handleRequest(user.id)}
+                  aria-label="Send request"
+                >
+                  <img
+                    className={styles.button}
+                    src="/assets/images/request-friend.svg"
+                    alt="Request Button"
+                    draggable={false}
+                  />
+                </button>
+              </li>
+            ))}
+          </ul>
+          <DialogClose />
+        </DialogContent>
+      </DialogPortal>
     </Dialog>
   );
 };

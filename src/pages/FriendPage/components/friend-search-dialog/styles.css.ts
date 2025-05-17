@@ -31,6 +31,7 @@ export const input = style({
 
 export const list = style({
   ...theme.layout.column,
+  flex: 1,
   gap: rem(8),
 });
 

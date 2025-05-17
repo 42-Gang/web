@@ -11,7 +11,7 @@ type Request = {
 const postFriendsRequests = (payload: Request) =>
   fetcher.post<HttpResponse>('v1/friends/requests', { json: payload });
 
-export const useFriendsRequests = () => {
+export const useCreateFriendsRequests = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
