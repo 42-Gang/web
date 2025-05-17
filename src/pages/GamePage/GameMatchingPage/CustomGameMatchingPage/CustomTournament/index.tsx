@@ -8,10 +8,10 @@ import { WaitingMessage } from '../../components/waiting-message';
 
 const TEST_SCENARIO = {
   playerIndex: 2, // 현재 유저의 슬롯 번호 (0~3)
-  hostIndex: 1, // 방장의 슬롯 번호
+  hostIndex: 2, // 방장의 슬롯 번호
   opponentStates: [
     true, // 0번 슬롯: 상대 있음 (방장임)
-    true, // 1번 슬롯: 나
+    false, // 1번 슬롯: 나
     true, // 2번 슬롯: 대기중
     true, // 3번 슬롯: 상대 있음
   ],

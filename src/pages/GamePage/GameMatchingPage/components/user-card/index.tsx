@@ -1,3 +1,4 @@
+import { RequestListDialog } from '../request-list-dialog';
 import * as styles from './styles.css';
 
 type UserCardProps = {
@@ -40,7 +41,11 @@ export const UserCard = ({
 
   const renderAvatar = () => {
     if (option === 'custom' && !isCurrentUser && isWaiting && isHostUser) {
-      return <button className={styles.addButton} onClick={onClickAdd} />;
+      return (
+        <RequestListDialog type="inviteFriend">
+          <button className={styles.addButton} onClick={onClickAdd} />
+        </RequestListDialog>
+      );
     }
 
     if (!isWaiting) {

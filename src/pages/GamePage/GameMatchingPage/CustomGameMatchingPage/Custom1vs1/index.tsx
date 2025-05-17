@@ -8,8 +8,8 @@ import { WaitingMessage } from '../../components/waiting-message';
 
 // 테스트 시나리오
 const TEST_SCENARIO = {
-  opponentExists: true,
-  iAmHost: false,
+  opponentExists: false,
+  iAmHost: true,
 };
 
 export const Game1vs1MatchingPage = () => {
