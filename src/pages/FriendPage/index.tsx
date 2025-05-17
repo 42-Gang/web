@@ -6,7 +6,7 @@ import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
 
 import { FriendList } from './components/friend-list';
-import { RequestListDialog } from './components/request-list-dialog';
+import { FriendRequestDialog } from './components/friend-request-dialog';
 import * as styles from './styles.css.ts';
 
 export const FriendPage = () => {
@@ -39,9 +39,7 @@ export const FriendPage = () => {
       <h2 className={styles.Title}>Friend List</h2>
 
       <div className={styles.FriendContainer}>
-        <RequestListDialog type="addFriend">
-          <button className={styles.addFriend} />
-        </RequestListDialog>
+        <button className={styles.addFriend} />
         <div className={styles.inputWrapper}>
           <input
             className={styles.input}
@@ -51,9 +49,9 @@ export const FriendPage = () => {
           />
         </div>
       </div>
-      <RequestListDialog type="alarm">
-        <div className={styles.alarm} />
-      </RequestListDialog>
+      <FriendRequestDialog>
+        <button className={styles.alarm} />
+      </FriendRequestDialog>
       <hr className={styles.separatorLine} />
 
       <FriendList friends={filteredFriends} />

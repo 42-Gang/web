@@ -54,6 +54,7 @@ export const alarm = style({
   alignSelf: 'flex-end',
   width: rem(32),
   height: rem(32),
+  marginRight: rem(16),
   background: "url('/assets/images/alarm.svg') center/contain no-repeat",
   opacity: 0.6,
   transition: 'opacity 200ms ease-in-out',
