@@ -8,3 +8,6 @@ export * from './HistoryPage';
 export * from './ProfilePage';
 export * from './GameSelectPage';
 export * from './TournamentPage';
+export * from './GamePage/GameSelectPage';
+export * from './GamePage/GameMatchingPage/AutoGameMatchingPage';
+export * from './GamePage/GameMatchingPage/CustomGameMatchingPage';
