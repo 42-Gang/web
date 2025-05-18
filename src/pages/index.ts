@@ -7,4 +7,5 @@ export * from './SignUpPage';
 export * from './HistoryPage';
 export * from './ProfilePage';
 export * from './GamePage/GameSelectPage';
-export * from './GamePage/AutoGameMatchingPage';
+export * from './GamePage/GameMatchingPage/AutoGameMatchingPage';
+export * from './GamePage/GameMatchingPage/CustomGameMatchingPage';
