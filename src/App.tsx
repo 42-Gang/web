@@ -25,6 +25,7 @@ import {
   FriendChatRoomPage,
   GameSelectPage,
   GameAutoMatchingPage,
+  GameCustomMatchingPage,
 } from '@/pages';
 
 const App = () => {
@@ -82,6 +83,7 @@ const App = () => {
         { path: PATH.FRIEND_CHATROOM, element: <FriendChatRoomPage /> },
         { path: PATH.GAME_SELECT, element: <GameSelectPage /> },
         { path: PATH.GAME_AUTO_MATCHING, element: <GameAutoMatchingPage /> },
+        { path: PATH.GAME_CUSTOM_MATCHING, element: <GameCustomMatchingPage /> },
       ],
     },
   ];

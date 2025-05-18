@@ -24,7 +24,7 @@ export const GameSelectPage = () => {
   const handleModeSelect = (selectedMode: '1vs1' | 'tournament') => {
     setMode(selectedMode);
     if (option) {
-      const path = option === 'auto' ? PATH.GAME_AUTO_MATCHING : 'game/custom-matching';
+      const path = option === 'auto' ? PATH.GAME_AUTO_MATCHING : PATH.GAME_CUSTOM_MATCHING;
 
       navigate(`${path}?mode=${selectedMode}`);
     }
