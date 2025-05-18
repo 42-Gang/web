@@ -1,9 +1,10 @@
 import { style } from '@vanilla-extract/css';
 
-import { rem } from '@/styles';
+import { rem, theme } from '@/styles';
 
-export const friendListWrapper = style({
-  maxHeight: rem(369),
-  overflowY: 'auto',
-  scrollbarGutter: 'stable',
+export const item = style({
+  ...theme.layout.rowBetween,
+  width: '100%',
+  paddingBlock: rem(14),
+  paddingInline: rem(18),
 });
