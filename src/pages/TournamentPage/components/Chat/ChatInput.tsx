@@ -11,8 +11,9 @@ export const ChatInput = ({ onSend }: ChatInputProps) => {
   const [isComposing, setIsComposing] = useState(false);
 
   const handleSend = () => {
-    if (!input.trim()) return;
-    onSend(input.trim());
+    const trimmed = input.trim();
+    if (!trimmed) return;
+    onSend(trimmed);
     setInput('');
   };
 

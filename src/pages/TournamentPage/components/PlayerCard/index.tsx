@@ -40,7 +40,11 @@ export const PlayerCard = ({
       onMouseLeave={() => setShowPopup(false)}
     >
       <div className={`${styles.avatarWrapper} ${borderClass}`}>
-        <img src={player.avatarUrl} className={avatarClass} />
+        <img
+          src={player.avatarUrl}
+          alt={`${player.name}의 프로필 이미지`}
+          className={avatarClass}
+        />
         {showPopup && (
           <div
             className={
