@@ -12,7 +12,6 @@ export const userCard = styleVariants({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: rem(16),
-    boxSizing: 'border-box',
     position: 'relative',
     flexShrink: 0,
   },
@@ -25,7 +24,6 @@ export const userCard = styleVariants({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: rem(16),
-    boxSizing: 'border-box',
     position: 'relative',
     flexShrink: 0,
   },
@@ -120,4 +118,11 @@ export const addButton = style({
   width: rem(60),
   height: rem(60),
   background: "url('/assets/images/invite-friend.svg') center/contain no-repeat",
+});
+
+export const fixedDialogContent = style({
+  width: rem(495),
+  minHeight: rem(385),
+  padding: rem(24),
+  borderRadius: rem(12),
 });

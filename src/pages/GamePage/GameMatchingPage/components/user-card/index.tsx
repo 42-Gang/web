@@ -1,8 +1,9 @@
-import { RequestListDialog } from '../request-list-dialog';
+import { DialogWrapper } from '@/components/ui/popup-dialog';
+
 import * as styles from './styles.css';
 
 type UserCardProps = {
-  userAvatar: string | null;
+  userAvatar?: string;
   userNickname: string;
   isPlayer: boolean; // 현재 유저인지 여부
   isWaiting: boolean;
@@ -42,9 +43,9 @@ export const UserCard = ({
   const renderAvatar = () => {
     if (option === 'custom' && !isCurrentUser && isWaiting && isHostUser) {
       return (
-        <RequestListDialog type="inviteFriend">
+        <DialogWrapper type="inviteFriend" contentClassName={styles.fixedDialogContent}>
           <button className={styles.addButton} onClick={onClickAdd} />
-        </RequestListDialog>
+        </DialogWrapper>
       );
     }
 

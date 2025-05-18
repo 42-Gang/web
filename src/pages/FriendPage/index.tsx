@@ -4,9 +4,9 @@ import { useFriendsMe } from '@/api';
 import { useSocket } from '@/api/socket';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
+import { DialogWrapper } from '@/components/ui/popup-dialog/index.tsx';
 
 import { FriendList } from './components/friend-list';
-import { RequestListDialog } from './components/request-list-dialog';
 import * as styles from './styles.css.ts';
 
 export const FriendPage = () => {
@@ -39,9 +39,9 @@ export const FriendPage = () => {
       <h2 className={styles.Title}>Friend List</h2>
 
       <div className={styles.FriendContainer}>
-        <RequestListDialog type="addFriend">
+        <DialogWrapper type="addFriend" contentClassName={styles.fixedDialogContent}>
           <button className={styles.addFriend} />
-        </RequestListDialog>
+        </DialogWrapper>
         <div className={styles.inputWrapper}>
           <input
             className={styles.input}
@@ -51,9 +51,9 @@ export const FriendPage = () => {
           />
         </div>
       </div>
-      <RequestListDialog type="alarm">
+      <DialogWrapper type="alarm" contentClassName={styles.fixedDialogContent}>
         <button className={styles.alarm} />
-      </RequestListDialog>
+      </DialogWrapper>
       <div className={styles.separatorLine} />
       <FriendList friends={filteredFriends} />
     </Flex>

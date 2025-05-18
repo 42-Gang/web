@@ -10,12 +10,14 @@ import { WaitingMessage } from '../../components/waiting-message';
 
 export const Game1vs1MatchingPage = () => {
   const { data } = useUsersMe();
-  const playerAvatar = data?.data?.avatarUrl ?? null;
+  const playerAvatar = data?.data?.avatarUrl;
   const playerNickname = data?.data?.nickname ?? '';
 
-  const opponentAvatar: string | null = null;
-  const isOpponentWaiting = !opponentAvatar;
-  const [isPlayerFirst] = useState(() => !opponentAvatar);
+  const opponentExists = false;
+  const isOpponentWaiting = !opponentExists;
+  const [isPlayerFirst] = useState(() => !opponentExists);
+
+  const opponentAvatar = opponentExists ? '/assets/images/sample-avatar.png' : undefined;
 
   const playerProps = {
     userAvatar: playerAvatar,

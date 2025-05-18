@@ -7,25 +7,27 @@ import {
   DialogOverlay,
   DialogTrigger,
 } from '@/components/system/dialog';
+import { AddFriend } from '@/pages/FriendPage/components/add-friend';
+import { GeneralAlarm } from '@/pages/FriendPage/components/general-alarm';
+import { InviteFriend } from '@/pages/GamePage/GameMatchingPage/components/invite-friend';
 
-import * as styles from './styles.css.ts';
-import { AddFriend } from '../add-friend/index.tsx';
-import { GeneralAlarm } from '../general-alarm/index.tsx';
+type DialogType = 'addFriend' | 'alarm' | 'inviteFriend';
 
-type DialogType = 'addFriend' | 'alarm';
-
-type RequestListDialogProps = {
+type DialogWrapperProps = {
   type: DialogType;
   children?: ReactNode;
+  contentClassName?: string;
 };
 
-export const RequestListDialog = ({ type, children }: RequestListDialogProps) => {
+export const DialogWrapper = ({ type, children, contentClassName }: DialogWrapperProps) => {
   const renderContent = () => {
     switch (type) {
       case 'addFriend':
         return <AddFriend />;
       case 'alarm':
         return <GeneralAlarm />;
+      case 'inviteFriend':
+        return <InviteFriend />;
       default:
         return null;
     }
@@ -35,8 +37,7 @@ export const RequestListDialog = ({ type, children }: RequestListDialogProps) =>
     <Dialog>
       <DialogTrigger>{children}</DialogTrigger>
       <DialogOverlay />
-
-      <DialogContent className={styles.fixedDialogContent}>
+      <DialogContent className={contentClassName}>
         {renderContent()}
         <DialogClose />
       </DialogContent>

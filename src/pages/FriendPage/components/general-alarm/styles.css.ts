@@ -43,7 +43,6 @@ export const approval = style({
   width: rem(40),
   height: rem(40),
   background: "url('/assets/images/approval.svg') center/contain no-repeat",
-  cursor: 'pointer',
   opacity: 0.6,
   transition: 'opacity 0.2s ease-in-out',
 
@@ -58,7 +57,6 @@ export const rejection = style({
   width: rem(40),
   height: rem(40),
   background: "url('/assets/images/rejection.svg') center/contain no-repeat",
-  cursor: 'pointer',
   opacity: 0.6,
   transition: 'opacity 0.2s ease-in-out',
 

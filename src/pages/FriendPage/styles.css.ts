@@ -38,7 +38,6 @@ export const addFriend = style({
   height: rem(46),
   marginTop: rem(8),
   background: "url('/assets/images/add-friend.svg') center/contain no-repeat",
-  cursor: 'pointer',
   transition: 'opacity 0.2s ease-in-out',
 
   opacity: 0.6,
@@ -54,7 +53,6 @@ export const alarm = style({
   width: rem(32),
   height: rem(32),
   background: "url('/assets/images/alarm.svg') center/contain no-repeat",
-  cursor: 'pointer',
   transition: 'opacity 0.2s ease-in-out',
 
   opacity: 0.6,
@@ -73,4 +71,11 @@ export const separatorLine = style({
   height: rem(1),
   backgroundColor: theme.color.white,
   marginTop: rem(12),
+});
+
+export const fixedDialogContent = style({
+  width: rem(700),
+  minHeight: rem(430),
+  padding: rem(24),
+  borderRadius: rem(12),
 });
