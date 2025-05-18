@@ -44,10 +44,20 @@ export const autoCustomButton = style({
       transition: 'opacity 0.3s ease',
       pointerEvents: 'none',
     },
+
+    // 👇 마우스 올렸을 때 효과
     '&:hover::before': {
       opacity: 1,
     },
     '&:hover': {
+      background: theme.color.autoCustomHover,
+      color: theme.color.yellow,
+    },
+
+    '&[data-current="true"]::before': {
+      opacity: 1,
+    },
+    '&[data-current="true"]': {
       background: theme.color.autoCustomHover,
       color: theme.color.yellow,
     },
