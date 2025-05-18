@@ -25,3 +25,10 @@ export type UsersSearchPayload = {
   status: 'ACCEPTED' | 'NONE' | 'PENDING' | 'REJECTED' | 'BLOCKED';
   exceptMe: boolean;
 };
+
+export type UserStatusType = 'ONLINE' | 'OFFLINE' | 'GAME' | 'LOBBY' | 'AWAY';
+
+export type UserStatus = {
+  friendId: number;
+  status: UserStatusType;
+};

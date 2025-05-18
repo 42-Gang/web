@@ -1,6 +1,7 @@
+import { UserStatus } from '@/api/types';
+
 type SocketEventData = {
-  message: { text: string };
-  notification: { title: string; body: string };
+  'friend-status': UserStatus;
 };
 
 export type ServerToClientEvents = {

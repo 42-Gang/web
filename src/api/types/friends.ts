@@ -20,7 +20,3 @@ export type Friend = {
 export type FriendList = {
   friends: Friend[];
 };
-
-export type FriendStatus = {
-  status: FriendStatusType;
-};

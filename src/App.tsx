@@ -1,5 +1,6 @@
 import '@/styles/global.css';
 
+import { useEffect } from 'react';
 import {
   createBrowserRouter,
   Navigate,
@@ -11,7 +12,10 @@ import {
 import { Toaster } from 'sonner';
 
 import { QueryClientProvider } from '@/api';
+import { useSocket } from '@/api/socket';
+import { UserStatus } from '@/api/types';
 import { useAuthAtom } from '@/atoms/useAuthAtom';
+import { useStatusAtom } from '@/atoms/useStatusAtom';
 import { PATH } from '@/constants/routes';
 import {
   EmailSignInPage,
@@ -59,6 +63,30 @@ const App = () => {
 
   const PrivateRoute = () => {
     const { isLogin } = useAuthAtom();
+    const { updateStatus } = useStatusAtom();
+
+    const { socket, connect, disconnect } = useSocket({
+      path: 'status',
+      handshake: '/ws/user',
+      withToken: true,
+    });
+
+    useEffect(() => {
+      connect();
+      return () => disconnect();
+    }, [connect, disconnect]);
+
+    useEffect(() => {
+      if (!socket) return;
+      const handleStatusUpdate = (data: UserStatus) => {
+        updateStatus(data);
+      };
+
+      socket.on('friend-status', handleStatusUpdate);
+      return () => {
+        socket.off('friend-status', handleStatusUpdate);
+      };
+    }, [socket, updateStatus]);
 
     if (!isLogin()) {
       return <Navigate to={PATH.LANDING} replace />;
