@@ -1,4 +1,4 @@
-import { useState , PropsWithChildren } from 'react';
+import { useState, PropsWithChildren } from 'react';
 import { toast } from 'sonner';
 
 import {
@@ -46,7 +46,7 @@ export const InviteFriendDialog = ({ children }: PropsWithChildren) => {
       <DialogPortal>
         <DialogOverlay />
 
-        <DialogContent className={styles.fixedDialogContent} aria-describedby={undefined}>
+        <DialogContent className={styles.fixedDialogContent}>
           <DialogTitle className={styles.title}>Invite Friend</DialogTitle>
 
           <input

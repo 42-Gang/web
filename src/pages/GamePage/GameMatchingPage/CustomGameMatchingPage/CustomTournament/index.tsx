@@ -29,7 +29,7 @@ export const GameTournamentMatchingPage = () => {
     return exists ? `/assets/images/sample${index + 1}.png` : undefined;
   });
 
-  const allMatched = slots.every((avatar) => avatar !== undefined);
+  const allMatched = slots.every((avatar) => !avatar);
 
   return (
     <Flex direction="column" style={{ height: '100%' }}>
@@ -39,7 +39,7 @@ export const GameTournamentMatchingPage = () => {
       <div className={styles.matchArea}>
         {slots.map((avatar, index) => {
           const isPlayer = index === TEST_SCENARIO.playerIndex;
-          const isWaiting = avatar === undefined;
+          const isWaiting = !avatar;
           const isPlayerHost = index === TEST_SCENARIO.hostIndex;
 
           return (

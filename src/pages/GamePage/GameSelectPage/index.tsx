@@ -54,7 +54,7 @@ export const GameSelectPage = () => {
           }) => (
             <button
               className={styles.autoCustomButton}
-              data-current={isCurrent ? 'true' : undefined}
+              {...(isCurrent && { 'data-current': 'true' })}
               style={{ outline: isCurrent ? '2px solid white' : 'none' }}
               onClick={onClick}
               onMouseEnter={onMouseEnter}
@@ -85,7 +85,7 @@ export const GameSelectPage = () => {
           }) => (
             <button
               className={text === '1VS1' ? styles.vsButton : styles.tournamentButton}
-              data-current={isCurrent ? 'true' : undefined}
+              {...(isCurrent && { 'data-current': 'true' })}
               style={{ outline: isCurrent ? '2px solid white' : 'none' }}
               onClick={onClick}
               onMouseEnter={onMouseEnter}

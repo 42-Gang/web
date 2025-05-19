@@ -14,7 +14,7 @@ const TEST_SCENARIO = {
 
 export const Game1vs1MatchingPage = () => {
   const { data } = useUsersMe();
-  const playerAvatar = data?.data?.avatarUrl ?? undefined;
+  const playerAvatar = data?.data?.avatarUrl;
   const playerNickname = data?.data?.nickname ?? '';
 
   const opponentAvatar: string | undefined = TEST_SCENARIO.opponentExists
