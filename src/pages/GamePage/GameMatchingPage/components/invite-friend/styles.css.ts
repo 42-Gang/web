@@ -4,10 +4,10 @@ import { rem, theme } from '@/styles';
 
 export const fixedDialogContent = style({
   width: rem(495),
-  height: rem(385), // minHeight → height로 고정
+  height: rem(385),
   padding: rem(24),
   borderRadius: rem(12),
-  display: 'flex', // ✅ 전체 영역을 Flex column으로
+  display: 'flex',
   flexDirection: 'column',
 });
 
