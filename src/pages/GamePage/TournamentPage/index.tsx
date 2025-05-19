@@ -1,26 +1,13 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import type { Match } from '@/api/types/game';
 
 import { ChatBox } from './components/Chat/ChatBox';
 import { ChatInput } from './components/Chat/ChatInput';
 import { MatchNode } from './components/MatchNode';
 import * as styles from './styles.css';
 
-export type Player = {
-  id: string;
-  name: string;
-  avatarUrl: string;
-  win: number;
-  lose: number;
-  tournament: number;
-};
-
-export type Match = {
-  id: string;
-  player1?: Player;
-  player2?: Player;
-  winnerId?: string;
-  children?: [Match, Match];
-};
 
 const tournamentData = {
   id: 'final',
@@ -86,6 +73,7 @@ const tournamentData = {
 };
 
 export const TournamentPage = () => {
+  const navigate = useNavigate();
   const [messages, setMessages] = useState<string[]>([]);
   const [readyIds, setReadyIds] = useState<string[]>([]);
 
@@ -100,12 +88,12 @@ export const TournamentPage = () => {
   };
 
   const handleBack = () => {
-    window.history.back();
+    navigate(-1);
   };
 
   return (
     <div className={styles.container}>
-      <button className={styles.backButton} onClick={handleBack} />
+      <button className={styles.backButton} onClick={handleBack} aria-label="Go back" />
       <div className={styles.bracketSection}>
         <div className={styles.titleWrapper}>
           <h1 className={styles.title}>Tournament</h1>
@@ -113,7 +101,7 @@ export const TournamentPage = () => {
         </div>
         <MatchNode match={tournamentData} isRoot readyIds={readyIds} />
         <div className={styles.readyButtonWrapper}>
-          <button className={styles.readyButton} onClick={handleReady} />
+          <button className={styles.readyButton} onClick={handleReady} aria-label="Mark as ready" />
         </div>
       </div>
       <div className={styles.chatSection}>
