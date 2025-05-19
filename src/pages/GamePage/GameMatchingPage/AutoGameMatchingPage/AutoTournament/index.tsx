@@ -19,7 +19,7 @@ export const GameTournamentMatchingPage = () => {
     '/assets/images/sample2.png',
   ];
 
-  const allMatched = slots.every((avatar) => !!avatar);
+  const allMatched = slots.every((avatar) => !avatar);
 
   return (
     <Flex direction="column" style={{ height: '100%' }}>
