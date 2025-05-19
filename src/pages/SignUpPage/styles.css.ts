@@ -89,12 +89,3 @@ export const submitButton = style({
     opacity: 0.7,
   },
 });
-
-export const backButton = style({
-  position: 'absolute',
-  top: rem(12),
-  left: rem(12),
-  width: rem(30),
-  height: rem(30),
-  background: `url('/assets/images/back-button.svg') center / contain no-repeat`,
-});
