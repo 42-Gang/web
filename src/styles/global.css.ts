@@ -51,3 +51,13 @@ globalStyle('*::-webkit-scrollbar-thumb', {
 globalStyle('*::-webkit-scrollbar-track', {
   backgroundColor: 'transparent',
 });
+
+globalStyle('.pixel-toast', {
+  fontFamily: 'DungGeunMo',
+  color: 'black !important',
+  fontSize: '17px !important',
+  backgroundColor: 'white !important',
+  border: '2px solid black !important',
+  borderRadius: '4px !important',
+  boxShadow: '0 4px 0 black !important',
+});
