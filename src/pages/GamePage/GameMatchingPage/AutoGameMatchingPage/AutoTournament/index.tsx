@@ -8,13 +8,18 @@ import { WaitingMessage } from '../../components/waiting-message';
 
 export const GameTournamentMatchingPage = () => {
   const { data } = useUsersMe();
-  const playerAvatar = data?.data?.avatarUrl ?? null;
+  const playerAvatar = data?.data?.avatarUrl;
   const playerNickname = data?.data?.nickname ?? '';
 
   // TODO: 상대방이 들어왔을 경우에 대한 처리
-  const slots = ['/assets/images/sample1.png', playerAvatar, null, '/assets/images/sample2.png'];
+  const slots = [
+    '/assets/images/sample1.png',
+    playerAvatar,
+    undefined,
+    '/assets/images/sample2.png',
+  ];
 
-  const allMatched = slots.every((avatar) => avatar !== null);
+  const allMatched = slots.every((avatar) => avatar !== undefined);
 
   return (
     <Flex direction="column" style={{ height: '100%' }}>
@@ -24,12 +29,12 @@ export const GameTournamentMatchingPage = () => {
       <div className={styles.matchArea}>
         {slots.map((avatar, index) => {
           const isPlayer = avatar === playerAvatar;
-          const isWaiting = avatar === null;
+          const isWaiting = !avatar;
 
           return (
             <UserCard
               key={index}
-              userAvatar={avatar ?? null}
+              userAvatar={avatar}
               userNickname={isWaiting ? '-' : isPlayer ? playerNickname : `OPPONENT ${index + 1}`}
               isPlayer={isPlayer}
               isWaiting={isWaiting}

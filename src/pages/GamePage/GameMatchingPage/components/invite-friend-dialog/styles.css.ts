@@ -2,39 +2,58 @@ import { style } from '@vanilla-extract/css';
 
 import { rem, theme } from '@/styles';
 
+export const fixedDialogContent = style({
+  width: rem(495),
+  height: rem(385),
+  padding: rem(24),
+  borderRadius: rem(12),
+  display: 'flex',
+  flexDirection: 'column',
+});
+
 export const title = style({
   marginBottom: rem(20),
   color: theme.color.white,
   fontFamily: theme.fontFamily.branding,
-  fontSize: rem(30),
+  fontSize: rem(25),
   lineHeight: 1.2,
 });
 
 export const input = style({
-  width: rem(430),
-  height: rem(46),
-  marginBottom: rem(25),
-  fontSize: rem(18),
-  borderRadius: rem(15),
+  width: rem(350),
+  height: rem(36),
+  fontSize: rem(16),
+  borderRadius: rem(12),
+  marginBottom: rem(24),
+  padding: `0 ${rem(12)}`,
+  boxSizing: 'border-box',
   textAlign: 'center',
+  margin: `0 auto ${rem(24)}`,
 });
 
 export const userList = style({
   display: 'flex',
   flexDirection: 'column',
-  maxHeight: rem(240),
+  gap: rem(10),
+  maxHeight: rem(200),
   overflowY: 'auto',
   scrollbarGutter: 'stable',
-  border: rem(3),
-  gap: rem(5),
+  paddingRight: rem(4),
 });
 
 export const userCard = style({
-  width: rem(630),
-  height: rem(80),
+  width: rem(340),
+  height: rem(60),
+  margin: '0 auto',
   border: `${rem(3)} solid ${theme.color.white}`,
   borderRadius: rem(10),
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  padding: `0 ${rem(20)}`,
+  boxSizing: 'border-box',
   transition: 'background-color 0.2s ease-in-out',
+  flexShrink: 0,
 
   selectors: {
     '&:hover': {
@@ -43,9 +62,15 @@ export const userCard = style({
   },
 });
 
+export const leftInfo = style({
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(12),
+});
+
 export const avatar = style({
-  width: rem(65),
-  height: rem(67),
+  width: rem(49),
+  height: rem(49),
   marginTop: rem(4),
   marginLeft: rem(10),
   marginRight: rem(30),
@@ -56,15 +81,15 @@ export const nickname = style({
   fontSize: rem(20),
 });
 
-export const friendRequest = style({
-  width: rem(40),
-  height: rem(40),
+export const inviteRequestButton = style({
+  width: rem(36),
+  height: rem(36),
   marginRight: rem(20),
   background: "url('/assets/images/request-friend.svg') center/contain no-repeat",
 });
 
 export const requestedButton = style([
-  friendRequest,
+  inviteRequestButton,
   {
     background: "url('/assets/images/request-success.svg') center/contain no-repeat",
     cursor: 'default',

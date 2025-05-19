@@ -14,12 +14,12 @@ const TEST_SCENARIO = {
 
 export const Game1vs1MatchingPage = () => {
   const { data } = useUsersMe();
-  const playerAvatar = data?.data?.avatarUrl ?? null;
+  const playerAvatar = data?.data?.avatarUrl;
   const playerNickname = data?.data?.nickname ?? '';
 
-  const opponentAvatar: string | null = TEST_SCENARIO.opponentExists
+  const opponentAvatar: string | undefined = TEST_SCENARIO.opponentExists
     ? '/assets/images/sample-avatar.png'
-    : null;
+    : undefined;
 
   const isOpponentWaiting = !opponentAvatar;
   const isPlayerHost = TEST_SCENARIO.iAmHost;

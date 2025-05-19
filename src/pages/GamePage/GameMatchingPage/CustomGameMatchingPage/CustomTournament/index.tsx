@@ -19,17 +19,17 @@ const TEST_SCENARIO = {
 
 export const GameTournamentMatchingPage = () => {
   const { data } = useUsersMe();
-  const playerAvatar = data?.data?.avatarUrl ?? null;
+  const playerAvatar = data?.data?.avatarUrl;
   const playerNickname = data?.data?.nickname ?? '';
 
   const isHostUser = TEST_SCENARIO.playerIndex === TEST_SCENARIO.hostIndex;
 
   const slots = TEST_SCENARIO.opponentStates.map((exists, index) => {
     if (index === TEST_SCENARIO.playerIndex) return playerAvatar;
-    return exists ? `/assets/images/sample${index + 1}.png` : null;
+    return exists ? `/assets/images/sample${index + 1}.png` : undefined;
   });
 
-  const allMatched = slots.every((avatar) => avatar !== null);
+  const allMatched = slots.every((avatar) => avatar != null);
 
   return (
     <Flex direction="column" style={{ height: '100%' }}>
@@ -39,7 +39,7 @@ export const GameTournamentMatchingPage = () => {
       <div className={styles.matchArea}>
         {slots.map((avatar, index) => {
           const isPlayer = index === TEST_SCENARIO.playerIndex;
-          const isWaiting = avatar === null;
+          const isWaiting = !avatar;
           const isPlayerHost = index === TEST_SCENARIO.hostIndex;
 
           return (

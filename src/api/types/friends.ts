@@ -1,5 +1,5 @@
 export type FriendRequestUser = {
-  userId: string;
+  userId: number;
   nickname: string;
   avatarUrl: string;
 };
@@ -19,8 +19,4 @@ export type Friend = {
 
 export type FriendList = {
   friends: Friend[];
-};
-
-export type FriendStatus = {
-  status: FriendStatusType;
 };

@@ -1,18 +1,33 @@
-import type { Friend } from '@/api/types';
+import { Separated } from 'react-simplikit';
+
+import { Friend } from '@/api/types';
+import { useStatusAtom } from '@/atoms/useStatusAtom';
+import { Divider, ProfileCard } from '@/components/ui';
 
 import * as styles from './styles.css';
-import { FriendItem } from '../friend-list/friend-item';
 
 type FriendListProps = {
   friends: Friend[];
 };
 
 export const FriendList = ({ friends }: FriendListProps) => {
+  const { status } = useStatusAtom();
+
   return (
-    <div className={styles.friendListWrapper}>
+    <Separated by={<Divider />}>
       {friends.map((friend) => (
-        <FriendItem key={friend.friendId} friend={friend} />
+        <div key={friend.friendId} className={styles.item}>
+          <ProfileCard
+            nickname={friend.nickname}
+            avatarUrl={friend.avatarUrl}
+            status={status.find((s) => s.friendId === friend.friendId)?.status}
+          />
+
+          <button>
+            <img src="/assets/images/message.svg" alt="Message Icon" />
+          </button>
+        </div>
       ))}
-    </div>
+    </Separated>
   );
 };

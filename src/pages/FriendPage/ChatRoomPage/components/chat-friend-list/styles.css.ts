@@ -29,7 +29,6 @@ export const item = style({
   display: 'flex',
   alignItems: 'center',
   gap: rem(10),
-  cursor: 'pointer',
   padding: `${rem(6)} ${rem(1)} ${rem(6)} ${rem(9)}`,
   borderBottom: `${rem(1.5)} solid ${theme.color.white}`,
   fontSize: rem(22),

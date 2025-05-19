@@ -4,7 +4,7 @@ import { rem, theme } from '@/styles';
 
 export const scroll = style({
   ...theme.layout.column,
-  maxHeight: rem(282),
+  maxHeight: rem(290),
   marginTop: rem(15),
   gap: rem(10),
   overflowY: 'auto',

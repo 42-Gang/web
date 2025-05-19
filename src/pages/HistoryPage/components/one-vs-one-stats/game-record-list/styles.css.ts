@@ -4,9 +4,9 @@ import { rem, theme } from '@/styles';
 
 export const list = style({
   ...theme.layout.column,
-  maxHeight: rem(282),
+  maxHeight: rem(290),
   marginTop: rem(16),
-  gap: rem(6),
+  gap: rem(10),
   overflowY: 'auto',
 });
 
