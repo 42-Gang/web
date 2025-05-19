@@ -1,8 +1,17 @@
 import { useState } from 'react';
+import { toast } from 'sonner';
 
-import { Flex } from '@/components/system';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogOverlay,
+  DialogPortal,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/system';
 
-import * as styles from './styles.css.ts';
+import * as styles from './styles.css';
 
 type User = {
   id: number;
@@ -17,7 +26,7 @@ const mockUsers: User[] = [
   { id: 4, nickname: 'Knightmare', avatarUrl: '/assets/images/sample-avatar.png' },
 ];
 
-export const InviteFriend = () => {
+export const InviteFriendDialog = ({ children }: { children: React.ReactNode }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [requestedIds, setRequestedIds] = useState<number[]>([]);
 
@@ -28,38 +37,47 @@ export const InviteFriend = () => {
   const handleRequest = (id: number, nickname: string) => {
     if (requestedIds.includes(id)) return;
     setRequestedIds((prev) => [...prev, id]);
-    alert(`Friend request sent to ${nickname}`);
+    toast.success(`Friend request sent to ${nickname}`);
   };
 
   return (
-    <Flex direction="column" alignItems="center" style={{ height: '100%' }}>
-      <h2 className={styles.title}>Add friend</h2>
+    <Dialog>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogPortal>
+        <DialogOverlay />
 
-      <input
-        className={styles.input}
-        placeholder="Please enter nickname."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
+        <DialogContent className={styles.fixedDialogContent} aria-describedby={undefined}>
+          <DialogTitle className={styles.title}>Invite Friend</DialogTitle>
 
-      <div className={styles.userList}>
-        {filteredUsers.map((user) => (
-          <div key={user.id} className={styles.userCard}>
-            <div className={styles.leftInfo}>
-              <img src={user.avatarUrl} alt={user.nickname} className={styles.avatar} />
-              <span className={styles.nickname}>{user.nickname}</span>
-            </div>
+          <input
+            className={styles.input}
+            placeholder="Please enter nickname."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
 
-            <button
-              className={
-                requestedIds.includes(user.id) ? styles.requestedButton : styles.inviteRequestButton
-              }
-              onClick={() => handleRequest(user.id, user.nickname)}
-              aria-label="Send friend request"
-            />
+          <div className={styles.userList}>
+            {filteredUsers.map((user) => (
+              <div key={user.id} className={styles.userCard}>
+                <div className={styles.leftInfo}>
+                  <img src={user.avatarUrl} alt={user.nickname} className={styles.avatar} />
+                  <span className={styles.nickname}>{user.nickname}</span>
+                </div>
+                <button
+                  className={
+                    requestedIds.includes(user.id)
+                      ? styles.requestedButton
+                      : styles.inviteRequestButton
+                  }
+                  onClick={() => handleRequest(user.id, user.nickname)}
+                  aria-label="Send friend request."
+                />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-    </Flex>
+          <DialogClose />
+        </DialogContent>
+      </DialogPortal>
+    </Dialog>
   );
 };

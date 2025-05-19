@@ -1,16 +1,15 @@
-import { DialogWrapper } from '@/components/ui/popup-dialog';
-
 import * as styles from './styles.css';
+import { InviteFriendDialog } from '../invite-friend';
 
 type UserCardProps = {
   userAvatar?: string;
   userNickname: string;
-  isPlayer: boolean; // 현재 유저인지 여부
+  isPlayer: boolean;
   isWaiting: boolean;
   mode: '1vs1' | 'tournament';
   option: 'auto' | 'custom';
   position?: 'left' | 'right';
-  isHostUser: boolean; // 현재 유저가 방장인지
+  isHostUser: boolean;
   isPlayerHost?: boolean;
   onClickAdd?: () => void;
 };
@@ -28,10 +27,8 @@ export const UserCard = ({
   onClickAdd,
 }: UserCardProps) => {
   const shouldFlipGun = mode === '1vs1' && position === 'right';
-
   const isCurrentUser = isPlayer;
 
-  // 카드 주인이 방장인지: 외부에서 전달되면 사용, 없으면 내부 계산
   const isCardOwnerHost = isPlayerHost ?? (isPlayer && isHostUser);
 
   const userCardClass = [
@@ -43,9 +40,9 @@ export const UserCard = ({
   const renderAvatar = () => {
     if (option === 'custom' && !isCurrentUser && isWaiting && isHostUser) {
       return (
-        <DialogWrapper type="inviteFriend" contentClassName={styles.fixedDialogContent}>
+        <InviteFriendDialog>
           <button className={styles.addButton} onClick={onClickAdd} />
-        </DialogWrapper>
+        </InviteFriendDialog>
       );
     }
 
