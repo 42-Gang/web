@@ -45,7 +45,6 @@ export const autoCustomButton = style({
       pointerEvents: 'none',
     },
 
-    // 👇 마우스 올렸을 때 효과
     '&:hover::before': {
       opacity: 1,
     },
