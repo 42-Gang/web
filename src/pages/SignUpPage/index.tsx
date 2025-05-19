@@ -19,6 +19,10 @@ export const SignUpPage = () => {
 
   const navigate = useNavigate();
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   const handleMailVerify = () => {
     if (!email) {
       alert('Please enter your email');
@@ -64,6 +68,7 @@ export const SignUpPage = () => {
 
   return (
     <Flex direction="column" justifyContent="space-between" style={{ height: '100%' }}>
+      <button className={styles.backButton} onClick={handleBack} />
       <Branding className={styles.branding} />
 
       <form className={styles.form} onSubmit={handleSubmit}>
