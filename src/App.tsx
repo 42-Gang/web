@@ -28,6 +28,7 @@ import {
   FriendPage,
   ChatRoomPage,
   GameSelectPage,
+  TournamentPage,
   GameAutoMatchingPage,
   GameCustomMatchingPage,
 } from '@/pages';
@@ -110,6 +111,7 @@ const App = () => {
         { path: PATH.FRIEND, element: <FriendPage /> },
         { path: PATH.FRIEND_CHATROOM, element: <ChatRoomPage /> },
         { path: PATH.GAME_SELECT, element: <GameSelectPage /> },
+        { path: PATH.TOURNAMENT, element: <TournamentPage /> },
         { path: PATH.GAME_AUTO_MATCHING, element: <GameAutoMatchingPage /> },
         { path: PATH.GAME_CUSTOM_MATCHING, element: <GameCustomMatchingPage /> },
       ],
