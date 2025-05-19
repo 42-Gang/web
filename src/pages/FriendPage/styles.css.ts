@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { rem, theme } from '@/styles';
 
-export const Title = style({
+export const title = style({
   marginTop: rem(42),
   marginBottom: rem(20),
   color: theme.color.white,
@@ -12,7 +12,7 @@ export const Title = style({
   lineHeight: 1.2,
 });
 
-export const FriendContainer = style({
+export const friendContainer = style({
   display: 'flex',
   marginLeft: rem(120),
   gap: rem(12),
@@ -50,26 +50,18 @@ export const addFriend = style({
 });
 
 export const alarm = style({
+  alignSelf: 'flex-end',
   width: rem(32),
   height: rem(32),
+  marginRight: rem(16),
   background: "url('/assets/images/alarm.svg') center/contain no-repeat",
-  transition: 'opacity 0.2s ease-in-out',
-
   opacity: 0.6,
+  transition: 'opacity 200ms ease-in-out',
 
-  selectors: {
-    '&:hover': {
-      opacity: 1,
-    },
-  },
-
-  marginLeft: rem(739),
+  ':hover': { opacity: 1 },
 });
 
-export const separatorLine = style({
-  width: '100%',
-  height: rem(1),
-  backgroundColor: theme.color.white,
+export const separate = style({
   marginTop: rem(12),
 });
 

@@ -1,61 +1,54 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useState } from 'react';
+import { useDebounce } from 'react-simplikit';
 
 import { useFriendsMe } from '@/api';
-import { useSocket } from '@/api/socket';
 import { Flex } from '@/components/system';
-import { BackButton } from '@/components/ui';
-import { DialogWrapper } from '@/components/ui/popup-dialog/index.tsx';
+import { BackButton, Divider } from '@/components/ui';
 
 import { FriendList } from './components/friend-list';
-import * as styles from './styles.css.ts';
+import { FriendRequestDialog } from './components/friend-request-dialog';
+import { FriendSearchDialog } from './components/friend-search-dialog';
+import * as styles from './styles.css';
 
 export const FriendPage = () => {
-  const { connect, disconnect } = useSocket({
-    path: 'status',
-    handshake: '/ws/user',
-    withToken: true,
-  });
+  const [value, setValue] = useState<string>('');
+  const [nickname, setNickname] = useState<string>('');
 
-  useEffect(() => {
-    connect();
+  const { data } = useFriendsMe();
 
-    return () => disconnect();
-  }, [connect, disconnect]);
-
-  const { data: friends } = useFriendsMe();
-
-  const friendList = useMemo(() => friends?.data?.friends || [], [friends]);
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const filteredFriends = useMemo(() => {
-    return friendList.filter((friend) =>
-      friend.nickname.toLowerCase().startsWith(searchTerm.toLowerCase()),
-    );
-  }, [friendList, searchTerm]);
+  const debouncedNickname = useDebounce((value: string) => {
+    setNickname(value);
+  }, 300);
 
   return (
     <Flex direction="column" style={{ height: '100%' }}>
       <BackButton />
-      <h2 className={styles.Title}>Friend List</h2>
+      <h2 className={styles.title}>Friend List</h2>
 
-      <div className={styles.FriendContainer}>
-        <DialogWrapper type="addFriend" contentClassName={styles.fixedDialogContent}>
+      <div className={styles.friendContainer}>
+        <FriendSearchDialog>
           <button className={styles.addFriend} />
-        </DialogWrapper>
+        </FriendSearchDialog>
         <div className={styles.inputWrapper}>
           <input
             className={styles.input}
             placeholder="Please enter your friend's nickname."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            value={value}
+            onChange={(e) => {
+              setValue(e.target.value);
+              debouncedNickname(e.target.value);
+            }}
           />
         </div>
       </div>
-      <DialogWrapper type="alarm" contentClassName={styles.fixedDialogContent}>
+      <FriendRequestDialog>
         <button className={styles.alarm} />
-      </DialogWrapper>
-      <div className={styles.separatorLine} />
-      <FriendList friends={filteredFriends} />
+      </FriendRequestDialog>
+      <Divider className={styles.separate} />
+
+      <FriendList
+        friends={data?.data?.friends.filter((friend) => friend.nickname.startsWith(nickname)) ?? []}
+      />
     </Flex>
   );
 };

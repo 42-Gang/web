@@ -1,9 +1,14 @@
+import { SearchParamsOption } from 'ky';
+
 import {
   HttpResponse,
   FriendList,
   UserInfo,
   TournamentGameList,
   TournamentRoundType,
+  UsersSearchPayload,
+  UserList,
+  FriendRequestUserList,
 } from '@/api/types';
 
 import { fetcher } from './fetcher';
@@ -14,6 +19,20 @@ const usersQueryKeys = {
     queryKey: ['users-me'],
     queryFn: () => fetcher.get<HttpResponse<UserInfo>>(`v1/users/me`),
   }),
+  usersSearch: (payload: UsersSearchPayload) => ({
+    _def: 'users-search',
+    queryKey: ['users-search', payload],
+    queryFn: () => {
+      const searchParams: SearchParamsOption = {
+        status: payload.status,
+        exceptMe: payload.exceptMe,
+      };
+      return fetcher.get<HttpResponse<UserList>>(`v1/users/search/${payload.nickname}`, {
+        searchParams,
+      });
+    },
+    enabled: payload.nickname.length > 1,
+  }),
 };
 
 const friendsQueryKeys = {
@@ -22,6 +41,11 @@ const friendsQueryKeys = {
     queryKey: ['friend-me'],
     queryFn: () =>
       fetcher.get<HttpResponse<FriendList>>(`v1/friends/me?status=ACCEPTED&status=BLOCKED`),
+  }),
+  friendsRequests: () => ({
+    _def: 'friend-requests',
+    queryKey: ['friend-requests'],
+    queryFn: () => fetcher.get<HttpResponse<FriendRequestUserList>>(`v1/friends/requests`),
   }),
 };
 
