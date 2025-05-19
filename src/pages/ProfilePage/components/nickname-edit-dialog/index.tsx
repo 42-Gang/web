@@ -45,7 +45,8 @@ export const NicknameEditDialog = ({ children }: PropsWithChildren) => {
         <input
           className={styles.input}
           type="text"
-          placeholder="Maximum of 10 characters allowed"
+          placeholder="Max 8 letters!"
+          maxLength={8}
           value={nickname}
           onChange={(e) => setNickname(e.target.value)}
         />

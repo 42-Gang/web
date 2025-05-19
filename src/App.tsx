@@ -123,7 +123,14 @@ const App = () => {
       element: (
         <QueryClientProvider>
           <Outlet />
-          <Toaster position="top-right" />
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              classNames: {
+                toast: 'pixel-toast',
+              },
+            }}
+          />
         </QueryClientProvider>
       ),
       children: [...publicRoutes, ...privateRoutes],
