@@ -31,7 +31,6 @@ export const startButton = style({
   color: theme.color.matched,
   border: `${rem(2)} solid ${theme.color.white}`,
   borderRadius: rem(8),
-  cursor: 'pointer',
   transition: 'transform 0.2s ease',
 
   selectors: {

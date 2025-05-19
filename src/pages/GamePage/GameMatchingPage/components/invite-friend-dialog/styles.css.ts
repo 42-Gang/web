@@ -2,6 +2,15 @@ import { style } from '@vanilla-extract/css';
 
 import { rem, theme } from '@/styles';
 
+export const fixedDialogContent = style({
+  width: rem(495),
+  height: rem(385),
+  padding: rem(24),
+  borderRadius: rem(12),
+  display: 'flex',
+  flexDirection: 'column',
+});
+
 export const title = style({
   marginBottom: rem(20),
   color: theme.color.white,
@@ -19,6 +28,7 @@ export const input = style({
   padding: `0 ${rem(12)}`,
   boxSizing: 'border-box',
   textAlign: 'center',
+  margin: `0 auto ${rem(24)}`,
 });
 
 export const userList = style({
@@ -34,6 +44,7 @@ export const userList = style({
 export const userCard = style({
   width: rem(340),
   height: rem(60),
+  margin: '0 auto',
   border: `${rem(3)} solid ${theme.color.white}`,
   borderRadius: rem(10),
   display: 'flex',

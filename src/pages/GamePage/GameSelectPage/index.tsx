@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Flex } from '@/components/system';
-import { BackButton, Branding, GameLicense } from '@/components/ui';
+import { BackButton, Branding, GameLicense, StepNavigator } from '@/components/ui';
 import { PATH } from '@/constants';
 
 import * as styles from './styles.css';
@@ -25,7 +25,6 @@ export const GameSelectPage = () => {
     setMode(selectedMode);
     if (option) {
       const path = option === 'auto' ? PATH.GAME_AUTO_MATCHING : PATH.GAME_CUSTOM_MATCHING;
-
       navigate(`${path}?mode=${selectedMode}`);
     }
   };
@@ -38,26 +37,67 @@ export const GameSelectPage = () => {
     <Flex direction="column" alignItems="center" style={{ height: '100%' }}>
       <BackButton />
       <Branding className={styles.branding} />
+
       {step === 'autoCustomSelect' && (
-        <div className={styles.buttonWrapper}>
-          <button className={styles.autoCustomButton} onClick={() => handleOptionSelect('auto')}>
-            AUTO
-          </button>
-          <button className={styles.autoCustomButton} onClick={() => handleOptionSelect('custom')}>
-            CUSTOM
-          </button>
-        </div>
+        <StepNavigator
+          items={['AUTO', 'CUSTOM']}
+          initial={0}
+          onSelect={(index) => handleOptionSelect(index === 0 ? 'auto' : 'custom')}
+          renderItem={({
+            text,
+            isCurrent,
+            onClick,
+            onMouseEnter,
+            onMouseLeave,
+            onFocus,
+            onBlur,
+          }) => (
+            <button
+              className={styles.autoCustomButton}
+              {...(isCurrent && { 'data-current': 'true' })}
+              style={{ outline: isCurrent ? '2px solid white' : 'none' }}
+              onClick={onClick}
+              onMouseEnter={onMouseEnter}
+              onMouseLeave={onMouseLeave}
+              onFocus={onFocus}
+              onBlur={onBlur}
+            >
+              {text}
+            </button>
+          )}
+          renderContainer={({ children }) => <div className={styles.buttonWrapper}>{children}</div>}
+        />
       )}
 
       {step === 'modeSelect' && (
-        <div className={styles.modeWrapper}>
-          <button className={styles.vsButton} onClick={() => handleModeSelect('1vs1')} />
-          <button
-            className={styles.tournamentButton}
-            onClick={() => handleModeSelect('tournament')}
-          />
-        </div>
+        <StepNavigator
+          items={['1VS1', 'TOURNAMENT']}
+          initial={0}
+          onSelect={(index) => handleModeSelect(index === 0 ? '1vs1' : 'tournament')}
+          renderItem={({
+            text,
+            isCurrent,
+            onClick,
+            onMouseEnter,
+            onMouseLeave,
+            onFocus,
+            onBlur,
+          }) => (
+            <button
+              className={text === '1VS1' ? styles.vsButton : styles.tournamentButton}
+              {...(isCurrent && { 'data-current': 'true' })}
+              style={{ outline: isCurrent ? '2px solid white' : 'none' }}
+              onClick={onClick}
+              onMouseEnter={onMouseEnter}
+              onMouseLeave={onMouseLeave}
+              onFocus={onFocus}
+              onBlur={onBlur}
+            />
+          )}
+          renderContainer={({ children }) => <div className={styles.modeWrapper}>{children}</div>}
+        />
       )}
+
       <GameLicense className={styles.license} />
     </Flex>
   );
