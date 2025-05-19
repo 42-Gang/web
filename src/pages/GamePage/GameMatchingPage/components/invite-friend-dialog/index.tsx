@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState , PropsWithChildren } from 'react';
 import { toast } from 'sonner';
 
 import {
@@ -26,7 +26,7 @@ const mockUsers: User[] = [
   { id: 4, nickname: 'Knightmare', avatarUrl: '/assets/images/sample-avatar.png' },
 ];
 
-export const InviteFriendDialog = ({ children }: { children: React.ReactNode }) => {
+export const InviteFriendDialog = ({ children }: PropsWithChildren) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [requestedIds, setRequestedIds] = useState<number[]>([]);
 

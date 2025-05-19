@@ -1,5 +1,5 @@
 import * as styles from './styles.css';
-import { InviteFriendDialog } from '../invite-friend';
+import { InviteFriendDialog } from '../invite-friend-dialog';
 
 type UserCardProps = {
   userAvatar?: string;
