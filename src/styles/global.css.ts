@@ -55,7 +55,7 @@ globalStyle('*::-webkit-scrollbar-track', {
 globalStyle('.pixel-toast', {
   fontFamily: 'DungGeunMo',
   color: 'black !important',
-  fontSize: '17px !important',
+  fontSize: '16px !important',
   backgroundColor: 'white !important',
   border: '2px solid black !important',
   borderRadius: '4px !important',
