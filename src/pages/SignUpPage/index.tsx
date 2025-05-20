@@ -1,5 +1,6 @@
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { useMailVerification, useRegister } from '@/api';
 import { Flex } from '@/components/system';
@@ -22,39 +23,39 @@ export const SignUpPage = () => {
 
   const handleMailVerify = () => {
     if (!email) {
-      alert('Please enter your email');
+      toast.error('Please enter your email');
       return;
     }
 
     mailVerifyMutation({ email })
       .then(() => {
-        alert('Verification code sent to your email');
+        toast.success('Verification code sent to your email');
       })
       .catch((error) => {
         console.error('Error sending verification code:', error);
-        alert('Failed to send verification code');
+        toast.error('Failed to send verification code');
       });
   };
 
   const handleSelect = () => {
     if (!email || !mailVerificationCode || !password || !confirmPassword || !nickname) {
-      alert('Please fill in all fields');
+      toast.error('Please fill in all fields');
       return;
     }
 
     if (password !== confirmPassword) {
-      alert('Passwords do not match');
+      toast.error('Passwords do not match');
       return;
     }
 
     registerMutation({ email, password, nickname, mailVerificationCode })
       .then(() => {
-        alert('Registration successful');
+        toast.success('Registration successful');
         navigate('/login', { replace: true });
       })
       .catch((error) => {
         console.error('Error during registration:', error);
-        alert('Registration failed');
+        toast.error('Registration failed');
       });
   };
 

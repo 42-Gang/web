@@ -13,7 +13,7 @@ export const SignInPage = () => {
   const handleSelect = (index: number) => {
     switch (index) {
       case 0:
-        toast('Google sign-in is not implemented yet');
+        toast.error('Google sign-in is not implemented yet');
         break;
       case 1:
         navigate(PATH.SIGNIN_EMAIL);
