@@ -29,7 +29,7 @@ export const SignUpPage = () => {
 
     mailVerifyMutation({ email })
       .then(() => {
-        toast.error('Verification code sent to your email');
+        toast.success('Verification code sent to your email');
       })
       .catch((error) => {
         console.error('Error sending verification code:', error);
@@ -50,7 +50,7 @@ export const SignUpPage = () => {
 
     registerMutation({ email, password, nickname, mailVerificationCode })
       .then(() => {
-        toast.error('Registration successful');
+        toast.success('Registration successful');
         navigate('/login', { replace: true });
       })
       .catch((error) => {
