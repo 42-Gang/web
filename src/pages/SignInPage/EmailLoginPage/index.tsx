@@ -62,7 +62,7 @@ export const EmailSignInPage = () => {
         </div>
 
         <DefaultStepNavigator
-          style={{ marginTop: '12px' }}
+          style={{ marginTop: '12px', outline: 'none' }}
           items={['CONTINUE', 'GO BACK']}
           onSelect={handleSelect}
         />

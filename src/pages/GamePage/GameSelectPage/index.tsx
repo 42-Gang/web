@@ -65,7 +65,11 @@ export const GameSelectPage = () => {
               {text}
             </button>
           )}
-          renderContainer={({ children }) => <div className={styles.buttonWrapper}>{children}</div>}
+          renderContainer={({ children, onFocus, onBlur }) => (
+            <div className={styles.buttonWrapper} onFocus={onFocus} onBlur={onBlur} tabIndex={0}>
+              {children}
+            </div>
+          )}
         />
       )}
 
@@ -94,7 +98,11 @@ export const GameSelectPage = () => {
               onBlur={onBlur}
             />
           )}
-          renderContainer={({ children }) => <div className={styles.modeWrapper}>{children}</div>}
+          renderContainer={({ children, onFocus, onBlur }) => (
+            <div className={styles.modeWrapper} onFocus={onFocus} onBlur={onBlur} tabIndex={0}>
+              {children}
+            </div>
+          )}
         />
       )}
 

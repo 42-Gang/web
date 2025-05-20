@@ -25,7 +25,11 @@ export const LandingPage = () => {
   return (
     <Flex direction="column" justifyContent="space-between" style={{ height: '100%' }}>
       <Branding className={styles.branding} />
-      <DefaultStepNavigator items={['SIGN IN', 'SIGN UP']} onSelect={handleSelect} />
+      <DefaultStepNavigator
+        items={['SIGN IN', 'SIGN UP']}
+        onSelect={handleSelect}
+        style={{ outline: 'none' }}
+      />
       <GameLicense className={styles.license} />
     </Flex>
   );
