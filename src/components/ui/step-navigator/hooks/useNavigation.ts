@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 
 type NavigationState = {
   selected: number;
@@ -10,6 +10,8 @@ type NavigationActions = {
   onSelect: (index: number) => void;
   onHover: (index: number | null) => void;
   onFocus: (index: number | null) => void;
+  onContainerFocus: () => void;
+  onContainerBlur: () => void;
 };
 
 type UseNavigationProps = {
@@ -20,6 +22,7 @@ type UseNavigationProps = {
 
 export const useNavigation = ({ items, onSelect, initial = 0 }: UseNavigationProps) => {
   const validInitial = items.length > 0 ? Math.min(Math.max(0, initial), items.length - 1) : 0;
+  const isFocused = useRef(false);
 
   const [state, setState] = useState<NavigationState>({
     selected: validInitial,
@@ -31,7 +34,7 @@ export const useNavigation = ({ items, onSelect, initial = 0 }: UseNavigationPro
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (items.length === 0) return;
+      if (items.length === 0 || !isFocused.current) return;
 
       if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
         e.preventDefault();
@@ -84,6 +87,12 @@ export const useNavigation = ({ items, onSelect, initial = 0 }: UseNavigationPro
     },
     onFocus: (index: number | null) => {
       setState((prev) => ({ ...prev, focused: index }));
+    },
+    onContainerFocus: () => {
+      isFocused.current = true;
+    },
+    onContainerBlur: () => {
+      isFocused.current = false;
     },
   };
 
