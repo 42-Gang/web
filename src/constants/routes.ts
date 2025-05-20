@@ -8,6 +8,7 @@ export const PATH = {
   GAME_SELECT: '/game/select',
   GAME_AUTO_MATCHING: '/game/auto/matching',
   GAME_CUSTOM_MATCHING: '/game/custom/matching',
+  TOURNAMENT: '/game/tournament',
 
   FRIEND: '/friend',
   FRIEND_CHATROOM: '/friend/chatroom',

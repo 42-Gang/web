@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useMailVerification, useRegister } from '@/api';
 import { Flex } from '@/components/system';
 import { Branding } from '@/components/ui';
+import { BackButton } from '@/components/ui/back-button';
 
 import * as styles from './styles.css';
 
@@ -64,6 +65,7 @@ export const SignUpPage = () => {
 
   return (
     <Flex direction="column" justifyContent="space-between" style={{ height: '100%' }}>
+      <BackButton />
       <Branding className={styles.branding} />
 
       <form className={styles.form} onSubmit={handleSubmit}>
