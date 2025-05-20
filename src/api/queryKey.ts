@@ -9,6 +9,7 @@ import {
   UsersSearchPayload,
   UserList,
   FriendRequestUserList,
+  ChatHistory,
 } from '@/api/types';
 
 import { fetcher } from './fetcher';
@@ -57,8 +58,25 @@ const gameQueryKeys = {
   }),
 };
 
+const chatQueryKeys = {
+  chatHistory: (roomId: string) => ({
+    _def: 'chat-history',
+    queryKey: ['chat-history', roomId],
+    queryFn: (): Promise<HttpResponse<ChatHistory>> => fetcher.get(`/v1/chat/${roomId}/messages`),
+    enabled: !!roomId,
+  }),
+
+  chatDmRoomId: (userId: number, friendId: number) => ({
+    _def: 'chat-dm-room-id',
+    queryKey: ['chat-dm-room-id', userId, friendId],
+    queryFn: (): Promise<HttpResponse<{ roomId: number }>> =>
+      fetcher.get(`/v1/chat/room/dm?userId=${userId}&friendId=${friendId}`),
+  }),
+};
+
 export const queryKeys = {
   ...usersQueryKeys,
   ...friendsQueryKeys,
   ...gameQueryKeys,
+  ...chatQueryKeys,
 };

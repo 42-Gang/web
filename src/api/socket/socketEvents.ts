@@ -1,7 +1,8 @@
-import { UserStatus } from '@/api/types';
+import { UserStatus , MessageFromServer } from '@/api/types';
 
 type SocketEventData = {
   'friend-status': UserStatus;
+  message: MessageFromServer;
 };
 
 export type ServerToClientEvents = {
@@ -11,5 +12,5 @@ export type ServerToClientEvents = {
 };
 
 export interface ClientToServerEvents {
-  sendMessage: (data: { text: string }) => void;
+  message: (data: { roomId: number; contents: string }) => void;
 }
