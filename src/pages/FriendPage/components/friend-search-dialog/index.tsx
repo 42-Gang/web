@@ -22,7 +22,7 @@ export const FriendSearchDialog = ({ children }: PropsWithChildren) => {
   const { data } = useUsersSearch({
     nickname,
     exceptMe: true,
-    status: 'NONE',
+    status: ['NONE'],
   });
 
   const debouncedNickname = useDebounce((value: string) => {

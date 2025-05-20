@@ -33,6 +33,7 @@ export const SignInPage = () => {
       <DefaultStepNavigator
         items={['CONTINUE WITH GOOGLE', 'CONTINUE WITH EMAIL', 'GO BACK']}
         onSelect={handleSelect}
+        style={{ outline: 'none' }}
       />
 
       <GameLicense className={styles.license} />

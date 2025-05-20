@@ -22,11 +22,14 @@ export const DefaultStepNavigator = ({
       items={items}
       onSelect={onSelect}
       initial={initial}
-      renderContainer={({ children }) => (
+      renderContainer={({ children, onFocus, onBlur }) => (
         <nav
           className={styles.navigation}
           aria-label="단계 네비게이터"
           role="navigation"
+          onFocus={onFocus}
+          onBlur={onBlur}
+          tabIndex={0}
           {...props}
         >
           <ul className={styles.list} role="list">

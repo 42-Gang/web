@@ -17,7 +17,11 @@ type StepNavigatorProps = {
     onBlur: () => void;
     onClick: () => void;
   }) => ReactNode;
-  renderContainer: (props: { children: ReactNode }) => ReactNode;
+  renderContainer: (props: {
+    children: ReactNode;
+    onFocus: () => void;
+    onBlur: () => void;
+  }) => ReactNode;
 };
 
 const StepNavigator = ({
@@ -47,7 +51,11 @@ const StepNavigator = ({
     }),
   );
 
-  return renderContainer({ children: itemsList });
+  return renderContainer({
+    children: itemsList,
+    onFocus: actions.onContainerFocus,
+    onBlur: actions.onContainerBlur,
+  });
 };
 
 export { StepNavigator };
