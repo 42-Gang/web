@@ -32,14 +32,33 @@ export const nickname = style({
 });
 
 export const blockButton = style({
-  background: `url('/assets/images/base-button-hover.png') no-repeat center`,
-  backgroundSize: 'contain',
-  width: rem(100),
+  ...theme.layout.center,
+  position: 'relative',
+  width: rem(110),
   height: rem(40),
   color: theme.color.white,
-  fontWeight: 'bold',
-  fontSize: rem(16),
-  transition: 'opacity 0.2s ease',
-  marginTop: rem(30),
-  textShadow: '0 0 0.25rem rgba(0, 0, 0, 0.6)',
+  fontSize: rem(18),
+  background: `url('/assets/images/base-button-normal.png') no-repeat center`,
+  backgroundSize: 'contain',
+  transition: 'opacity 250ms ease',
+  zIndex: theme.zIndex.default,
+
+  selectors: {
+    '&::after': {
+      content: '',
+      position: 'absolute',
+      inset: 0,
+      opacity: 0,
+      pointerEvents: 'none',
+      transition: 'opacity 250ms ease',
+      background: "url('/assets/images/base-button-hover.png') center/contain no-repeat",
+      zIndex: theme.zIndex.behind,
+    },
+    '&:hover::after': { opacity: 1 },
+    '&[data-selected="true"]::after': { opacity: 1 },
+  },
+});
+
+export const buttonText = style({
+  transform: `translateY(-${rem(2)})`,
 });
