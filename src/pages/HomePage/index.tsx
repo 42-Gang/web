@@ -23,6 +23,7 @@ export const HomePage = () => {
         <DefaultStepNavigator
           items={['START GAME', 'HISTORY', 'FRIEND', 'PROFILE']}
           onSelect={handleSelect}
+          style={{ outline: 'none' }}
         />
         <GameLicense className={styles.license} />
       </Flex>

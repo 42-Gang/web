@@ -54,7 +54,7 @@ export const verifyButton = style({
   ...theme.layout.center,
   position: 'absolute',
   top: '50%',
-  right: 0,
+  left: 220,
   transform: `translateY(-50%)`,
   width: rem(110),
   height: rem(40),
@@ -62,11 +62,23 @@ export const verifyButton = style({
   fontSize: rem(18),
   background: `url('/assets/images/base-button-normal.png') no-repeat center`,
   backgroundSize: 'contain',
-  opacity: 1,
   transition: 'opacity 250ms ease',
 
-  ':hover': {
-    opacity: 0.7,
+  zIndex: theme.zIndex.default,
+
+  selectors: {
+    '&::after': {
+      content: '',
+      position: 'absolute',
+      inset: 0,
+      opacity: 0,
+      pointerEvents: 'none',
+      transition: 'opacity 250ms ease',
+      background: "url('/assets/images/base-button-hover.png') center/contain no-repeat",
+      zIndex: theme.zIndex.behind,
+    },
+    '&:hover::after': { opacity: 1 },
+    '&[data-selected="true"]::after': { opacity: 1 },
   },
 });
 
@@ -76,16 +88,28 @@ export const buttonText = style({
 
 export const submitButton = style({
   ...theme.layout.center,
+  position: 'relative',
   padding: `${rem(10)} ${rem(20)}`,
   marginTop: rem(20),
   color: theme.color.white,
   fontSize: rem(22),
   background: `url('/assets/images/base-button-normal.png') no-repeat center`,
   backgroundSize: 'contain',
-  opacity: 1,
-  transition: 'opacity 250ms ease',
+  backgroundColor: 'transparent',
+  zIndex: theme.zIndex.default,
 
-  ':hover': {
-    opacity: 0.7,
+  selectors: {
+    '&::after': {
+      content: '',
+      position: 'absolute',
+      inset: 0,
+      opacity: 0,
+      pointerEvents: 'none',
+      transition: 'opacity 250ms ease',
+      background: "url('/assets/images/base-button-hover.png') center/contain no-repeat",
+      zIndex: theme.zIndex.behind,
+    },
+    '&:hover::after': { opacity: 1 },
+    '&[data-selected="true"]::after': { opacity: 1 },
   },
 });
