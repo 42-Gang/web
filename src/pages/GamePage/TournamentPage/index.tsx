@@ -1,109 +1,79 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import type { Match } from '@/api/types/game';
+import type { TournamentRoundType } from '@/api/types/game';
+import { BackButton } from '@/components/ui/back-button';
 
+import { roundTwoData } from './__mocks__/round2';
+import { roundFourData } from './__mocks__/round4';
 import { ChatBox } from './components/Chat/ChatBox';
 import { ChatInput } from './components/Chat/ChatInput';
 import { MatchNode } from './components/MatchNode';
 import * as styles from './styles.css';
 
 
-const tournamentData = {
-  id: 'final',
-  winnerId: 'pong',
-  player1: {
-    id: 'pong',
-    name: 'PONG',
-    avatarUrl: '/assets/images/sample-avatar.png',
-    win: 10,
-    lose: 3,
-    tournament: 1,
-  },
-  player2: {
-    id: 'ding',
-    name: 'Ding',
-    avatarUrl: '/assets/images/sample-avatar.png',
-    win: 7,
-    lose: 5,
-    tournament: 2,
-  },
-  children: [
-    {
-      id: 'semi1',
-      winnerId: 'pong',
-      player1: {
-        id: 'pong',
-        name: 'PONG',
-        avatarUrl: '/assets/images/sample-avatar.png',
-        win: 10,
-        lose: 3,
-        tournament: 1,
-      },
-      player2: {
-        id: 'ping',
-        name: 'PING',
-        avatarUrl: '/assets/images/sample-avatar.png',
-        win: 5,
-        lose: 5,
-        tournament: 0,
-      },
-    },
-    {
-      id: 'semi2',
-      winnerId: 'ding',
-      player1: {
-        id: 'ding',
-        name: 'Ding',
-        avatarUrl: '/assets/images/sample-avatar.png',
-        win: 7,
-        lose: 5,
-        tournament: 2,
-      },
-      player2: {
-        id: 'dong',
-        name: 'Dong',
-        avatarUrl: '/assets/images/sample-avatar.png',
-        win: 4,
-        lose: 6,
-        tournament: 0,
-      },
-    },
-  ] as [Match, Match],
-};
-
 export const TournamentPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
   const [messages, setMessages] = useState<string[]>([]);
   const [readyIds, setReadyIds] = useState<string[]>([]);
 
+  const round = (searchParams.get('round') as TournamentRoundType) ?? 'ROUND_4';
+  const tournamentData = round === 'ROUND_2' ? roundTwoData : roundFourData;
+
+  const currentUserId = 'pong'; // TODO: 로그인 유저 ID로 교체 예정
+
   const handleSend = (text: string) => {
-    if (!text.trim()) return;
-    setMessages((prev) => [...prev, text]);
+    if (text.trim()) setMessages((prev) => [...prev, text]);
   };
 
   const handleReady = () => {
-    const myId = 'pong'; // TODO: 실제 사용자 ID로 바꿔야 함
-    setReadyIds((prev) => (prev.includes(myId) ? prev : [...prev, myId]));
+    setReadyIds((prev) => (prev.includes(currentUserId) ? prev : [...prev, currentUserId]));
   };
 
-  const handleBack = () => {
-    navigate(-1);
-  };
+  // 확인용 버튼 (API 연동시 삭제 예정)
+  const renderDevToggleButtons = () => (
+    <div style={{ position: 'absolute', top: 4, right: 10 }}>
+      <button
+        style={{ padding: '4px 8px', fontSize: '13px' }}
+        onClick={() => navigate('/game/tournament?round=ROUND_2')}
+      >
+        Round 2 보기
+      </button>
+      <button
+        style={{ padding: '4px 8px', fontSize: '13px' }}
+        onClick={() => navigate('/game/tournament?round=ROUND_4')}
+      >
+        Round 4 보기
+      </button>
+    </div>
+  );
 
   return (
     <div className={styles.container}>
-      <button className={styles.backButton} onClick={handleBack} aria-label="Go back" />
+      {import.meta.env.MODE === 'development' && renderDevToggleButtons()}
+
+      <BackButton />
+
       <div className={styles.bracketSection}>
         <div className={styles.titleWrapper}>
           <h1 className={styles.title}>Tournament</h1>
-          <h2 className={styles.round}>Round 2</h2>
+          <h2 className={styles.round}>{round === 'ROUND_2' ? 'Round 2' : 'Round 4'}</h2>
         </div>
-        <MatchNode match={tournamentData} isRoot readyIds={readyIds} />
+
+        <MatchNode
+          match={tournamentData}
+          isRoot
+          readyIds={readyIds}
+          currentUserId={currentUserId}
+        />
+
         <div className={styles.readyButtonWrapper}>
-          <button className={styles.readyButton} onClick={handleReady} aria-label="Mark as ready" />
+          <button className={styles.readyButton} onClick={handleReady} aria-label="Ready" />
         </div>
       </div>
+
       <div className={styles.chatSection}>
         <ChatBox messages={messages} />
         <ChatInput onSend={handleSend} />

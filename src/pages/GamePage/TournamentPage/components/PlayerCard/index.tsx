@@ -1,15 +1,8 @@
 import { useState } from 'react';
 
-import * as styles from './styles.css';
+import type { Player } from '@/api/types/game';
 
-export type Player = {
-  id: string;
-  name: string;
-  avatarUrl: string;
-  win: number;
-  lose: number;
-  tournament: number;
-};
+import * as styles from './styles.css';
 
 type PlayerCardProps = {
   player?: Player;
@@ -25,13 +18,22 @@ export const PlayerCard = ({
   isBottomPosition = false,
   isReady = false,
 }: PlayerCardProps) => {
-  const [showPopup, setShowPopup] = useState(false);
+  const [showPopup, setShowPopup] = useState<boolean>(false);
 
   if (!player) return <div className={isLarge ? styles.emptyLarge : styles.empty} />;
 
+  const { name, avatarUrl, win, lose, tournament } = player;
+
   const wrapperClass = isLarge ? styles.cardLarge : styles.card;
-  const borderClass = isReady ? styles.avatarBorder : undefined;
-  const avatarClass = styles.avatar;
+  const avatarWrapperClass = [styles.avatarWrapper, isReady && styles.avatarBorder]
+    .filter(Boolean)
+    .join(' ');
+
+  const popupClass = isLarge
+    ? styles.popupBelowLarge
+    : isBottomPosition
+      ? styles.popupAbove
+      : styles.popupBelow;
 
   return (
     <div
@@ -39,29 +41,17 @@ export const PlayerCard = ({
       onMouseEnter={() => setShowPopup(true)}
       onMouseLeave={() => setShowPopup(false)}
     >
-      <div className={`${styles.avatarWrapper} ${borderClass}`}>
-        <img
-          src={player.avatarUrl}
-          alt={`${player.name}의 프로필 이미지`}
-          className={avatarClass}
-        />
+      <div className={avatarWrapperClass}>
+        <img src={avatarUrl} alt={`${name}의 프로필 이미지`} className={styles.avatar} />
         {showPopup && (
-          <div
-            className={
-              isLarge
-                ? styles.popupBelowLarge
-                : isBottomPosition
-                  ? styles.popupAbove
-                  : styles.popupBelow
-            }
-          >
-            <div>win: {player.win}</div>
-            <div>lose: {player.lose}</div>
-            <div>tournament: {player.tournament}</div>
+          <div className={popupClass}>
+            <div>win: {win}</div>
+            <div>lose: {lose}</div>
+            <div>tournament: {tournament}</div>
           </div>
         )}
       </div>
-      <span className={styles.name}>{player.name}</span>
+      <span className={styles.name}>{name}</span>
     </div>
   );
 };

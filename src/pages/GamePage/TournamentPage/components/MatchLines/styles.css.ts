@@ -50,6 +50,14 @@ export const horizontalLineLeft = style({
   backgroundColor: theme.color.white,
 });
 
+export const horizontalLineLeftHighlight = style({
+  ...baseLine,
+  width: rem(96),
+  top: rem(60),
+  left: '50%',
+  backgroundColor: theme.color.yellow,
+});
+
 export const horizontalLineRight = style({
   ...baseLine,
   width: rem(80),
@@ -58,20 +66,10 @@ export const horizontalLineRight = style({
   backgroundColor: theme.color.white,
 });
 
-export const horizontalLineLeftHighlight = style({
-  ...baseLine,
-  width: rem(96),
-  top: rem(60),
-  left: '50%',
-  backgroundColor: theme.color.yellow,
-  zIndex: 1,
-});
-
 export const horizontalLineRightHighlight = style({
   ...baseLine,
   width: rem(96),
   top: rem(60),
   right: '50%',
   backgroundColor: theme.color.yellow,
-  zIndex: 1,
 });

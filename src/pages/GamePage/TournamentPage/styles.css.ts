@@ -55,13 +55,5 @@ export const readyButton = style({
   width: rem(120),
   height: rem(50),
   background: `url('/assets/images/ready-button.png') center / contain no-repeat`,
-});
-
-export const backButton = style({
-  position: 'absolute',
-  top: rem(12),
-  left: rem(12),
-  width: rem(30),
-  height: rem(30),
-  background: `url('/assets/images/back-button.svg') center / contain no-repeat`,
+  marginTop: rem(-12),
 });
