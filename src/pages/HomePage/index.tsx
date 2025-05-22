@@ -19,7 +19,9 @@ export const HomePage = () => {
   return (
     <>
       <Flex direction="column" justifyContent="space-between" style={{ height: '100%' }}>
+        <img src="/assets/images/gun.svg" alt="gunImage" className={styles.gunLeft} />
         <Branding className={styles.branding} />
+        <img src="/assets/images/gun.svg" alt="gunImage" className={styles.gunRight} />
         <DefaultStepNavigator
           items={['START GAME', 'HISTORY', 'FRIEND', 'PROFILE']}
           onSelect={handleSelect}
