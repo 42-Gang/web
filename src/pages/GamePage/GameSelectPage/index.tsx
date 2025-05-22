@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Flex } from '@/components/system';
@@ -11,27 +11,20 @@ type Step = 'autoCustomSelect' | 'modeSelect';
 
 export const GameSelectPage = () => {
   const [step, setStep] = useState<Step>('autoCustomSelect');
-  const [option, setOption] = useState<'auto' | 'custom' | null>(null);
-  const [mode, setMode] = useState<'1vs1' | 'tournament' | null>(null);
+  const [path, setPath] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
-  const handleOptionSelect = (selected: 'auto' | 'custom') => {
-    setOption(selected);
+  const handleOptionSelect = (selectedIndex: number) => {
+    const selectedPath = selectedIndex === 0 ? PATH.GAME_AUTO_MATCHING : PATH.GAME_CUSTOM_MATCHING;
+    setPath(selectedPath);
     setStep('modeSelect');
   };
 
-  const handleModeSelect = (selectedMode: '1vs1' | 'tournament') => {
-    setMode(selectedMode);
-    if (option) {
-      const path = option === 'auto' ? PATH.GAME_AUTO_MATCHING : PATH.GAME_CUSTOM_MATCHING;
-      navigate(`${path}?mode=${selectedMode}`);
-    }
+  const handleModeSelect = (selected: '1vs1' | 'tournament') => {
+    if (!path) return;
+    navigate(`${path}?mode=${selected}`);
   };
-
-  useEffect(() => {
-    // TODO: mode + option 사용 예정
-  }, [mode, option]);
 
   return (
     <Flex direction="column" alignItems="center" style={{ height: '100%' }}>
@@ -42,7 +35,7 @@ export const GameSelectPage = () => {
         <StepNavigator
           items={['AUTO', 'CUSTOM']}
           initial={0}
-          onSelect={(index) => handleOptionSelect(index === 0 ? 'auto' : 'custom')}
+          onSelect={handleOptionSelect}
           renderItem={({
             text,
             isCurrent,
@@ -96,7 +89,9 @@ export const GameSelectPage = () => {
               onMouseLeave={onMouseLeave}
               onFocus={onFocus}
               onBlur={onBlur}
-            />
+            >
+              {text}
+            </button>
           )}
           renderContainer={({ children, onFocus, onBlur }) => (
             <div className={styles.modeWrapper} onFocus={onFocus} onBlur={onBlur} tabIndex={0}>

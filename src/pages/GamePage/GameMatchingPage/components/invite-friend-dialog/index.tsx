@@ -1,6 +1,7 @@
 import { useState, PropsWithChildren } from 'react';
 import { toast } from 'sonner';
 
+import { useFriendsMe } from '@/api';
 import {
   Dialog,
   DialogClose,
@@ -13,31 +14,21 @@ import {
 
 import * as styles from './styles.css';
 
-type User = {
-  id: number;
-  nickname: string;
-  avatarUrl: string;
-};
-
-const mockUsers: User[] = [
-  { id: 1, nickname: 'Woongbi', avatarUrl: '/assets/images/sample-avatar.png' },
-  { id: 2, nickname: 'WOfagonSlayer', avatarUrl: '/assets/images/sample-avatar.png' },
-  { id: 3, nickname: 'PixelQueen', avatarUrl: '/assets/images/sample-avatar.png' },
-  { id: 4, nickname: 'Knightmare', avatarUrl: '/assets/images/sample-avatar.png' },
-];
-
 export const InviteFriendDialog = ({ children }: PropsWithChildren) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [requestedIds, setRequestedIds] = useState<number[]>([]);
 
-  const filteredUsers = mockUsers.filter((user) =>
+  const { data } = useFriendsMe();
+  const friends = data?.data?.friends ?? [];
+
+  const filteredUsers = friends.filter((user) =>
     user.nickname.toLowerCase().startsWith(searchTerm.toLowerCase()),
   );
 
   const handleRequest = (id: number, nickname: string) => {
     if (requestedIds.includes(id)) return;
     setRequestedIds((prev) => [...prev, id]);
-    toast.success(`Friend request sent to ${nickname}`);
+    toast.success(`You invited ${nickname}`);
   };
 
   return (
@@ -58,19 +49,19 @@ export const InviteFriendDialog = ({ children }: PropsWithChildren) => {
 
           <div className={styles.userList}>
             {filteredUsers.map((user) => (
-              <div key={user.id} className={styles.userCard}>
+              <div key={user.friendId} className={styles.userCard}>
                 <div className={styles.leftInfo}>
                   <img src={user.avatarUrl} alt={user.nickname} className={styles.avatar} />
                   <span className={styles.nickname}>{user.nickname}</span>
                 </div>
                 <button
                   className={
-                    requestedIds.includes(user.id)
+                    requestedIds.includes(user.friendId)
                       ? styles.requestedButton
                       : styles.inviteRequestButton
                   }
-                  onClick={() => handleRequest(user.id, user.nickname)}
-                  aria-label="Send friend request."
+                  onClick={() => handleRequest(user.friendId, user.nickname)}
+                  aria-label="invite friend."
                 />
               </div>
             ))}
