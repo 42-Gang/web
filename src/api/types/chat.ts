@@ -16,3 +16,7 @@ export type MessageFromServer = {
 export type ChatHistory = {
   chatHistory: ChatMessage[];
 };
+
+export type ChatDmRoomInfo = {
+  roomId: number;
+};

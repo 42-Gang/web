@@ -10,6 +10,7 @@ import {
   UserList,
   FriendRequestUserList,
   ChatHistory,
+  ChatDmRoomInfo,
 } from '@/api/types';
 
 import { fetcher } from './fetcher';
@@ -62,14 +63,16 @@ const chatQueryKeys = {
   chatHistory: (roomId: string) => ({
     _def: 'chat-history',
     queryKey: ['chat-history', roomId],
-    queryFn: (): Promise<HttpResponse<ChatHistory>> => fetcher.get(`/v1/chat/${roomId}/messages`),
-    enabled: !!roomId,
+    queryFn: (): Promise<HttpResponse<ChatHistory>> =>
+      roomId
+        ? fetcher.get(`/v1/chat/${roomId}/messages`)
+        : Promise.reject(new Error('roomId is undefined')),
   }),
 
   chatDmRoomId: (userId: number, friendId: number) => ({
     _def: 'chat-dm-room-id',
     queryKey: ['chat-dm-room-id', userId, friendId],
-    queryFn: (): Promise<HttpResponse<{ roomId: number }>> =>
+    queryFn: (): Promise<HttpResponse<ChatDmRoomInfo>> =>
       fetcher.get(`/v1/chat/room/dm?userId=${userId}&friendId=${friendId}`),
   }),
 };

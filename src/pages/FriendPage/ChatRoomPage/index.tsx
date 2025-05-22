@@ -34,7 +34,7 @@ export const ChatRoomPage = () => {
         </div>
 
         <div className={styles.friendListWrapper}>
-          <FriendList friends={friends} />
+          {currentFriend && <FriendList friend={currentFriend} />}
         </div>
       </div>
     </div>
