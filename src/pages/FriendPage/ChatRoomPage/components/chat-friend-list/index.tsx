@@ -5,7 +5,7 @@ import { ProfileCard } from '@/components/ui';
 import * as styles from './styles.css';
 
 type FriendListProps = {
-  friend: Friend; // ✅ friends → friend (단일)
+  friend: Friend;
 };
 
 export const FriendList = ({ friend }: FriendListProps) => {
