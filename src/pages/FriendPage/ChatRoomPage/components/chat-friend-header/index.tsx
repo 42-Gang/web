@@ -1,29 +1,32 @@
 import { useState } from 'react';
 
+import { Friend } from '@/api/types';
+
 import * as styles from './styles.css';
 
-export const FriendHeader = ({
-  profileUrl = '/assets/images/sample-avatar.png',
-  nickname = 'PING',
-}: {
-  profileUrl?: string;
-  nickname?: string;
-}) => {
-  const [isBlocked, setIsBlocked] = useState(false);
+type FriendHeaderProps = {
+  friend: Friend;
+};
+
+export const FriendHeader = ({ friend }: FriendHeaderProps) => {
+  const [isBlocked, setIsBlocked] = useState(friend.status === 'BLOCKED');
 
   const handleToggleBlock = () => {
     setIsBlocked((prev) => !prev);
-    // TODO: 실제 block/unblock API 요청
   };
 
   return (
     <div className={styles.header}>
       <div className={styles.profile}>
-        <img src={profileUrl} alt="profile" className={styles.avatar} />
-        <span className={styles.nickname}>{nickname}</span>
+        <img
+          src={friend.avatarUrl || '/assets/images/sample-avatar.png'}
+          alt="friend avatar"
+          className={styles.avatar}
+        />
+        <span className={styles.nickname}>{friend.nickname}</span>
       </div>
-      <button className={styles.blockButton} onClick={handleToggleBlock}>
-        {isBlocked ? 'UNBLOCK' : 'BLOCK'}
+      <button className={styles.blockButton} data-selected={isBlocked} onClick={handleToggleBlock}>
+        <span className={styles.buttonText}>{isBlocked ? 'UNBLOCK' : 'BLOCK'}</span>
       </button>
     </div>
   );

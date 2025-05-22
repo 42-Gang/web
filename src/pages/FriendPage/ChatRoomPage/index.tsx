@@ -1,4 +1,6 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+
+import { useFriendsMe } from '@/api';
 
 import { ChatBox } from './components/chat-box';
 import { FriendHeader } from './components/chat-friend-header';
@@ -7,11 +9,18 @@ import * as styles from './styles.css';
 
 export const ChatRoomPage = () => {
   const navigate = useNavigate();
+  const { data } = useFriendsMe();
+  const friends = data?.data?.friends ?? [];
+
+  const [params] = useSearchParams();
+  const friendId = Number(params.get('friendId'));
+
+  const currentFriend = friends.find((f) => f.friendId === friendId);
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.chatSection}>
-        <FriendHeader />
+        {currentFriend && <FriendHeader friend={currentFriend} />}
         <ChatBox />
       </div>
 
@@ -25,7 +34,7 @@ export const ChatRoomPage = () => {
         </div>
 
         <div className={styles.friendListWrapper}>
-          <FriendList />
+          {currentFriend && <FriendList friend={currentFriend} />}
         </div>
       </div>
     </div>
