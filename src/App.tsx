@@ -33,6 +33,8 @@ import {
   GameCustomMatchingPage,
 } from '@/pages';
 
+import { useSocketNotification } from './api/socket/useSocketNotification';
+
 const App = () => {
   const PublicRoute = () => {
     const { isLogin } = useAuthAtom();
@@ -71,6 +73,8 @@ const App = () => {
       handshake: '/ws/user',
       withToken: true,
     });
+
+    useSocketNotification();
 
     useEffect(() => {
       connect();
