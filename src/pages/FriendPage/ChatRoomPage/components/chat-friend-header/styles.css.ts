@@ -6,7 +6,7 @@ export const header = style({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  marginBottom: rem(12),
+  marginBottom: rem(15),
 });
 
 export const profile = style({
@@ -19,6 +19,7 @@ export const profile = style({
 export const avatar = style({
   width: rem(70),
   height: rem(70),
+  marginRight: rem(20),
   borderRadius: '50%',
   objectFit: 'cover',
   flexShrink: 0,
@@ -26,6 +27,7 @@ export const avatar = style({
 
 export const nickname = style({
   color: theme.color.white,
+  marginRight: rem(30),
   fontSize: rem(28),
   textTransform: 'uppercase',
   letterSpacing: rem(2),
@@ -36,6 +38,8 @@ export const blockButton = style({
   position: 'relative',
   width: rem(110),
   height: rem(40),
+  marginRight: rem(20),
+  marginTop: rem(30),
   color: theme.color.white,
   fontSize: rem(18),
   background: `url('/assets/images/base-button-normal.png') no-repeat center`,

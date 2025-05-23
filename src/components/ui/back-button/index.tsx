@@ -4,11 +4,15 @@ import { PATH } from '@/constants';
 
 import * as styles from './styles.css';
 
-export const BackButton = () => {
+type BackButtonProps = {
+  toPath?: string;
+};
+
+export const BackButton = ({ toPath }: BackButtonProps) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(PATH.HOME);
+    navigate(toPath ?? PATH.HOME);
   };
 
   return <button className={styles.button} onClick={handleClick} aria-label="Go to home page" />;
