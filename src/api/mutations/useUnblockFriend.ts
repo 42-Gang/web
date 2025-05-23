@@ -18,7 +18,9 @@ export const useUnblockFriend = () => {
   return useMutation({
     mutationFn: patchUnblockFriend,
     onSuccess: async (response) => {
-      toast.success(response.message);
+      toast.success(response.message, {
+        position: 'top-left',
+      });
       await queryClient.invalidateQueries(queryKeys.friendsMe());
     },
   });
