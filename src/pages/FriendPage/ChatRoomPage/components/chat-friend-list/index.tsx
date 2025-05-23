@@ -5,25 +5,29 @@ import { ProfileCard } from '@/components/ui';
 import * as styles from './styles.css';
 
 type FriendListProps = {
-  friend: Friend;
+  friends: Friend[];
 };
 
-export const FriendList = ({ friend }: FriendListProps) => {
+export const FriendList = ({ friends }: FriendListProps) => {
   const { status } = useStatusAtom();
-
-  const friendStatus = status.find((s) => s.friendId === friend.friendId)?.status;
 
   return (
     <div className={styles.friendList}>
       <ul className={styles.list}>
         <li className={styles.divider} />
-        <li className={styles.item}>
-          <ProfileCard
-            avatarUrl={friend.avatarUrl || '/assets/images/sample-avatar.png'}
-            nickname={friend.nickname}
-            status={friendStatus}
-          />
-        </li>
+        {friends.map((friend) => {
+          const friendStatus = status.find((s) => s.friendId === friend.friendId)?.status;
+
+          return (
+            <li key={friend.friendId} className={styles.item}>
+              <ProfileCard
+                avatarUrl={friend.avatarUrl || '/assets/images/sample-avatar.png'}
+                nickname={friend.nickname}
+                status={friendStatus}
+              />
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
