@@ -1,6 +1,8 @@
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 import { useFriendsMe } from '@/api';
+import { BackButton } from '@/components/ui';
+import { PATH } from '@/constants';
 
 import { ChatBox } from './components/chat-box';
 import { FriendHeader } from './components/chat-friend-header';
@@ -8,7 +10,6 @@ import { FriendList } from './components/chat-friend-list';
 import * as styles from './styles.css';
 
 export const ChatRoomPage = () => {
-  const navigate = useNavigate();
   const { data } = useFriendsMe();
   const friends = data?.data?.friends ?? [];
 
@@ -21,7 +22,7 @@ export const ChatRoomPage = () => {
     <div className={styles.wrapper}>
       <div className={styles.sidebar}>
         <div className={styles.header}>
-          <button className={styles.button} aria-label="채팅 나가기" onClick={() => navigate(-1)} />
+          <BackButton toPath={PATH.FRIEND} />
         </div>
 
         <div className={styles.friendListWrapper}>
