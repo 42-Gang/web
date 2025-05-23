@@ -1,5 +1,5 @@
-import { useState } from 'react';
-
+import { useBlockFriend } from '@/api/mutations/useBlockFriend';
+import { useUnblockFriend } from '@/api/mutations/useUnblockFriend';
 import { Friend } from '@/api/types';
 
 import * as styles from './styles.css';
@@ -9,10 +9,19 @@ type FriendHeaderProps = {
 };
 
 export const FriendHeader = ({ friend }: FriendHeaderProps) => {
-  const [isBlocked, setIsBlocked] = useState(friend.status === 'BLOCKED');
+  const { mutate: blockFriend } = useBlockFriend();
+  const { mutate: unblockFriend } = useUnblockFriend();
+
+  const isBlocked = friend.status === 'BLOCKED';
 
   const handleToggleBlock = () => {
-    setIsBlocked((prev) => !prev);
+    const payload = { friendId: friend.friendId };
+
+    if (isBlocked) {
+      unblockFriend(payload);
+    } else {
+      blockFriend(payload);
+    }
   };
 
   return (
