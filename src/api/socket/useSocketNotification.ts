@@ -2,24 +2,27 @@ import { useEffect } from 'react';
 import { toast } from 'sonner';
 
 import { socketPubSub } from '@/api/socket/socketPubSub';
+type FriendRequestPayload = {
+  fromUserId: number;
+  fromUserNickname: string;
+  toUserId: number;
+  timestamp: string;
+};
+
+type FriendAcceptPayload = {
+  fromUserId: number;
+  toUserNickname: string;
+  toUserId: number;
+  timestamp: string;
+};
 
 export const useSocketNotification = () => {
   useEffect(() => {
-    const handleFriendRequest = (data: {
-      fromUserId: number;
-      fromUserNickname: string;
-      toUserId: number;
-      timestamp: string;
-    }) => {
+    const handleFriendRequest = (data: FriendRequestPayload) => {
       toast.info(`${data.fromUserNickname} sent you a friend request!`);
     };
 
-    const handleFriendAccept = (data: {
-      fromUserId: number;
-      toUserNickname: string;
-      toUserId: number;
-      timestamp: string;
-    }) => {
+    const handleFriendAccept = (data: FriendAcceptPayload) => {
       toast.success(`${data.toUserNickname} accepted your friend request!`);
     };
 
