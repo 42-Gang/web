@@ -19,23 +19,19 @@ export const ChatRoomPage = () => {
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.chatSection}>
-        {currentFriend && <FriendHeader friend={currentFriend} />}
-        <ChatBox />
-      </div>
-
       <div className={styles.sidebar}>
         <div className={styles.header}>
-          <button
-            className={styles.exitButton}
-            aria-label="채팅 나가기"
-            onClick={() => navigate(-1)}
-          />
+          <button className={styles.button} aria-label="채팅 나가기" onClick={() => navigate(-1)} />
         </div>
 
         <div className={styles.friendListWrapper}>
           {currentFriend && <FriendList friend={currentFriend} />}
         </div>
+      </div>
+
+      <div className={styles.chatSection}>
+        {currentFriend && <FriendHeader friend={currentFriend} />}
+        <ChatBox />
       </div>
     </div>
   );

@@ -22,27 +22,19 @@ export const FriendHeader = ({ friend }: FriendHeaderProps) => {
     if (isBlocked) {
       unblockFriend(payload, {
         onSuccess: (response) => {
-          toast.success(response.message, {
-            position: 'top-left',
-          });
+          toast.success(response.message);
         },
         onError: () => {
-          toast.error('차단 해제에 실패했습니다.', {
-            position: 'top-left',
-          });
+          toast.error('차단 해제에 실패했습니다.');
         },
       });
     } else {
       blockFriend(payload, {
         onSuccess: (response) => {
-          toast.success(response.message, {
-            position: 'top-left',
-          });
+          toast.success(response.message);
         },
         onError: () => {
-          toast.error('차단에 실패했습니다.', {
-            position: 'top-left',
-          });
+          toast.error('차단에 실패했습니다.');
         },
       });
     }
@@ -50,17 +42,18 @@ export const FriendHeader = ({ friend }: FriendHeaderProps) => {
 
   return (
     <div className={styles.header}>
+      <button className={styles.blockButton} data-selected={isBlocked} onClick={handleToggleBlock}>
+        <span className={styles.buttonText}>{isBlocked ? 'UNBLOCK' : 'BLOCK'}</span>
+      </button>
+
       <div className={styles.profile}>
+        <span className={styles.nickname}>{friend.nickname}</span>
         <img
           src={friend.avatarUrl || '/assets/images/sample-avatar.png'}
           alt="friend avatar"
           className={styles.avatar}
         />
-        <span className={styles.nickname}>{friend.nickname}</span>
       </div>
-      <button className={styles.blockButton} data-selected={isBlocked} onClick={handleToggleBlock}>
-        <span className={styles.buttonText}>{isBlocked ? 'UNBLOCK' : 'BLOCK'}</span>
-      </button>
     </div>
   );
 };
