@@ -2,26 +2,15 @@ import { style } from '@vanilla-extract/css';
 
 import { rem, theme } from '@/styles';
 
-const baseFlexColumnCenter = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-} as const;
-
-const baseFlexRowCenter = {
-  display: 'flex',
-  alignItems: 'center',
-} as const;
-
 export const treeWrapper = style({
-  ...baseFlexColumnCenter,
+  ...theme.layout.columnCenter,
   gap: rem(20),
 });
 
 export const leafWrapper = style({
-  ...baseFlexColumnCenter,
+  ...theme.layout.columnCenter,
   gap: rem(50),
-  marginTop: rem(-50),
+  marginTop: rem(-35),
 });
 
 export const branchWrapper = style({
@@ -32,13 +21,14 @@ export const branchWrapper = style({
 });
 
 export const roundWrapper = style({
-  ...baseFlexColumnCenter,
+  ...theme.layout.columnCenter,
   gap: rem(16),
   marginTop: rem(40),
 });
 
 export const matchBox = style({
-  ...baseFlexRowCenter,
+  display: 'flex',
+  alignItems: 'center',
   gap: rem(12),
   backgroundColor: theme.color.black,
   padding: rem(8),
@@ -57,15 +47,65 @@ export const vs = style({
 });
 
 export const matchBoxNoBorder = style({
-  ...baseFlexRowCenter,
+  display: 'flex',
+  alignItems: 'center',
   justifyContent: 'center',
   position: 'relative',
   padding: rem(6),
-  marginTop: rem(70),
   width: rem(250),
   gap: rem(60),
 });
 
 export const centerColumn = style({
-  ...baseFlexColumnCenter,
+  ...theme.layout.columnCenter,
+});
+
+export const questionImage = style({
+  width: rem(180),
+  height: rem(180),
+  objectFit: 'contain',
+  transform: 'translateY(-10%)',
+});
+
+const baseArrow = {
+  position: 'absolute',
+  top: '40%',
+  transform: 'translateY(-50%)',
+  width: rem(110),
+  height: rem(60),
+  objectFit: 'contain',
+} as const;
+
+export const arrowLeft = style({
+  ...baseArrow,
+  left: rem(-80),
+  transform: 'translateY(-50%) scaleX(-1)',
+});
+
+export const arrowRight = style({
+  ...baseArrow,
+  right: rem(-80),
+});
+
+export const semiMatchWrapper = style({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: rem(32),
+  marginBottom: rem(-12),
+});
+
+export const playerColumn = style({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  gap: rem(40),
+});
+
+export const centerDecoration = style({
+  position: 'relative',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
 });

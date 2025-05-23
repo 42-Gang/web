@@ -1,4 +1,6 @@
 export type TournamentRoundType = 'ROUND_2' | 'ROUND_4';
+export type VerticalPosition = 'top' | 'bottom';
+export type HorizontalVariant = 'left' | 'right';
 
 export type Player = {
   id: string;
