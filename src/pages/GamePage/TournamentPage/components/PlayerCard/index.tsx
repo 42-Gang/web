@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import type { Player } from '@/api/types/game';
+import type { Player, TournamentRoundType } from '@/api/types/game';
 
 import * as styles from './styles.css';
 
@@ -8,32 +8,39 @@ type PlayerCardProps = {
   player?: Player;
   isWinner?: boolean;
   isLarge?: boolean;
-  isBottomPosition?: boolean;
   isReady?: boolean;
+  isLoser?: boolean;
+  showStats?: boolean;
+  round?: TournamentRoundType;
+  side?: 'left' | 'right';
 };
 
 export const PlayerCard = ({
   player,
   isLarge = false,
-  isBottomPosition = false,
   isReady = false,
+  isLoser = false,
+  showStats = true,
+  side = 'left',
+  round,
 }: PlayerCardProps) => {
-  const [showPopup, setShowPopup] = useState<boolean>(false);
+  const [showPopup, setShowPopup] = useState(false);
 
-  if (!player) return <div className={isLarge ? styles.emptyLarge : styles.empty} />;
+  if (!player) {
+    return <div className={isLarge ? styles.emptyLarge : styles.empty} />;
+  }
 
   const { name, avatarUrl, win, lose, tournament } = player;
 
   const wrapperClass = isLarge ? styles.cardLarge : styles.card;
-  const avatarWrapperClass = [styles.avatarWrapper, isReady && styles.avatarBorder]
-    .filter(Boolean)
-    .join(' ');
+  const avatarWrapperClass = [styles.avatarWrapper, isReady ? styles.avatarBorder : ''].join(' ');
 
-  const popupClass = isLarge
-    ? styles.popupBelowLarge
-    : isBottomPosition
+  const popupClass =
+    round === 'ROUND_2'
       ? styles.popupAbove
-      : styles.popupBelow;
+      : side === 'left'
+        ? styles.popupRight
+        : styles.popupLeft;
 
   return (
     <div
@@ -43,7 +50,8 @@ export const PlayerCard = ({
     >
       <div className={avatarWrapperClass}>
         <img src={avatarUrl} alt={`${name}의 프로필 이미지`} className={styles.avatar} />
-        {showPopup && (
+        {isLoser && <div className={styles.overlay} />}
+        {showStats && showPopup && (
           <div className={popupClass}>
             <div>win: {win}</div>
             <div>lose: {lose}</div>
