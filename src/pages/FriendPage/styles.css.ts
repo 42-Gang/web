@@ -78,7 +78,7 @@ export const alarmRinging = style([
   {
     background: "url('/assets/images/alarm-ringing.svg') center/contain no-repeat",
     opacity: 1,
-    animation: `${bounce} 1s ease-in-out infinite`, // 💥 bounce 애니메이션 적용
+    animation: `${bounce} 1s ease-in-out infinite`,
   },
 ]);
 
