@@ -1,4 +1,4 @@
-import { style } from '@vanilla-extract/css';
+import { keyframes, style } from '@vanilla-extract/css';
 
 import { rem, theme } from '@/styles';
 
@@ -60,6 +60,27 @@ export const alarm = style({
 
   ':hover': { opacity: 1 },
 });
+
+const bounce = keyframes({
+  '0%, 100%': {
+    transform: 'translateY(0) scale(1)',
+  },
+  '30%': {
+    transform: 'translateY(-4px) scale(1.1)',
+  },
+  '60%': {
+    transform: 'translateY(2px) scale(0.95)',
+  },
+});
+
+export const alarmRinging = style([
+  alarm,
+  {
+    background: "url('/assets/images/alarm-ringing.svg') center/contain no-repeat",
+    opacity: 1,
+    animation: `${bounce} 1s ease-in-out infinite`, // 💥 bounce 애니메이션 적용
+  },
+]);
 
 export const separate = style({
   marginTop: rem(12),

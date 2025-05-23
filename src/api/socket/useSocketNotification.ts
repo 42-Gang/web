@@ -11,7 +11,7 @@ export const useSocketNotification = () => {
       toUserId: number;
       timestamp: string;
     }) => {
-      toast.info(`${data.fromUserNickname}sent you a friend request!`);
+      toast.info(`${data.fromUserNickname} sent you a friend request!`);
     };
 
     const handleFriendAccept = (data: {
