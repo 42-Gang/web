@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
 
 import { fetcher } from '@/api';
 import { queryKeys } from '@/api/queryKey';
@@ -17,10 +16,7 @@ export const useBlockFriend = () => {
 
   return useMutation({
     mutationFn: patchBlockFriend,
-    onSuccess: async (response) => {
-      toast.success(response.message, {
-        position: 'top-left',
-      });
+    onSuccess: async () => {
       await queryClient.invalidateQueries(queryKeys.friendsMe());
     },
   });

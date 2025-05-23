@@ -1,3 +1,5 @@
+import { toast } from 'sonner';
+
 import { useBlockFriend } from '@/api/mutations/useBlockFriend';
 import { useUnblockFriend } from '@/api/mutations/useUnblockFriend';
 import { Friend } from '@/api/types';
@@ -18,9 +20,31 @@ export const FriendHeader = ({ friend }: FriendHeaderProps) => {
     const payload = { friendId: friend.friendId };
 
     if (isBlocked) {
-      unblockFriend(payload);
+      unblockFriend(payload, {
+        onSuccess: (response) => {
+          toast.success(response.message, {
+            position: 'top-left',
+          });
+        },
+        onError: () => {
+          toast.error('차단 해제에 실패했습니다.', {
+            position: 'top-left',
+          });
+        },
+      });
     } else {
-      blockFriend(payload);
+      blockFriend(payload, {
+        onSuccess: (response) => {
+          toast.success(response.message, {
+            position: 'top-left',
+          });
+        },
+        onError: () => {
+          toast.error('차단에 실패했습니다.', {
+            position: 'top-left',
+          });
+        },
+      });
     }
   };
 
