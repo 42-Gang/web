@@ -12,6 +12,7 @@ export const EmailSignInPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
   const { setToken } = useAuthAtom();
   const { mutateAsync } = useLogin();
 
@@ -58,6 +59,9 @@ export const EmailSignInPage = () => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={async (e) => {
+              if (e.key === 'Enter') await handleSelect(0);
+            }}
           />
         </div>
 

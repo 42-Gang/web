@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Flex } from '@/components/system';
@@ -8,6 +9,7 @@ import * as styles from './styles.css';
 
 export const LandingPage = () => {
   const navigate = useNavigate();
+  const navigatorRef = useRef<HTMLDivElement>(null);
 
   const handleSelect = (index: number) => {
     switch (index) {
@@ -22,10 +24,15 @@ export const LandingPage = () => {
     }
   };
 
+  useEffect(() => {
+    navigatorRef.current?.focus();
+  }, []);
+
   return (
     <Flex direction="column" justifyContent="space-between" style={{ height: '100%' }}>
       <Branding className={styles.branding} />
       <DefaultStepNavigator
+        ref={navigatorRef}
         items={['SIGN IN', 'SIGN UP']}
         onSelect={handleSelect}
         style={{ outline: 'none' }}
