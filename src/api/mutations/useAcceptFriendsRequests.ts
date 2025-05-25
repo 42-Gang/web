@@ -20,7 +20,7 @@ export const useAcceptFriendsRequests = () => {
       await queryClient.invalidateQueries(queryKeys.friendsRequests());
       await queryClient.invalidateQueries({ ...queryKeys.friendsMe(), refetchType: 'all' });
       await queryClient.invalidateQueries({
-        queryKey: [queryKeys.usersSearch({ nickname: '', exceptMe: true, status: 'NONE' })._def],
+        queryKey: [queryKeys.usersSearch({ nickname: '', exceptMe: true, status: ['NONE'] })._def],
         refetchType: 'all',
       });
     },
