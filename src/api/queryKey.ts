@@ -1,5 +1,3 @@
-import { SearchParamsOption } from 'ky';
-
 import {
   HttpResponse,
   FriendList,
@@ -25,10 +23,10 @@ const usersQueryKeys = {
     _def: 'users-search',
     queryKey: ['users-search', payload],
     queryFn: () => {
-      const searchParams: SearchParamsOption = {
-        status: payload.status,
-        exceptMe: payload.exceptMe,
-      };
+      const searchParams = new URLSearchParams();
+      payload.status.forEach((status) => searchParams.append('status', status));
+      searchParams.append('exceptMe', String(payload.exceptMe));
+
       return fetcher.get<HttpResponse<UserList>>(`v1/users/search/${payload.nickname}`, {
         searchParams,
       });

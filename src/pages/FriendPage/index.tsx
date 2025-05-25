@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDebounce } from 'react-simplikit';
 
-import { useFriendsMe } from '@/api';
-import { socketPubSub } from '@/api/socket';
+import { useFriendsMe, useFriendsRequests } from '@/api';
 import { Flex } from '@/components/system';
 import { BackButton, Divider } from '@/components/ui';
 
@@ -14,22 +13,15 @@ import * as styles from './styles.css';
 export const FriendPage = () => {
   const [value, setValue] = useState<string>('');
   const [nickname, setNickname] = useState<string>('');
-  const [hasNewRequest, setHasNewRequest] = useState(false);
 
   const { data } = useFriendsMe();
+  const { data: requests } = useFriendsRequests();
+
+  const requestsCount: number = requests?.data?.requests.length ?? 0;
 
   const debouncedNickname = useDebounce((value: string) => {
     setNickname(value);
   }, 300);
-
-  useEffect(() => {
-    const handleFriendRequest = () => setHasNewRequest(true);
-
-    socketPubSub.subscribe('friend-request', handleFriendRequest);
-    return () => {
-      socketPubSub.unsubscribe('friend-request', handleFriendRequest);
-    };
-  }, []);
 
   return (
     <Flex direction="column" style={{ height: '100%' }}>
@@ -52,8 +44,8 @@ export const FriendPage = () => {
           />
         </div>
       </div>
-      <FriendRequestDialog onOpen={() => setHasNewRequest(false)}>
-        <button className={hasNewRequest ? styles.alarmRinging : styles.alarm} />
+      <FriendRequestDialog>
+        <button className={requestsCount > 0 ? styles.alarmRinging : styles.alarm} />
       </FriendRequestDialog>
 
       <Divider className={styles.separate} />

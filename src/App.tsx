@@ -1,6 +1,6 @@
 import '@/styles/global.css';
 
-import { useEffect } from 'react';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import {
   createBrowserRouter,
   Navigate,
@@ -12,10 +12,8 @@ import {
 import { Toaster } from 'sonner';
 
 import { QueryClientProvider } from '@/api';
-import { useSocket } from '@/api/socket';
-import { UserStatus } from '@/api/types';
+import { useStatusSocket, useFriendSocket } from '@/api/socket';
 import { useAuthAtom } from '@/atoms/useAuthAtom';
-import { useStatusAtom } from '@/atoms/useStatusAtom';
 import { PATH } from '@/constants/routes';
 import {
   EmailSignInPage,
@@ -32,8 +30,6 @@ import {
   GameAutoMatchingPage,
   GameCustomMatchingPage,
 } from '@/pages';
-
-import { useSocketNotification } from './api/socket/useSocketNotification';
 
 const App = () => {
   const PublicRoute = () => {
@@ -66,32 +62,9 @@ const App = () => {
 
   const PrivateRoute = () => {
     const { isLogin } = useAuthAtom();
-    const { updateStatus } = useStatusAtom();
 
-    const { socket, connect, disconnect } = useSocket({
-      path: 'status',
-      handshake: '/ws/user',
-      withToken: true,
-    });
-
-    useSocketNotification();
-
-    useEffect(() => {
-      connect();
-      return () => disconnect();
-    }, [connect, disconnect]);
-
-    useEffect(() => {
-      if (!socket) return;
-      const handleStatusUpdate = (data: UserStatus) => {
-        updateStatus(data);
-      };
-
-      socket.on('friend-status', handleStatusUpdate);
-      return () => {
-        socket.off('friend-status', handleStatusUpdate);
-      };
-    }, [socket, updateStatus]);
+    useStatusSocket();
+    useFriendSocket();
 
     if (!isLogin()) {
       return <Navigate to={PATH.LANDING} replace />;
@@ -135,6 +108,7 @@ const App = () => {
               },
             }}
           />
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       ),
       children: [...publicRoutes, ...privateRoutes],

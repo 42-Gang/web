@@ -22,7 +22,7 @@ export type UserList = {
 
 export type UsersSearchPayload = {
   nickname: string;
-  status: 'ACCEPTED' | 'NONE' | 'PENDING' | 'REJECTED' | 'BLOCKED';
+  status: ('ACCEPTED' | 'NONE' | 'PENDING' | 'REJECTED' | 'BLOCKED')[];
   exceptMe: boolean;
 };
 

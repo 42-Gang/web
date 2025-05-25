@@ -20,3 +20,17 @@ export type Friend = {
 export type FriendList = {
   friends: Friend[];
 };
+
+export type FriendRequestStatus = {
+  fromUserId: number;
+  fromUserNickname: string;
+  toUserId: number;
+  timestamp: string;
+};
+
+export type FriendAcceptStatus = {
+  fromUserId: number;
+  toUserNickname: string;
+  toUserId: number;
+  timestamp: string;
+};
