@@ -14,11 +14,7 @@ import {
 
 import * as styles from './styles.css';
 
-type FriendRequestDialogProps = PropsWithChildren<{
-  onOpen?: (open: boolean) => void;
-}>;
-
-export const FriendRequestDialog = ({ children, onOpen }: FriendRequestDialogProps) => {
+export const FriendRequestDialog = ({ children }: PropsWithChildren) => {
   const { data } = useFriendsRequests();
 
   const { mutate: acceptFriendsRequestsMutation } = useAcceptFriendsRequests();
@@ -55,7 +51,7 @@ export const FriendRequestDialog = ({ children, onOpen }: FriendRequestDialogPro
   };
 
   return (
-    <Dialog onOpenChange={onOpen}>
+    <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogOverlay />
       <DialogPortal>
