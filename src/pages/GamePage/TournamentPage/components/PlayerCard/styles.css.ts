@@ -34,10 +34,11 @@ export const avatarWrapper = style({
   width: '100%',
   aspectRatio: '1 / 1',
   borderRadius: '50%',
-  overflow: 'hidden',
+  overflow: 'visible',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
+  position: 'relative',
 });
 
 export const avatarBorder = style({
@@ -73,8 +74,18 @@ export const popupBase = style({
   textAlign: 'center',
 });
 
-export const popupBelow = style([popupBase, { top: rem(80) }]);
+export const overlay = style({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  borderRadius: '50%',
+});
 
-export const popupBelowLarge = style([popupBase, { top: rem(130) }]);
+export const popupAbove = style([popupBase, { bottom: rem(100) }]);
 
-export const popupAbove = style([popupBase, { bottom: rem(20) }]);
+export const popupLeft = style([popupBase, { right: rem(80) }]);
+
+export const popupRight = style([popupBase, { left: rem(80) }]);
