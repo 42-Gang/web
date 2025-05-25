@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Flex } from '@/components/system';
@@ -8,6 +9,7 @@ import * as styles from './styles.css';
 
 export const HomePage = () => {
   const navigate = useNavigate();
+  const navigatorRef = useRef<HTMLDivElement>(null);
 
   const handleSelect = (index: number) => {
     const paths = [PATH.GAME_SELECT, PATH.HISTORY, PATH.FRIEND, PATH.PROFILE];
@@ -16,13 +18,23 @@ export const HomePage = () => {
     }
   };
 
+  useEffect(() => {
+    navigatorRef.current?.focus();
+  }, []);
+
   return (
     <>
       <Flex direction="column" justifyContent="space-between" style={{ height: '100%' }}>
-        <img src="/assets/images/gun.svg" alt="gunImage" className={styles.gunLeft} />
+        <img src="/assets/images/gun.svg" alt="gunImage" className={styles.gun({ side: 'left' })} />
         <Branding className={styles.branding} />
-        <img src="/assets/images/gun.svg" alt="gunImage" className={styles.gunRight} />
+        <img
+          src="/assets/images/gun.svg"
+          alt="gunImage"
+          className={styles.gun({ side: 'right' })}
+        />
+
         <DefaultStepNavigator
+          ref={navigatorRef}
           items={['START GAME', 'HISTORY', 'FRIEND', 'PROFILE']}
           onSelect={handleSelect}
           style={{ outline: 'none' }}
