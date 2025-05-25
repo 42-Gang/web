@@ -46,6 +46,9 @@ export const EmailSignInPage = () => {
             className={styles.input}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={async (e) => {
+              if (e.key === 'Enter') await handleSelect(0);
+            }}
           />
         </div>
 

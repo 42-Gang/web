@@ -48,4 +48,4 @@ export const SignInPage = () => {
   );
 };
 
-export { EmailSignInPage } from './EmailLoginPage';
+export { EmailSignInPage } from './EmailSignInPage';
