@@ -34,7 +34,7 @@ export const useNavigation = ({ items, onSelect, initial = 0 }: UseNavigationPro
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (items.length === 0) return;
+      if (items.length === 0 || !isFocused.current) return;
 
       if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
         e.preventDefault();
