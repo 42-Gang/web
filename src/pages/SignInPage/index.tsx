@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -9,6 +10,7 @@ import * as styles from './styles.css';
 
 export const SignInPage = () => {
   const navigate = useNavigate();
+  const navigatorRef = useRef<HTMLDivElement>(null);
 
   const handleSelect = (index: number) => {
     switch (index) {
@@ -26,11 +28,16 @@ export const SignInPage = () => {
     }
   };
 
+  useEffect(() => {
+    navigatorRef.current?.focus();
+  }, []);
+
   return (
     <Flex direction="column" justifyContent="space-between" style={{ height: '100%' }}>
       <Branding className={styles.branding} />
 
       <DefaultStepNavigator
+        ref={navigatorRef}
         items={['CONTINUE WITH GOOGLE', 'CONTINUE WITH EMAIL', 'GO BACK']}
         onSelect={handleSelect}
         style={{ outline: 'none' }}
@@ -41,4 +48,4 @@ export const SignInPage = () => {
   );
 };
 
-export { EmailSignInPage } from './EmailLoginPage';
+export { EmailSignInPage } from './EmailSignInPage';

@@ -8,10 +8,13 @@ import { Branding, DefaultStepNavigator, GameLicense } from '@/components/ui';
 
 import * as styles from './styles.css';
 
+const CONTINUE_ACTION_INDEX = 0;
+
 export const EmailSignInPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
   const { setToken } = useAuthAtom();
   const { mutateAsync } = useLogin();
 
@@ -45,6 +48,9 @@ export const EmailSignInPage = () => {
             className={styles.input}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={async (e) => {
+              if (e.key === 'Enter') await handleSelect(CONTINUE_ACTION_INDEX);
+            }}
           />
         </div>
 
@@ -58,6 +64,9 @@ export const EmailSignInPage = () => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={async (e) => {
+              if (e.key === 'Enter') await handleSelect(CONTINUE_ACTION_INDEX);
+            }}
           />
         </div>
 
