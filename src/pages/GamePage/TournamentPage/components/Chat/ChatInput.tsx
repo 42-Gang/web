@@ -11,16 +11,20 @@ type ChatInputProps = {
 
 export const ChatInput = ({ onSend }: ChatInputProps) => {
   const { data: me } = useUsersMe();
+  const user = me?.data;
+
   const [input, setInput] = useState('');
   const [isComposing, setIsComposing] = useState(false);
 
+  // TODO: 현재는 로컬 메시지 구분용으로 Date.now()를 사용
+  // 추후 웹소켓 연동 시 서버에서 고유 ID를 받아와야 함
   const handleSend = () => {
     const trimmed = input.trim();
-    if (!trimmed || !me?.data) return;
+    if (!trimmed || !user) return;
 
     onSend({
       id: Date.now(),
-      nickname: me.data.nickname,
+      nickname: user.nickname,
       time: new Date().toISOString(),
       message: trimmed,
     });
@@ -36,20 +40,21 @@ export const ChatInput = ({ onSend }: ChatInputProps) => {
   };
 
   return (
-    <div>
+    <>
       <div className={styles.chatDivider} />
       <div className={styles.chatInputWrapper}>
         <input
           className={styles.input}
           value={input}
-          placeholder="메시지를 입력하세요"
+          placeholder={user ? '메시지를 입력하세요' : '유저 정보를 불러오는 중입니다...'}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           onCompositionStart={() => setIsComposing(true)}
           onCompositionEnd={() => setIsComposing(false)}
+          disabled={!user}
         />
-        <button className={styles.sendButton} onClick={handleSend} />
+        <button className={styles.sendButton} onClick={handleSend} disabled={!user} />
       </div>
-    </div>
+    </>
   );
 };

@@ -17,7 +17,9 @@ export const TournamentPage = () => {
   const [searchParams] = useSearchParams();
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [readyIds] = useState<string[]>([]);
+  const [readyIds, setReadyIds] = useState<string[]>([]);
+
+  const currentUserId = 'pong'; // TODO: 실제 사용자 연동 (테스트용 임시 유저)
 
   const round = (searchParams.get('round') as TournamentRoundType) ?? 'ROUND_4';
   const tournamentData = round === 'ROUND_2' ? roundTwoData : roundFourData;
@@ -27,7 +29,9 @@ export const TournamentPage = () => {
   };
 
   const handleReady = () => {
-    // TODO : 실제 사용자 api 연동 (Ready 버튼 눌렀을 때 효과)
+    if (!readyIds.includes(currentUserId)) {
+      setReadyIds((prev) => [...prev, currentUserId]);
+    }
   };
 
   const renderDevToggleButtons = () => (
@@ -63,7 +67,7 @@ export const TournamentPage = () => {
           match={tournamentData}
           isRoot
           readyIds={readyIds}
-          currentUserId={''} // 추후 사용자 ID(myID) 전달 가능
+          currentUserId={currentUserId}
         />
 
         <div className={styles.readyButtonWrapper}>
