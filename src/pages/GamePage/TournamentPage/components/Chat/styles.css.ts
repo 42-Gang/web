@@ -1,6 +1,11 @@
-import { style } from '@vanilla-extract/css';
+import { style, keyframes, globalStyle } from '@vanilla-extract/css';
 
-import { rem } from '@/styles';
+import { rem, theme } from '@/styles';
+
+const bounce = keyframes({
+  '0%, 100%': { transform: 'translateY(0)' },
+  '50%': { transform: 'translateY(-8px)' },
+});
 
 export const chatWrapper = style({
   display: 'flex',
@@ -40,6 +45,12 @@ export const input = style({
   padding: rem(4),
   fontSize: rem(14),
   backgroundColor: 'transparent',
+  outline: 'none',
+});
+
+globalStyle(`${input}::placeholder`, {
+  fontSize: rem(11),
+  color: theme.color.chatText,
 });
 
 export const sendButton = style({
@@ -47,4 +58,41 @@ export const sendButton = style({
   height: rem(20),
   background: `url('/assets/images/send-icon.svg') center / contain no-repeat`,
   flexShrink: 0,
+});
+
+export const chatMessage = style({
+  marginBottom: rem(6),
+  lineHeight: 1.4,
+});
+
+export const chatNickname = style({
+  fontSize: rem(16),
+  marginRight: rem(4),
+});
+
+export const chatEmptyWrapper = style({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '100%',
+});
+
+export const chatEmptyImage = style({
+  width: rem(110),
+  height: rem(110),
+  animation: `${bounce} 2.1s ease-in-out infinite`,
+});
+
+export const chatEmpty = style({
+  color: theme.color.chatText,
+});
+
+export const chatEmptyShadow = style({
+  width: rem(60),
+  height: rem(12),
+  background: 'rgba(0, 0, 0, 0.15)',
+  borderRadius: '50%',
+  filter: 'blur(2px)',
+  transform: 'translateY(-20px)',
 });

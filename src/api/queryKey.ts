@@ -19,6 +19,7 @@ const usersQueryKeys = {
     queryKey: ['users-me'],
     queryFn: () => fetcher.get<HttpResponse<UserInfo>>(`v1/users/me`),
   }),
+
   usersSearch: (payload: UsersSearchPayload) => ({
     _def: 'users-search',
     queryKey: ['users-search', payload],
@@ -32,6 +33,13 @@ const usersQueryKeys = {
       });
     },
     enabled: payload.nickname.length > 1,
+  }),
+
+  userProfile: (id: number) => ({
+    _def: 'user-profile',
+    queryKey: ['user-profile', id],
+    queryFn: () => fetcher.get<HttpResponse<UserInfo>>(`v1/users/${id}`),
+    enabled: !!id,
   }),
 };
 
