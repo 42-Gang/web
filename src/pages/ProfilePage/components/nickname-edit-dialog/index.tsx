@@ -49,6 +49,11 @@ export const NicknameEditDialog = ({ children }: PropsWithChildren) => {
           maxLength={8}
           value={nickname}
           onChange={(e) => setNickname(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleSubmit();
+            }
+          }}
         />
         <button className={styles.button} onClick={handleSubmit}>
           Confirm
