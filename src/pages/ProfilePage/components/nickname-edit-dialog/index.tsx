@@ -1,4 +1,4 @@
-import { PropsWithChildren, useState } from 'react';
+import { PropsWithChildren, useState, useRef, useEffect } from 'react';
 import { toast } from 'sonner';
 
 import { useUpdateProfile } from '@/api';
@@ -16,6 +16,7 @@ export const NicknameEditDialog = ({ children }: PropsWithChildren) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [nickname, setNickname] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const { mutate: updateProfileMutation } = useUpdateProfile();
 
@@ -42,14 +43,23 @@ export const NicknameEditDialog = ({ children }: PropsWithChildren) => {
     );
   };
 
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 0);
+    }
+  }, [isOpen]);
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger>{children}</DialogTrigger>
-      <DialogContent className={styles.content} aria-describedby={undefined}>
+      <DialogContent className={styles.content}>
         <DialogClose />
 
         <DialogTitle className={styles.title}>Change nickname</DialogTitle>
         <input
+          ref={inputRef}
           className={styles.input}
           type="text"
           placeholder="Max 8 letters!"
