@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
+import type { ChatMessage } from '@/api/types/chat';
 import type { TournamentRoundType } from '@/api/types/game';
 import { BackButton } from '@/components/ui/back-button';
 
@@ -11,28 +12,52 @@ import { ChatInput } from './components/Chat/ChatInput';
 import { MatchNode } from './components/MatchNode';
 import * as styles from './styles.css';
 
-
 export const TournamentPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [readyIds, setReadyIds] = useState<string[]>([]);
 
-  const round = (searchParams.get('round') as TournamentRoundType) ?? 'ROUND_4';
+  const currentUserId = 'pong'; // TODO: 실제 사용자 연동 (테스트용 임시 유저)
+
+  const rawRound = searchParams.get('round');
+
+  const isValidRound = (round: string | null): round is TournamentRoundType =>
+    round === 'ROUND_2' || round === 'ROUND_4';
+
+  const fallback = useMemo(() => {
+    if (isValidRound(rawRound)) return rawRound;
+    const stored = sessionStorage.getItem('lastValidRound');
+    return isValidRound(stored) ? stored : 'ROUND_4';
+  }, [rawRound]);
+
+  useEffect(() => {
+    if (isValidRound(rawRound)) {
+      sessionStorage.setItem('lastValidRound', rawRound);
+    }
+  }, [rawRound]);
+
+  useEffect(() => {
+    if (rawRound && !isValidRound(rawRound)) {
+      navigate(`/game/tournament?round=${fallback}`, { replace: true });
+    }
+  }, [rawRound, navigate, fallback]);
+
+  const round: TournamentRoundType = isValidRound(rawRound) ? rawRound : fallback;
+
   const tournamentData = round === 'ROUND_2' ? roundTwoData : roundFourData;
 
-  const currentUserId = 'pong'; // TODO: 로그인 유저 ID로 교체 예정
-
-  const handleSend = (text: string) => {
-    if (text.trim()) setMessages((prev) => [...prev, text]);
+  const handleSend = (msg: ChatMessage) => {
+    setMessages((prev) => [...prev, msg]);
   };
 
   const handleReady = () => {
-    setReadyIds((prev) => (prev.includes(currentUserId) ? prev : [...prev, currentUserId]));
+    if (!readyIds.includes(currentUserId)) {
+      setReadyIds((prev) => [...prev, currentUserId]);
+    }
   };
 
-  // 확인용 버튼 (API 연동시 삭제 예정)
   const renderDevToggleButtons = () => (
     <div style={{ position: 'absolute', top: 4, right: 10 }}>
       <button

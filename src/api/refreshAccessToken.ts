@@ -8,7 +8,7 @@ interface Response {
 }
 
 const postRefreshToken = async () => {
-  const response = await ky.post(`api/v1/auth/refresh-token`, {
+  const response = await ky.post(`/api/v1/auth/refresh-token`, {
     credentials: 'include',
   });
   return await response.json<HttpResponse<Response>>();

@@ -77,6 +77,7 @@ const color = {
   opponentCard: '#34A09B',
   waiting: '#D2F474',
   matched: '#E890C7',
+  chatText: '#545858',
 };
 
 const zIndex = {
