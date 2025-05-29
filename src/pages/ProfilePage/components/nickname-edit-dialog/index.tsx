@@ -51,6 +51,7 @@ export const NicknameEditDialog = ({ children }: PropsWithChildren) => {
           onChange={(e) => setNickname(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
+              e.preventDefault();
               handleSubmit();
             }
           }}
