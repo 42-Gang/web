@@ -47,6 +47,7 @@ export const NicknameEditDialog = ({ children }: PropsWithChildren) => {
           e.preventDefault();
           inputRef.current?.focus();
         }}
+        aria-describedby={undefined}
       >
         <DialogClose />
         <DialogTitle className={styles.title}>Change nickname</DialogTitle>
