@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import type { ChatMessage } from '@/api/types/chat';
@@ -21,7 +21,31 @@ export const TournamentPage = () => {
 
   const currentUserId = 'pong'; // TODO: 실제 사용자 연동 (테스트용 임시 유저)
 
-  const round = (searchParams.get('round') as TournamentRoundType) ?? 'ROUND_4';
+  const rawRound = searchParams.get('round');
+
+  const isValidRound = (round: string | null): round is TournamentRoundType =>
+    round === 'ROUND_2' || round === 'ROUND_4';
+
+  const fallback = useMemo(() => {
+    if (isValidRound(rawRound)) return rawRound;
+    const stored = sessionStorage.getItem('lastValidRound');
+    return isValidRound(stored) ? stored : 'ROUND_4';
+  }, [rawRound]);
+
+  useEffect(() => {
+    if (isValidRound(rawRound)) {
+      sessionStorage.setItem('lastValidRound', rawRound);
+    }
+  }, [rawRound]);
+
+  useEffect(() => {
+    if (rawRound && !isValidRound(rawRound)) {
+      navigate(`/game/tournament?round=${fallback}`, { replace: true });
+    }
+  }, [rawRound, navigate, fallback]);
+
+  const round: TournamentRoundType = isValidRound(rawRound) ? rawRound : fallback;
+
   const tournamentData = round === 'ROUND_2' ? roundTwoData : roundFourData;
 
   const handleSend = (msg: ChatMessage) => {
