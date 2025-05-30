@@ -1,5 +1,5 @@
 import { Mutex } from 'async-mutex';
-import ky, { HTTPError, type Options, type ResponsePromise } from 'ky';
+import ky, { type Options, type ResponsePromise } from 'ky';
 
 import { LOCAL_STORAGE } from './constants';
 import { refreshAccessToken } from './refreshAccessToken';
@@ -8,7 +8,7 @@ const tokenRefreshMutex = new Mutex();
 
 const defaultOption: Options = {
   retry: 0,
-  timeout: 5_000,
+  timeout: 5000,
   credentials: 'include',
 };
 
@@ -19,7 +19,6 @@ export const instance = ky.create({
     beforeRequest: [
       (request) => {
         const accessToken = window.localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN);
-
         if (accessToken) {
           request.headers.set('Authorization', `Bearer ${accessToken}`);
         }
@@ -28,36 +27,24 @@ export const instance = ky.create({
     afterResponse: [
       async (request, options, response) => {
         if (!response.ok && response.status === 401 && !request.url.includes('logout')) {
-          try {
-            let accessToken: string | undefined;
+          return tokenRefreshMutex.runExclusive(async () => {
+            const newAccessToken = await refreshAccessToken();
 
-            if (tokenRefreshMutex.isLocked()) {
-              await tokenRefreshMutex.waitForUnlock();
-
-              const newAccessToken = window.localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN);
-
-              if (newAccessToken) {
-                accessToken = newAccessToken;
-              }
-            } else {
-              await tokenRefreshMutex.acquire();
-              accessToken = await refreshAccessToken();
-            }
-
-            request.headers.set('Authorization', `Bearer ${accessToken}`);
-            return ky(request, options);
-          } catch (e) {
-            if (e instanceof HTTPError && e.response.url.includes('/refresh-token')) {
+            if (!newAccessToken) {
               window.localStorage.removeItem(LOCAL_STORAGE.ACCESS_TOKEN);
+              return response;
             }
 
-            if (e instanceof Error) {
-              console.warn(`[fetcher.ts] ${e.name} (${e.message})`);
-            }
-          } finally {
-            tokenRefreshMutex.release();
-          }
+            const newHeaders = new Headers(options?.headers || {});
+            newHeaders.set('Authorization', `Bearer ${newAccessToken}`);
+
+            return instance(request.url, {
+              ...options,
+              headers: newHeaders,
+            });
+          });
         }
+
         return response;
       },
     ],
