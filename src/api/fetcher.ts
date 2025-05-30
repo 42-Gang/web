@@ -6,7 +6,7 @@ import { refreshAccessToken } from './refreshAccessToken';
 
 const tokenRefreshMutex = new Mutex();
 
-const defaultOption: Options = {
+const defaultOptions: Options = {
   retry: 0,
   timeout: 5000,
   credentials: 'include',
@@ -18,32 +18,43 @@ export const instance = ky.create({
   hooks: {
     beforeRequest: [
       (request) => {
-        const accessToken = window.localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN);
-        if (accessToken) {
-          request.headers.set('Authorization', `Bearer ${accessToken}`);
+        const token = window.localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN);
+        if (token) {
+          request.headers.set('Authorization', `Bearer ${token}`);
         }
       },
     ],
     afterResponse: [
       async (request, options, response) => {
-        if (!response.ok && response.status === 401 && !request.url.includes('logout')) {
+        if (response.status === 401 && !request.url.includes('logout')) {
           return tokenRefreshMutex.runExclusive(async () => {
-            const newAccessToken = await refreshAccessToken();
+            const currentToken = window.localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN);
+            const originalToken = request.headers.get('Authorization')?.replace('Bearer ', '');
 
-            if (!newAccessToken) {
+            if (currentToken && currentToken !== originalToken) {
+              const retryHeaders = new Headers(request.headers);
+              retryHeaders.set('Authorization', `Bearer ${currentToken}`);
+
+              return instance(request.url, {
+                ...options,
+                headers: retryHeaders,
+                prefixUrl: undefined,
+              });
+            }
+
+            const newToken = await refreshAccessToken();
+            if (!newToken) {
               window.localStorage.removeItem(LOCAL_STORAGE.ACCESS_TOKEN);
               return response;
             }
 
-            const newHeaders = new Headers(options?.headers || {});
-            newHeaders.set('Authorization', `Bearer ${newAccessToken}`);
+            const retryHeaders = new Headers(options?.headers || {});
+            retryHeaders.set('Authorization', `Bearer ${newToken}`);
 
-            const url = new URL(request.url);
-            const relativeUrl = url.pathname + url.search;
-
-            return instance(relativeUrl, {
+            return instance(request.url, {
               ...options,
-              headers: newHeaders,
+              headers: retryHeaders,
+              prefixUrl: undefined,
             });
           });
         }
@@ -52,19 +63,17 @@ export const instance = ky.create({
       },
     ],
   },
-  ...defaultOption,
+  ...defaultOptions,
 });
 
-export async function resultify<T>(response: ResponsePromise) {
+export const resultify = async <T>(response: ResponsePromise) => {
   return await response.json<T>();
-}
+};
 
 export const fetcher = {
-  get: <T>(pathname: string, options?: Options) => resultify<T>(instance.get(pathname, options)),
-  post: <T>(pathname: string, options?: Options) => resultify<T>(instance.post(pathname, options)),
-  put: <T>(pathname: string, options?: Options) => resultify<T>(instance.put(pathname, options)),
-  delete: <T>(pathname: string, options?: Options) =>
-    resultify<T>(instance.delete(pathname, options)),
-  patch: <T>(pathname: string, options?: Options) =>
-    resultify<T>(instance.patch(pathname, options)),
+  get: <T>(path: string, options?: Options) => resultify<T>(instance.get(path, options)),
+  post: <T>(path: string, options?: Options) => resultify<T>(instance.post(path, options)),
+  put: <T>(path: string, options?: Options) => resultify<T>(instance.put(path, options)),
+  delete: <T>(path: string, options?: Options) => resultify<T>(instance.delete(path, options)),
+  patch: <T>(path: string, options?: Options) => resultify<T>(instance.patch(path, options)),
 };
