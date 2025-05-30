@@ -38,7 +38,10 @@ export const instance = ky.create({
             const newHeaders = new Headers(options?.headers || {});
             newHeaders.set('Authorization', `Bearer ${newAccessToken}`);
 
-            return instance(request.url, {
+            const url = new URL(request.url);
+            const relativeUrl = url.pathname + url.search;
+
+            return instance(relativeUrl, {
               ...options,
               headers: newHeaders,
             });
