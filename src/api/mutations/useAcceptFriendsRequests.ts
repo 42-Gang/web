@@ -17,12 +17,8 @@ export const useAcceptFriendsRequests = () => {
   return useMutation({
     mutationFn: patchAcceptFriendsRequests,
     onSuccess: async () => {
-      await queryClient.invalidateQueries(queryKeys.friendsRequests());
-      await queryClient.invalidateQueries({ ...queryKeys.friendsMe(), refetchType: 'all' });
-      await queryClient.invalidateQueries({
-        queryKey: [queryKeys.usersSearch({ nickname: '', exceptMe: true, status: ['NONE'] })._def],
-        refetchType: 'all',
-      });
+      await queryClient.invalidateQueries({ queryKey: queryKeys.users._def, refetchType: 'all' });
+      await queryClient.invalidateQueries({ queryKey: queryKeys.friends._def, refetchType: 'all' });
     },
   });
 };

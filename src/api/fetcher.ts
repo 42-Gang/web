@@ -1,14 +1,14 @@
 import { Mutex } from 'async-mutex';
-import ky, { HTTPError, type Options, type ResponsePromise } from 'ky';
+import ky, { type Options, type ResponsePromise } from 'ky';
 
 import { LOCAL_STORAGE } from './constants';
 import { refreshAccessToken } from './refreshAccessToken';
 
 const tokenRefreshMutex = new Mutex();
 
-const defaultOption: Options = {
+const defaultOptions: Options = {
   retry: 0,
-  timeout: 5_000,
+  timeout: 5000,
   credentials: 'include',
 };
 
@@ -18,63 +18,62 @@ export const instance = ky.create({
   hooks: {
     beforeRequest: [
       (request) => {
-        const accessToken = window.localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN);
-
-        if (accessToken) {
-          request.headers.set('Authorization', `Bearer ${accessToken}`);
+        const token = window.localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN);
+        if (token) {
+          request.headers.set('Authorization', `Bearer ${token}`);
         }
       },
     ],
     afterResponse: [
       async (request, options, response) => {
-        if (!response.ok && response.status === 401 && !request.url.includes('logout')) {
-          try {
-            let accessToken: string | undefined;
+        if (response.status === 401 && !request.url.includes('logout')) {
+          return tokenRefreshMutex.runExclusive(async () => {
+            const currentToken = window.localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN);
+            const originalToken = request.headers.get('Authorization')?.replace('Bearer ', '');
 
-            if (tokenRefreshMutex.isLocked()) {
-              await tokenRefreshMutex.waitForUnlock();
+            if (currentToken && currentToken !== originalToken) {
+              const retryHeaders = new Headers(request.headers);
+              retryHeaders.set('Authorization', `Bearer ${currentToken}`);
 
-              const newAccessToken = window.localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN);
-
-              if (newAccessToken) {
-                accessToken = newAccessToken;
-              }
-            } else {
-              await tokenRefreshMutex.acquire();
-              accessToken = await refreshAccessToken();
+              return instance(request.url, {
+                ...options,
+                headers: retryHeaders,
+                prefixUrl: undefined,
+              });
             }
 
-            request.headers.set('Authorization', `Bearer ${accessToken}`);
-            return ky(request, options);
-          } catch (e) {
-            if (e instanceof HTTPError && e.response.url.includes('/refresh-token')) {
+            const newToken = await refreshAccessToken();
+            if (!newToken) {
               window.localStorage.removeItem(LOCAL_STORAGE.ACCESS_TOKEN);
+              return response;
             }
 
-            if (e instanceof Error) {
-              console.warn(`[fetcher.ts] ${e.name} (${e.message})`);
-            }
-          } finally {
-            tokenRefreshMutex.release();
-          }
+            const retryHeaders = new Headers(options?.headers || {});
+            retryHeaders.set('Authorization', `Bearer ${newToken}`);
+
+            return instance(request.url, {
+              ...options,
+              headers: retryHeaders,
+              prefixUrl: undefined,
+            });
+          });
         }
+
         return response;
       },
     ],
   },
-  ...defaultOption,
+  ...defaultOptions,
 });
 
-export async function resultify<T>(response: ResponsePromise) {
+export const resultify = async <T>(response: ResponsePromise) => {
   return await response.json<T>();
-}
+};
 
 export const fetcher = {
-  get: <T>(pathname: string, options?: Options) => resultify<T>(instance.get(pathname, options)),
-  post: <T>(pathname: string, options?: Options) => resultify<T>(instance.post(pathname, options)),
-  put: <T>(pathname: string, options?: Options) => resultify<T>(instance.put(pathname, options)),
-  delete: <T>(pathname: string, options?: Options) =>
-    resultify<T>(instance.delete(pathname, options)),
-  patch: <T>(pathname: string, options?: Options) =>
-    resultify<T>(instance.patch(pathname, options)),
+  get: <T>(path: string, options?: Options) => resultify<T>(instance.get(path, options)),
+  post: <T>(path: string, options?: Options) => resultify<T>(instance.post(path, options)),
+  put: <T>(path: string, options?: Options) => resultify<T>(instance.put(path, options)),
+  delete: <T>(path: string, options?: Options) => resultify<T>(instance.delete(path, options)),
+  patch: <T>(path: string, options?: Options) => resultify<T>(instance.patch(path, options)),
 };

@@ -4,7 +4,7 @@ import { queryKeys } from '@/api/queryKey';
 import { TournamentRoundType } from '@/api/types/game';
 
 export const useTournamentHistory = (type: TournamentRoundType) =>
-  useQuery(queryKeys.tournamentHistory(type));
+  useQuery(queryKeys.games.tournamentHistory(type));
 
 export const useSuspenseTournamentHistory = (type: TournamentRoundType) =>
-  useSuspenseQuery(queryKeys.tournamentHistory(type));
+  useSuspenseQuery(queryKeys.games.tournamentHistory(type));
