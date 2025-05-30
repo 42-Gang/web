@@ -2,6 +2,6 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
 import { queryKeys } from '@/api/queryKey';
 
-export const useFriendsMe = () => useQuery(queryKeys.friendsMe());
+export const useFriendsMe = () => useQuery(queryKeys.friends.me);
 
-export const useSuspenseFriendsMe = () => useSuspenseQuery(queryKeys.friendsMe());
+export const useSuspenseFriendsMe = () => useSuspenseQuery(queryKeys.friends.me);

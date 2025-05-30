@@ -1,3 +1,5 @@
+import { createQueryKeys, mergeQueryKeys } from '@lukemorales/query-key-factory';
+
 import {
   HttpResponse,
   FriendList,
@@ -9,21 +11,27 @@ import {
   FriendRequestUserList,
   ChatHistory,
   ChatDmRoomInfo,
+  UserProfilePayload,
 } from '@/api/types';
 
 import { fetcher } from './fetcher';
 
-const usersQueryKeys = {
-  usersMe: () => ({
-    _def: 'users-me',
-    queryKey: ['users-me'],
-    queryFn: () => fetcher.get<HttpResponse<UserInfo>>(`v1/users/me`),
-  }),
-
-  usersSearch: (payload: UsersSearchPayload) => ({
-    _def: 'users-search',
-    queryKey: ['users-search', payload],
+const userQueryKeys = createQueryKeys('users', {
+  me: {
+    queryKey: null,
+    queryFn: () => fetcher.get<HttpResponse<UserInfo>>('v1/users/me'),
+  },
+  search: (payload: UsersSearchPayload) => ({
+    queryKey: [payload],
     queryFn: () => {
+      if (payload.nickname.length < 3) {
+        return Promise.resolve({
+          status: 'SUCCESS',
+          message: 'Search term too short',
+          data: { users: [] },
+        } as HttpResponse<UserList>);
+      }
+
       const searchParams = new URLSearchParams();
       payload.status.forEach((status) => searchParams.append('status', status));
       searchParams.append('exceptMe', String(payload.exceptMe));
@@ -32,60 +40,52 @@ const usersQueryKeys = {
         searchParams,
       });
     },
-    enabled: payload.nickname.length > 1,
   }),
-
-  userProfile: (id: number) => ({
-    _def: 'user-profile',
-    queryKey: ['user-profile', id],
-    queryFn: () => fetcher.get<HttpResponse<UserInfo>>(`v1/users/${id}`),
-    enabled: !!id,
+  profile: (payload: UserProfilePayload) => ({
+    queryKey: [payload],
+    queryFn: () => fetcher.get<HttpResponse<UserInfo>>(`v1/users/${payload.id}`),
   }),
-};
+});
 
-const friendsQueryKeys = {
-  friendsMe: () => ({
-    _def: 'friend-me',
-    queryKey: ['friend-me'],
+const friendsQueryKeys = createQueryKeys('friends', {
+  me: {
+    queryKey: null,
     queryFn: () =>
       fetcher.get<HttpResponse<FriendList>>(`v1/friends/me?status=ACCEPTED&status=BLOCKED`),
-  }),
-  friendsRequests: () => ({
-    _def: 'friend-requests',
-    queryKey: ['friend-requests'],
+  },
+  requests: {
+    queryKey: null,
     queryFn: () => fetcher.get<HttpResponse<FriendRequestUserList>>(`v1/friends/requests`),
-  }),
-};
+  },
+});
 
-const gameQueryKeys = {
+const gameQueryKeys = createQueryKeys('games', {
   tournamentHistory: (type: TournamentRoundType) => ({
-    _def: 'tournament-history',
-    queryKey: ['tournament-history', type],
+    queryKey: [type],
     queryFn: () => fetcher.get<HttpResponse<TournamentGameList>>(`v1/game/history/${type}`),
   }),
-};
+});
 
-const chatQueryKeys = {
-  chatHistory: (roomId: string) => ({
-    _def: 'chat-history',
-    queryKey: ['chat-history', roomId],
-    queryFn: (): Promise<HttpResponse<ChatHistory>> =>
+const chatQueryKeys = createQueryKeys('chats', {
+  history: (roomId: string) => ({
+    queryKey: [roomId],
+    queryFn: () =>
       roomId
-        ? fetcher.get(`/v1/chat/${roomId}/messages`)
+        ? fetcher.get<HttpResponse<ChatHistory>>(`v1/chat/${roomId}/messages`)
         : Promise.reject(new Error('roomId is undefined')),
   }),
-
-  chatDmRoomId: (userId: number, friendId: number) => ({
-    _def: 'chat-dm-room-id',
-    queryKey: ['chat-dm-room-id', userId, friendId],
-    queryFn: (): Promise<HttpResponse<ChatDmRoomInfo>> =>
-      fetcher.get(`/v1/chat/room/dm?userId=${userId}&friendId=${friendId}`),
+  dmRoomId: (userId: number, friendId: number) => ({
+    queryKey: [userId, friendId],
+    queryFn: () =>
+      fetcher.get<HttpResponse<ChatDmRoomInfo>>(
+        `v1/chat/room/dm?userId=${userId}&friendId=${friendId}`,
+      ),
   }),
-};
+});
 
-export const queryKeys = {
-  ...usersQueryKeys,
-  ...friendsQueryKeys,
-  ...gameQueryKeys,
-  ...chatQueryKeys,
-};
+export const queryKeys = mergeQueryKeys(
+  userQueryKeys,
+  friendsQueryKeys,
+  gameQueryKeys,
+  chatQueryKeys,
+);

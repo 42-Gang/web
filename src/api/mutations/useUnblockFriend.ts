@@ -17,7 +17,7 @@ export const useUnblockFriend = () => {
   return useMutation({
     mutationFn: patchUnblockFriend,
     onSuccess: async () => {
-      await queryClient.invalidateQueries(queryKeys.friendsMe());
+      await queryClient.invalidateQueries({ queryKey: queryKeys.friends._def });
     },
   });
 };

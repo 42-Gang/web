@@ -4,7 +4,7 @@ import { queryKeys } from '@/api/queryKey';
 import { UsersSearchPayload } from '@/api/types';
 
 export const useUsersSearch = (payload: UsersSearchPayload) =>
-  useQuery(queryKeys.usersSearch(payload));
+  useQuery(queryKeys.users.search(payload));
 
 export const useSuspenseUsersSearch = (payload: UsersSearchPayload) =>
-  useSuspenseQuery(queryKeys.usersSearch(payload));
+  useSuspenseQuery(queryKeys.users.search(payload));

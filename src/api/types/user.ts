@@ -32,3 +32,7 @@ export type UserStatus = {
   friendId: number;
   status: UserStatusType;
 };
+
+export type UserProfilePayload = {
+  id: number;
+};

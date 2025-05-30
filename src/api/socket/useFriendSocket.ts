@@ -28,24 +28,8 @@ export const useFriendSocket = () => {
       toast.success(`${data.toUserNickname} accepted your friend request!`);
 
       await Promise.all([
-        queryClient.invalidateQueries({
-          queryKey: [queryKeys.friendsMe()._def],
-          refetchType: 'all',
-        }),
-        queryClient.invalidateQueries({
-          queryKey: [queryKeys.friendsRequests()._def],
-          refetchType: 'all',
-        }),
-        queryClient.invalidateQueries({
-          queryKey: [
-            queryKeys.usersSearch({
-              nickname: '',
-              exceptMe: true,
-              status: ['NONE'],
-            })._def,
-          ],
-          refetchType: 'all',
-        }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.users._def, refetchType: 'all' }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.friends._def, refetchType: 'all' }),
       ]);
     };
 
@@ -53,20 +37,8 @@ export const useFriendSocket = () => {
       toast.info(`${data.fromUserNickname} sent you a friend request!`);
 
       await Promise.all([
-        queryClient.invalidateQueries({
-          queryKey: [queryKeys.friendsRequests()._def],
-          refetchType: 'all',
-        }),
-        queryClient.invalidateQueries({
-          queryKey: [
-            queryKeys.usersSearch({
-              nickname: '',
-              exceptMe: true,
-              status: ['NONE'],
-            })._def,
-          ],
-          refetchType: 'all',
-        }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.users._def, refetchType: 'all' }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.friends._def, refetchType: 'all' }),
       ]);
     };
 
