@@ -7,20 +7,27 @@ interface Response {
   accessToken: string;
 }
 
-const postRefreshToken = async () => {
-  const response = await ky.post(`/api/v1/auth/refresh-token`, {
-    credentials: 'include',
-  });
-  return await response.json<HttpResponse<Response>>();
+const postRefreshToken = async (): Promise<HttpResponse<Response>> => {
+  return await ky
+    .post(`/api/v1/auth/refresh-token`, {
+      credentials: 'include',
+    })
+    .json();
 };
 
-export async function refreshAccessToken() {
-  const { data } = (await postRefreshToken()) ?? {};
-  const newAccessToken = data?.accessToken ?? undefined;
+export const refreshAccessToken = async (): Promise<string | undefined> => {
+  try {
+    const { data } = await postRefreshToken();
+    const newAccessToken = data?.accessToken ?? undefined;
 
-  if (newAccessToken) {
-    window.localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, newAccessToken);
+    if (newAccessToken) {
+      window.localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, newAccessToken);
+    }
+
+    return newAccessToken;
+  } catch (error) {
+    console.error('Failed to refresh access token:', error);
+    window.localStorage.removeItem(LOCAL_STORAGE.ACCESS_TOKEN);
+    throw new Error('Unable to refresh access token');
   }
-
-  return newAccessToken;
-}
+};

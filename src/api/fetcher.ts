@@ -43,9 +43,10 @@ export const instance = ky.create({
             }
 
             const newToken = await refreshAccessToken();
+
             if (!newToken) {
               window.localStorage.removeItem(LOCAL_STORAGE.ACCESS_TOKEN);
-              return response;
+              throw new Error('Unable to refresh access token');
             }
 
             const retryHeaders = new Headers(options?.headers || {});
