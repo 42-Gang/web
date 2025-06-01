@@ -4,41 +4,20 @@ import { rem, theme } from '@/styles';
 
 export const wrapper = style({
   display: 'flex',
-  width: rem(800),
-  height: rem(600),
-  margin: '0 auto',
-  backgroundColor: '#111',
-  border: `${rem(2)} solid ${theme.color.white}`,
-  overflow: 'hidden',
-});
-
-export const button = style({
-  position: 'absolute',
-  top: rem(5),
-  left: rem(5),
-  width: rem(32),
-  height: rem(32),
-  opacity: 0.6,
-  transition: 'opacity 200ms ease',
-  background: 'url("/assets/images/back-button.svg")',
-
-  ':hover': { opacity: 1 },
-});
-
-export const chatSection = style({
-  display: 'flex',
-  flexDirection: 'column',
-  width: rem(600),
-  height: rem(600),
-  padding: 0,
-  justifyContent: 'flex-end',
+  width: '100%',
+  height: '100%',
 });
 
 export const sidebar = style({
-  width: rem(200),
-  display: 'flex',
-  flexDirection: 'column',
-  boxSizing: 'border-box',
+  ...theme.layout.column,
+  width: '25%',
+});
+
+export const chatSection = style({
+  ...theme.layout.column,
+  width: '75%',
+  height: '100%',
+  padding: 0,
 });
 
 export const header = style({
