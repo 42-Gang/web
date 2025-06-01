@@ -12,7 +12,7 @@ import {
 import { Toaster } from 'sonner';
 
 import { QueryClientProvider } from '@/api';
-import { useStatusSocket, useFriendSocket } from '@/api/socket';
+import { useChatSocket, useStatusSocket, useFriendSocket } from '@/api/socket';
 import { useAuthAtom } from '@/atoms/useAuthAtom';
 import { PATH } from '@/constants/routes';
 import {
@@ -63,6 +63,7 @@ const App = () => {
   const PrivateRoute = () => {
     const { isLogin } = useAuthAtom();
 
+    useChatSocket();
     useStatusSocket();
     useFriendSocket();
 

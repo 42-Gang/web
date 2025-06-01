@@ -1,18 +1,25 @@
 import { toast } from 'sonner';
 
-import { useBlockFriend } from '@/api/mutations/useBlockFriend';
-import { useUnblockFriend } from '@/api/mutations/useUnblockFriend';
-import { Friend } from '@/api/types';
+import { useBlockFriend, useUnblockFriend, useFriendsMe, type Friend } from '@/api';
 
 import * as styles from './styles.css';
 
 type FriendHeaderProps = {
-  friend: Friend;
+  current: number;
 };
 
-export const FriendHeader = ({ friend }: FriendHeaderProps) => {
+export const FriendHeader = ({ current }: FriendHeaderProps) => {
+  const { data } = useFriendsMe();
+  const friends: Friend[] = data?.data?.friends ?? [];
+
+  const friend = friends.find((f) => f.friendId === current);
+
   const { mutate: blockFriend } = useBlockFriend();
   const { mutate: unblockFriend } = useUnblockFriend();
+
+  if (!friend) {
+    return <div className={styles.header}>친구 정보를 찾을 수 없습니다.</div>;
+  }
 
   const isBlocked = friend.status === 'BLOCKED';
 

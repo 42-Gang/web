@@ -1,6 +1,7 @@
+import { Suspense } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { useFriendsMe } from '@/api';
+import { type Friend, useFriendsMe } from '@/api';
 import { BackButton } from '@/components/ui';
 import { PATH } from '@/constants';
 
@@ -11,14 +12,12 @@ import * as styles from './styles.css';
 
 export const ChatRoomPage = () => {
   const { data, isLoading } = useFriendsMe();
-  const friends = data?.data?.friends ?? [];
+  const friends: Friend[] = data?.data?.friends ?? [];
 
   const [params] = useSearchParams();
-  const friendId = Number(params.get('friend'));
+  const current: number = Number(params.get('friend'));
 
-  const current = friends.find((f) => f.friendId === friendId);
-
-  if (isLoading) {
+  if (isLoading || !current || isNaN(current)) {
     return <div className={styles.chat}>Loading...</div>;
   }
 
@@ -30,8 +29,10 @@ export const ChatRoomPage = () => {
       </div>
 
       <div className={styles.chat}>
-        {current && <FriendHeader friend={current} />}
-        <ChatBox />
+        <FriendHeader current={current} />
+        <Suspense fallback={<>Loading chat...</>}>
+          <ChatBox current={current} />
+        </Suspense>
       </div>
     </div>
   );

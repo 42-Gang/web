@@ -7,7 +7,7 @@ import { ProfileCard } from '@/components/ui';
 import * as styles from './styles.css';
 
 type FriendListProps = {
-  current?: Friend;
+  current?: number;
   friends: Friend[];
 };
 
@@ -23,7 +23,7 @@ export const FriendList = ({ current, friends }: FriendListProps) => {
           return (
             <li
               key={friend.friendId}
-              className={clsx(styles.item, current?.friendId === friend.friendId && styles.current)}
+              className={clsx(styles.item, current === friend.friendId && styles.current)}
             >
               <ProfileCard
                 avatarUrl={friend.avatarUrl || '/assets/images/sample-avatar.png'}
