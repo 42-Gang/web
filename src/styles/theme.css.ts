@@ -51,6 +51,11 @@ const layout = {
     flexDirection: 'column',
     justifyContent: 'center',
   },
+  columnBetween: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  },
 };
 
 const size = {

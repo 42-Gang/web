@@ -2,22 +2,20 @@ import { style } from '@vanilla-extract/css';
 
 import { rem, theme } from '@/styles';
 
-export const chatBox = style({
+export const root = style({
+  ...theme.layout.columnBetween,
   width: '100%',
-  height: rem(500),
+  height: '100%',
   backgroundColor: theme.color.orangeChat,
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
 });
 
-export const messages = style({
-  padding: rem(12),
-  overflowY: 'auto',
+export const messageList = style({
+  ...theme.layout.column,
   flex: 1,
-  display: 'flex',
-  flexDirection: 'column',
+  marginBlock: rem(12),
+  paddingInline: rem(12),
   gap: rem(8),
+  overflowY: 'auto',
 });
 
 export const messageBase = style({

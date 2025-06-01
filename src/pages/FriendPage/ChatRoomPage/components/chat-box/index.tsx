@@ -4,13 +4,13 @@ import * as styles from './styles.css';
 
 export const ChatBox = () => {
   const [messages, setMessages] = useState<string[]>(['PING: hello!', 'ME: hi']);
-  const [inputValue, setInputValue] = useState('');
+  const [message, setMessage] = useState('');
   const [isComposing, setIsComposing] = useState(false);
 
   const handleSend = () => {
-    if (!inputValue.trim()) return;
-    setMessages((prev) => [...prev, `ME: ${inputValue.trim()}`]);
-    setInputValue('');
+    if (!message.trim()) return;
+    setMessages((prev) => [...prev, `ME: ${message.trim()}`]);
+    setMessage('');
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -21,8 +21,8 @@ export const ChatBox = () => {
   };
 
   return (
-    <div className={styles.chatBox}>
-      <div className={styles.messages}>
+    <div className={styles.root}>
+      <div className={styles.messageList}>
         {messages.map((msg, idx) => {
           const isMyMessage = msg.startsWith('ME:');
           return (
@@ -32,13 +32,14 @@ export const ChatBox = () => {
           );
         })}
       </div>
+
       <div className={styles.inputWrapper}>
         <input
-          type="text"
           className={styles.input}
+          type="text"
           placeholder="Type a message"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
           onCompositionStart={() => setIsComposing(true)}
           onCompositionEnd={() => setIsComposing(false)}
