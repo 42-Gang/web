@@ -26,7 +26,7 @@ export const ChatRoomPage = () => {
     <div className={styles.wrapper}>
       <div className={styles.sidebar}>
         <BackButton href={PATH.FRIEND} />
-        <FriendList friends={friends} />
+        <FriendList current={current} friends={friends} />
       </div>
 
       <div className={styles.chat}>

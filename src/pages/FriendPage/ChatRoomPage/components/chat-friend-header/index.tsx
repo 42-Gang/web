@@ -42,18 +42,18 @@ export const FriendHeader = ({ friend }: FriendHeaderProps) => {
 
   return (
     <div className={styles.header}>
-      <button className={styles.blockToggle} data-selected={isBlocked} onClick={handleToggleBlock}>
-        <span>{isBlocked ? 'UNBLOCK' : 'BLOCK'}</span>
-      </button>
-
       <div className={styles.profile}>
-        <span className={styles.nickname}>{friend.nickname}</span>
         <img
           className={styles.avatar}
           src={friend.avatarUrl || '/assets/images/sample-avatar.png'}
           alt="friend avatar"
         />
+        <span className={styles.nickname}>{friend.nickname}</span>
       </div>
+
+      <button className={styles.blockToggle} data-selected={isBlocked} onClick={handleToggleBlock}>
+        <span>{isBlocked ? 'UNBLOCK' : 'BLOCK'}</span>
+      </button>
     </div>
   );
 };

@@ -4,7 +4,7 @@ import { rem, theme } from '@/styles';
 
 export const header = style({
   ...theme.layout.rowBetween,
-  paddingBlock: rem(12),
+  minHeight: rem(60),
   paddingInline: rem(20),
 });
 
@@ -14,8 +14,8 @@ export const profile = style({
 });
 
 export const avatar = style({
-  width: rem(56),
-  height: rem(56),
+  width: rem(42),
+  height: rem(42),
   borderRadius: '50%',
   objectFit: 'cover',
   flexShrink: 0,
@@ -23,13 +23,12 @@ export const avatar = style({
 
 export const nickname = style({
   color: theme.color.white,
-  fontSize: rem(28),
+  fontSize: rem(24),
   letterSpacing: rem(2),
 });
 
 export const blockToggle = style({
   ...theme.layout.center,
-  alignSelf: 'flex-end',
   position: 'relative',
   width: rem(110),
   height: rem(40),
