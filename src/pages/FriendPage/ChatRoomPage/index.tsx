@@ -10,26 +10,27 @@ import { FriendList } from './components/chat-friend-list';
 import * as styles from './styles.css';
 
 export const ChatRoomPage = () => {
-  const { data } = useFriendsMe();
+  const { data, isLoading } = useFriendsMe();
   const friends = data?.data?.friends ?? [];
 
   const [params] = useSearchParams();
-  const friendId = Number(params.get('friendId'));
+  const friendId = Number(params.get('friend'));
 
-  const currentFriend = friends.find((f) => f.friendId === friendId);
+  const current = friends.find((f) => f.friendId === friendId);
+
+  if (isLoading) {
+    return <div className={styles.chat}>Loading...</div>;
+  }
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.sidebar}>
         <BackButton href={PATH.FRIEND} />
-
-        <div className={styles.friendListWrapper}>
-          {currentFriend && <FriendList friends={friends} />}
-        </div>
+        <FriendList friends={friends} />
       </div>
 
-      <div className={styles.chatSection}>
-        {currentFriend && <FriendHeader friend={currentFriend} />}
+      <div className={styles.chat}>
+        {current && <FriendHeader friend={current} />}
         <ChatBox />
       </div>
     </div>
