@@ -1,3 +1,5 @@
+import { UserInfo } from './user';
+
 export type TournamentRoundType = 'ROUND_2' | 'ROUND_4';
 export type VerticalPosition = 'top' | 'bottom';
 export type HorizontalVariant = 'left' | 'right';
@@ -27,4 +29,30 @@ export type TournamentGame = {
 
 export type TournamentGameList = {
   game_list: TournamentGame[];
+};
+
+export type JoinTournamentRoomPayload = {
+  tournamentSize: number;
+};
+
+export type WaitingRoomUpdatePayload =
+  | { roomId: string; users: UserInfo[] }
+  | { users: UserInfo[] };
+
+export type CustomRoomCreatePayload = {
+  tournamentSize: number;
+};
+
+export type CustomRoomAcceptPayload = {
+  roomId: string;
+};
+
+export type CustomRoomInvitePayload = {
+  roomId: string;
+  userId: string;
+};
+
+export type CustomRoomStartPayload = {
+  roomId: string;
+  tournamentSize: number;
 };
