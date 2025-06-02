@@ -4,7 +4,6 @@ import { useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useUsersMe } from '@/api';
-import { queryKeys } from '@/api/queryKey';
 import { ChatMessageResponse } from '@/api/types';
 
 import { useSocket } from './useSocket';
@@ -32,10 +31,6 @@ export const useChatSocket = () => {
     if (!socket) return;
 
     const handleChatMessage = async (data: ChatMessageResponse) => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.chats._def, refetchType: 'all' }),
-      ]);
-
       if (!me || data.userId === me.data.id) return;
       if (friend && data.userId === friend) return;
 

@@ -21,6 +21,7 @@ export type ChatMessagePayload = {
 export type ChatMessageResponse = {
   roomId: number;
   userId: number;
+  messageId: number;
   nickname: string;
   contents: string;
   timestamp: string;
