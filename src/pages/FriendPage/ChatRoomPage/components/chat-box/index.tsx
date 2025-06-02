@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useState, useRef, useLayoutEffect } from 'react';
 
 import { useSuspenseChatDmRoomId, useSuspenseChatHistory, useSuspenseUsersMe } from '@/api';
 import { useSocket } from '@/api/socket';
@@ -18,18 +18,21 @@ export const ChatBox = ({ current }: Props) => {
 
   const { data } = useSuspenseChatHistory(roomId);
 
-  const { socket, connect, disconnect } = useSocket({
+  const { socket } = useSocket({
     path: 'chat',
     handshake: '/ws/chat',
     withToken: true,
   });
 
-  useEffect(() => {
-    connect();
-    return () => disconnect();
-  }, [connect, disconnect]);
-
   const [message, setMessage] = useState('');
+  const messageListRef = useRef<HTMLDivElement | null>(null);
+
+  useLayoutEffect(() => {
+    const messageList = messageListRef.current;
+    if (messageList) {
+      messageList.scrollTop = messageList.scrollHeight;
+    }
+  }, [data.data.chatHistory]);
 
   const handleSend = (e: FormEvent) => {
     e.preventDefault();
@@ -39,7 +42,7 @@ export const ChatBox = ({ current }: Props) => {
 
   return (
     <div className={styles.root}>
-      <div className={styles.messageList}>
+      <div ref={messageListRef} className={styles.messageList}>
         {data.data.chatHistory.map((message) => {
           return (
             <div
