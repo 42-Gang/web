@@ -1,8 +1,10 @@
 import { clsx } from 'clsx';
+import { useNavigate } from 'react-router-dom';
 
 import { Friend } from '@/api/types';
 import { useStatusAtom } from '@/atoms/useStatusAtom';
 import { ProfileCard } from '@/components/ui';
+import { PATH } from '@/constants';
 
 import * as styles from './styles.css';
 
@@ -13,27 +15,31 @@ type FriendListProps = {
 
 export const FriendList = ({ current, friends }: FriendListProps) => {
   const { status } = useStatusAtom();
+  const navigate = useNavigate();
 
   return (
     <div className={styles.wrapper}>
-      <ul className={styles.list}>
+      <div className={styles.list}>
         {friends.map((friend) => {
           const friendStatus = status.find((s) => s.friendId === friend.friendId)?.status;
 
           return (
-            <li
+            <button
               key={friend.friendId}
               className={clsx(styles.item, current === friend.friendId && styles.current)}
+              onClick={() =>
+                navigate(`${PATH.FRIEND_CHATROOM}?friend=${friend.friendId}`, { replace: true })
+              }
             >
               <ProfileCard
                 avatarUrl={friend.avatarUrl || '/assets/images/sample-avatar.png'}
                 nickname={friend.nickname}
                 status={friendStatus}
               />
-            </li>
+            </button>
           );
         })}
-      </ul>
+      </div>
     </div>
   );
 };
