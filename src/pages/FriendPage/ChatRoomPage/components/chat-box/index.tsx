@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 
 import { useSuspenseChatDmRoomId, useSuspenseUsersMe } from '@/api';
 import { useSocket } from '@/api/socket';
@@ -30,8 +30,10 @@ export const ChatBox = ({ current }: Props) => {
 
   const [message, setMessage] = useState('');
 
-  const handleSend = () => {
+  const handleSend = (e: FormEvent) => {
+    e.preventDefault();
     socket.emit('message', { roomId, contents: message });
+    setMessage('');
   };
 
   return (
@@ -47,19 +49,16 @@ export const ChatBox = ({ current }: Props) => {
         {/*})}*/}
       </div>
 
-      <div className={styles.inputWrapper}>
+      <form className={styles.inputWrapper} onSubmit={handleSend}>
         <input
           className={styles.input}
           type="text"
           placeholder="Type a message"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && message.trim()) handleSend();
-          }}
         />
-        <button className={styles.sendButton} onClick={handleSend} />
-      </div>
+        <button className={styles.sendButton} type="submit" />
+      </form>
     </div>
   );
 };
