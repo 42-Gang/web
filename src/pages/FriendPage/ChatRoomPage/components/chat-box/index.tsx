@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useState } from 'react';
 
-import { useSuspenseChatDmRoomId, useSuspenseUsersMe } from '@/api';
+import { useSuspenseChatDmRoomId, useSuspenseChatHistory, useSuspenseUsersMe } from '@/api';
 import { useSocket } from '@/api/socket';
 
 import * as styles from './styles.css';
@@ -15,7 +15,7 @@ export const ChatBox = ({ current }: Props) => {
 
   const roomId: number = room.data.roomId;
 
-  // const { data } = useChatHistory(roomId);
+  const { data } = useSuspenseChatHistory(roomId);
 
   const { socket, connect, disconnect } = useSocket({
     path: 'chat',
@@ -39,14 +39,13 @@ export const ChatBox = ({ current }: Props) => {
   return (
     <div className={styles.root}>
       <div className={styles.messageList}>
-        {/*{messages.map((msg, idx) => {*/}
-        {/*  const isMyMessage = msg.startsWith('ME:');*/}
-        {/*  return (*/}
-        {/*    <div key={idx} className={isMyMessage ? styles.myMessage : styles.otherMessage}>*/}
-        {/*      {msg}*/}
-        {/*    </div>*/}
-        {/*  );*/}
-        {/*})}*/}
+        {data.data.chatHistory.map((message) => {
+          return (
+            <div key={message.id} className={styles.otherMessage}>
+              {message.nickname}: {message.message}
+            </div>
+          );
+        })}
       </div>
 
       <form className={styles.inputWrapper} onSubmit={handleSend}>

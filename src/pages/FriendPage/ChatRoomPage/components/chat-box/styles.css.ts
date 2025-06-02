@@ -4,9 +4,10 @@ import { rem, theme } from '@/styles';
 
 export const root = style({
   ...theme.layout.columnBetween,
+  flex: 1,
   width: '100%',
-  height: '100%',
   backgroundColor: theme.color.orangeChat,
+  overflow: 'hidden',
 });
 
 export const messageList = style({
@@ -19,10 +20,10 @@ export const messageList = style({
 });
 
 export const messageBase = style({
-  fontSize: rem(19),
+  fontSize: rem(18),
 });
 
-export const myMessage = style([messageBase, { color: 'white' }]);
+export const myMessage = style([messageBase, { color: theme.color.white }]);
 export const otherMessage = style([messageBase, { color: '#6F59B1' }]);
 
 export const inputWrapper = style({
