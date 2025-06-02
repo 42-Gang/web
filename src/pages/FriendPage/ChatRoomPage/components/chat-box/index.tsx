@@ -63,7 +63,7 @@ export const ChatBox = ({ current }: Props) => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
-        <button className={styles.sendButton} type="submit" />
+        <button className={styles.sendButton} type="submit" aria-label="Send message" />
       </form>
     </div>
   );
