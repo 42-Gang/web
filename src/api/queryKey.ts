@@ -67,7 +67,7 @@ const gameQueryKeys = createQueryKeys('games', {
 });
 
 const chatQueryKeys = createQueryKeys('chats', {
-  history: (roomId: string) => ({
+  history: (roomId: number) => ({
     queryKey: [roomId],
     queryFn: () =>
       roomId

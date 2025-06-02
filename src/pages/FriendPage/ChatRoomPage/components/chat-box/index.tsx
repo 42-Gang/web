@@ -1,50 +1,70 @@
-import { useState } from 'react';
+import { clsx } from 'clsx';
+import { FormEvent, useState, useRef, useLayoutEffect } from 'react';
+
+import { useSuspenseChatDmRoomId, useSuspenseChatHistory, useSuspenseUsersMe } from '@/api';
+import { useSocket } from '@/api/socket';
 
 import * as styles from './styles.css';
 
-export const ChatBox = () => {
-  const [messages, setMessages] = useState<string[]>(['PING: hello!', 'ME: hi']);
-  const [inputValue, setInputValue] = useState('');
-  const [isComposing, setIsComposing] = useState(false);
+type Props = {
+  current: number;
+};
 
-  const handleSend = () => {
-    if (!inputValue.trim()) return;
-    setMessages((prev) => [...prev, `ME: ${inputValue.trim()}`]);
-    setInputValue('');
-  };
+export const ChatBox = ({ current }: Props) => {
+  const { data: me } = useSuspenseUsersMe();
+  const { data: room } = useSuspenseChatDmRoomId(me.data.id, current);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !isComposing) {
-      e.preventDefault();
-      handleSend();
+  const roomId: number = room.data.roomId;
+
+  const { data } = useSuspenseChatHistory(roomId);
+
+  const { socket } = useSocket({
+    path: 'chat',
+    handshake: '/ws/chat',
+    withToken: true,
+  });
+
+  const [message, setMessage] = useState('');
+  const messageListRef = useRef<HTMLDivElement | null>(null);
+
+  useLayoutEffect(() => {
+    const messageList = messageListRef.current;
+    if (messageList) {
+      messageList.scrollTop = messageList.scrollHeight;
     }
+  }, [data.data.chatHistory]);
+
+  const handleSend = (e: FormEvent) => {
+    e.preventDefault();
+    socket.emit('message', { roomId, contents: message });
+    setMessage('');
   };
 
   return (
-    <div className={styles.chatBox}>
-      <div className={styles.messages}>
-        {messages.map((msg, idx) => {
-          const isMyMessage = msg.startsWith('ME:');
+    <div className={styles.root}>
+      <div ref={messageListRef} className={styles.messageList}>
+        {data.data.chatHistory.map((message) => {
           return (
-            <div key={idx} className={isMyMessage ? styles.myMessage : styles.otherMessage}>
-              {msg}
+            <div
+              key={message.id}
+              className={clsx(styles.message, message.nickname === me.data.nickname && styles.me)}
+            >
+              {message.nickname === me.data.nickname ? 'ME' : message.nickname}: {message.message}
             </div>
           );
         })}
       </div>
-      <div className={styles.inputWrapper}>
+
+      <form className={styles.inputWrapper} onSubmit={handleSend}>
         <input
-          type="text"
           className={styles.input}
+          type="text"
           placeholder="Type a message"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onCompositionStart={() => setIsComposing(true)}
-          onCompositionEnd={() => setIsComposing(false)}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
         />
-        <button className={styles.sendButton} onClick={handleSend} />
-      </div>
+        <button className={styles.sendButton} type="submit" aria-label="Send message" />
+      </form>
     </div>
   );
 };

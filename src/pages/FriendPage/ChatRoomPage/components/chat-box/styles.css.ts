@@ -2,30 +2,29 @@ import { style } from '@vanilla-extract/css';
 
 import { rem, theme } from '@/styles';
 
-export const chatBox = style({
+export const root = style({
+  ...theme.layout.columnBetween,
+  flex: 1,
   width: '100%',
-  height: rem(500),
   backgroundColor: theme.color.orangeChat,
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
+  overflow: 'hidden',
 });
 
-export const messages = style({
-  padding: rem(12),
-  overflowY: 'auto',
+export const messageList = style({
+  ...theme.layout.column,
   flex: 1,
-  display: 'flex',
-  flexDirection: 'column',
+  marginBlock: rem(12),
+  paddingInline: rem(12),
   gap: rem(8),
+  overflowY: 'auto',
 });
 
 export const messageBase = style({
-  fontSize: rem(19),
+  fontSize: rem(18),
 });
 
-export const myMessage = style([messageBase, { color: 'white' }]);
-export const otherMessage = style([messageBase, { color: '#6F59B1' }]);
+export const message = style([messageBase, { color: '#6F59B1' }]);
+export const me = style([messageBase, { color: theme.color.white }]);
 
 export const inputWrapper = style({
   display: 'flex',

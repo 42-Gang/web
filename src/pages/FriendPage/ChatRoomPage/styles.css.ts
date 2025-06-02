@@ -1,73 +1,21 @@
 import { style } from '@vanilla-extract/css';
 
-import { rem, theme } from '@/styles';
+import { theme } from '@/styles';
 
 export const wrapper = style({
   display: 'flex',
-  width: rem(800),
-  height: rem(600),
-  margin: '0 auto',
-  backgroundColor: '#111',
-  border: `${rem(2)} solid ${theme.color.white}`,
-  overflow: 'hidden',
-});
-
-export const button = style({
-  position: 'absolute',
-  top: rem(5),
-  left: rem(5),
-  width: rem(32),
-  height: rem(32),
-  opacity: 0.6,
-  transition: 'opacity 200ms ease',
-  background: 'url("/assets/images/back-button.svg")',
-
-  ':hover': { opacity: 1 },
-});
-
-export const chatSection = style({
-  display: 'flex',
-  flexDirection: 'column',
-  width: rem(600),
-  height: rem(600),
-  padding: 0,
-  justifyContent: 'flex-end',
+  width: '100%',
+  height: '100%',
 });
 
 export const sidebar = style({
-  width: rem(200),
-  display: 'flex',
-  flexDirection: 'column',
-  boxSizing: 'border-box',
+  ...theme.layout.column,
+  width: '25%',
+  height: '100%',
 });
 
-export const header = style({
-  height: rem(50),
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'flex-end',
-  padding: rem(8),
-});
-
-export const friendListWrapper = style({
-  flex: 1,
-  overflowY: 'auto',
-  overflowX: 'hidden',
-  padding: 0,
-});
-
-export const exitButton = style({
-  background: `url('/assets/images/back-button.svg') no-repeat center`,
-  backgroundSize: 'contain',
-  width: rem(30),
-  height: rem(30),
-  border: 'none',
-});
-
-export const divider = style({
-  width: rem(200),
-  height: rem(1),
-  backgroundColor: theme.color.white,
-  marginBottom: 0,
-  marginTop: 0,
+export const chat = style({
+  ...theme.layout.column,
+  width: '75%',
+  height: '100%',
 });

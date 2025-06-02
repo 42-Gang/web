@@ -16,10 +16,6 @@ export const FriendList = ({ friends }: FriendListProps) => {
   const { status } = useStatusAtom();
   const navigate = useNavigate();
 
-  const handleClickMessage = async (friendId: number) => {
-    navigate(`${PATH.FRIEND_CHATROOM}?friendId=${friendId}`);
-  };
-
   return (
     <Separated by={<Divider />}>
       {friends.map((friend) => (
@@ -30,7 +26,7 @@ export const FriendList = ({ friends }: FriendListProps) => {
             status={status.find((s) => s.friendId === friend.friendId)?.status}
           />
 
-          <button onClick={() => handleClickMessage(friend.friendId)}>
+          <button onClick={() => navigate(`${PATH.FRIEND_CHATROOM}?friend=${friend.friendId}`)}>
             <img src="/assets/images/message.svg" alt="Message Icon" />
           </button>
         </div>

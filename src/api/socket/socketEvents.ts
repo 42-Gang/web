@@ -1,9 +1,16 @@
-import type { FriendAcceptStatus, FriendRequestStatus, UserStatus } from '@/api/types';
+import {
+  FriendAcceptStatus,
+  FriendRequestStatus,
+  ChatMessageResponse,
+  UserStatus,
+  ChatMessagePayload,
+} from '@/api/types';
 
 type SocketEventData = {
   'friend-status': UserStatus;
   'friend-accept': FriendAcceptStatus;
   'friend-request': FriendRequestStatus;
+  message: ChatMessageResponse;
 };
 
 export type ServerToClientEvents = {
@@ -13,5 +20,5 @@ export type ServerToClientEvents = {
 };
 
 export interface ClientToServerEvents {
-  sendMessage: (data: { text: string }) => void;
+  message: (data: ChatMessagePayload) => void;
 }
