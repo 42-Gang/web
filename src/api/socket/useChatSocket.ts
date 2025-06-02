@@ -4,8 +4,8 @@ import { useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useUsersMe } from '@/api';
-import { queryKeys } from '@/api/queryKey';
 import { ChatMessageResponse } from '@/api/types';
+import { PATH } from '@/constants';
 
 import { useSocket } from './useSocket';
 
@@ -32,14 +32,17 @@ export const useChatSocket = () => {
     if (!socket) return;
 
     const handleChatMessage = async (data: ChatMessageResponse) => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.chats._def, refetchType: 'all' }),
-      ]);
-
       if (!me || data.userId === me.data.id) return;
       if (friend && data.userId === friend) return;
 
-      toast.info(`${data.nickname}: ${data.contents}`);
+      toast.info(`${data.nickname}: ${data.contents}`, {
+        action: {
+          label: 'Open',
+          onClick: () => {
+            window.location.href = `${PATH.FRIEND_CHATROOM}?friend=${data.userId}`;
+          },
+        },
+      });
     };
 
     socket.on('message', handleChatMessage);
