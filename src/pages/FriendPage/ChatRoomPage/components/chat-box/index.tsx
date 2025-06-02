@@ -1,3 +1,4 @@
+import { clsx } from 'clsx';
 import { FormEvent, useEffect, useState } from 'react';
 
 import { useSuspenseChatDmRoomId, useSuspenseChatHistory, useSuspenseUsersMe } from '@/api';
@@ -41,8 +42,11 @@ export const ChatBox = ({ current }: Props) => {
       <div className={styles.messageList}>
         {data.data.chatHistory.map((message) => {
           return (
-            <div key={message.id} className={styles.otherMessage}>
-              {message.nickname}: {message.message}
+            <div
+              key={message.id}
+              className={clsx(styles.message, message.nickname === me.data.nickname && styles.me)}
+            >
+              {message.nickname === me.data.nickname ? 'ME' : message.nickname}: {message.message}
             </div>
           );
         })}

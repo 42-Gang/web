@@ -23,8 +23,8 @@ export const messageBase = style({
   fontSize: rem(18),
 });
 
-export const myMessage = style([messageBase, { color: theme.color.white }]);
-export const otherMessage = style([messageBase, { color: '#6F59B1' }]);
+export const message = style([messageBase, { color: '#6F59B1' }]);
+export const me = style([messageBase, { color: theme.color.white }]);
 
 export const inputWrapper = style({
   display: 'flex',
