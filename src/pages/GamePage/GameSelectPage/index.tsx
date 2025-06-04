@@ -23,7 +23,8 @@ export const GameSelectPage = () => {
   const handleModeConfirm = (index: number) => {
     if (!path) return;
     const mode = index === 0 ? '1vs1' : 'tournament';
-    navigate(`${path}?mode=${mode}`);
+    const tournamentSize = mode === '1vs1' ? 2 : 4;
+    navigate(`${path}?mode=${mode}&size=${tournamentSize}`);
   };
 
   return (

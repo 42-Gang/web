@@ -31,28 +31,40 @@ export type TournamentGameList = {
   game_list: TournamentGame[];
 };
 
-export type JoinTournamentRoomPayload = {
+// auto
+export type AutoJoinPayload = {
   tournamentSize: number;
 };
 
-export type WaitingRoomUpdatePayload =
-  | { roomId: string; users: UserInfo[] }
-  | { users: UserInfo[] };
-
-export type CustomRoomCreatePayload = {
+// custom
+export type CustomCreatePayload = {
   tournamentSize: number;
 };
 
-export type CustomRoomAcceptPayload = {
+export type CustomInvitePayload = {
+  roomId: string;
+  inviteeId: number;
+};
+
+export type CustomAcceptPayload = {
   roomId: string;
 };
 
-export type CustomRoomInvitePayload = {
+export type CustomStartPayload = {
   roomId: string;
-  userId: string;
 };
 
-export type CustomRoomStartPayload = {
+export type CustomLeavePayload = {
   roomId: string;
-  tournamentSize: number;
 };
+
+// common
+export type WaitingRoomUpdatePayload = {
+  users: UserInfo[];
+};
+
+export type TournamentCreatedPayload = {
+  tournamentId: number;
+  size: number;
+  mode: string;
+}

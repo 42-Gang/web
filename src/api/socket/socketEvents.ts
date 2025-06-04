@@ -2,12 +2,14 @@ import type {
   FriendAcceptStatus,
   FriendRequestStatus,
   UserStatus,
-  CustomRoomCreatePayload,
-  CustomRoomInvitePayload,
-  CustomRoomStartPayload,
+  AutoJoinPayload,
+  CustomCreatePayload,
+  CustomInvitePayload,
+  CustomAcceptPayload,
+  CustomStartPayload,
+  CustomLeavePayload,
   WaitingRoomUpdatePayload,
-  JoinTournamentRoomPayload,
-  CustomRoomAcceptPayload
+  TournamentCreatedPayload
 } from '@/api/types';
 
 type SocketEventData = {
@@ -15,10 +17,8 @@ type SocketEventData = {
   'friend-accept': FriendAcceptStatus;
   'friend-request': FriendRequestStatus;
 
-  'room-update': WaitingRoomUpdatePayload;
-  'custom-room-created': { roomId: string };
-  'custom-room-invited': CustomRoomInvitePayload;
-  'custom-room-started': CustomRoomStartPayload;
+  'waiting-room-update': WaitingRoomUpdatePayload;
+  'tournament-created': TournamentCreatedPayload;
 };
 
 export type ServerToClientEvents = {
@@ -27,19 +27,22 @@ export type ServerToClientEvents = {
   [key: string]: (data: unknown) => void;
 };
 
-type ClientEventPayloads = {
+type ClientEventData = {
   sendMessage: { text: string };
 
-  joinAutoRoom: JoinTournamentRoomPayload;
-  createCustomRoom: CustomRoomCreatePayload;
-  inviteCustomRoom: CustomRoomInvitePayload;
-  acceptCustomRoom: CustomRoomAcceptPayload;
-  startCustomRoom: CustomRoomStartPayload;
-  leaveRoom: void;
+  // auto
+  'auto-join': AutoJoinPayload
+
+  //custom
+  'custom-create': CustomCreatePayload;
+  'custom-invite': CustomInvitePayload;
+  'custom-accept': CustomAcceptPayload;
+  'custom-start': CustomStartPayload;
+  'custom-leave': CustomLeavePayload;
 };
 
 export type ClientToServerEvents = {
-  [K in keyof ClientEventPayloads]: ClientEventPayloads[K] extends void
-    ? () => void
-    : (data: ClientEventPayloads[K]) => void;
+  [K in keyof ClientEventData]: (data: ClientEventData[K]) => void;
+} & {
+  [key: string]: (data: unknown) => void;
 };
