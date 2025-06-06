@@ -1,6 +1,11 @@
+import { useEffect } from 'react';
+
 import { useUsersMe } from '@/api';
+import { useWaitingSocket } from '@/api/socket/useWaitingSocket';
+import { useWaitingStore } from '@/api/store/useWaitingStore';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
+
 
 import * as styles from './styles.css';
 import { UserCard } from '../../components/user-card';
@@ -8,18 +13,17 @@ import { WaitingMessage } from '../../components/waiting-message';
 
 export const GameTournamentMatchingPage = () => {
   const { data } = useUsersMe();
-  const playerAvatar = data?.data?.avatarUrl;
-  const playerNickname = data?.data?.nickname ?? '';
+  const meId = data?.data?.id;
 
-  // TODO: 상대방이 들어왔을 경우에 대한 처리
-  const slots = [
-    '/assets/images/sample1.png',
-    playerAvatar,
-    undefined,
-    '/assets/images/sample2.png',
-  ];
+  const { socket } = useWaitingSocket();
+  const { users, tournamentSize } = useWaitingStore();
 
-  const allMatched = slots.every((avatar) => avatar !== undefined);
+  useEffect(() => {
+    if (!socket || !socket.connected || tournamentSize === 0) return;
+    socket.emit('auto-join', { tournamentSize });
+  }, [socket, tournamentSize]);
+
+  const allMatched = users.length === tournamentSize;
 
   return (
     <Flex direction="column" style={{ height: '100%' }}>
@@ -27,16 +31,22 @@ export const GameTournamentMatchingPage = () => {
       <h2 className={styles.title}>AUTO TOURNAMENT</h2>
 
       <div className={styles.matchArea}>
-        {slots.map((avatar, index) => {
-          const isPlayer = avatar === playerAvatar;
-          const isWaiting = !avatar;
+        {[...Array(tournamentSize)].map((_, index) => {
+          const user = users[index];
+          const isWaiting = !user;
 
           return (
             <UserCard
               key={index}
-              userAvatar={avatar}
-              userNickname={isWaiting ? '-' : isPlayer ? playerNickname : `OPPONENT ${index + 1}`}
-              isPlayer={isPlayer}
+              userAvatar={user?.avatarUrl}
+              userNickname={
+                isWaiting
+                  ? '-'
+                  : user.id === meId
+                  ? user.nickname
+                  : `OPPONENT ${index + 1}`
+              }
+              isPlayer={user?.id === meId}
               isWaiting={isWaiting}
               mode="tournament"
               option="auto"
