@@ -15,8 +15,10 @@ import { WaitingMessage } from '../../components/waiting-message';
 
 export const Game1vs1MatchingPage = () => {
   const { data } = useUsersMe();
-  const playerAvatar = data?.data?.avatarUrl;
-  const playerNickname = data?.data?.nickname ?? '';
+  const me = data?.data;
+  const playerId = me?.id;
+  const playerNickname = me?.nickname ?? '';
+  const playerAvatar = me?.avatarUrl;
 
   const { users } = useWaitingStore();
   const location = useLocation();
@@ -26,15 +28,12 @@ export const Game1vs1MatchingPage = () => {
   const { socket } = useWaitingSocket();
 
   useEffect(() => {
-    if (!socket) return;
+    if (!socket || !socket.connected) return;
     socket.emit('auto-join', { tournamentSize });
   }, [socket, tournamentSize]);
 
-  const opponent = Array.isArray(users)
-    ? users.find((u) => u && u.nickname !== playerNickname)
-    : undefined;
-
-  const isPlayerFirst = !opponent || playerNickname < opponent.nickname;
+  const opponent = users?.find((u) => u.id !== playerId);
+  const isMeFirst = users?.[0]?.id === me?.id || !opponent;
   const isOpponentWaiting = !opponent;
 
   const playerProps = {
@@ -63,7 +62,7 @@ export const Game1vs1MatchingPage = () => {
       <h2 className={styles.title}>AUTO SOLO</h2>
 
       <div className={styles.matchArea}>
-        {isPlayerFirst ? (
+        {isMeFirst ? (
           <>
             <UserCard key="player" {...playerProps} position="left" />
             <span className={styles.vs}>VS</span>
