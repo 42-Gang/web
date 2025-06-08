@@ -43,6 +43,9 @@ export const useWaitingSocket = () => {
     const handleTournamentCreated = (data: TournamentCreatedPayload) => {
       toast.success(`토너먼트가 시작되었습니다. (ID: ${data.tournamentId}, 모드: ${data.mode})`);
       // Todo: 페이지 이동 추가
+
+      useWaitingStore.getState().clearRoom();
+      useWaitingStore.getState().clearInvitation();
     };
 
     const handleTournamentInvited = (data: CustomInvitedPayload) => {
@@ -50,7 +53,23 @@ export const useWaitingSocket = () => {
 
       const host = users.find((u) => u.id === data.hostId);
       const nickname = host?.nickname ?? `ID ${data.hostId}`;
-      toast.info(`${nickname}님이 초대했습니다. 수락하시겠습니까?`);
+      toast.info(`${nickname}님이 초대했습니다. 수락하시겠습니까?`, {
+        action: {
+          label: 'Yes',
+          onClick: () => {
+            if (socket) {
+              socket.emit('custom-accept', { roomId: data.roomId });
+              // TODO: 페이지 이동 추가
+            }
+          },
+        },
+        cancel: {
+          label: 'No',
+          onClick: () => {
+            useWaitingStore.getState().clearInvitation();
+          },
+        },
+      });
     };
 
     socket.on('waiting-room-update', handleWaitingRoomUpdate);

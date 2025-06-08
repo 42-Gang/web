@@ -26,6 +26,16 @@ export const Game1vs1MatchingPage = () => {
   }
 }, [socket, tournamentSize]);
 
+  useEffect(() => {
+    return () => {
+      if (socket && roomId) {
+        socket.emit('custom-leave', { roomId });
+      }
+      useWaitingStore.getState().clearRoom();
+      useWaitingStore.getState().clearInvitation();
+    };
+  }, [socket, roomId]);
+
   const me = users.find((u) => u.id === meId);
   const opponent = users.find((u) => u.id !== meId);
 
@@ -81,7 +91,16 @@ export const Game1vs1MatchingPage = () => {
         )}
       </div>
 
-      <WaitingMessage isWaiting={isOpponentWaiting} option="custom" isHost={isHostRef.current} />
+      <WaitingMessage
+        isWaiting={isOpponentWaiting}
+        option="custom"
+        isHost={isHostRef.current}
+        onStartGame={() => {
+          if (socket && roomId) {
+            socket.emit('custom-start', { roomId });
+          }
+        }}
+      />
     </Flex>
   );
 };
