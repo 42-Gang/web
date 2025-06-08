@@ -3,8 +3,8 @@ export type ErrorDetail = {
   message: string;
 };
 
-export type HttpResponse<T = unknown> = {
+export type HttpResponse<T = undefined> = {
   status: 'SUCCESS' | 'FAIL' | string;
   message: string;
   errors?: ErrorDetail[];
-} & (T extends unknown ? { data?: T } : { data: T });
+} & (T extends undefined ? { data?: T } : { data: T });

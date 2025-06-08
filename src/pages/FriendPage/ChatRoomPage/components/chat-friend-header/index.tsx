@@ -1,18 +1,25 @@
 import { toast } from 'sonner';
 
-import { useBlockFriend } from '@/api/mutations/useBlockFriend';
-import { useUnblockFriend } from '@/api/mutations/useUnblockFriend';
-import { Friend } from '@/api/types';
+import { useBlockFriend, useUnblockFriend, useFriendsMe, type Friend } from '@/api';
 
 import * as styles from './styles.css';
 
 type FriendHeaderProps = {
-  friend: Friend;
+  current: number;
 };
 
-export const FriendHeader = ({ friend }: FriendHeaderProps) => {
+export const FriendHeader = ({ current }: FriendHeaderProps) => {
+  const { data } = useFriendsMe();
+  const friends: Friend[] = data?.data?.friends ?? [];
+
+  const friend = friends.find((f) => f.friendId === current);
+
   const { mutate: blockFriend } = useBlockFriend();
   const { mutate: unblockFriend } = useUnblockFriend();
+
+  if (!friend) {
+    return <div className={styles.header}>친구 정보를 찾을 수 없습니다.</div>;
+  }
 
   const isBlocked = friend.status === 'BLOCKED';
 
@@ -42,18 +49,18 @@ export const FriendHeader = ({ friend }: FriendHeaderProps) => {
 
   return (
     <div className={styles.header}>
-      <button className={styles.blockButton} data-selected={isBlocked} onClick={handleToggleBlock}>
-        <span className={styles.buttonText}>{isBlocked ? 'UNBLOCK' : 'BLOCK'}</span>
-      </button>
-
       <div className={styles.profile}>
-        <span className={styles.nickname}>{friend.nickname}</span>
         <img
+          className={styles.avatar}
           src={friend.avatarUrl || '/assets/images/sample-avatar.png'}
           alt="friend avatar"
-          className={styles.avatar}
         />
+        <span className={styles.nickname}>{friend.nickname}</span>
       </div>
+
+      <button className={styles.blockToggle} data-selected={isBlocked} onClick={handleToggleBlock}>
+        <span>{isBlocked ? 'UNBLOCK' : 'BLOCK'}</span>
+      </button>
     </div>
   );
 };

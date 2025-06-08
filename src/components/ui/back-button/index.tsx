@@ -5,15 +5,17 @@ import { PATH } from '@/constants';
 import * as styles from './styles.css';
 
 type BackButtonProps = {
-  toPath?: string;
+  href?: string;
 };
 
-export const BackButton = ({ toPath }: BackButtonProps) => {
+export const BackButton = ({ href }: BackButtonProps) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(toPath ?? PATH.HOME);
+    navigate(href ?? PATH.HOME);
   };
 
-  return <button className={styles.button} onClick={handleClick} aria-label="Go to home page" />;
+  return (
+    <button className={styles.button} onClick={handleClick} aria-label="Go to previous page" />
+  );
 };

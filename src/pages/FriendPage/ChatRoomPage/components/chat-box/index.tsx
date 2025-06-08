@@ -1,50 +1,105 @@
-import { useState } from 'react';
+import { clsx } from 'clsx';
+import { FormEvent, useState, useRef, useLayoutEffect, useEffect, useMemo } from 'react';
+
+import {
+  ChatMessage,
+  ChatMessageResponse,
+  useSuspenseChatDmRoomId,
+  useSuspenseChatHistory,
+  useSuspenseUsersMe,
+} from '@/api';
+import { useSocket } from '@/api/socket';
 
 import * as styles from './styles.css';
 
-export const ChatBox = () => {
-  const [messages, setMessages] = useState<string[]>(['PING: hello!', 'ME: hi']);
-  const [inputValue, setInputValue] = useState('');
-  const [isComposing, setIsComposing] = useState(false);
+type Props = {
+  current: number;
+};
 
-  const handleSend = () => {
-    if (!inputValue.trim()) return;
-    setMessages((prev) => [...prev, `ME: ${inputValue.trim()}`]);
-    setInputValue('');
-  };
+export const ChatBox = ({ current }: Props) => {
+  const { data: me } = useSuspenseUsersMe();
+  const { data: room } = useSuspenseChatDmRoomId(me.data.id, current);
+  const roomId = room.data.roomId;
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !isComposing) {
-      e.preventDefault();
-      handleSend();
-    }
+  const { data } = useSuspenseChatHistory(roomId);
+  const { socket } = useSocket({
+    path: 'chat',
+    handshake: '/ws/chat',
+    withToken: true,
+  });
+
+  const [message, setMessage] = useState('');
+  const [socketMessages, setSocketMessages] = useState<ChatMessage[]>([]);
+  const messageListRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    setSocketMessages([]);
+  }, [roomId]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleChatMessage = (data: ChatMessageResponse) => {
+      if (!me) return;
+
+      const newMessage: ChatMessage = {
+        id: data.messageId,
+        nickname: data.nickname,
+        time: new Date(data.timestamp).toLocaleTimeString(),
+        message: data.contents,
+      };
+
+      setSocketMessages((prev) => [...prev, newMessage]);
+    };
+
+    socket.on('message', handleChatMessage);
+    return () => {
+      socket.off('message', handleChatMessage);
+    };
+  }, [socket, me]);
+
+  const mergedMessages = useMemo(() => {
+    const map = new Map<number, ChatMessage>();
+    [...data.data.chatHistory, ...socketMessages].forEach((msg) => {
+      map.set(msg.id, msg);
+    });
+    return Array.from(map.values());
+  }, [data.data.chatHistory, socketMessages]);
+
+  useLayoutEffect(() => {
+    const list = messageListRef.current;
+    if (list) list.scrollTop = list.scrollHeight;
+  }, [mergedMessages]);
+
+  const handleSend = (e: FormEvent) => {
+    e.preventDefault();
+    if (!message.trim()) return;
+    socket.emit('message', { roomId, contents: message });
+    setMessage('');
   };
 
   return (
-    <div className={styles.chatBox}>
-      <div className={styles.messages}>
-        {messages.map((msg, idx) => {
-          const isMyMessage = msg.startsWith('ME:');
+    <div className={styles.root}>
+      <div ref={messageListRef} className={styles.messageList}>
+        {mergedMessages.map((msg) => {
+          const isMe = msg.nickname === me.data.nickname;
           return (
-            <div key={idx} className={isMyMessage ? styles.myMessage : styles.otherMessage}>
-              {msg}
+            <div key={msg.id} className={clsx(styles.message, isMe && styles.me)}>
+              {isMe ? 'ME' : msg.nickname}: {msg.message}
             </div>
           );
         })}
       </div>
-      <div className={styles.inputWrapper}>
+      <form className={styles.inputWrapper} onSubmit={handleSend}>
         <input
-          type="text"
           className={styles.input}
+          type="text"
           placeholder="Type a message"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onCompositionStart={() => setIsComposing(true)}
-          onCompositionEnd={() => setIsComposing(false)}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
         />
-        <button className={styles.sendButton} onClick={handleSend} />
-      </div>
+        <button className={styles.sendButton} type="submit" aria-label="Send message" />
+      </form>
     </div>
   );
 };

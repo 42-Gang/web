@@ -10,17 +10,24 @@ import type {
   CustomLeavePayload,
   CustomInvitedPayload,
   WaitingRoomUpdatePayload,
-  TournamentCreatedPayload
+  TournamentCreatedPayload,
+  ChatMessagePayload,
+  ChatMessageResponse,
 } from '@/api/types';
 
 type SocketEventData = {
+  // 친구 관련
   'friend-status': UserStatus;
   'friend-accept': FriendAcceptStatus;
   'friend-request': FriendRequestStatus;
 
+  // 대기방/게임 관련
   'waiting-room-update': WaitingRoomUpdatePayload;
   'tournament-created': TournamentCreatedPayload;
   'custom-invited': CustomInvitedPayload;
+
+  // 채팅
+  message: ChatMessageResponse;
 };
 
 export type ServerToClientEvents = {
@@ -30,12 +37,13 @@ export type ServerToClientEvents = {
 };
 
 type ClientEventData = {
-  sendMessage: { text: string };
+  // 채팅
+  message: ChatMessagePayload;
 
-  // auto
-  'auto-join': AutoJoinPayload
+  // 자동 매칭
+  'auto-join': AutoJoinPayload;
 
-  //custom
+  // 커스텀 매칭
   'custom-create': CustomCreatePayload;
   'custom-invite': CustomInvitePayload;
   'custom-accept': CustomAcceptPayload;
