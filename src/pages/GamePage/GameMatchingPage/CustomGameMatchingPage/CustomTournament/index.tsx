@@ -55,17 +55,17 @@ export const GameTournamentMatchingPage = () => {
           const isPlayer = user?.id === meId;
           const isWaiting = !user;
 
+          const nickname = isWaiting
+            ? '-'
+            : isPlayer
+            ? data?.data?.nickname ?? 'ME'
+            : user?.nickname ?? `OPPONENT ${i + 1}`;
+
           const card = (
             <UserCard
               key={i}
               userAvatar={user?.avatarUrl}
-              userNickname={
-                isWaiting
-                  ? '-'
-                  : isPlayer
-                  ? data?.data?.nickname ?? 'ME'
-                  : user?.nickname ?? `OPPONENT ${i + 1}`
-              }
+              userNickname={nickname}
               isPlayer={isPlayer}
               isWaiting={isWaiting}
               mode="tournament"
@@ -75,12 +75,16 @@ export const GameTournamentMatchingPage = () => {
             />
           );
 
-          return isWaiting && isHostRef.current ? (
-            <InviteFriendDialog key={i} onInvite={handleInviteFriend}>
-              {card}
-            </InviteFriendDialog>
-          ) : (
-            card
+          return (
+            <div key={i}>
+              {isWaiting && isHostRef.current ? (
+                <InviteFriendDialog onInvite={handleInviteFriend}>
+                  {card}
+                </InviteFriendDialog>
+              ) : (
+                card
+              )}
+            </div>
           );
         })}
       </div>
