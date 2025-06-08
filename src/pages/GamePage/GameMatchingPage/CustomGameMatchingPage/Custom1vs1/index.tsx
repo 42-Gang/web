@@ -15,9 +15,9 @@ export const Game1vs1MatchingPage = () => {
   const meId = data?.data?.id;
 
   const { socket } = useWaitingSocket();
-  const { users, tournamentSize, roomId } = useWaitingStore();
+  const { users, tournamentSize, roomId, invitation } = useWaitingStore();
 
-  const isHostRef = useRef(true);
+  const isHostRef = useRef(!invitation);
 
   useEffect(() => {
     if (!socket || !socket.connected || tournamentSize === 0) return;

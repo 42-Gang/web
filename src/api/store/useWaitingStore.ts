@@ -11,13 +11,13 @@ type WaitingStore = {
   users: UserInfo[];
   tournamentSize: number;
   roomId: string | null;
+  invitation?: Invitation;
 
   setUsers: (users: UserInfo[]) => void;
   setTournamentSize: (size: number) => void;
   setRoomId: (id: string) => void;
   clearRoom: () => void;
 
-  invitation?: Invitation;
   setInvitation: (data: Invitation) => void;
   clearInvitation: () => void;
 };;

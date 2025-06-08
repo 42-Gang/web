@@ -31,9 +31,10 @@ export const GameTournamentMatchingPage = () => {
       <h2 className={styles.title}>AUTO TOURNAMENT</h2>
 
       <div className={styles.matchArea}>
-        {[...Array(tournamentSize)].map((_, index) => {
+        {[...Array(tournamentSize || 4)].map((_, index) => {
           const user = users[index];
           const isWaiting = !user;
+          const isPlayer = user?.id === meId;
 
           return (
             <UserCard
@@ -42,7 +43,7 @@ export const GameTournamentMatchingPage = () => {
               userNickname={
                 isWaiting
                   ? '-'
-                  : user.id === meId
+                  : isPlayer
                   ? user.nickname
                   : `OPPONENT ${index + 1}`
               }
