@@ -14,7 +14,11 @@ import {
 
 import * as styles from './styles.css';
 
-export const InviteFriendDialog = ({ children }: PropsWithChildren) => {
+type InviteFriendDialogProps = PropsWithChildren<{
+  onInvite?: (inviteeId: number) => void;
+}>;
+
+export const InviteFriendDialog = ({ children, onInvite }: InviteFriendDialogProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [requestedIds, setRequestedIds] = useState<number[]>([]);
 
@@ -29,6 +33,7 @@ export const InviteFriendDialog = ({ children }: PropsWithChildren) => {
     if (requestedIds.includes(id)) return;
     setRequestedIds((prev) => [...prev, id]);
     toast.success(`You invited ${nickname}`);
+    onInvite?.(id);
   };
 
   return (

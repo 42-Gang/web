@@ -8,6 +8,7 @@ import type {
   CustomAcceptPayload,
   CustomStartPayload,
   CustomLeavePayload,
+  CustomInvitedPayload,
   WaitingRoomUpdatePayload,
   TournamentCreatedPayload
 } from '@/api/types';
@@ -19,6 +20,7 @@ type SocketEventData = {
 
   'waiting-room-update': WaitingRoomUpdatePayload;
   'tournament-created': TournamentCreatedPayload;
+  'custom-invited': CustomInvitedPayload;
 };
 
 export type ServerToClientEvents = {

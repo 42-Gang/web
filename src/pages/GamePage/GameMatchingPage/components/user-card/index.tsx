@@ -11,7 +11,7 @@ type UserCardProps = {
   position?: 'left' | 'right';
   isHostUser: boolean;
   isPlayerHost?: boolean;
-  onClickAdd?: () => void;
+  onClickAdd?: (inviteeId: number) => void;
 };
 
 export const UserCard = ({
@@ -40,8 +40,8 @@ export const UserCard = ({
   const renderAvatar = () => {
     if (option === 'custom' && !isCurrentUser && isWaiting && isHostUser) {
       return (
-        <InviteFriendDialog>
-          <button className={styles.addButton} onClick={onClickAdd} />
+        <InviteFriendDialog onInvite={onClickAdd}>
+          <button className={styles.addButton} />
         </InviteFriendDialog>
       );
     }

@@ -46,6 +46,11 @@ export type CustomInvitePayload = {
   inviteeId: number;
 };
 
+export type CustomInvitedPayload = {
+  roomId: string;
+  hostId: number;
+};
+
 export type CustomAcceptPayload = {
   roomId: string;
 };

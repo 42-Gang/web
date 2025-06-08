@@ -31,6 +31,8 @@ import {
   GameCustomMatchingPage,
 } from '@/pages';
 
+import { useWaitingSocket } from './api/socket/useWaitingSocket';
+
 const App = () => {
   const PublicRoute = () => {
     const { isLogin } = useAuthAtom();
@@ -65,6 +67,7 @@ const App = () => {
 
     useStatusSocket();
     useFriendSocket();
+    useWaitingSocket();
 
     if (!isLogin()) {
       return <Navigate to={PATH.LANDING} replace />;

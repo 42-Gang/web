@@ -1,4 +1,8 @@
+import { useEffect, useRef } from 'react';
+
 import { useUsersMe } from '@/api';
+import { useWaitingSocket } from '@/api/socket/useWaitingSocket';
+import { useWaitingStore } from '@/api/store/useWaitingStore';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
 
@@ -6,60 +10,55 @@ import * as styles from './styles.css';
 import { UserCard } from '../../components/user-card';
 import { WaitingMessage } from '../../components/waiting-message';
 
-// 테스트 시나리오
-const TEST_SCENARIO = {
-  opponentExists: false,
-  iAmHost: true,
-};
-
 export const Game1vs1MatchingPage = () => {
   const { data } = useUsersMe();
-  const playerAvatar = data?.data?.avatarUrl;
-  const playerNickname = data?.data?.nickname ?? '';
+  const meId = data?.data?.id;
 
-  const opponentAvatar: string | undefined = TEST_SCENARIO.opponentExists
-    ? '/assets/images/sample-avatar.png'
-    : undefined;
+  const { socket } = useWaitingSocket();
+  const { users, tournamentSize, roomId } = useWaitingStore();
 
-  const isOpponentWaiting = !opponentAvatar;
-  const isPlayerHost = TEST_SCENARIO.iAmHost;
-  const opponentIsHost = !isPlayerHost;
+  const isHostRef = useRef(true);
 
-  const handleInviteFriend = () => {
-    console.error('Invite friend clicked');
+  useEffect(() => {
+    if (!socket || !socket.connected || tournamentSize === 0) return;
+    if (isHostRef.current) {
+      socket.emit('custom-create', { tournamentSize });
+  }
+}, [socket, tournamentSize]);
+
+  const me = users.find((u) => u.id === meId);
+  const opponent = users.find((u) => u.id !== meId);
+
+  const isMeFirst = users[0]?.id === meId || !opponent;
+  const isOpponentWaiting = !opponent;
+
+  
+  const handleInviteFriend = (inviteeId: number) => {
+    if (!socket || !roomId) return;
+    socket.emit('custom-invite', { roomId, inviteeId });
   };
 
   const playerProps = {
-    userAvatar: playerAvatar,
-    userNickname: playerNickname,
+    userAvatar: me?.avatarUrl,
+    userNickname: me?.nickname ?? 'ME',
     isPlayer: true,
     isWaiting: false,
     mode: '1vs1' as const,
     option: 'custom' as const,
-    isHostUser: isPlayerHost,
+    isHostUser: isHostRef.current
   };
 
   const opponentProps = {
-    userAvatar: opponentAvatar,
-    userNickname: 'OPPONENT',
+    userAvatar: opponent?.avatarUrl,
+    userNickname: opponent?.nickname ?? 'OPPONENT',
     isPlayer: false,
     isWaiting: isOpponentWaiting,
     mode: '1vs1' as const,
     option: 'custom' as const,
-    isHostUser: isPlayerHost,
-    isPlayerHost: opponentIsHost,
+    isHostUser: isHostRef.current,
+    isPlayerHost: !isHostRef.current,
     onClickAdd: handleInviteFriend,
   };
-
-  const [leftCard, rightCard] = isPlayerHost
-    ? [
-        <UserCard key="player" {...playerProps} position="left" />,
-        <UserCard key="opponent" {...opponentProps} position="right" />,
-      ]
-    : [
-        <UserCard key="opponent" {...opponentProps} position="left" />,
-        <UserCard key="player" {...playerProps} position="right" />,
-      ];
 
   return (
     <Flex direction="column" style={{ height: '100%' }}>
@@ -67,12 +66,22 @@ export const Game1vs1MatchingPage = () => {
       <h2 className={styles.title}>CUSTOM SOLO</h2>
 
       <div className={styles.matchArea}>
-        {leftCard}
-        <span className={styles.vs}>VS</span>
-        {rightCard}
+        {isMeFirst ? (
+          <>
+            <UserCard key="player" {...playerProps} position="left" />
+            <span className={styles.vs}>VS</span>
+            <UserCard key="opponent" {...opponentProps} position="right" />
+          </>
+        ) : (
+          <>
+            <UserCard key="opponent" {...opponentProps} position="left" />
+            <span className={styles.vs}>VS</span>
+            <UserCard key="player" {...playerProps} position="right" />
+          </>
+        )}
       </div>
 
-      <WaitingMessage isWaiting={isOpponentWaiting} option="custom" isHost={isPlayerHost} />
+      <WaitingMessage isWaiting={isOpponentWaiting} option="custom" isHost={isHostRef.current} />
     </Flex>
   );
 };
