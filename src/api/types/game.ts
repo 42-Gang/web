@@ -43,7 +43,7 @@ export type CustomCreatePayload = {
 
 export type CustomInvitePayload = {
   roomId: string;
-  inviteeId: number;
+  userId: number;
 };
 
 export type CustomInvitedPayload = {

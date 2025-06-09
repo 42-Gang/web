@@ -13,6 +13,7 @@ import { Toaster } from 'sonner';
 
 import { QueryClientProvider } from '@/api';
 import { useChatSocket, useStatusSocket, useFriendSocket } from '@/api/socket';
+import { useWaitingSocket } from '@/api/socket/useWaitingSocket';
 import { useAuthAtom } from '@/atoms/useAuthAtom';
 import { PATH } from '@/constants/routes';
 import {
@@ -30,8 +31,6 @@ import {
   GameAutoMatchingPage,
   GameCustomMatchingPage,
 } from '@/pages';
-
-import { useWaitingSocket } from './api/socket/useWaitingSocket';
 
 const App = () => {
   const PublicRoute = () => {

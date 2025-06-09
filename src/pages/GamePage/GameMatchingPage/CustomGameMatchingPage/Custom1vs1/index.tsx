@@ -43,9 +43,9 @@ export const Game1vs1MatchingPage = () => {
   const isOpponentWaiting = !opponent;
 
   
-  const handleInviteFriend = (inviteeId: number) => {
+  const handleInviteFriend = (userId: number) => {
     if (!socket || !roomId) return;
-    socket.emit('custom-invite', { roomId, inviteeId });
+    socket.emit('custom-invite', { roomId, userId });
   };
 
   const playerProps = {

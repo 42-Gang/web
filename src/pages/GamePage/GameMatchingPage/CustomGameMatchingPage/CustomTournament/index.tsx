@@ -37,9 +37,9 @@ export const GameTournamentMatchingPage = () => {
     };
   }, [socket, roomId]);
 
-  const handleInviteFriend = (inviteeId: number) => {
+  const handleInviteFriend = (userId: number) => {
     if (!socket || !roomId) return;
-    socket.emit('custom-invite', { roomId, inviteeId });
+    socket.emit('custom-invite', { roomId, userId });
   };
 
   const allMatched = users.length === tournamentSize;
