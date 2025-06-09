@@ -15,12 +15,11 @@ import { useSocket } from './useSocket';
 import { useWaitingStore } from '../store/useWaitingStore';
 
 export const useWaitingSocket = () => {
-  const { setUsers } = useWaitingStore();
-  const { setInvitation, users } = useWaitingStore();
+  const { setUsers, setInvitation, users } = useWaitingStore();
 
   const { socket, connect, disconnect } = useSocket({
   path: 'waiting',
-  handshake: '/ws/waiting',
+  handshake: '/ws/main-game',
   withToken: true,
 }) as {
   socket: import('socket.io-client').Socket<ServerToClientEvents, ClientToServerEvents>;
@@ -51,7 +50,7 @@ export const useWaitingSocket = () => {
     const handleTournamentInvited = (data: CustomInvitedPayload) => {
       setInvitation(data);
 
-      const host = users.find((u) => u.id === data.hostId);
+      const host = useWaitingStore.getState().users.find((u) => u.id === data.hostId);
       const nickname = host?.nickname ?? `ID ${data.hostId}`;
       toast.info(`${nickname}님이 초대했습니다. 수락하시겠습니까?`, {
         action: {
