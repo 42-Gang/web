@@ -1,7 +1,4 @@
-import { useEffect } from 'react';
-
 import { useUsersMe } from '@/api';
-import { useWaitingSocket } from '@/api/socket/useWaitingSocket';
 import { useWaitingStore } from '@/api/store/useWaitingStore';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
@@ -16,15 +13,9 @@ export const Game1vs1MatchingPage = () => {
   const { data } = useUsersMe();
   const meId = data?.data?.id;
 
-  const { socket } = useWaitingSocket();
-  const { users, tournamentSize } = useWaitingStore();
+  const { users } = useWaitingStore();
 
-  useEffect(() => {
-    if (!socket || !socket.connected || tournamentSize === 0) return;
-    socket.emit('auto-join', { tournamentSize });
-  }, [socket, tournamentSize]);
-
-  const me = users.find((u) => u.id === meId);
+  const me = users.find ((u) => u.id === meId);
   const opponent = users.find((u) => u.id !== meId);
 
   const isMeFirst = users[0]?.id === meId || !opponent;
