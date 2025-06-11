@@ -27,7 +27,7 @@ export const GameSelectPage = () => {
     const mode = index === 0 ? '1vs1' : 'tournament';
     const tournamentSize = mode === '1vs1' ? 2 : 4;
 
-    if (path === PATH.GAME_AUTO_MATCHING && socket?.connected) {
+    if (path === PATH.GAME_AUTO_MATCHING && mode === '1vs1' && socket?.connected) {
       socket.emit('auto-join', { tournamentSize });
     }
 
