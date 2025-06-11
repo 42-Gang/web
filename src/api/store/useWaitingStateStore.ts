@@ -12,6 +12,7 @@ type WaitingStore = {
   tournamentSize: number;
   roomId: string | null;
   invitation?: Invitation;
+  hostId: number | null;
 
   setUsers: (users: UserInfo[]) => void;
   setTournamentSize: (size: number) => void;
@@ -20,24 +21,33 @@ type WaitingStore = {
 
   setInvitation: (data: Invitation) => void;
   clearInvitation: () => void;
-};;
+
+  setHostId: (id: number) => void;
+  clearHost: () => void;
+};
 
 export const useWaitingStore = create<WaitingStore>((set) => ({
   users: [],
   tournamentSize: 0,
   roomId: null,
   invitation: undefined,
+  hostId: null,
 
   setUsers: (users) => set({ users }),
   setTournamentSize: (size) => set({ tournamentSize: size }),
   setRoomId: (id) => set({ roomId: id }),
+
+  setInvitation: (data) => set({ invitation: data }),
+  clearInvitation: () => set({ invitation: undefined }),
+
+  setHostId: (id) => set({ hostId: id }),
+  clearHost: () => set({ hostId: null }),
+
   clearRoom: () =>
     set({
       users: [],
       tournamentSize: 0,
-      roomId: null
+      roomId: null,
+      hostId: null,
     }),
-
-    setInvitation: (data) => set({ invitation: data }),
-    clearInvitation: () => set({ invitation: undefined })
 }));

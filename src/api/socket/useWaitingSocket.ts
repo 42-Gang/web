@@ -9,10 +9,10 @@ import type {
 } from '@/api/types';
 
 import { useSocket } from './useSocket';
-import { useWaitingStore } from '../store/useWaitingStore';
+import { useWaitingStore } from '../store/useWaitingStateStore';
 
 export const useWaitingSocket = () => {
-  const { setUsers, setInvitation } = useWaitingStore();
+  const { setUsers, setInvitation, setHostId } = useWaitingStore();
 
   const { socket, connect, disconnect } = useSocket({
     path: 'waiting',
@@ -46,6 +46,7 @@ export const useWaitingSocket = () => {
 
     const handleTournamentInvited = (data: CustomInvitedPayload) => {
       setInvitation(data);
+      setHostId(data.hostId);
 
       const host = useWaitingStore.getState().users.find((u) => u.id === data.hostId);
       const nickname = host?.nickname ?? `ID ${data.hostId}`;
@@ -77,7 +78,7 @@ export const useWaitingSocket = () => {
       socket.off('tournament-created', handleTournamentCreated);
       socket.off('custom-invited', handleTournamentInvited);
     };
-  }, [socket, setUsers, setInvitation]);
+  }, [socket, setUsers, setInvitation, setHostId]);
 
   return { socket };
 };

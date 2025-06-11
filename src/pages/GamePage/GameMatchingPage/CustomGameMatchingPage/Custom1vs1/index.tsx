@@ -2,8 +2,8 @@ import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { useUsersMe } from '@/api';
-import { useWaitingSocket } from '@/api/socket/useWaitingSocket';
-import { useWaitingStore } from '@/api/store/useWaitingStore';
+import { useWaitingSocketStore } from '@/api/store/useWaitingSocketStore';
+import { useWaitingStore } from '@/api/store/useWaitingStateStore';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
 
@@ -15,7 +15,7 @@ export const Game1vs1MatchingPage = () => {
   const { data } = useUsersMe();
   const meId = data?.data?.id;
 
-  const { socket } = useWaitingSocket();
+  const { socket } = useWaitingSocketStore();
   const { users, tournamentSize, roomId, invitation, setTournamentSize } = useWaitingStore();
 
   const [searchParams] = useSearchParams();
