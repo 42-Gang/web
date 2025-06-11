@@ -1,31 +1,28 @@
 import { useEffect } from 'react';
 import { toast } from 'sonner';
 
-import type {
-  ServerToClientEvents,
-  ClientToServerEvents
-} from '@/api/socket/socketEvents';
+import type { ServerToClientEvents, ClientToServerEvents } from '@/api/socket/socketEvents';
 import type {
   WaitingRoomUpdatePayload,
   TournamentCreatedPayload,
-  CustomInvitedPayload
+  CustomInvitedPayload,
 } from '@/api/types';
 
 import { useSocket } from './useSocket';
 import { useWaitingStore } from '../store/useWaitingStore';
 
 export const useWaitingSocket = () => {
-  const { setUsers, setInvitation, users } = useWaitingStore();
+  const { setUsers, setInvitation } = useWaitingStore();
 
   const { socket, connect, disconnect } = useSocket({
-  path: 'waiting',
-  handshake: '/ws/main-game',
-  withToken: true,
-}) as {
-  socket: import('socket.io-client').Socket<ServerToClientEvents, ClientToServerEvents>;
-  connect: () => void;
-  disconnect: () => void;
-};
+    path: 'waiting',
+    handshake: '/ws/main-game',
+    withToken: true,
+  }) as {
+    socket: import('socket.io-client').Socket<ServerToClientEvents, ClientToServerEvents>;
+    connect: () => void;
+    disconnect: () => void;
+  };
 
   useEffect(() => {
     connect();
@@ -79,8 +76,8 @@ export const useWaitingSocket = () => {
       socket.off('waiting-room-update', handleWaitingRoomUpdate);
       socket.off('tournament-created', handleTournamentCreated);
       socket.off('custom-invited', handleTournamentInvited);
-    }
-  }, [socket, setUsers, setInvitation, users]);
+    };
+  }, [socket, setUsers, setInvitation]);
 
   return { socket };
 };

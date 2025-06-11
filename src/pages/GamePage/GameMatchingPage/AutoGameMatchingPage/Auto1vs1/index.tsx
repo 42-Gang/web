@@ -1,21 +1,41 @@
+import { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+
 import { useUsersMe } from '@/api';
+import { useWaitingSocket } from '@/api/socket/useWaitingSocket';
 import { useWaitingStore } from '@/api/store/useWaitingStore';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
-
 
 import * as styles from './styles.css';
 import { UserCard } from '../../components/user-card';
 import { WaitingMessage } from '../../components/waiting-message';
 
-
 export const Game1vs1MatchingPage = () => {
   const { data } = useUsersMe();
   const meId = data?.data?.id;
 
-  const { users } = useWaitingStore();
+  const { socket } = useWaitingSocket();
+  const [searchParams] = useSearchParams();
 
-  const me = users.find ((u) => u.id === meId);
+  const { users, tournamentSize, setTournamentSize } = useWaitingStore();
+
+  useEffect(() => {
+    const size = searchParams.get('size');
+    if (size) {
+      const parsed = Number(size);
+      if (!isNaN(parsed)) {
+        setTournamentSize(parsed);
+      }
+    }
+  }, [searchParams, setTournamentSize]);
+
+  useEffect(() => {
+    if (!socket || !socket.connected || tournamentSize === 0) return;
+    socket.emit('auto-join', { tournamentSize });
+  }, [socket, tournamentSize]);
+
+  const me = users.find((u) => u.id === meId);
   const opponent = users.find((u) => u.id !== meId);
 
   const isMeFirst = users[0]?.id === meId || !opponent;

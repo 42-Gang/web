@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import { useUsersMe } from '@/api';
 import { useWaitingSocket } from '@/api/socket/useWaitingSocket';
@@ -16,9 +17,21 @@ export const GameTournamentMatchingPage = () => {
   const meId = data?.data?.id;
 
   const { socket } = useWaitingSocket();
-  const { users, tournamentSize, roomId, invitation } = useWaitingStore();
+  const { users, tournamentSize, roomId, invitation, setTournamentSize } = useWaitingStore();
 
-  const isHostRef = useRef(!invitation)
+  const [searchParams] = useSearchParams();
+
+  const isHostRef = useRef(!invitation);
+
+  useEffect(() => {
+    const size = searchParams.get('size');
+    if (size) {
+      const parsed = Number(size);
+      if (!isNaN(parsed)) {
+        setTournamentSize(parsed);
+      }
+    }
+  }, [searchParams, setTournamentSize]);
 
   useEffect(() => {
     if (!socket || !socket.connected || tournamentSize === 0) return;
@@ -58,8 +71,8 @@ export const GameTournamentMatchingPage = () => {
           const nickname = isWaiting
             ? '-'
             : isPlayer
-            ? data?.data?.nickname ?? 'ME'
-            : user?.nickname ?? `OPPONENT ${i + 1}`;
+              ? (data?.data?.nickname ?? 'ME')
+              : (user?.nickname ?? `OPPONENT ${i + 1}`);
 
           const card = (
             <UserCard
@@ -78,9 +91,7 @@ export const GameTournamentMatchingPage = () => {
           return (
             <div key={i}>
               {isWaiting && isHostRef.current ? (
-                <InviteFriendDialog onInvite={handleInviteFriend}>
-                  {card}
-                </InviteFriendDialog>
+                <InviteFriendDialog onInvite={handleInviteFriend}>{card}</InviteFriendDialog>
               ) : (
                 card
               )}

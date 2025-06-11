@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import { useUsersMe } from '@/api';
 import { useWaitingSocket } from '@/api/socket/useWaitingSocket';
@@ -15,16 +16,28 @@ export const Game1vs1MatchingPage = () => {
   const meId = data?.data?.id;
 
   const { socket } = useWaitingSocket();
-  const { users, tournamentSize, roomId, invitation } = useWaitingStore();
+  const { users, tournamentSize, roomId, invitation, setTournamentSize } = useWaitingStore();
+
+  const [searchParams] = useSearchParams();
 
   const isHostRef = useRef(!invitation);
+
+  useEffect(() => {
+    const size = searchParams.get('size');
+    if (size) {
+      const parsed = Number(size);
+      if (!isNaN(parsed)) {
+        setTournamentSize(parsed);
+      }
+    }
+  }, [searchParams, setTournamentSize]);
 
   useEffect(() => {
     if (!socket || !socket.connected || tournamentSize === 0) return;
     if (isHostRef.current) {
       socket.emit('custom-create', { tournamentSize });
-  }
-}, [socket, tournamentSize]);
+    }
+  }, [socket, tournamentSize]);
 
   useEffect(() => {
     return () => {
@@ -42,7 +55,6 @@ export const Game1vs1MatchingPage = () => {
   const isMeFirst = users[0]?.id === meId || !opponent;
   const isOpponentWaiting = !opponent;
 
-  
   const handleInviteFriend = (userId: number) => {
     if (!socket || !roomId) return;
     socket.emit('custom-invite', { roomId, userId });
@@ -55,7 +67,7 @@ export const Game1vs1MatchingPage = () => {
     isWaiting: false,
     mode: '1vs1' as const,
     option: 'custom' as const,
-    isHostUser: isHostRef.current
+    isHostUser: isHostRef.current,
   };
 
   const opponentProps = {

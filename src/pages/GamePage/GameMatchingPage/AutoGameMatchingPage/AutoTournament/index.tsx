@@ -1,4 +1,8 @@
+import { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+
 import { useUsersMe } from '@/api';
+import { useWaitingSocket } from '@/api/socket/useWaitingSocket';
 import { useWaitingStore } from '@/api/store/useWaitingStore';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
@@ -11,7 +15,25 @@ export const GameTournamentMatchingPage = () => {
   const { data } = useUsersMe();
   const meId = data?.data?.id;
 
-  const { users, tournamentSize } = useWaitingStore();
+  const [searchParams] = useSearchParams();
+  const { socket } = useWaitingSocket();
+
+  const { users, tournamentSize, setTournamentSize } = useWaitingStore();
+
+  useEffect(() => {
+    const size = searchParams.get('size');
+    if (size) {
+      const parsed = Number(size);
+      if (!isNaN(parsed)) {
+        setTournamentSize(parsed);
+      }
+    }
+  }, [searchParams, setTournamentSize]);
+
+  useEffect(() => {
+    if (!socket || !socket.connected || tournamentSize === 0) return;
+    socket.emit('auto-join', { tournamentSize });
+  }, [socket, tournamentSize]);
 
   const allMatched = users.length === tournamentSize;
 
