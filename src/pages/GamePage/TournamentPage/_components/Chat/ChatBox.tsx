@@ -1,6 +1,6 @@
-import type { ChatMessage } from '@/api/types/chat.ts';
+import type { ChatMessage } from '@/api';
 
-import * as styles from './styles.css.ts';
+import * as styles from './styles.css';
 
 type ChatBoxProps = {
   messages: ChatMessage[];

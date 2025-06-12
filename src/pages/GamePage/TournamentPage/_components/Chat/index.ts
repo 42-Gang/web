@@ -1,2 +1,2 @@
-export * from './ChatBox.tsx';
-export * from './ChatInput.tsx';
+export * from './ChatBox';
+export * from './ChatInput';

@@ -1,9 +1,8 @@
 import { useState } from 'react';
 
-import { useUsersMe } from '@/api/queries/useUsersMe.ts';
-import type { ChatMessage } from '@/api/types/chat.ts';
+import { useUsersMe, type ChatMessage } from '@/api';
 
-import * as styles from './styles.css.ts';
+import * as styles from './styles.css';
 
 type ChatInputProps = {
   onSend: (message: ChatMessage) => void;
