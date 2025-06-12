@@ -9,4 +9,4 @@ export * from './ProfilePage';
 export * from './GamePage/TournamentPage';
 export * from './GameSelectPage';
 export * from './GameSelectPage/GameMatchingPage/AutoMatchingPage';
-export * from './GameSelectPage/GameMatchingPage/CustomGameMatchingPage';
+export * from './GameSelectPage/GameMatchingPage/CustomMatchingPage';

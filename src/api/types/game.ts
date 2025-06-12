@@ -1,4 +1,4 @@
-import { UserInfo } from './user';
+import { UserInfo } from '@/api';
 
 export type TournamentRoundType = 'ROUND_2' | 'ROUND_4';
 export type VerticalPosition = 'top' | 'bottom';
@@ -31,14 +31,16 @@ export type TournamentGameList = {
   game_list: TournamentGame[];
 };
 
-// auto
 export type AutoJoinPayload = {
   tournamentSize: number;
 };
 
-// custom
 export type CustomCreatePayload = {
   tournamentSize: number;
+};
+
+export type CustomCreateResponse = {
+  roomId: string;
 };
 
 export type CustomInvitePayload = {
@@ -63,7 +65,6 @@ export type CustomLeavePayload = {
   roomId: string;
 };
 
-// common
 export type WaitingRoomUpdatePayload = {
   users: UserInfo[];
 };
@@ -72,4 +73,4 @@ export type TournamentCreatedPayload = {
   tournamentId: number;
   size: number;
   mode: string;
-}
+};

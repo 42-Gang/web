@@ -1,4 +1,4 @@
-import type {
+import {
   FriendAcceptStatus,
   FriendRequestStatus,
   UserStatus,
@@ -13,6 +13,7 @@ import type {
   TournamentCreatedPayload,
   ChatMessagePayload,
   ChatMessageResponse,
+  CustomCreateResponse,
 } from '@/api/types';
 
 type SocketEventData = {
@@ -20,6 +21,7 @@ type SocketEventData = {
   'friend-accept': FriendAcceptStatus;
   'friend-request': FriendRequestStatus;
 
+  'custom-create': CustomCreateResponse;
   'waiting-room-update': WaitingRoomUpdatePayload;
   'tournament-created': TournamentCreatedPayload;
   'custom-invite': CustomInvitedPayload;

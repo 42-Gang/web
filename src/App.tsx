@@ -29,7 +29,7 @@ import {
   GameSelectPage,
   TournamentPage,
   GameAutoMatchingPage,
-  GameCustomMatchingPage,
+  CustomMatchingPage,
 } from '@/pages';
 
 const App = () => {
@@ -93,7 +93,7 @@ const App = () => {
         { path: PATH.GAME_SELECT, element: <GameSelectPage /> },
         { path: PATH.TOURNAMENT, element: <TournamentPage /> },
         { path: PATH.GAME_AUTO_MATCHING, element: <GameAutoMatchingPage /> },
-        { path: PATH.GAME_CUSTOM_MATCHING, element: <GameCustomMatchingPage /> },
+        { path: PATH.GAME_CUSTOM_MATCHING, element: <CustomMatchingPage /> },
       ],
     },
   ];
