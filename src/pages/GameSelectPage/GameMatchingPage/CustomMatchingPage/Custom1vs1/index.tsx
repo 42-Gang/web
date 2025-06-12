@@ -21,9 +21,11 @@ export const Custom1vs1 = () => {
     withToken: true,
   });
 
-  const { users, roomId, invitation } = useWaitingStore();
+  const { users, invitation } = useWaitingStore();
 
   const [searchParams] = useSearchParams();
+  const roomId = searchParams.get('roomId');
+
   const navigate = useNavigate();
   const hasCreatedRoom = useRef(false);
 
@@ -31,8 +33,6 @@ export const Custom1vs1 = () => {
 
   useEffect(() => {
     if (!socket?.connected || hasCreatedRoom.current) return;
-
-    const roomId = searchParams.get('roomId');
     const _size = searchParams.get('size');
     const size = _size ? Number(_size) : NaN;
 
@@ -40,7 +40,7 @@ export const Custom1vs1 = () => {
       socket.emit('custom-create', { tournamentSize: size });
       hasCreatedRoom.current = true;
     }
-  }, [searchParams, socket]);
+  }, [roomId, searchParams, socket]);
 
   useEffect(() => {
     const handleCustomCreate = (data: CustomCreateResponse) => {
@@ -54,16 +54,6 @@ export const Custom1vs1 = () => {
       socket.off('custom-create', handleCustomCreate);
     };
   }, [searchParams, socket, navigate]);
-
-  useEffect(() => {
-    return () => {
-      if (socket && roomId) {
-        socket.emit('custom-leave', { roomId });
-      }
-      useWaitingStore.getState().clearRoom();
-      useWaitingStore.getState().clearInvitation();
-    };
-  }, [socket, roomId]);
 
   const me = users.find((u) => u.id === uid);
   const opponent = users.find((u) => u.id !== uid);
