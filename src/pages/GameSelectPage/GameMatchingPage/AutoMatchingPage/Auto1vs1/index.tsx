@@ -8,10 +8,10 @@ import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
 
 import * as styles from './styles.css.ts';
-import { UserCard } from '../../components/user-card';
-import { WaitingMessage } from '../../components/waiting-message';
+import { UserCard } from '../../_components/user-card';
+import { WaitingMessage } from '../../_components/waiting-message';
 
-export const Game1vs1MatchingPage = () => {
+export const Auto1vs1 = () => {
   const { data } = useUsersMe();
   const meId = data?.data?.id;
 

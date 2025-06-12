@@ -6,11 +6,11 @@ import { useWaitingSocketStore } from '@/api/store/useWaitingSocketStore.ts';
 import { useWaitingStore } from '@/api/store/useWaitingStateStore.ts';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
+import { InviteFriendDialog } from '@/pages/GameSelectPage/GameMatchingPage/_components/invite-friend-dialog';
+import { UserCard } from '@/pages/GameSelectPage/GameMatchingPage/_components/user-card';
+import { WaitingMessage } from '@/pages/GameSelectPage/GameMatchingPage/_components/waiting-message';
 
 import * as styles from './styles.css.ts';
-import { InviteFriendDialog } from '../../components/invite-friend-dialog';
-import { UserCard } from '../../components/user-card';
-import { WaitingMessage } from '../../components/waiting-message';
 
 export const GameTournamentMatchingPage = () => {
   const { data } = useUsersMe();

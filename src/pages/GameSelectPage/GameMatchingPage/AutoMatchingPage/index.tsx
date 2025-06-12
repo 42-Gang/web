@@ -1,7 +1,7 @@
 import { useSearchParams } from 'react-router-dom';
 
-import { Game1vs1MatchingPage } from './Auto1vs1';
-import { GameTournamentMatchingPage } from './AutoTournament';
+import { Auto1vs1 } from './Auto1vs1';
+import { AutoTournament } from './AutoTournament';
 
 export const GameAutoMatchingPage = () => {
   const [searchParams] = useSearchParams();
@@ -11,8 +11,8 @@ export const GameAutoMatchingPage = () => {
 
   return (
     <div>
-      {mode === '1vs1' && <Game1vs1MatchingPage />}
-      {mode === 'tournament' && <GameTournamentMatchingPage />}
+      {mode === '1vs1' && <Auto1vs1 />}
+      {mode === 'tournament' && <AutoTournament />}
     </div>
   );
 };

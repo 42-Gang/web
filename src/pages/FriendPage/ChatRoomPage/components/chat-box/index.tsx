@@ -24,7 +24,7 @@ export const ChatBox = ({ current }: Props) => {
   const { data } = useSuspenseChatHistory(roomId);
   const { socket } = useSocket({
     path: 'chat',
-    handshake: '/ws/chat',
+    handshake: '/ws/Chat',
     withToken: true,
   });
 

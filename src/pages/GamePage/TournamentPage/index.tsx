@@ -1,15 +1,13 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import type { ChatMessage } from '@/api/types/chat.ts';
-import type { TournamentRoundType } from '@/api/types/game.ts';
-import { BackButton } from '@/components/ui/back-button';
+import type { ChatMessage, TournamentRoundType } from '@/api/types';
+import { BackButton } from '@/components/ui';
 
-import { roundTwoData } from './__mocks__/round2.ts';
-import { roundFourData } from './__mocks__/round4.ts';
-import { ChatBox } from './components/Chat/ChatBox.tsx';
-import { ChatInput } from './components/Chat/ChatInput.tsx';
-import { MatchNode } from './components/MatchNode';
+import { roundTwoData } from './__mocks__/round2';
+import { roundFourData } from './__mocks__/round4';
+import { ChatBox, ChatInput } from './_components/Chat';
+import { MatchNode } from './_components/MatchNode';
 import * as styles from './styles.css.ts';
 
 export const TournamentPage = () => {

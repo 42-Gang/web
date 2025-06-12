@@ -1,4 +1,4 @@
-import type { Match } from '@/api/types/game.ts';
+import type { Match } from '@/api/types/game';
 
 export const roundFourData: Match = {
   id: 'round4-root',

@@ -6,10 +6,10 @@ import { useWaitingSocketStore } from '@/api/store/useWaitingSocketStore.ts';
 import { useWaitingStore } from '@/api/store/useWaitingStateStore.ts';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
+import { UserCard } from '@/pages/GameSelectPage/GameMatchingPage/_components/user-card';
+import { WaitingMessage } from '@/pages/GameSelectPage/GameMatchingPage/_components/waiting-message';
 
 import * as styles from './styles.css.ts';
-import { UserCard } from '../../components/user-card';
-import { WaitingMessage } from '../../components/waiting-message';
 
 export const Game1vs1MatchingPage = () => {
   const { data } = useUsersMe();
