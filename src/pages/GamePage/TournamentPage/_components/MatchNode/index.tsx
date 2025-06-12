@@ -1,15 +1,10 @@
 import { useSearchParams } from 'react-router-dom';
 
-import type {
-  Match,
-  TournamentRoundType,
-  VerticalPosition,
-  HorizontalVariant,
-} from '@/api/types/game.ts';
+import type { Match, TournamentRoundType, VerticalPosition, HorizontalVariant } from '@/api';
 
 import { MatchLines } from '../MatchLines';
 import { PlayerCard } from '../PlayerCard';
-import * as styles from './styles.css.ts';
+import * as styles from './styles.css';
 
 type MatchNodeProps = {
   match: Match;
