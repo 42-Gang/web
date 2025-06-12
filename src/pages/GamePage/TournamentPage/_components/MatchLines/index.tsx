@@ -1,4 +1,4 @@
-import type { VerticalPosition, HorizontalVariant, TournamentRoundType } from '@/api/types/game.ts';
+import type { VerticalPosition, HorizontalVariant, TournamentRoundType } from '@/api';
 
 import * as styles from './styles.css.ts';
 

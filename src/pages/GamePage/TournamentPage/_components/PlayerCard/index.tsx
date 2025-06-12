@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import type { Player, TournamentRoundType } from '@/api/types/game.ts';
+import type { Player, TournamentRoundType } from '@/api';
 
 import * as styles from './styles.css.ts';
 

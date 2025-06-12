@@ -8,7 +8,7 @@ import { roundTwoData } from './__mocks__/round2';
 import { roundFourData } from './__mocks__/round4';
 import { ChatBox, ChatInput } from './_components/Chat';
 import { MatchNode } from './_components/MatchNode';
-import * as styles from './styles.css.ts';
+import * as styles from './styles.css';
 
 export const TournamentPage = () => {
   const navigate = useNavigate();
