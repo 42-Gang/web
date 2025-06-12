@@ -22,7 +22,7 @@ type SocketEventData = {
 
   'waiting-room-update': WaitingRoomUpdatePayload;
   'tournament-created': TournamentCreatedPayload;
-  'custom-invited': CustomInvitedPayload;
+  'custom-invite': CustomInvitedPayload;
 
   message: ChatMessageResponse;
 };

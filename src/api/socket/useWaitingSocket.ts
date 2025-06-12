@@ -66,12 +66,12 @@ export const useWaitingSocket = () => {
 
     socket.on('waiting-room-update', handleWaitingRoomUpdate);
     socket.on('tournament-created', handleTournamentCreated);
-    socket.on('custom-invited', handleTournamentInvited);
+    socket.on('custom-invite', handleTournamentInvited);
 
     return () => {
       socket.off('waiting-room-update', handleWaitingRoomUpdate);
       socket.off('tournament-created', handleTournamentCreated);
-      socket.off('custom-invited', handleTournamentInvited);
+      socket.off('custom-invite', handleTournamentInvited);
     };
   }, [socket, setUsers, setInvitation, setHostId]);
 };
