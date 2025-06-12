@@ -15,11 +15,16 @@ export const Custom1vs1 = () => {
   const { data } = useUsersMe();
   const uid = data?.data?.id;
 
-  const { socket } = useSocket({
+  const { socket, connect, disconnect } = useSocket({
     path: 'waiting',
     handshake: '/ws/main-game',
     withToken: true,
   });
+
+  useEffect(() => {
+    connect();
+    return () => disconnect();
+  }, [connect, disconnect]);
 
   const { users, invitation } = useWaitingStore();
 
