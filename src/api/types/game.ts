@@ -1,5 +1,3 @@
-import { UserInfo } from '@/api';
-
 export type TournamentRoundType = 'ROUND_2' | 'ROUND_4';
 export type VerticalPosition = 'top' | 'bottom';
 export type HorizontalVariant = 'left' | 'right';
@@ -48,7 +46,7 @@ export type CustomInvitePayload = {
   userId: number;
 };
 
-export type CustomInvitedPayload = {
+export type CustomInviteResponse = {
   roomId: string;
   hostId: number;
 };
@@ -65,11 +63,11 @@ export type CustomLeavePayload = {
   roomId: string;
 };
 
-export type WaitingRoomUpdatePayload = {
-  users: UserInfo[];
+export type WaitingRoomUpdateResponse = {
+  users: { id: number; nickname: string; avatarUrl: string }[];
 };
 
-export type TournamentCreatedPayload = {
+export type TournamentCreatedResponse = {
   tournamentId: number;
   size: number;
   mode: string;

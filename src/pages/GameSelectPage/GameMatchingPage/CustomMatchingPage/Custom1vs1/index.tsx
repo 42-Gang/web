@@ -1,9 +1,8 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { CustomCreateResponse, useUsersMe } from '@/api';
-import { useSocket } from '@/api/socket';
-import { useWaitingStore } from '@/api/store/useWaitingStateStore.ts';
+import { CustomCreateResponse, useUsersMe, WaitingRoomUpdateResponse } from '@/api';
+import { useWaitingSocket } from '@/api/socket';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
 
@@ -15,37 +14,36 @@ export const Custom1vs1 = () => {
   const { data } = useUsersMe();
   const uid = data?.data?.id;
 
-  const { socket, connect, disconnect } = useSocket({
-    path: 'waiting',
-    handshake: '/ws/main-game',
-    withToken: true,
-  });
-
-  useEffect(() => {
-    connect();
-    return () => disconnect();
-  }, [connect, disconnect]);
-
-  const { users, invitation } = useWaitingStore();
+  const { socket } = useWaitingSocket();
 
   const [searchParams] = useSearchParams();
   const roomId = searchParams.get('roomId');
 
   const navigate = useNavigate();
-  const hasCreatedRoom = useRef(false);
+  const isHost = useRef(false);
 
-  const isHostRef = useRef(!invitation);
+  const [users, setUsers] = useState<
+    {
+      id: number;
+      nickname: string;
+      avatarUrl: string;
+    }[]
+  >([]);
 
   useEffect(() => {
-    if (!socket?.connected || hasCreatedRoom.current) return;
+    if (!socket.connected) return;
+
     const _size = searchParams.get('size');
     const size = _size ? Number(_size) : NaN;
 
-    if (!roomId && _size && !isNaN(size)) {
+    if (!roomId && _size && !isNaN(size) && !isHost.current) {
       socket.emit('custom-create', { tournamentSize: size });
-      hasCreatedRoom.current = true;
+      isHost.current = true;
     }
-  }, [roomId, searchParams, socket]);
+    if (roomId && !_size) {
+      socket.emit('custom-accept', { roomId });
+    }
+  }, [roomId, searchParams, socket, socket.connected]);
 
   useEffect(() => {
     const handleCustomCreate = (data: CustomCreateResponse) => {
@@ -54,11 +52,17 @@ export const Custom1vs1 = () => {
       navigate(`?${currentParams.toString()}`, { replace: true });
     };
 
+    const handleWaitingRoomUpdate = (data: WaitingRoomUpdateResponse) => {
+      setUsers([...users, ...data.users]);
+    };
+
     socket.on('custom-create', handleCustomCreate);
+    socket.on('waiting-room-update', handleWaitingRoomUpdate);
     return () => {
       socket.off('custom-create', handleCustomCreate);
+      socket.off('waiting-room-update', handleWaitingRoomUpdate);
     };
-  }, [searchParams, socket, navigate]);
+  }, [searchParams, socket, navigate, users]);
 
   const me = users.find((u) => u.id === uid);
   const opponent = users.find((u) => u.id !== uid);
@@ -78,7 +82,7 @@ export const Custom1vs1 = () => {
     isWaiting: false,
     mode: '1vs1' as const,
     option: 'custom' as const,
-    isHostUser: isHostRef.current,
+    isHostUser: isHost.current,
   };
 
   const opponentProps = {
@@ -88,8 +92,8 @@ export const Custom1vs1 = () => {
     isWaiting: isOpponentWaiting,
     mode: '1vs1' as const,
     option: 'custom' as const,
-    isHostUser: isHostRef.current,
-    isPlayerHost: !isHostRef.current,
+    isHostUser: isHost.current,
+    isPlayerHost: !isHost.current,
     onClickAdd: handleInviteFriend,
   };
 
@@ -117,7 +121,7 @@ export const Custom1vs1 = () => {
       <WaitingMessage
         isWaiting={isOpponentWaiting}
         option="custom"
-        isHost={isHostRef.current}
+        isHost={isHost.current}
         onStartGame={() => {
           if (socket && roomId) {
             socket.emit('custom-start', { roomId });

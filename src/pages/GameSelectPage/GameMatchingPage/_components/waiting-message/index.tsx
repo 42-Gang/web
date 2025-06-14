@@ -9,7 +9,12 @@ type WaitingMessageProps = {
   onStartGame?: () => void;
 };
 
-export const WaitingMessage = ({ isWaiting, option, isHost, onStartGame }: WaitingMessageProps) => {
+export const WaitingMessage = ({
+  isWaiting,
+  option,
+  isHost = false,
+  onStartGame,
+}: WaitingMessageProps) => {
   const [dotCount, setDotCount] = useState(1);
 
   useEffect(() => {

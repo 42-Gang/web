@@ -8,9 +8,9 @@ import {
   CustomAcceptPayload,
   CustomStartPayload,
   CustomLeavePayload,
-  CustomInvitedPayload,
-  WaitingRoomUpdatePayload,
-  TournamentCreatedPayload,
+  CustomInviteResponse,
+  WaitingRoomUpdateResponse,
+  TournamentCreatedResponse,
   ChatMessagePayload,
   ChatMessageResponse,
   CustomCreateResponse,
@@ -22,9 +22,9 @@ type SocketEventData = {
   'friend-request': FriendRequestStatus;
 
   'custom-create': CustomCreateResponse;
-  'waiting-room-update': WaitingRoomUpdatePayload;
-  'tournament-created': TournamentCreatedPayload;
-  'custom-invite': CustomInvitedPayload;
+  'waiting-room-update': WaitingRoomUpdateResponse;
+  'tournament-created': TournamentCreatedResponse;
+  'custom-invite': CustomInviteResponse;
 
   message: ChatMessageResponse;
 };
