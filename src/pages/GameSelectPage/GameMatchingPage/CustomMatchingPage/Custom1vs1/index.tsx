@@ -1,8 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { CustomCreateResponse, useUsersMe, WaitingRoomUpdateResponse } from '@/api';
-import { useWaitingSocket } from '@/api/socket';
+import {
+  CustomCreateResponse,
+  useUsersMe,
+  WaitingRoomPlayer,
+  WaitingRoomUpdateResponse,
+} from '@/api';
+import { useSocket } from '@/api/socket';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
 
@@ -14,21 +19,20 @@ export const Custom1vs1 = () => {
   const { data } = useUsersMe();
   const uid = data?.data?.id;
 
-  const { socket } = useWaitingSocket();
+  const { socket } = useSocket({
+    path: 'waiting',
+    handshake: '/ws/main-game',
+    withToken: true,
+  });
 
   const [searchParams] = useSearchParams();
   const roomId = searchParams.get('roomId');
 
   const navigate = useNavigate();
   const isHost = useRef(false);
+  const isAccept = useRef(false);
 
-  const [users, setUsers] = useState<
-    {
-      id: number;
-      nickname: string;
-      avatarUrl: string;
-    }[]
-  >([]);
+  const [users, setUsers] = useState<WaitingRoomPlayer[]>([]);
 
   useEffect(() => {
     if (!socket.connected) return;
@@ -40,8 +44,9 @@ export const Custom1vs1 = () => {
       socket.emit('custom-create', { tournamentSize: size });
       isHost.current = true;
     }
-    if (roomId && !_size) {
+    if (roomId && !_size && !isAccept.current) {
       socket.emit('custom-accept', { roomId });
+      isAccept.current = true;
     }
   }, [roomId, searchParams, socket, socket.connected]);
 
@@ -53,7 +58,7 @@ export const Custom1vs1 = () => {
     };
 
     const handleWaitingRoomUpdate = (data: WaitingRoomUpdateResponse) => {
-      setUsers([...users, ...data.users]);
+      setUsers(data.users);
     };
 
     socket.on('custom-create', handleCustomCreate);

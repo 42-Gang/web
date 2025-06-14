@@ -11,6 +11,13 @@ export type Player = {
   tournament: number;
 };
 
+export type WaitingRoomPlayer = {
+  id: number;
+  nickname: string;
+  avatarUrl: string;
+  isHost: boolean;
+};
+
 export type Match = {
   id: string;
   player1?: Player;
@@ -49,6 +56,8 @@ export type CustomInvitePayload = {
 export type CustomInviteResponse = {
   roomId: string;
   hostId: number;
+  hostName: string;
+  hostAvatarUrl: string;
 };
 
 export type CustomAcceptPayload = {
@@ -64,7 +73,7 @@ export type CustomLeavePayload = {
 };
 
 export type WaitingRoomUpdateResponse = {
-  users: { id: number; nickname: string; avatarUrl: string }[];
+  users: WaitingRoomPlayer[];
 };
 
 export type TournamentCreatedResponse = {

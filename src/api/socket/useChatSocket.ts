@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useUsersMe } from '@/api';
@@ -28,6 +28,8 @@ export const useChatSocket = () => {
     return () => disconnect();
   }, [connect, disconnect]);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (!socket) return;
 
@@ -39,7 +41,7 @@ export const useChatSocket = () => {
         action: {
           label: 'Open',
           onClick: () => {
-            window.location.href = `${PATH.FRIEND_CHATROOM}?friend=${data.userId}`;
+            navigate(`${PATH.FRIEND_CHATROOM}?friend=${data.userId}`, { replace: true });
           },
         },
       });
@@ -49,5 +51,5 @@ export const useChatSocket = () => {
     return () => {
       socket.off('message', handleChatMessage);
     };
-  }, [socket, queryClient, me, friend]);
+  }, [socket, queryClient, me, friend, navigate]);
 };

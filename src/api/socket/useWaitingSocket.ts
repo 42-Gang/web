@@ -1,7 +1,9 @@
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import type { CustomInviteResponse } from '@/api/types';
+import type { CustomInviteResponse } from '@/api';
+import { PATH } from '@/constants';
 
 import { useSocket } from './useSocket';
 
@@ -17,22 +19,26 @@ export const useWaitingSocket = () => {
     return () => disconnect();
   }, [connect, disconnect]);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (!socket) return;
 
     const handleTournamentInvited = (data: CustomInviteResponse) => {
-      if (!socket) return;
-
-      const nickname = data.hostId ?? `ID ${data.hostId}`;
-      toast.info(`${nickname}님이 초대했습니다. 수락하시겠습니까?`, {
+      toast.info(`${data.hostName}님이 초대했습니다. 수락하시겠습니까?`, {
         action: {
           label: 'Yes',
-          onClick: () => socket.emit('custom-accept', { roomId: data.roomId }),
+          onClick: () => {
+            navigate(`${PATH.GAME_CUSTOM_MATCHING}?mode=1vs1&roomId=${data.roomId}`, {
+              replace: true,
+            });
+          },
         },
         cancel: {
           label: 'No',
           onClick: () => undefined,
         },
+        duration: 10000,
       });
     };
 
@@ -41,7 +47,7 @@ export const useWaitingSocket = () => {
     return () => {
       socket.off('custom-invite', handleTournamentInvited);
     };
-  }, [socket]);
+  }, [socket, navigate]);
 
   return { socket };
 };
