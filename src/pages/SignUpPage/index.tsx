@@ -22,40 +22,28 @@ export const SignUpPage = () => {
   const navigate = useNavigate();
 
   const handleMailVerify = () => {
-    if (!email) {
-      toast.error('Please enter your email');
-      return;
-    }
-
     mailVerifyMutation({ email })
-      .then(() => {
-        toast.success('Verification code sent to your email');
+      .then((res) => {
+        toast.success(res.message || 'Verification code sent to your email');
       })
-      .catch((error) => {
-        console.error('Error sending verification code:', error);
-        toast.error('Failed to send verification code');
+      .catch(async (error) => {
+        console.error('Mail verification error:', error);
+        const res = await error.response?.json();
+        toast.error(res?.message || 'Failed to send verification code');
       });
   };
 
   const handleSelect = () => {
-    if (!email || !mailVerificationCode || !password || !confirmPassword || !nickname) {
-      toast.error('Please fill in all fields');
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      toast.error('Passwords do not match');
-      return;
-    }
-
     registerMutation({ email, password, nickname, mailVerificationCode })
-      .then(() => {
-        toast.success('Registration successful');
+      .then((res) => {
+        toast.success(res.message || 'Registration successful');
         navigate('/login', { replace: true });
       })
-      .catch((error) => {
+      .catch(async (error) => {
         console.error('Error during registration:', error);
-        toast.error('Registration failed');
+        const res = await error.response?.json();
+        const cleanedMessage = res?.message.replace(/^body\//, '');
+        toast.error(cleanedMessage || 'Registration failed');
       });
   };
 
