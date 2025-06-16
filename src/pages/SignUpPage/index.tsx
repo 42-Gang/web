@@ -1,3 +1,4 @@
+import { HTTPError } from 'ky';
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -28,8 +29,14 @@ export const SignUpPage = () => {
       })
       .catch(async (error) => {
         console.error('Mail verification error:', error);
-        const res = await error.response?.json();
-        toast.error(res?.message || 'Failed to send verification code');
+        if (error instanceof HTTPError) {
+          const res = await error.response.json();
+          const message =
+            res?.message?.replace(/^body\//, '') || 'Failed to send verification code';
+          toast.error(message);
+        } else {
+          toast.error('Failed to send verification code');
+        }
       });
   };
 
@@ -41,9 +48,14 @@ export const SignUpPage = () => {
       })
       .catch(async (error) => {
         console.error('Error during registration:', error);
-        const res = await error.response?.json();
-        const cleanedMessage = res?.message.replace(/^body\//, '');
-        toast.error(cleanedMessage || 'Registration failed');
+
+        if (error instanceof HTTPError) {
+          const res = await error.response.json();
+          const message = res?.message?.replace(/^body\//, '') || 'Registration failed';
+          toast.error(message);
+        } else {
+          toast.error('Registration failed');
+        }
       });
   };
 
