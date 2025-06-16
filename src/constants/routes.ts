@@ -3,6 +3,7 @@ export const PATH = {
   HOME: '/home',
   SIGNIN: '/signin',
   SIGNIN_EMAIL: '/signin/email',
+  SIGNIN_GOOGLE_CALLBACK: '/signin/callback',
   SIGNUP: '/signup',
   HISTORY: '/history',
   GAME_SELECT: '/game/select',

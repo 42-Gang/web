@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { Flex } from '@/components/system';
 import { Branding, GameLicense, DefaultStepNavigator } from '@/components/ui';
@@ -14,9 +13,12 @@ export const SignInPage = () => {
 
   const handleSelect = (index: number) => {
     switch (index) {
-      case 0:
-        toast.error('Google sign-in is not implemented yet');
+      case 0: {
+        const redirectUri = `${window.location.origin}${PATH.SIGNIN_GOOGLE_CALLBACK}`;
+        const googleLoginUrl = `${import.meta.env.VITE_API_BASE_URL}/v1/oauth/google?redirectUri=${redirectUri}`;
+        window.location.href = googleLoginUrl;
         break;
+      }
       case 1:
         navigate(PATH.SIGNIN_EMAIL);
         break;
