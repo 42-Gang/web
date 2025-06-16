@@ -1,15 +1,31 @@
 import {
   FriendAcceptStatus,
   FriendRequestStatus,
-  ChatMessageResponse,
   UserStatus,
+  AutoJoinPayload,
+  CustomCreatePayload,
+  CustomInvitePayload,
+  CustomAcceptPayload,
+  CustomStartPayload,
+  CustomLeavePayload,
+  CustomInviteResponse,
+  WaitingRoomUpdateResponse,
+  TournamentCreatedResponse,
   ChatMessagePayload,
+  ChatMessageResponse,
+  CustomCreateResponse,
 } from '@/api/types';
 
 type SocketEventData = {
   'friend-status': UserStatus;
   'friend-accept': FriendAcceptStatus;
   'friend-request': FriendRequestStatus;
+
+  'custom-create': CustomCreateResponse;
+  'waiting-room-update': WaitingRoomUpdateResponse;
+  'tournament-created': TournamentCreatedResponse;
+  'custom-invite': CustomInviteResponse;
+
   message: ChatMessageResponse;
 };
 
@@ -19,6 +35,20 @@ export type ServerToClientEvents = {
   [key: string]: (data: unknown) => void;
 };
 
-export interface ClientToServerEvents {
-  message: (data: ChatMessagePayload) => void;
-}
+type ClientEventData = {
+  message: ChatMessagePayload;
+
+  'auto-join': AutoJoinPayload;
+
+  'custom-create': CustomCreatePayload;
+  'custom-invite': CustomInvitePayload;
+  'custom-accept': CustomAcceptPayload;
+  'custom-start': CustomStartPayload;
+  'custom-leave': CustomLeavePayload;
+};
+
+export type ClientToServerEvents = {
+  [K in keyof ClientEventData]: (data: ClientEventData[K]) => void;
+} & {
+  [key: string]: (data: unknown) => void;
+};
