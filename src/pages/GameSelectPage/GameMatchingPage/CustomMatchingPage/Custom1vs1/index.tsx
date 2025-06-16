@@ -29,7 +29,6 @@ export const Custom1vs1 = () => {
   const roomId = searchParams.get('roomId');
 
   const navigate = useNavigate();
-  const isHost = useRef(false);
   const isAccept = useRef(false);
 
   const [users, setUsers] = useState<WaitingRoomPlayer[]>([]);
@@ -40,13 +39,11 @@ export const Custom1vs1 = () => {
     const _size = searchParams.get('size');
     const size = _size ? Number(_size) : NaN;
 
-    if (!roomId && _size && !isNaN(size) && !isHost.current) {
+    if (!roomId && _size && !isNaN(size)) {
       socket.emit('custom-create', { tournamentSize: size });
-      isHost.current = true;
     }
     if (roomId && !_size && !isAccept.current) {
       socket.emit('custom-accept', { roomId });
-      isAccept.current = true;
     }
   }, [roomId, searchParams, socket, socket.connected]);
 
@@ -72,6 +69,8 @@ export const Custom1vs1 = () => {
   const me = users.find((u) => u.id === uid);
   const opponent = users.find((u) => u.id !== uid);
 
+  const isHost = me?.isHost ?? false;
+
   const isMeFirst = users[0]?.id === uid || !opponent;
   const isOpponentWaiting = !opponent;
 
@@ -87,7 +86,7 @@ export const Custom1vs1 = () => {
     isWaiting: false,
     mode: '1vs1' as const,
     option: 'custom' as const,
-    isHostUser: isHost.current,
+    isHostUser: isHost,
   };
 
   const opponentProps = {
@@ -97,8 +96,8 @@ export const Custom1vs1 = () => {
     isWaiting: isOpponentWaiting,
     mode: '1vs1' as const,
     option: 'custom' as const,
-    isHostUser: isHost.current,
-    isPlayerHost: !isHost.current,
+    isHostUser: isHost,
+    isPlayerHost: !isHost,
     onClickAdd: handleInviteFriend,
   };
 
@@ -126,7 +125,7 @@ export const Custom1vs1 = () => {
       <WaitingMessage
         isWaiting={isOpponentWaiting}
         option="custom"
-        isHost={isHost.current}
+        isHost={isHost}
         onStartGame={() => {
           if (socket && roomId) {
             socket.emit('custom-start', { roomId });
