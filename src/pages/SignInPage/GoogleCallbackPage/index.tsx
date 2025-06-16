@@ -34,10 +34,9 @@ export const GoogleCallbackPage = () => {
       try {
         const { data } = await mutateAsync({ code, state, redirectUri });
         setToken(data.accessToken);
-
         setTimeout(() => {
           window.location.replace(PATH.HOME);
-        }, 1800);
+        }, 300);
       } catch {
         toast.error('Google login failed');
         navigate(PATH.SIGNIN);
