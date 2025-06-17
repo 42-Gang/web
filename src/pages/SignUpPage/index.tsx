@@ -26,7 +26,9 @@ export const SignUpPage = () => {
   const navigate = useNavigate();
 
   const validatePassword = (value: string) => {
-    setIsPasswordValid(passwordRegex.test(value));
+    const isLengthValid = value.length >= 8 && value.length <= 20;
+    const isPatternValid = passwordRegex.test(value);
+    setIsPasswordValid(isLengthValid && isPatternValid);
   };
 
   const handleMailVerify = () => {
@@ -124,6 +126,7 @@ export const SignUpPage = () => {
           <span
             className={styles.check}
             data-show={isPasswordValid && password.length > 0 ? 'true' : undefined}
+            aria-label={isPasswordValid ? 'Password valid' : 'Password invalid'}
           />
         </div>
 
