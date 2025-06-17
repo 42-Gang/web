@@ -10,10 +10,13 @@ import { BackButton } from '@/components/ui/back-button';
 
 import * as styles from './styles.css';
 
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/;
+
 export const SignUpPage = () => {
   const [email, setEmail] = useState('');
   const [mailVerificationCode, setMailVerificationCode] = useState('');
   const [password, setPassword] = useState('');
+  const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [confirmPassword, setConfirmPassword] = useState('');
   const [nickname, setNickname] = useState('');
 
@@ -21,6 +24,10 @@ export const SignUpPage = () => {
   const { mutateAsync: registerMutation } = useRegister();
 
   const navigate = useNavigate();
+
+  const validatePassword = (value: string) => {
+    setIsPasswordValid(passwordRegex.test(value));
+  };
 
   const handleMailVerify = () => {
     mailVerifyMutation({ email })
@@ -107,8 +114,16 @@ export const SignUpPage = () => {
             className={styles.input}
             id="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              setPassword(value);
+              validatePassword(value);
+            }}
             type="password"
+          />
+          <span
+            className={styles.check}
+            data-show={isPasswordValid && password.length > 0 ? 'true' : undefined}
           />
         </div>
 
