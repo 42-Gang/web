@@ -26,7 +26,6 @@ export const Auto1vs1 = () => {
   });
 
   const [searchParams] = useSearchParams();
-  const roomId = searchParams.get('roomId');
 
   const [users, setUsers] = useState<WaitingRoomPlayer[]>([]);
 
@@ -37,7 +36,7 @@ export const Auto1vs1 = () => {
     const size = _size ? Number(_size) : NaN;
 
     socket.emit('auto-join', { tournamentSize: size });
-  }, [roomId, searchParams, socket, socket.connected]);
+  }, [searchParams, socket, socket.connected]);
 
   useEffect(() => {
     const handleWaitingRoomUpdate = (data: WaitingRoomUpdateResponse) => {
