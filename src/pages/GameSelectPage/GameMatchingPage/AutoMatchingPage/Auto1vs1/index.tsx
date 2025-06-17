@@ -53,7 +53,7 @@ export const Auto1vs1 = () => {
       socket.off('waiting-room-update', handleWaitingRoomUpdate);
       socket.off('tournament-created', handleTournamentCreated);
     };
-  }, [searchParams, socket]);
+  }, [socket]);
 
   const me = users.find((u) => u.id === uid);
   const opponent = users.find((u) => u.id !== uid);
