@@ -113,3 +113,24 @@ export const submitButton = style({
     '&[data-selected="true"]::after': { opacity: 1 },
   },
 });
+
+export const check = style({
+  background: `url('/assets/images/check-circle.svg') no-repeat center`,
+  position: 'absolute',
+  backgroundColor: theme.color.black,
+  top: '50%',
+  right: rem(60),
+  width: rem(20),
+  height: rem(20),
+  transform: 'translateY(-50%)',
+  pointerEvents: 'none',
+  opacity: 0,
+  transition: 'opacity 0.3s ease',
+  borderRadius: '50%',
+
+  selectors: {
+    '&[data-show="true"]': {
+      opacity: 1,
+    },
+  },
+});
