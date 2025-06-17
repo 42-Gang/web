@@ -49,7 +49,7 @@ export const UserCard = ({
     if (!isWaiting) {
       return (
         <img
-          src={userAvatar?.trim() || '/assets/sample-avatar.png'}
+          src={userAvatar?.trim() ?? '/assets/sample-avatar.png'}
           alt={isPlayer ? 'user avatar' : 'opponent avatar'}
           className={styles.avatarImage}
         />
