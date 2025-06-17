@@ -13,6 +13,7 @@ import { Toaster } from 'sonner';
 
 import { QueryClientProvider } from '@/api';
 import { useChatSocket, useStatusSocket, useFriendSocket } from '@/api/socket';
+import { useWaitingSocket } from '@/api/socket/useWaitingSocket';
 import { useAuthAtom } from '@/atoms/useAuthAtom';
 import { PATH } from '@/constants/routes';
 import {
@@ -28,8 +29,8 @@ import {
   GameSelectPage,
   TournamentPage,
   GameAutoMatchingPage,
-  GameCustomMatchingPage,
   GoogleCallbackPage,
+  CustomMatchingPage,
 } from '@/pages';
 
 const App = () => {
@@ -68,6 +69,7 @@ const App = () => {
     useChatSocket();
     useStatusSocket();
     useFriendSocket();
+    useWaitingSocket();
 
     if (!isLogin()) {
       return <Navigate to={PATH.LANDING} replace />;
@@ -93,7 +95,7 @@ const App = () => {
         { path: PATH.GAME_SELECT, element: <GameSelectPage /> },
         { path: PATH.TOURNAMENT, element: <TournamentPage /> },
         { path: PATH.GAME_AUTO_MATCHING, element: <GameAutoMatchingPage /> },
-        { path: PATH.GAME_CUSTOM_MATCHING, element: <GameCustomMatchingPage /> },
+        { path: PATH.GAME_CUSTOM_MATCHING, element: <CustomMatchingPage /> },
       ],
     },
   ];

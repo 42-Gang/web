@@ -3,7 +3,7 @@ import { StepNavigator } from '@/components/ui';
 type GameSelectStepNavigatorProps = {
   items: string[];
   onConfirm: (index: number) => void;
-  getClassName: (text: string) => string;
+  buttonClassName: (text: string) => string;
   wrapperClassName: string;
   showText?: boolean;
 };
@@ -11,7 +11,7 @@ type GameSelectStepNavigatorProps = {
 export const GameSelectStepNavigator = ({
   items,
   onConfirm,
-  getClassName,
+  buttonClassName,
   wrapperClassName,
   showText = true,
 }: GameSelectStepNavigatorProps) => {
@@ -37,7 +37,7 @@ export const GameSelectStepNavigator = ({
       }) => (
         <button
           key={text}
-          className={getClassName(text)}
+          className={buttonClassName(text)}
           data-current={isCurrent || undefined}
           aria-current={isSelected}
           aria-label={`${text} 단계 선택`}

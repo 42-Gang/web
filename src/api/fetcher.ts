@@ -14,7 +14,9 @@ const defaultOptions: Options = {
 
 export const instance = ky.create({
   prefixUrl: '/api',
-  headers: { 'content-type': 'application/json' },
+  headers: {
+    'content-type': 'application/json',
+  },
   hooks: {
     beforeRequest: [
       (request) => {
