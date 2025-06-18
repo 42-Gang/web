@@ -3,6 +3,7 @@ export * from './FriendPage/ChatRoomPage';
 export * from './HomePage';
 export * from './LandingPage';
 export * from './SignInPage';
+export * from './SignInPage/GoogleCallbackPage';
 export * from './SignUpPage';
 export * from './HistoryPage';
 export * from './ProfilePage';
