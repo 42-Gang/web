@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -15,7 +15,6 @@ export const GoogleCallbackPage = () => {
   const state = searchParams.get('state');
   const navigate = useNavigate();
 
-  const hasRunRef = useRef(false);
   const { setToken } = useAuthAtom();
   const { mutateAsync } = useGoogleLogin();
 
@@ -25,9 +24,6 @@ export const GoogleCallbackPage = () => {
       navigate(PATH.SIGNIN);
       return;
     }
-
-    if (hasRunRef.current) return;
-    hasRunRef.current = true;
 
     const redirectUri = `${window.location.origin}${PATH.SIGNIN_GOOGLE_CALLBACK}`;
     const handleCallback = async () => {
@@ -42,7 +38,8 @@ export const GoogleCallbackPage = () => {
     };
 
     handleCallback();
-  }, [code, state, mutateAsync, navigate, setToken]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className={styles.container}>
