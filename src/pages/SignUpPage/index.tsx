@@ -73,6 +73,8 @@ export const SignUpPage = () => {
     handleSelect();
   };
 
+  const isConfirmPasswordValid = confirmPassword.length > 0 && password === confirmPassword;
+
   return (
     <Flex direction="column" justifyContent="space-between" style={{ height: '100%' }}>
       <BackButton />
@@ -129,7 +131,9 @@ export const SignUpPage = () => {
             aria-label={isPasswordValid ? 'Password valid' : 'Password invalid'}
           />
         </div>
-
+        <div id="passwordHint" className={styles.hint}>
+          (8 ~ 20 chars, 1 number, 1 upper, 1 lower, 1 special at least)
+        </div>
         <div className={styles.row}>
           <label className={styles.label} htmlFor="confirmPassword">
             RE-PASSWORD:
@@ -140,6 +144,11 @@ export const SignUpPage = () => {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             type="password"
+          />
+          <span
+            className={styles.check}
+            data-show={isConfirmPasswordValid ? 'true' : undefined}
+            aria-label={isConfirmPasswordValid ? 'Passwords match' : 'Passwords do not match'}
           />
         </div>
 

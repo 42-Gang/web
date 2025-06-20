@@ -51,7 +51,7 @@ export const SignInPage = () => {
 
       <DefaultStepNavigator
         ref={navigatorRef}
-        items={['CONTINUE WITH GOOGLE', 'CONTINUE WITH EMAIL', 'GO BACK']}
+        items={['SIGNIN WITH GOOGLE', 'SIGNIN WITH EMAIL', 'GO BACK']}
         onSelect={handleSelect}
         style={{ outline: 'none' }}
       />

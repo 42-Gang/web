@@ -134,3 +134,11 @@ export const check = style({
     },
   },
 });
+
+export const hint = style({
+  fontSize: rem(15),
+  color: theme.color.orangeChat,
+  marginTop: rem(-13),
+  marginBottom: rem(-10),
+  marginLeft: rem(60),
+});
