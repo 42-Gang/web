@@ -1,5 +1,7 @@
+import { HTTPError } from 'ky';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { useLogin } from '@/api';
 import { useAuthAtom } from '@/atoms/useAuthAtom';
@@ -21,9 +23,21 @@ export const EmailSignInPage = () => {
   const handleSelect = async (index: number) => {
     switch (index) {
       case 0: {
-        const { data } = await mutateAsync({ email, password });
-        if (!data) throw new Error('로그인에 실패했습니다.');
-        setToken(data.accessToken);
+        try {
+          const { data } = await mutateAsync({ email, password });
+
+          if (!data) throw new Error('로그인에 실패했습니다.');
+
+          setToken(data.accessToken);
+        } catch (error) {
+          console.error('로그인 실패:', error);
+
+          if (error instanceof HTTPError) {
+            const res = await error.response.json();
+            const message = res?.message?.replace(/^body\//, '') || 'Failed to sign in';
+            toast.error(message);
+          }
+        }
         break;
       }
       case 1:
