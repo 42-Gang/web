@@ -43,13 +43,25 @@ export const GameSelectPage = () => {
       )}
 
       {step === 'mode-select' && (
-        <GameSelectStepNavigator
-          items={['1VS1', 'TOURNAMENT']}
-          onConfirm={handleModeConfirm}
-          showText={false}
-          buttonClassName={(text) => (text === '1VS1' ? styles.vsButton : styles.tournamentButton)}
-          wrapperClassName={styles.modeWrapper}
-        />
+        <div className={styles.modeWrapper}>
+          <button
+            className={styles.vsButton}
+            onClick={() => handleModeConfirm(0)}
+            aria-label="1대1 게임 모드 선택"
+          >
+            <img src="/assets/images/1vs1.png" className={styles.buttonImage} alt="" />
+            <span className={styles.buttonText}>1vs1</span>
+          </button>
+
+          <button
+            className={styles.tournamentButton}
+            onClick={() => handleModeConfirm(1)}
+            aria-label="토너먼트 게임 모드 선택"
+          >
+            <img src="/assets/images/tournament.png" className={styles.buttonImage} alt="" />
+            <span className={styles.buttonText}>Tournament</span>
+          </button>
+        </div>
       )}
 
       <GameLicense className={styles.license} />
