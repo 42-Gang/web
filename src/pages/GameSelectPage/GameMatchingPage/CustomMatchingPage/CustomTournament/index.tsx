@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { useSocket, useUsersMe, CustomCreateResponse, WaitingRoomUpdateResponse } from '@/api';
-import { useWaitingSocket } from '@/api/socket';
+import { useGameInviteSocket } from '@/api/socket';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
 
@@ -12,7 +12,7 @@ import { UserCard } from '../../_components/user-card';
 import { WaitingMessage } from '../../_components/waiting-message';
 
 export const CustomTournament = () => {
-  useWaitingSocket();
+  useGameInviteSocket();
 
   const { data } = useUsersMe();
   const meId = data?.data?.id;

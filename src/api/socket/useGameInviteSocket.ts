@@ -7,7 +7,7 @@ import { PATH } from '@/constants';
 
 import { useSocket } from './useSocket';
 
-export const useWaitingSocket = () => {
+export const useGameInviteSocket = () => {
   const { socket, connect, disconnect } = useSocket({
     path: 'waiting',
     handshake: '/ws/main-game',

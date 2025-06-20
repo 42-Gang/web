@@ -13,7 +13,7 @@ import { Toaster } from 'sonner';
 
 import { QueryClientProvider } from '@/api';
 import { useChatSocket, useStatusSocket, useFriendSocket } from '@/api/socket';
-import { useWaitingSocket } from '@/api/socket/useWaitingSocket';
+import { useGameInviteSocket } from '@/api/socket/useGameInviteSocket';
 import { useAuthAtom } from '@/atoms/useAuthAtom';
 import { PATH } from '@/constants/routes';
 import {
@@ -69,7 +69,7 @@ const App = () => {
     useChatSocket();
     useStatusSocket();
     useFriendSocket();
-    useWaitingSocket();
+    useGameInviteSocket();
 
     if (!isLogin()) {
       return <Navigate to={PATH.LANDING} replace />;

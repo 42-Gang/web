@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { useUsersMe } from '@/api';
-import { useWaitingSocketStore } from '@/api/store/useWaitingSocketStore.ts';
+import { useGameInviteSocketStore } from '@/api/store/useGameInviteSocketStore.ts';
 import { useWaitingStore } from '@/api/store/useWaitingStateStore.ts';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
@@ -16,7 +16,7 @@ export const AutoTournament = () => {
   const meId = data?.data?.id;
 
   const [searchParams] = useSearchParams();
-  const { socket } = useWaitingSocketStore();
+  const { socket } = useGameInviteSocketStore();
 
   const { users, tournamentSize, setTournamentSize } = useWaitingStore();
 
