@@ -49,11 +49,11 @@ export const CustomTournament = () => {
     if (!socket) return;
 
     const handleCustomCreate = (data: CustomCreateResponse) => {
-      const currentParams = new URLSearchParams(searchParams.toString());
+      const currentParams = new URLSearchParams();
+      currentParams.set('mode', 'tournament');
       currentParams.set('roomId', data.roomId);
       currentParams.set('size', String(size));
       navigate(`?${currentParams.toString()}`, { replace: true });
-      // ✅ currentRoomId 관련 코드 제거됨
     };
 
     const handleWaitingRoomUpdate = (data: WaitingRoomUpdateResponse) => {
@@ -67,7 +67,7 @@ export const CustomTournament = () => {
       socket.off('custom-create', handleCustomCreate);
       socket.off('waiting-room-update', handleWaitingRoomUpdate);
     };
-  }, [socket, searchParams, navigate, size]);
+  }, [socket, navigate, size]);
 
   useEffect(() => {
     return () => {
