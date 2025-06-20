@@ -11,7 +11,6 @@ import { InviteFriendDialog } from '../../_components/invite-friend-dialog';
 import { UserCard } from '../../_components/user-card';
 import { WaitingMessage } from '../../_components/waiting-message';
 
-
 export const CustomTournament = () => {
   useWaitingSocket();
 
@@ -24,7 +23,6 @@ export const CustomTournament = () => {
   const size = _size ? Number(_size) : NaN;
 
   const [users, setUsers] = useState<WaitingRoomUpdateResponse['users']>([]);
-  const [currentRoomId, setCurrentRoomId] = useState(roomId ?? null);
 
   const isHostRef = useRef(!roomId);
   const isAcceptRef = useRef(false);
@@ -38,13 +36,11 @@ export const CustomTournament = () => {
 
   useEffect(() => {
     if (!socket.connected || roomId || !_size || isNaN(size)) return;
-
     socket.emit('custom-create', { tournamentSize: size });
   }, [roomId, _size, size, socket, socket.connected]);
 
   useEffect(() => {
     if (!socket.connected || !roomId || isAcceptRef.current) return;
-
     socket.emit('custom-accept', { roomId });
     isAcceptRef.current = true;
   }, [roomId, socket, socket.connected]);
@@ -57,7 +53,7 @@ export const CustomTournament = () => {
       currentParams.set('roomId', data.roomId);
       currentParams.set('size', String(size));
       navigate(`?${currentParams.toString()}`, { replace: true });
-      setCurrentRoomId(data.roomId);
+      // ✅ currentRoomId 관련 코드 제거됨
     };
 
     const handleWaitingRoomUpdate = (data: WaitingRoomUpdateResponse) => {
@@ -75,16 +71,16 @@ export const CustomTournament = () => {
 
   useEffect(() => {
     return () => {
-      if (socket && currentRoomId) {
-        socket.emit('custom-leave', { roomId: currentRoomId });
+      if (socket && roomId) {
+        socket.emit('custom-leave', { roomId });
       }
     };
-  }, [socket, currentRoomId]);
+  }, [socket, roomId]);
 
   const handleInviteFriend = (userId: number) => {
-    if (!socket || !currentRoomId) return;
+    if (!socket || !roomId) return;
     socket.emit('custom-invite', {
-      roomId: currentRoomId,
+      roomId,
       userId,
       tournamentSize: size,
     });
@@ -141,8 +137,8 @@ export const CustomTournament = () => {
         option="custom"
         isHost={isHostRef.current}
         onStartGame={() => {
-          if (socket && currentRoomId) {
-            socket.emit('custom-start', { roomId: currentRoomId });
+          if (socket && roomId) {
+            socket.emit('custom-start', { roomId });
           }
         }}
       />
