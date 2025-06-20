@@ -15,7 +15,7 @@ export const SignInPage = () => {
   const handleSelect = (index: number) => {
     switch (index) {
       case 0: {
-        const baseUrl = import.meta.env.VITE_API_BASE_URL;
+        const baseUrl = import.meta.env.VITE_API_URL;
 
         if (!baseUrl) {
           toast.error('Google login is currently unavailable. Please contact the administrator.');
