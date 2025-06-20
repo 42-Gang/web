@@ -2,6 +2,11 @@ import { style } from '@vanilla-extract/css';
 
 import { rem, theme } from '@/styles';
 
+export const imagePath = {
+  ONE_VS_ONE: '/assets/images/1vs1.png',
+  TOURNAMENT: '/assets/images/tournament.png',
+};
+
 export const branding = style({
   marginTop: theme.size.brandingTopMargin,
   marginBottom: rem(20),
@@ -75,10 +80,9 @@ export const vsButton = style({
   width: rem(220),
   height: rem(220),
   border: `${rem(3)} solid ${theme.color.white}`,
-  background: "url('/assets/images/1vs1.svg') center/contain no-repeat",
-  backgroundPosition: `${rem(10)} ${rem(7)}`,
-  borderRadius: rem(15),
+  borderRadius: rem(30),
   overflow: 'hidden',
+  ...theme.layout.columnCenter,
 
   selectors: {
     '&::after': {
@@ -102,10 +106,9 @@ export const tournamentButton = style({
   width: rem(220),
   height: rem(220),
   border: `${rem(3)} solid ${theme.color.white}`,
-  background: "url('/assets/images/tournament.png') center/contain no-repeat",
-  backgroundSize: '90%',
-  borderRadius: rem(15),
+  borderRadius: rem(30),
   overflow: 'hidden',
+  ...theme.layout.columnCenter,
 
   selectors: {
     '&::after': {
@@ -126,4 +129,17 @@ export const tournamentButton = style({
 
 export const license = style({
   marginBottom: rem(36),
+});
+
+export const buttonImage = style({
+  width: rem(180),
+  height: rem(180),
+  objectFit: 'contain',
+  marginTop: rem(16),
+});
+
+export const buttonText = style({
+  fontSize: rem(30),
+  color: theme.color.yellow,
+  marginTop: rem(-6),
 });
