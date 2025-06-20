@@ -49,7 +49,7 @@ export const GameSelectPage = () => {
             onClick={() => handleModeConfirm(0)}
             aria-label="1대1 게임 모드 선택"
           >
-            <img src="/assets/images/1vs1.png" className={styles.buttonImage} alt="" />
+            <img src={styles.imagePath.ONE_VS_ONE} className={styles.buttonImage} alt="" />
             <span className={styles.buttonText}>1vs1</span>
           </button>
 
@@ -58,7 +58,7 @@ export const GameSelectPage = () => {
             onClick={() => handleModeConfirm(1)}
             aria-label="토너먼트 게임 모드 선택"
           >
-            <img src="/assets/images/tournament.png" className={styles.buttonImage} alt="" />
+            <img src={styles.imagePath.TOURNAMENT} className={styles.buttonImage} alt="" />
             <span className={styles.buttonText}>Tournament</span>
           </button>
         </div>
