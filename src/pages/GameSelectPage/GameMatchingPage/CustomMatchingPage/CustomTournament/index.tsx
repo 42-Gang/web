@@ -1,9 +1,8 @@
-import { useEffect, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { useUsersMe } from '@/api';
-import { useWaitingSocketStore } from '@/api/store/useWaitingSocketStore.ts';
-import { useWaitingStore } from '@/api/store/useWaitingStateStore.ts';
+import { useSocket, useUsersMe, CustomCreateResponse, WaitingRoomUpdateResponse } from '@/api';
+import { useGameInviteSocket } from '@/api/socket';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
 
@@ -13,49 +12,81 @@ import { UserCard } from '../../_components/user-card';
 import { WaitingMessage } from '../../_components/waiting-message';
 
 export const CustomTournament = () => {
+  useGameInviteSocket();
+
   const { data } = useUsersMe();
   const meId = data?.data?.id;
 
-  const { socket } = useWaitingSocketStore();
-  const { users, tournamentSize, roomId, invitation, setTournamentSize } = useWaitingStore();
-
   const [searchParams] = useSearchParams();
+  const roomId = searchParams.get('roomId');
+  const _size = searchParams.get('size');
+  const size = _size ? Number(_size) : NaN;
 
-  const isHostRef = useRef(!invitation);
+  const [users, setUsers] = useState<WaitingRoomUpdateResponse['users']>([]);
+
+  const isHostRef = useRef(!roomId);
+  const isAcceptRef = useRef(false);
+  const navigate = useNavigate();
+
+  const { socket } = useSocket({
+    path: 'waiting',
+    handshake: '/ws/main-game',
+    withToken: true,
+  });
 
   useEffect(() => {
-    const size = searchParams.get('size');
-    if (size) {
-      const parsed = Number(size);
-      if (!isNaN(parsed)) {
-        setTournamentSize(parsed);
-      }
-    }
-  }, [searchParams, setTournamentSize]);
+    if (!socket.connected || roomId || !_size || isNaN(size)) return;
+    socket.emit('custom-create', { tournamentSize: size });
+  }, [roomId, _size, size, socket, socket.connected]);
 
   useEffect(() => {
-    if (!socket || !socket.connected || tournamentSize === 0) return;
-    if (isHostRef.current) {
-      socket.emit('custom-create', { tournamentSize });
-    }
-  }, [socket, tournamentSize]);
+    if (!socket.connected || !roomId || isAcceptRef.current) return;
+    socket.emit('custom-accept', { roomId });
+    isAcceptRef.current = true;
+  }, [roomId, socket, socket.connected]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleCustomCreate = (data: CustomCreateResponse) => {
+      const currentParams = new URLSearchParams();
+      currentParams.set('mode', 'tournament');
+      currentParams.set('roomId', data.roomId);
+      currentParams.set('size', String(size));
+      navigate(`?${currentParams.toString()}`, { replace: true });
+    };
+
+    const handleWaitingRoomUpdate = (data: WaitingRoomUpdateResponse) => {
+      setUsers(data.users);
+    };
+
+    socket.on('custom-create', handleCustomCreate);
+    socket.on('waiting-room-update', handleWaitingRoomUpdate);
+
+    return () => {
+      socket.off('custom-create', handleCustomCreate);
+      socket.off('waiting-room-update', handleWaitingRoomUpdate);
+    };
+  }, [socket, navigate, size]);
 
   useEffect(() => {
     return () => {
       if (socket && roomId) {
         socket.emit('custom-leave', { roomId });
       }
-      useWaitingStore.getState().clearRoom();
-      useWaitingStore.getState().clearInvitation();
     };
   }, [socket, roomId]);
 
   const handleInviteFriend = (userId: number) => {
     if (!socket || !roomId) return;
-    socket.emit('custom-invite', { roomId, userId });
+    socket.emit('custom-invite', {
+      roomId,
+      userId,
+      tournamentSize: size,
+    });
   };
 
-  const allMatched = users.length === tournamentSize;
+  const allMatched = users.length === size;
 
   return (
     <Flex direction="column" style={{ height: '100%' }}>
@@ -63,7 +94,7 @@ export const CustomTournament = () => {
       <h2 className={styles.title}>CUSTOM TOURNAMENT</h2>
 
       <div className={styles.matchArea}>
-        {Array.from({ length: tournamentSize || 4 }, (_, i) => {
+        {Array.from({ length: size }, (_, i) => {
           const user = users[i];
           const isPlayer = user?.id === meId;
           const isWaiting = !user;
@@ -85,6 +116,7 @@ export const CustomTournament = () => {
               option="custom"
               isHostUser={isHostRef.current}
               isPlayerHost={user?.id === users[0]?.id}
+              onClickAdd={handleInviteFriend}
             />
           );
 

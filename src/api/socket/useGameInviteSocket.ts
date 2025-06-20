@@ -7,7 +7,7 @@ import { PATH } from '@/constants';
 
 import { useSocket } from './useSocket';
 
-export const useWaitingSocket = () => {
+export const useGameInviteSocket = () => {
   const { socket, connect, disconnect } = useSocket({
     path: 'waiting',
     handshake: '/ws/main-game',
@@ -29,9 +29,16 @@ export const useWaitingSocket = () => {
         action: {
           label: 'Yes',
           onClick: () => {
-            navigate(`${PATH.GAME_CUSTOM_MATCHING}?mode=1vs1&roomId=${data.roomId}`, {
-              replace: true,
-            });
+            if (data.tournamentSize && data.tournamentSize > 2) {
+              navigate(
+                `${PATH.GAME_CUSTOM_MATCHING}?mode=tournament&size=${data.tournamentSize}&roomId=${data.roomId}`,
+                { replace: true },
+              );
+            } else {
+              navigate(`${PATH.GAME_CUSTOM_MATCHING}?mode=1vs1&roomId=${data.roomId}`, {
+                replace: true,
+              });
+            }
           },
         },
         cancel: {
