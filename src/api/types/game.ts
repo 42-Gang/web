@@ -51,6 +51,7 @@ export type CustomCreateResponse = {
 export type CustomInvitePayload = {
   roomId: string;
   userId: number;
+  tournamentSize?: number;
 };
 
 export type CustomInviteResponse = {
@@ -58,6 +59,7 @@ export type CustomInviteResponse = {
   hostId: number;
   hostName: string;
   hostAvatarUrl: string;
+  tournamentSize?: number;
 };
 
 export type CustomAcceptPayload = {
