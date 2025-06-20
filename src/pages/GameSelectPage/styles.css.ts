@@ -2,6 +2,11 @@ import { style } from '@vanilla-extract/css';
 
 import { rem, theme } from '@/styles';
 
+export const imagePath = {
+  ONE_VS_ONE: '/assets/images/1vs1.png',
+  TOURNAMENT: '/assets/images/tournament.png',
+};
+
 export const branding = style({
   marginTop: theme.size.brandingTopMargin,
   marginBottom: rem(20),
@@ -77,7 +82,6 @@ export const vsButton = style({
   border: `${rem(3)} solid ${theme.color.white}`,
   borderRadius: rem(30),
   overflow: 'hidden',
-  backgroundPosition: `${rem(10)} ${rem(7)}`,
   ...theme.layout.columnCenter,
 
   selectors: {
@@ -104,7 +108,6 @@ export const tournamentButton = style({
   border: `${rem(3)} solid ${theme.color.white}`,
   borderRadius: rem(30),
   overflow: 'hidden',
-  backgroundSize: '90%',
   ...theme.layout.columnCenter,
 
   selectors: {
