@@ -1,9 +1,13 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { useUsersMe } from '@/api';
-import { useWaitingSocketStore } from '@/api/store/useWaitingSocketStore.ts';
-import { useWaitingStore } from '@/api/store/useWaitingStateStore.ts';
+import {
+  useUsersMe,
+  type TournamentCreatedResponse,
+  type WaitingRoomPlayer,
+  type WaitingRoomUpdateResponse,
+} from '@/api';
+import { useSocket } from '@/api/socket';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
 
@@ -13,32 +17,48 @@ import { WaitingMessage } from '../../_components/waiting-message';
 
 export const Auto1vs1 = () => {
   const { data } = useUsersMe();
-  const meId = data?.data?.id;
+  const uid = data?.data?.id;
 
-  const { socket } = useWaitingSocketStore();
+  const { socket } = useSocket({
+    path: 'waiting',
+    handshake: '/ws/main-game',
+    withToken: true,
+  });
+
   const [searchParams] = useSearchParams();
 
-  const { users, tournamentSize, setTournamentSize } = useWaitingStore();
+  const [users, setUsers] = useState<WaitingRoomPlayer[]>([]);
 
   useEffect(() => {
-    const size = searchParams.get('size');
-    if (size) {
-      const parsed = Number(size);
-      if (!isNaN(parsed)) {
-        setTournamentSize(parsed);
-      }
-    }
-  }, [searchParams, setTournamentSize]);
+    if (!socket.connected) return;
+
+    const _size = searchParams.get('size');
+    const size = _size ? Number(_size) : NaN;
+
+    socket.emit('auto-join', { tournamentSize: size });
+  }, [searchParams, socket, socket.connected]);
 
   useEffect(() => {
-    if (!socket || !socket.connected || tournamentSize === 0) return;
-    socket.emit('auto-join', { tournamentSize });
-  }, [socket, tournamentSize]);
+    const handleWaitingRoomUpdate = (data: WaitingRoomUpdateResponse) => {
+      setUsers(data.users);
+    };
 
-  const me = users.find((u) => u.id === meId);
-  const opponent = users.find((u) => u.id !== meId);
+    const handleTournamentCreated = (data: TournamentCreatedResponse) => {
+      alert(`Tournament created with ID: ${data.tournamentId} and size: ${data.size}`);
+    };
 
-  const isMeFirst = users[0]?.id === meId || !opponent;
+    socket.on('waiting-room-update', handleWaitingRoomUpdate);
+    socket.on('tournament-created', handleTournamentCreated);
+    return () => {
+      socket.off('waiting-room-update', handleWaitingRoomUpdate);
+      socket.off('tournament-created', handleTournamentCreated);
+    };
+  }, [socket]);
+
+  const me = users.find((u) => u.id === uid);
+  const opponent = users.find((u) => u.id !== uid);
+
+  const isMeFirst = users[0]?.id === uid || !opponent;
   const isOpponentWaiting = !opponent;
 
   const playerProps = {
