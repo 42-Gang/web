@@ -124,6 +124,7 @@ export const SignUpPage = () => {
               validatePassword(value);
             }}
             type="password"
+            aria-describedby="passwordHint"
           />
           <span
             className={styles.check}
