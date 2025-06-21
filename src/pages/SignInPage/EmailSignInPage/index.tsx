@@ -30,12 +30,15 @@ export const EmailSignInPage = () => {
 
           setToken(data.accessToken);
         } catch (error) {
-          console.error('로그인 실패:', error);
-
           if (error instanceof HTTPError) {
             const res = await error.response.json();
-            const message = res?.message?.replace(/^body\//, '') || 'Failed to sign in';
+            const message =
+              typeof res.message === 'string'
+                ? res.message.replace(/^body\//, '')
+                : '서버 오류가 발생했습니다.';
             toast.error(message);
+          } else {
+            toast.error('알 수 없는 오류가 발생했습니다.');
           }
         }
         break;
