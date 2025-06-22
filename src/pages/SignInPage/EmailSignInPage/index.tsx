@@ -1,5 +1,7 @@
+import { HTTPError } from 'ky';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { useLogin } from '@/api';
 import { useAuthAtom } from '@/atoms/useAuthAtom';
@@ -21,9 +23,30 @@ export const EmailSignInPage = () => {
   const handleSelect = async (index: number) => {
     switch (index) {
       case 0: {
-        const { data } = await mutateAsync({ email, password });
-        if (!data) throw new Error('로그인에 실패했습니다.');
-        setToken(data.accessToken);
+        try {
+          const { data } = await mutateAsync({ email, password });
+
+          if (!data) throw new Error('로그인에 실패했습니다.');
+
+          setToken(data.accessToken);
+        } catch (error) {
+          if (error instanceof HTTPError) {
+            try {
+              const res = await error.response.json();
+              const message =
+                typeof res.message === 'string'
+                  ? res.message.replace(/^body\//, '')
+                  : '서버 오류가 발생했습니다.';
+              toast.error(message);
+            } catch {
+              toast.error('서버 응답을 해석하는 중 오류가 발생했습니다.');
+            }
+          } else if (error instanceof Error) {
+            toast.error(error.message);
+          } else {
+            toast.error('알 수 없는 오류가 발생했습니다.');
+          }
+        }
         break;
       }
       case 1:

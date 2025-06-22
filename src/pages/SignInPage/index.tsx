@@ -15,7 +15,7 @@ export const SignInPage = () => {
   const handleSelect = (index: number) => {
     switch (index) {
       case 0: {
-        const baseUrl = import.meta.env.VITE_API_BASE_URL;
+        const baseUrl = import.meta.env.VITE_API_URL;
 
         if (!baseUrl) {
           toast.error('Google login is currently unavailable. Please contact the administrator.');
@@ -51,7 +51,7 @@ export const SignInPage = () => {
 
       <DefaultStepNavigator
         ref={navigatorRef}
-        items={['CONTINUE WITH GOOGLE', 'CONTINUE WITH EMAIL', 'GO BACK']}
+        items={['SIGN IN WITH GOOGLE', 'SIGN IN WITH EMAIL', 'GO BACK']}
         onSelect={handleSelect}
         style={{ outline: 'none' }}
       />

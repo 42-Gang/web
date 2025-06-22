@@ -6,4 +6,4 @@ export * from './useSocket';
 export * from './useChatSocket';
 export * from './useStatusSocket';
 export * from './useFriendSocket';
-export * from './useWaitingSocket';
+export * from './useGameInviteSocket';

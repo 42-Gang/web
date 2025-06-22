@@ -8,7 +8,7 @@ type WaitingSocketStore = {
   setSocket: (socket: Socket<ServerToClientEvents, ClientToServerEvents>) => void;
 };
 
-export const useWaitingSocketStore = create<WaitingSocketStore>((set) => ({
+export const useGameInviteSocketStore = create<WaitingSocketStore>((set) => ({
   socket: null,
   setSocket: (socket) => set({ socket }),
 }));

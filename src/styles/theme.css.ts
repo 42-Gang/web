@@ -66,6 +66,7 @@ const size = {
 
 const color = {
   white: 'hsl(0, 0%, 100%)',
+  gray: 'hsl(0, 0%, 70%)',
   black: 'hsl(0, 0%, 0%)',
   brand: 'hsl(0, 48%, 59%)',
   orangeChat: 'hsl(14, 97%, 71%)',
