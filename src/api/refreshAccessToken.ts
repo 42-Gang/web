@@ -7,6 +7,8 @@ interface Response {
   accessToken: string;
 }
 
+let refreshingPromise: Promise<string | undefined> | null = null;
+
 const postRefreshToken = async (): Promise<HttpResponse<Response>> => {
   return await ky
     .post(`/api/v1/auth/refresh-token`, {
@@ -16,12 +18,22 @@ const postRefreshToken = async (): Promise<HttpResponse<Response>> => {
 };
 
 export const refreshAccessToken = async (): Promise<string | undefined> => {
-  const { data } = await postRefreshToken();
-  const newAccessToken = data?.accessToken ?? undefined;
-
-  if (newAccessToken) {
-    window.localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, newAccessToken);
+  if (refreshingPromise) {
+    return refreshingPromise;
   }
 
-  return newAccessToken;
+  refreshingPromise = (async () => {
+    try {
+      const { data } = await postRefreshToken();
+      const newAccessToken = data?.accessToken ?? undefined;
+      if (newAccessToken) {
+        window.localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, newAccessToken);
+      }
+      return newAccessToken;
+    } finally {
+      refreshingPromise = null;
+    }
+  })();
+
+  return refreshingPromise;
 };
