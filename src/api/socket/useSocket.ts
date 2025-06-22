@@ -21,7 +21,7 @@ export const useSocket = (options: UseSocketOptions) => {
     createSocket(path, token || '', { handshake, withToken }),
   );
 
-  const retryTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const retryTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const callbacksRef = useRef({ onConnect, onDisconnect, onError });
   callbacksRef.current = { onConnect, onDisconnect, onError };
