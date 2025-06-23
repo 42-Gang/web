@@ -1,5 +1,5 @@
 import { Mutex } from 'async-mutex';
-import ky, { type Options, type ResponsePromise } from 'ky';
+import ky, { HTTPError, type Options, type ResponsePromise } from 'ky';
 
 import { LOCAL_STORAGE } from './constants';
 import { refreshAccessToken } from './refreshAccessToken';
@@ -14,54 +14,52 @@ const defaultOptions: Options = {
 
 export const instance = ky.create({
   prefixUrl: '/api',
-  headers: {
-    'content-type': 'application/json',
-  },
+  headers: { 'content-type': 'application/json' },
   hooks: {
     beforeRequest: [
       (request) => {
-        const token = window.localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN);
-        if (token) {
-          request.headers.set('Authorization', `Bearer ${token}`);
+        const accessToken = window.localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN);
+
+        if (accessToken) {
+          request.headers.set('Authorization', `Bearer ${accessToken}`);
         }
       },
     ],
     afterResponse: [
       async (request, options, response) => {
-        if (response.status === 401 && !request.url.includes('logout')) {
-          return tokenRefreshMutex.runExclusive(async () => {
-            const currentToken = window.localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN);
-            const originalToken = request.headers.get('Authorization')?.replace('Bearer ', '');
+        if (!response.ok && response.status === 401 && !request.url.includes('logout')) {
+          try {
+            let accessToken: string | undefined;
 
-            if (currentToken && currentToken !== originalToken) {
-              const retryHeaders = new Headers(request.headers);
-              retryHeaders.set('Authorization', `Bearer ${currentToken}`);
+            if (tokenRefreshMutex.isLocked()) {
+              await tokenRefreshMutex.waitForUnlock();
 
-              return instance(request.url, {
-                ...options,
-                headers: retryHeaders,
-                prefixUrl: undefined,
-              });
+              const newAccessToken = window.localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN);
+
+              if (newAccessToken) {
+                accessToken = newAccessToken;
+              }
+            } else {
+              await tokenRefreshMutex.acquire();
+              accessToken = await refreshAccessToken();
             }
 
-            const newToken = await refreshAccessToken();
-
-            if (!newToken) {
+            request.headers.set('Authorization', `Bearer ${accessToken}`);
+            return ky(request, options);
+          } catch (e) {
+            if (e instanceof HTTPError && e.response.url.includes('refresh-token')) {
               window.localStorage.removeItem(LOCAL_STORAGE.ACCESS_TOKEN);
-              throw new Error('Unable to refresh access token');
+              alert('로그인이 만료되었습니다. 다시 로그인해주세요.');
+              window.location.href = '/';
             }
 
-            const retryHeaders = new Headers(options?.headers || {});
-            retryHeaders.set('Authorization', `Bearer ${newToken}`);
-
-            return instance(request.url, {
-              ...options,
-              headers: retryHeaders,
-              prefixUrl: undefined,
-            });
-          });
+            if (e instanceof Error) {
+              console.warn(`[fetcher.ts] ${e.name} (${e.message})`);
+            }
+          } finally {
+            tokenRefreshMutex.release();
+          }
         }
-
         return response;
       },
     ],
