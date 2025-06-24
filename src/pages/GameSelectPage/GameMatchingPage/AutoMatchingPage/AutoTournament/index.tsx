@@ -96,22 +96,6 @@ export const AutoTournament = () => {
     };
   }, [socket, tournamentSize]);
 
-  useEffect(() => {
-    // const handleLeaveSuccess = (data: unknown) => {
-    //   const message = data as string;
-    //   console.log('Leave success:', message);
-    // };
-    const handleLeaveSuccess = () => {};
-
-    if (!socket) return;
-
-    socket.on('leave-success', handleLeaveSuccess);
-
-    return () => {
-      socket.off('leave-success', handleLeaveSuccess);
-    };
-  }, [socket]);
-
   if (!meId) return <div>Loading...</div>;
 
   const renderUsers = (() => {
