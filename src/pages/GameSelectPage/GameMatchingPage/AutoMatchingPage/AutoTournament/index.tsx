@@ -76,7 +76,7 @@ export const AutoTournament = () => {
     };
 
     if (socket.connected) {
-      setTimeout(emitJoin, 50);
+      emitJoin();
     } else {
       socket.once('connect', emitJoin);
     }
