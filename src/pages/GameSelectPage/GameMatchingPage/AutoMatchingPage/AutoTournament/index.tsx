@@ -28,7 +28,6 @@ export const AutoTournament = () => {
 
   const navigate = useNavigate();
   const [isNavigatable, setIsNavigatable] = useState(true);
-  const [isTournamentStarted, setIsTournamentStarted] = useState(false);
 
   const handleBackClick = () => {
     if (!isNavigatable) {
@@ -48,21 +47,25 @@ export const AutoTournament = () => {
     if (!socket || !tournamentSize) return;
 
     const handleWaitingRoomUpdate = (data: WaitingRoomUpdateResponse) => {
-      const filteredUsers = data.users.filter((u) => u.id !== meId);
-      const converted = filteredUsers.map((u) => ({
-        id: u.id,
-        nickname: u.nickname,
-        avatarUrl: u.avatarUrl,
-        win: 0,
-        lose: 0,
-        tournament: 0,
-      }));
+      const converted = data.users.map((u) => {
+        const isMe = u.id === meId;
+        return {
+          id: u.id,
+          nickname: isMe ? (meData?.data?.nickname ?? 'ME') : '???',
+          avatarUrl: isMe
+            ? (meData?.data?.avatarUrl ?? '/assets/images/sample-avatar.png')
+            : '/assets/images/sample-avatar.png',
+          win: isMe ? (meData?.data?.win ?? 0) : 0,
+          lose: isMe ? (meData?.data?.lose ?? 0) : 0,
+          tournament: isMe ? (meData?.data?.tournament ?? 0) : 0,
+        };
+      });
+
       setUsers(converted);
     };
 
     const handleTournamentCreated = () => {
       setIsNavigatable(false);
-      setIsTournamentStarted(true);
     };
 
     socket.on('waiting-room-update', handleWaitingRoomUpdate);
@@ -82,7 +85,8 @@ export const AutoTournament = () => {
       socket.off('waiting-room-update', handleWaitingRoomUpdate);
       socket.off('tournament-created', handleTournamentCreated);
     };
-  }, [socket, tournamentSize, setUsers, meId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [socket, tournamentSize, setUsers]);
 
   useEffect(() => {
     return () => {
@@ -92,35 +96,39 @@ export const AutoTournament = () => {
     };
   }, [socket, tournamentSize]);
 
+  useEffect(() => {
+    // const handleLeaveSuccess = (data: unknown) => {
+    //   const message = data as string;
+    //   console.log('Leave success:', message);
+    // };
+    const handleLeaveSuccess = () => {};
+
+    if (!socket) return;
+
+    socket.on('leave-success', handleLeaveSuccess);
+
+    return () => {
+      socket.off('leave-success', handleLeaveSuccess);
+    };
+  }, [socket]);
+
   if (!meId) return <div>Loading...</div>;
 
   const renderUsers = (() => {
-    const result: ((typeof users)[number] | undefined)[] = [];
+    const uniqueUsers = users.filter(
+      (user, index, self) => index === self.findIndex((u) => u.id === user.id),
+    );
 
-    if (meData?.data) {
-      result.push({
-        id: meData.data.id,
-        nickname: meData.data.nickname,
-        avatarUrl: meData.data.avatarUrl,
-        win: 0,
-        lose: 0,
-        tournament: 0,
-      });
+    const paddedUsers = [...uniqueUsers] as ((typeof users)[number] | undefined)[];
+
+    while (paddedUsers.length < tournamentSize) {
+      paddedUsers.push(undefined);
     }
 
-    if (isTournamentStarted) {
-      const others = users.filter((u) => u.id !== meId);
-      result.push(...others);
-    }
-
-    while (result.length < tournamentSize) {
-      result.push(undefined);
-    }
-
-    return result;
+    return paddedUsers.slice(0, tournamentSize);
   })();
 
-  const allMatched = users.length + 1 === tournamentSize;
+  const allMatched = users.length === tournamentSize;
 
   return (
     <Flex direction="column" style={{ height: '100%' }}>
@@ -132,16 +140,18 @@ export const AutoTournament = () => {
           const isWaiting = !user;
           const isPlayer = user?.id === meId;
 
-          const nickname = isWaiting
-            ? '-'
+          const nickname = isWaiting ? '-' : isPlayer ? (meData?.data?.nickname ?? 'ME') : '???';
+
+          const avatarUrl = isWaiting
+            ? undefined
             : isPlayer
-              ? (meData?.data?.nickname ?? 'ME')
-              : (user?.nickname ?? `OPPONENT ${i + 1}`);
+              ? meData?.data?.avatarUrl
+              : '/assets/images/sample-avatar.png';
 
           return (
             <UserCard
               key={user?.id ?? `waiting-${i}`}
-              userAvatar={user?.avatarUrl}
+              userAvatar={avatarUrl}
               userNickname={nickname}
               isPlayer={isPlayer}
               isWaiting={isWaiting}
