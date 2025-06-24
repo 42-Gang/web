@@ -54,7 +54,7 @@ export const AutoTournament = () => {
           nickname: isMe ? (meData?.data?.nickname ?? 'ME') : '???',
           avatarUrl: isMe
             ? (meData?.data?.avatarUrl ?? '/assets/images/sample-avatar.png')
-            : '/assets/images/sample-avatar.png',
+            : '/assets/images/tournament-random-profile.png',
           win: isMe ? (meData?.data?.win ?? 0) : 0,
           lose: isMe ? (meData?.data?.lose ?? 0) : 0,
           tournament: isMe ? (meData?.data?.tournament ?? 0) : 0,
@@ -144,9 +144,7 @@ export const AutoTournament = () => {
 
           const avatarUrl = isWaiting
             ? undefined
-            : isPlayer
-              ? meData?.data?.avatarUrl
-              : '/assets/images/sample-avatar.png';
+            : (user?.avatarUrl ?? '/assets/images/tournament-random-profile.png');
 
           return (
             <UserCard
