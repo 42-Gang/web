@@ -76,6 +76,7 @@ const color = {
   lose: '#C83A3A',
   yellow: '#ECF411',
 
+  passwordOk: '#00b894',
   friendHover: '#1E90FF',
   autoCustomHover: 'hsla(0, 0%, 100%, 0.2)',
 
