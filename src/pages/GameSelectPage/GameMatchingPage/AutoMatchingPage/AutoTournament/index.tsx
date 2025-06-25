@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { useSocket, useUsersMe, type WaitingRoomUpdateResponse } from '@/api';
+import { UserInfo, useSocket, useUsersMe, type WaitingRoomUpdateResponse } from '@/api';
 import { useWaitingStore } from '@/api/store/useWaitingStateStore';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
@@ -19,6 +19,12 @@ export const AutoTournament = () => {
   const tournamentSize = Number(searchParams.get('size') || 0);
 
   const { users, setUsers, setTournamentSize } = useWaitingStore();
+
+  const TOURNAMENT_SIZE = 4;
+  const ME_NICKNAME_PLACEHOLDER = 'ME';
+  const UNKNOWN_NICKNAME_PLACEHOLDER = '???';
+  const DEFAULT_AVATAR_URL = '/assets/images/sample-avatar.png';
+  const RANDOM_PROFILE_AVATAR_URL = '/assets/images/tournament-random-profile.png';
 
   const { socket } = useSocket({
     path: 'waiting',
@@ -38,23 +44,30 @@ export const AutoTournament = () => {
   };
 
   useEffect(() => {
-    if (!isNaN(tournamentSize) && tournamentSize > 0) {
-      setTournamentSize(tournamentSize);
-    }
-  }, [tournamentSize, setTournamentSize]);
+    setTournamentSize(TOURNAMENT_SIZE);
+  }, [setTournamentSize]);
 
   useEffect(() => {
     if (!socket || !tournamentSize) return;
 
     const handleWaitingRoomUpdate = (data: WaitingRoomUpdateResponse) => {
+      // console.log('meId:', meId);
+      // console.log('data.users:', data.users);
+
+      // data.users.forEach((u) => {
+      //   console.log(`유저: ${u.nickname} (id: ${u.id}) => isMe: ${u.id === meId}`);
+      // });
+
       const converted = data.users.map((u) => {
         const isMe = u.id === meId;
         return {
           id: u.id,
-          nickname: isMe ? (meData?.data?.nickname ?? 'ME') : '???',
+          nickname: isMe
+            ? (meData?.data?.nickname ?? ME_NICKNAME_PLACEHOLDER)
+            : UNKNOWN_NICKNAME_PLACEHOLDER,
           avatarUrl: isMe
-            ? (meData?.data?.avatarUrl ?? '/assets/images/sample-avatar.png')
-            : '/assets/images/tournament-random-profile.png',
+            ? (meData?.data?.avatarUrl ?? DEFAULT_AVATAR_URL)
+            : RANDOM_PROFILE_AVATAR_URL,
           win: isMe ? (meData?.data?.win ?? 0) : 0,
           lose: isMe ? (meData?.data?.lose ?? 0) : 0,
           tournament: isMe ? (meData?.data?.tournament ?? 0) : 0,
@@ -72,7 +85,7 @@ export const AutoTournament = () => {
     socket.on('tournament-created', handleTournamentCreated);
 
     const emitJoin = () => {
-      socket.emit('auto-join', { tournamentSize });
+      socket.emit('auto-join', { tournamentSize: TOURNAMENT_SIZE });
     };
 
     if (socket.connected) {
@@ -90,8 +103,8 @@ export const AutoTournament = () => {
 
   useEffect(() => {
     return () => {
-      if (socket?.connected && tournamentSize > 0) {
-        socket.emit('auto-leave', { tournamentSize });
+      if (socket?.connected && TOURNAMENT_SIZE > 0) {
+        socket.emit('auto-leave', { tournamentSize: TOURNAMENT_SIZE });
       }
     };
   }, [socket, tournamentSize]);
@@ -103,13 +116,15 @@ export const AutoTournament = () => {
       (user, index, self) => index === self.findIndex((u) => u.id === user.id),
     );
 
-    const paddedUsers = [...uniqueUsers] as ((typeof users)[number] | undefined)[];
+    const myUser = uniqueUsers.find((u) => u.id === meId);
+    const otherUsers = uniqueUsers.filter((u) => u.id !== meId);
 
-    while (paddedUsers.length < tournamentSize) {
-      paddedUsers.push(undefined);
+    const paddedOthers: (UserInfo | undefined)[] = [...otherUsers];
+    while (paddedOthers.length < TOURNAMENT_SIZE - 1) {
+      paddedOthers.push(undefined);
     }
 
-    return paddedUsers.slice(0, tournamentSize);
+    return [myUser, ...paddedOthers];
   })();
 
   const allMatched = users.length === tournamentSize;
@@ -124,11 +139,13 @@ export const AutoTournament = () => {
           const isWaiting = !user;
           const isPlayer = user?.id === meId;
 
-          const nickname = isWaiting ? '-' : isPlayer ? (meData?.data?.nickname ?? 'ME') : '???';
+          const nickname = isWaiting
+            ? '-'
+            : isPlayer
+              ? (meData?.data?.nickname ?? ME_NICKNAME_PLACEHOLDER)
+              : UNKNOWN_NICKNAME_PLACEHOLDER;
 
-          const avatarUrl = isWaiting
-            ? undefined
-            : (user?.avatarUrl ?? '/assets/images/tournament-random-profile.png');
+          const avatarUrl = isWaiting ? undefined : (user?.avatarUrl ?? RANDOM_PROFILE_AVATAR_URL);
 
           return (
             <UserCard
