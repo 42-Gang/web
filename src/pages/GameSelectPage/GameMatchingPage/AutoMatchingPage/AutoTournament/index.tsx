@@ -51,13 +51,6 @@ export const AutoTournament = () => {
     if (!socket || !tournamentSize) return;
 
     const handleWaitingRoomUpdate = (data: WaitingRoomUpdateResponse) => {
-      // console.log('meId:', meId);
-      // console.log('data.users:', data.users);
-
-      // data.users.forEach((u) => {
-      //   console.log(`유저: ${u.nickname} (id: ${u.id}) => isMe: ${u.id === meId}`);
-      // });
-
       const converted = data.users.map((u) => {
         const isMe = u.id === meId;
         return {
