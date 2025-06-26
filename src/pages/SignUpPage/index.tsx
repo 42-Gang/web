@@ -8,6 +8,7 @@ import { Flex } from '@/components/system';
 import { Branding } from '@/components/ui';
 import { BackButton } from '@/components/ui/back-button';
 
+import { PasswordTooltip } from './components/components';
 import * as styles from './styles.css';
 
 export const SignUpPage = () => {
@@ -15,36 +16,12 @@ export const SignUpPage = () => {
   const [mailVerificationCode, setMailVerificationCode] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [passwordRules, setPasswordRules] = useState({
-    alpha: false,
-    numberSpecial: false,
-    length: false,
-  });
   const [nickname, setNickname] = useState('');
 
   const { mutateAsync: mailVerifyMutation } = useMailVerification();
   const { mutateAsync: registerMutation } = useRegister();
 
   const navigate = useNavigate();
-
-  const lowerAlphaRegex = /[a-z]/;
-  const upperAlphaRegex = /[A-Z]/;
-  const numberRegex = /\d/;
-  const specialCharRegex = /[~!@#$%^&*]/;
-
-  const validatePasswordRules = (value: string) => {
-    setPasswordRules({
-      alpha: lowerAlphaRegex.test(value) && upperAlphaRegex.test(value),
-      numberSpecial: numberRegex.test(value) && specialCharRegex.test(value),
-      length: value.length >= 8 && value.length <= 20,
-    });
-  };
-
-  const passwordCheckItems = [
-    { key: 'alpha', label: '영문 대소문자 포함' },
-    { key: 'numberSpecial', label: '숫자 및 특수문자 포함' },
-    { key: 'length', label: '8자 이상 20자 이하' },
-  ] as const;
 
   const handleMailVerify = () => {
     mailVerifyMutation({ email })
@@ -137,18 +114,10 @@ export const SignUpPage = () => {
             onChange={(e) => {
               const value = e.target.value;
               setPassword(value);
-              validatePasswordRules(value);
             }}
-            aria-describedby="passwordRules"
           />
         </div>
-        <div id="passwordRules" className={styles.passwordCheckList}>
-          {passwordCheckItems.map((item) => (
-            <div key={item.key} className={styles.checkItem} data-valid={passwordRules[item.key]}>
-              {passwordRules[item.key] ? '✓' : '✗'} {item.label}
-            </div>
-          ))}
-        </div>
+        <PasswordTooltip />
 
         <div className={styles.row}>
           <label className={styles.label} htmlFor="confirmPassword">

@@ -134,26 +134,3 @@ export const check = style({
     },
   },
 });
-
-export const passwordCheckList = style({
-  fontSize: rem(13),
-  color: theme.color.gray,
-  marginTop: rem(-10),
-  marginBottom: rem(-5),
-  marginLeft: rem(60),
-  display: 'flex',
-  flexDirection: 'row',
-  gap: rem(12),
-});
-
-export const checkItem = style({
-  transition: 'color 0.3s ease',
-  selectors: {
-    '&[data-valid="true"]': {
-      color: theme.color.passwordOk,
-    },
-    '&[data-valid="false"]': {
-      color: theme.color.gray,
-    },
-  },
-});
