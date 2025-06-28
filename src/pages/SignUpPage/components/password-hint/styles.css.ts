@@ -5,7 +5,7 @@ import { rem, theme } from '@/styles';
 export const tooltipWrapper = style({
   position: 'absolute',
   top: rem(370),
-  left: rem(540),
+  left: rem(550),
 });
 
 export const tooltipIcon = style({

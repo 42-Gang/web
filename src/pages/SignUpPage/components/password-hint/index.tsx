@@ -8,7 +8,7 @@ export const passwordRules: string[] = [
   'Contain at least one special character (@$!%*?&)',
 ];
 
-export const PasswordTooltip = () => {
+export const PasswordHint = () => {
   return (
     <span className={styles.tooltipWrapper}>
       <button type="button" className={styles.tooltipIcon} aria-label="Password Rules">

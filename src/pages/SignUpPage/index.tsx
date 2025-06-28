@@ -8,7 +8,7 @@ import { Flex } from '@/components/system';
 import { Branding } from '@/components/ui';
 import { BackButton } from '@/components/ui/back-button';
 
-import { PasswordTooltip } from './components/components';
+import { PasswordHint } from './components/password-hint';
 import * as styles from './styles.css';
 
 export const SignUpPage = () => {
@@ -117,7 +117,7 @@ export const SignUpPage = () => {
             }}
           />
         </div>
-        <PasswordTooltip />
+        <PasswordHint />
 
         <div className={styles.row}>
           <label className={styles.label} htmlFor="confirmPassword">
