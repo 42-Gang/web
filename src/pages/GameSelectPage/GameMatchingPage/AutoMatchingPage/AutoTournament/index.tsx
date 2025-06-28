@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { UserInfo, useSocket, useUsersMe, type WaitingRoomUpdateResponse } from '@/api';
+import { UserInfo, useUsersMe, type WaitingRoomUpdateResponse } from '@/api';
+import { useSocket } from '@/api/socket';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
 
