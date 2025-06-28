@@ -4,8 +4,7 @@ import { rem, theme } from '@/styles';
 
 export const tooltipWrapper = style({
   position: 'absolute',
-  top: rem(370),
-  left: rem(550),
+  left: rem(450),
 });
 
 export const tooltipIcon = style({

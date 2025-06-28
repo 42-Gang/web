@@ -15,6 +15,7 @@ export const SignUpPage = () => {
   const [email, setEmail] = useState('');
   const [mailVerificationCode, setMailVerificationCode] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
   const [nickname, setNickname] = useState('');
 
@@ -106,18 +107,24 @@ export const SignUpPage = () => {
           <label className={styles.label} htmlFor="password">
             PASSWORD:
           </label>
-          <input
-            className={styles.input}
-            id="password"
-            value={password}
-            type="password"
-            onChange={(e) => {
-              const value = e.target.value;
-              setPassword(value);
-            }}
-          />
+          <div className={styles.inputWrapper}>
+            <input
+              className={styles.input}
+              id="password"
+              value={password}
+              type={showPassword ? 'text' : 'password'}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              className={styles.toggleButton}
+              data-show={showPassword}
+              onClick={() => setShowPassword((v) => !v)}
+              aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
+            />
+          </div>
+          <PasswordHint />
         </div>
-        <PasswordHint />
 
         <div className={styles.row}>
           <label className={styles.label} htmlFor="confirmPassword">
