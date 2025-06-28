@@ -8,15 +8,14 @@ import { Flex } from '@/components/system';
 import { Branding } from '@/components/ui';
 import { BackButton } from '@/components/ui/back-button';
 
+import { PasswordHint } from './components/password-hint';
 import * as styles from './styles.css';
-
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/;
 
 export const SignUpPage = () => {
   const [email, setEmail] = useState('');
   const [mailVerificationCode, setMailVerificationCode] = useState('');
   const [password, setPassword] = useState('');
-  const [isPasswordValid, setIsPasswordValid] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
   const [nickname, setNickname] = useState('');
 
@@ -24,12 +23,6 @@ export const SignUpPage = () => {
   const { mutateAsync: registerMutation } = useRegister();
 
   const navigate = useNavigate();
-
-  const validatePassword = (value: string) => {
-    const isLengthValid = value.length >= 8 && value.length <= 20;
-    const isPatternValid = passwordRegex.test(value);
-    setIsPasswordValid(isLengthValid && isPatternValid);
-  };
 
   const handleMailVerify = () => {
     mailVerifyMutation({ email })
@@ -114,27 +107,25 @@ export const SignUpPage = () => {
           <label className={styles.label} htmlFor="password">
             PASSWORD:
           </label>
-          <input
-            className={styles.input}
-            id="password"
-            value={password}
-            onChange={(e) => {
-              const value = e.target.value;
-              setPassword(value);
-              validatePassword(value);
-            }}
-            type="password"
-            aria-describedby="passwordHint"
-          />
-          <span
-            className={styles.check}
-            data-show={isPasswordValid && password.length > 0 ? 'true' : undefined}
-            aria-label={isPasswordValid ? 'Password valid' : 'Password invalid'}
-          />
+          <div className={styles.inputWrapper}>
+            <input
+              className={styles.input}
+              id="password"
+              value={password}
+              type={showPassword ? 'text' : 'password'}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              className={styles.toggleButton}
+              data-show={showPassword}
+              onClick={() => setShowPassword((v) => !v)}
+              aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
+            />
+          </div>
+          <PasswordHint />
         </div>
-        <div id="passwordHint" className={styles.hint}>
-          (8 ~ 20 chars, 1 number, 1 upper, 1 lower, 1 special at least)
-        </div>
+
         <div className={styles.row}>
           <label className={styles.label} htmlFor="confirmPassword">
             RE-PASSWORD:

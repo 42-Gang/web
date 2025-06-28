@@ -21,12 +21,18 @@ export const useSocket = (options: UseSocketOptions) => {
     createSocket(path, token || '', { handshake, withToken }),
   );
 
+  const retryTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
   const callbacksRef = useRef({ onConnect, onDisconnect, onError });
   callbacksRef.current = { onConnect, onDisconnect, onError };
 
   const handlersRef = useRef({
     handleConnect: () => {
       setIsConnected(true);
+      if (retryTimerRef.current) {
+        clearInterval(retryTimerRef.current);
+        retryTimerRef.current = null;
+      }
       callbacksRef.current.onConnect?.();
     },
     handleDisconnect: () => {
@@ -35,7 +41,8 @@ export const useSocket = (options: UseSocketOptions) => {
     },
     handleConnectError: async (error: Error) => {
       console.warn('connect_error:', error);
-      const newToken = await refreshAccessToken();
+
+      const newToken = await refreshAccessToken().catch(() => null);
       if (newToken) {
         setToken(newToken);
         destroySocket(path, token ?? undefined, { handshake, withToken });
@@ -43,6 +50,13 @@ export const useSocket = (options: UseSocketOptions) => {
         setSocket(newSocket);
         newSocket.connect();
       }
+
+      if (!retryTimerRef.current) {
+        retryTimerRef.current = setInterval(() => {
+          socket.connect();
+        }, 1000);
+      }
+
       callbacksRef.current.onError?.(error);
     },
   });
@@ -53,6 +67,10 @@ export const useSocket = (options: UseSocketOptions) => {
 
   const disconnect = useCallback(() => {
     socket.disconnect();
+    if (retryTimerRef.current) {
+      clearInterval(retryTimerRef.current);
+      retryTimerRef.current = null;
+    }
   }, [socket]);
 
   useEffect(() => {
@@ -66,6 +84,10 @@ export const useSocket = (options: UseSocketOptions) => {
       socket.off('connect', handleConnect);
       socket.off('disconnect', handleDisconnect);
       socket.off('connect_error', handleConnectError);
+      if (retryTimerRef.current) {
+        clearInterval(retryTimerRef.current);
+        retryTimerRef.current = null;
+      }
     };
   }, [socket]);
 

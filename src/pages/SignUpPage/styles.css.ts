@@ -135,10 +135,26 @@ export const check = style({
   },
 });
 
-export const hint = style({
-  fontSize: rem(15),
-  color: theme.color.gray,
-  marginTop: rem(-13),
-  marginBottom: rem(-10),
-  marginLeft: rem(60),
+export const toggleButton = style({
+  position: 'absolute',
+  top: '50%',
+  right: rem(60),
+  transform: 'translateY(-50%)',
+  width: rem(20),
+  height: rem(20),
+  border: 'none',
+  padding: 0,
+  cursor: 'pointer',
+
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'center',
+  backgroundSize: 'contain',
+
+  backgroundImage: `url('/assets/images/show-password-false.png')`,
+
+  selectors: {
+    '&[data-show="true"]': {
+      backgroundImage: `url('/assets/images/show-password-true.png')`,
+    },
+  },
 });
