@@ -6,13 +6,18 @@ import * as styles from './styles.css';
 
 type BackButtonProps = {
   href?: string;
+  onClick?: () => void;
 };
 
-export const BackButton = ({ href }: BackButtonProps) => {
+export const BackButton = ({ href, onClick }: BackButtonProps) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(href ?? PATH.HOME);
+    if (onClick) {
+      onClick();
+    } else {
+      navigate(href ?? PATH.HOME);
+    }
   };
 
   return (
