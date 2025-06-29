@@ -6,8 +6,6 @@ import * as styles from './styles.css.ts';
 
 type PlayerCardProps = {
   player?: Player;
-  isWinner?: boolean;
-  isLarge?: boolean;
   isReady?: boolean;
   isLoser?: boolean;
   showStats?: boolean;
@@ -17,7 +15,6 @@ type PlayerCardProps = {
 
 export const PlayerCard = ({
   player,
-  isLarge = false,
   isReady = false,
   isLoser = false,
   showStats = true,
@@ -27,12 +24,11 @@ export const PlayerCard = ({
   const [showPopup, setShowPopup] = useState(false);
 
   if (!player) {
-    return <div className={isLarge ? styles.emptyLarge : styles.empty} />;
+    return <div className={styles.empty} />;
   }
 
   const { name, avatarUrl, win, lose, tournament } = player;
 
-  const wrapperClass = isLarge ? styles.cardLarge : styles.card;
   const avatarWrapperClass = [styles.avatarWrapper, isReady ? styles.avatarBorder : ''].join(' ');
 
   const popupClass =
@@ -44,7 +40,7 @@ export const PlayerCard = ({
 
   return (
     <div
-      className={wrapperClass}
+      className={styles.card}
       onMouseEnter={() => setShowPopup(true)}
       onMouseLeave={() => setShowPopup(false)}
     >

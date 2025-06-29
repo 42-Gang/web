@@ -47,7 +47,6 @@ const renderRound2RootMatch = (match: Match, readyIds: string[]) => {
         player={match.player1}
         isWinner={match.player1?.id === match.winnerId}
         isLoser={!!match.player1 && loserIds.includes(match.player1.id)}
-        isLarge
         isReady={isReady(match.player1?.id, readyIds)}
         showStats
         round="ROUND_2"
@@ -58,7 +57,6 @@ const renderRound2RootMatch = (match: Match, readyIds: string[]) => {
         player={match.player2}
         isWinner={match.player2?.id === match.winnerId}
         isLoser={!!match.player2 && loserIds.includes(match.player2.id)}
-        isLarge
         isReady={isReady(match.player2?.id, readyIds)}
         showStats
         round="ROUND_2"
