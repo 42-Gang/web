@@ -1,11 +1,11 @@
 import { PATH } from '@/constants';
 import { GoogleCallbackHandler } from '@/pages/OAuthPage/GoogleCallbackHandler';
 
-export const GoogleCallbackPage = () => {
+export const GoogleSignUpCallbackPage = () => {
   return (
     <GoogleCallbackHandler
-      redirectPath={PATH.SIGNIN}
-      redirectUriPath={PATH.SIGNIN_GOOGLE_CALLBACK}
+      redirectPath={PATH.SIGNUP}
+      redirectUriPath={PATH.SIGNUP_GOOGLE_CALLBACK}
     />
   );
 };

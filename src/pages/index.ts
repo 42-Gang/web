@@ -5,6 +5,7 @@ export * from './LandingPage';
 export * from './SignInPage';
 export * from './SignInPage/GoogleCallbackPage';
 export * from './SignUpPage';
+export * from './SignUpPage/EmailSignUpPage';
 export * from './HistoryPage';
 export * from './ProfilePage';
 export * from './GamePage/TournamentPage';

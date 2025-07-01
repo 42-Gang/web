@@ -5,6 +5,8 @@ export const PATH = {
   SIGNIN_EMAIL: '/signin/email',
   SIGNIN_GOOGLE_CALLBACK: '/signin/callback',
   SIGNUP: '/signup',
+  SIGNUP_EMAIL: '/signup/email',
+  SIGNUP_GOOGLE_CALLBACK: '/signup/callback',
   HISTORY: '/history',
   GAME_SELECT: '/game-select',
   GAME_AUTO_MATCHING: '/game-select/auto-matching',

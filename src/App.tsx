@@ -18,6 +18,7 @@ import { useAuthAtom } from '@/atoms/useAuthAtom';
 import { PATH } from '@/constants/routes';
 import {
   EmailSignInPage,
+  EmailSignUpPage,
   HomePage,
   LandingPage,
   SignInPage,
@@ -56,6 +57,7 @@ const App = () => {
         { path: PATH.LANDING, element: <LandingPage /> },
         { path: PATH.SIGNIN, element: <SignInPage /> },
         { path: PATH.SIGNIN_EMAIL, element: <EmailSignInPage /> },
+        { path: PATH.SIGNUP_EMAIL, element: <EmailSignUpPage /> },
         { path: PATH.SIGNUP, element: <SignUpPage /> },
         { path: PATH.SIGNIN_GOOGLE_CALLBACK, element: <GoogleCallbackPage /> },
         { path: '*', element: <Navigate to={PATH.LANDING} replace /> },
