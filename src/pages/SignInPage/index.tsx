@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { Flex } from '@/components/system';
 import { Branding, GameLicense, DefaultStepNavigator } from '@/components/ui';
 import { PATH } from '@/constants';
+import { redirectToGoogleOAuth } from '@/utils/auth/redirectToGoogleOAuth';
 
 import * as styles from './styles.css';
 
@@ -22,9 +23,7 @@ export const SignInPage = () => {
           break;
         }
 
-        const redirectUri = `${window.location.origin}${PATH.SIGNIN_GOOGLE_CALLBACK}`;
-        const googleLoginUrl = `${baseUrl}/v1/oauth/google?redirectUri=${redirectUri}`;
-        window.location.href = googleLoginUrl;
+        redirectToGoogleOAuth({ type: 'signin', baseUrl });
         break;
       }
 

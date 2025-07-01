@@ -5,42 +5,37 @@ import { toast } from 'sonner';
 import { useGoogleLogin } from '@/api/mutations/useGoogleLogin';
 import { useAuthAtom } from '@/atoms/useAuthAtom';
 import { Branding, GameLicense } from '@/components/ui';
+import { PATH } from '@/constants';
 
-import * as styles from '../SignInPage/GoogleCallbackPage/styles.css';
+import * as styles from './styles.css';
 
-
-type Props = {
-  redirectPath: string;
-  redirectUriPath: string;
-};
-
-export const GoogleCallbackHandler = ({ redirectPath, redirectUriPath }: Props) => {
+export const OAuthCallbackPage = () => {
   const [searchParams] = useSearchParams();
   const code = searchParams.get('code');
   const state = searchParams.get('state');
   const navigate = useNavigate();
 
   const { setToken } = useAuthAtom();
-
   const { mutateAsync } = useGoogleLogin();
 
   useEffect(() => {
     if (!code || !state) {
       toast.error('Missing code or state in URL');
-      navigate(redirectPath);
+      navigate(PATH.SIGNIN);
       return;
     }
 
-    const redirectUri = `${window.location.origin}${redirectUriPath}`;
+    const redirectUri = `${window.location.origin}${PATH.OAUTH_GOOGLE_CALLBACK}`;
 
     const handleCallback = async () => {
       try {
         const { data } = await mutateAsync({ code, state, redirectUri });
         setToken(data.accessToken);
         navigate('/', { replace: true });
-      } catch {
+      } catch (error) {
+        console.error(error);
         toast.error('Google login failed');
-        navigate(redirectPath);
+        navigate(state === 'signup' ? PATH.SIGNUP : PATH.SIGNIN);
       }
     };
 

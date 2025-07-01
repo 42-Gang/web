@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { Flex } from '@/components/system';
 import { Branding, GameLicense, DefaultStepNavigator } from '@/components/ui';
 import { PATH } from '@/constants';
+import { redirectToGoogleOAuth } from '@/utils/auth/redirectToGoogleOAuth';
 
 import * as styles from './EmailSignUpPage/styles.css';
 
@@ -21,17 +22,19 @@ export const SignUpPage = () => {
           toast.error('Google sign-up is currently unavailable. Please contact the administrator.');
           break;
         }
-
-        const redirectUri = `${window.location.origin}${PATH.SIGNUP_GOOGLE_CALLBACK}`;
-        const googleSignUpUrl = `${baseUrl}/v1/oauth/google?redirectUri=${redirectUri}`;
-        window.location.href = googleSignUpUrl;
+        redirectToGoogleOAuth({ type: 'signup', baseUrl });
         break;
       }
+
       case 1:
         navigate(PATH.SIGNUP_EMAIL);
         break;
+
       case 2:
         navigate(-1);
+        break;
+
+      default:
         break;
     }
   };

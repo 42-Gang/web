@@ -30,7 +30,7 @@ import {
   GameSelectPage,
   TournamentPage,
   GameAutoMatchingPage,
-  GoogleCallbackPage,
+  OAuthCallbackPage,
   CustomMatchingPage,
 } from '@/pages';
 
@@ -59,7 +59,7 @@ const App = () => {
         { path: PATH.SIGNIN_EMAIL, element: <EmailSignInPage /> },
         { path: PATH.SIGNUP_EMAIL, element: <EmailSignUpPage /> },
         { path: PATH.SIGNUP, element: <SignUpPage /> },
-        { path: PATH.SIGNIN_GOOGLE_CALLBACK, element: <GoogleCallbackPage /> },
+        { path: PATH.OAUTH_GOOGLE_CALLBACK, element: <OAuthCallbackPage /> },
         { path: '*', element: <Navigate to={PATH.LANDING} replace /> },
       ],
     },
