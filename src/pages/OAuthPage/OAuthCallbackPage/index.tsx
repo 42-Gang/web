@@ -5,11 +5,11 @@ import { toast } from 'sonner';
 import { useGoogleLogin } from '@/api/mutations/useGoogleLogin';
 import { useAuthAtom } from '@/atoms/useAuthAtom';
 import { Branding, GameLicense } from '@/components/ui';
-import { PATH } from '@/constants/routes';
+import { PATH } from '@/constants';
 
 import * as styles from './styles.css';
 
-export const GoogleCallbackPage = () => {
+export const OAuthCallbackPage = () => {
   const [searchParams] = useSearchParams();
   const code = searchParams.get('code');
   const state = searchParams.get('state');
@@ -25,15 +25,17 @@ export const GoogleCallbackPage = () => {
       return;
     }
 
-    const redirectUri = `${window.location.origin}${PATH.SIGNIN_GOOGLE_CALLBACK}`;
+    const redirectUri = `${window.location.origin}${PATH.OAUTH_GOOGLE_CALLBACK}`;
+
     const handleCallback = async () => {
       try {
         const { data } = await mutateAsync({ code, state, redirectUri });
         setToken(data.accessToken);
-        navigate(PATH.HOME, { replace: true });
-      } catch {
+        navigate('/', { replace: true });
+      } catch (error) {
+        console.error(error);
         toast.error('Google login failed');
-        navigate(PATH.SIGNIN);
+        navigate(state === 'signup' ? PATH.SIGNUP : PATH.SIGNIN);
       }
     };
 

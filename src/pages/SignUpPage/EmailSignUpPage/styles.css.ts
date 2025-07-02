@@ -6,6 +6,10 @@ export const branding = style({
   marginTop: theme.size.brandingTopMargin,
 });
 
+export const license = style({
+  marginBottom: rem(36),
+});
+
 export const form = style({
   ...theme.layout.columnCenterX,
   paddingBottom: rem(24),
