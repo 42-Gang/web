@@ -1,4 +1,3 @@
-import { HTTPError } from 'ky';
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -7,6 +6,8 @@ import { useMailVerification, useRegister } from '@/api';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui/back-button';
 import { Branding } from '@/components/ui/branding';
+import { parseErrorMessage } from '@/utils/parseErrorMessage';
+import { parseSuccessMessage } from '@/utils/parseSuccessMessage';
 
 import * as styles from './styles.css';
 import { PasswordHint } from '../components/password-hint';
@@ -27,37 +28,30 @@ export const EmailSignUpPage = () => {
   const handleMailVerify = () => {
     mailVerifyMutation({ email })
       .then((res) => {
-        toast.success(res.message || 'Verification code sent to your email');
+        const message = parseSuccessMessage(res.message, 'Verification code sent to your email');
+
+        toast.success(message);
       })
       .catch(async (error) => {
-        console.error('Mail verification error:', error);
-        if (error instanceof HTTPError) {
-          const res = await error.response.json();
-          const message =
-            res?.message?.replace(/^body\//, '') || 'Failed to send verification code';
-          toast.error(message);
-        } else {
-          toast.error('Failed to send verification code');
-        }
+        const message = await parseErrorMessage(error, 'Failed to send verification code');
+
+        toast.error(message);
       });
   };
 
   const handleSelect = () => {
     registerMutation({ email, password, nickname, mailVerificationCode })
       .then((res) => {
-        toast.success(res.message || 'Registration successful');
+        const message = parseSuccessMessage(res.message, 'Registration successful');
+
+        toast.success(message);
         navigate('/login', { replace: true });
       })
       .catch(async (error) => {
-        console.error('Error during registration:', error);
+        console.error(error);
+        const message = await parseErrorMessage(error, 'Registration failed');
 
-        if (error instanceof HTTPError) {
-          const res = await error.response.json();
-          const message = res?.message?.replace(/^body\//, '') || 'Registration failed';
-          toast.error(message);
-        } else {
-          toast.error('Registration failed');
-        }
+        toast.error(message);
       });
   };
 

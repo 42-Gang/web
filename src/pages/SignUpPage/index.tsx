@@ -38,7 +38,6 @@ export const SignUpPage = () => {
         break;
     }
   };
-
   useEffect(() => {
     navigatorRef.current?.focus();
   }, []);

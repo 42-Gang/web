@@ -9,6 +9,8 @@ import {
   DialogTitle,
   DialogClose,
 } from '@/components/system';
+import { parseErrorMessage } from '@/utils/parseErrorMessage';
+import { parseSuccessMessage } from '@/utils/parseSuccessMessage';
 
 import * as styles from './styles.css';
 
@@ -19,20 +21,24 @@ export const NicknameEditDialog = ({ children }: PropsWithChildren) => {
 
   const { mutate: updateProfileMutation, isPending } = useUpdateProfile();
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (isPending) return;
 
     updateProfileMutation(
       { nickname },
       {
-        onSuccess: () => {
-          toast.success('닉네임 변경 완료');
+        onSuccess: (response) => {
+          const message = parseSuccessMessage(response.message, 'Nickname updated successfully.');
+
+          toast.success(message);
           setNickname('');
           setIsOpen(false);
         },
-        onError: (error) => {
+        onError: async (error) => {
           console.error(error);
-          toast.error('닉네임 변경 실패');
+          const message = await parseErrorMessage(error, 'Failed to update nickname.');
+
+          toast.error(message);
         },
       },
     );
