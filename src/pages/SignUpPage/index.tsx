@@ -27,17 +27,33 @@ export const SignUpPage = () => {
   const handleMailVerify = () => {
     mailVerifyMutation({ email })
       .then((res) => {
-        toast.success(res.message || 'Verification code sent to your email');
+        const message =
+          typeof res.message === 'string'
+            ? res.message.replace(/^body\//, '')
+            : 'Verification code sent to your email';
+
+        toast.success(message);
       })
       .catch(async (error) => {
         console.error('Mail verification error:', error);
+
         if (error instanceof HTTPError) {
-          const res = await error.response.json();
-          const message =
-            res?.message?.replace(/^body\//, '') || 'Failed to send verification code';
-          toast.error(message);
+          try {
+            const res = await error.response.json();
+
+            const message =
+              typeof res.message === 'string'
+                ? res.message.replace(/^body\//, '')
+                : 'Failed to send verification code';
+
+            toast.error(message);
+          } catch {
+            toast.error('Failed to parse server response');
+          }
+        } else if (error instanceof Error) {
+          toast.error(error.message);
         } else {
-          toast.error('Failed to send verification code');
+          toast.error('An unknown error occurred during mail verification');
         }
       });
   };
@@ -45,18 +61,34 @@ export const SignUpPage = () => {
   const handleSelect = () => {
     registerMutation({ email, password, nickname, mailVerificationCode })
       .then((res) => {
-        toast.success(res.message || 'Registration successful');
+        const message =
+          typeof res.message === 'string'
+            ? res.message.replace(/^body\//, '')
+            : 'Registration successful';
+
+        toast.success(message);
         navigate('/login', { replace: true });
       })
       .catch(async (error) => {
         console.error('Error during registration:', error);
 
         if (error instanceof HTTPError) {
-          const res = await error.response.json();
-          const message = res?.message?.replace(/^body\//, '') || 'Registration failed';
-          toast.error(message);
+          try {
+            const res = await error.response.json();
+
+            const message =
+              typeof res.message === 'string'
+                ? res.message.replace(/^body\//, '')
+                : res?.errors?.[0]?.message || 'Registration failed';
+
+            toast.error(message);
+          } catch {
+            toast.error('Failed to parse server response');
+          }
+        } else if (error instanceof Error) {
+          toast.error(error.message);
         } else {
-          toast.error('Registration failed');
+          toast.error('An unknown error occurred during registration');
         }
       });
   };
