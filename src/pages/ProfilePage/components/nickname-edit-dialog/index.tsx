@@ -1,3 +1,4 @@
+import { HTTPError } from 'ky';
 import { PropsWithChildren, useState, useRef } from 'react';
 import { toast } from 'sonner';
 
@@ -19,20 +20,39 @@ export const NicknameEditDialog = ({ children }: PropsWithChildren) => {
 
   const { mutate: updateProfileMutation, isPending } = useUpdateProfile();
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (isPending) return;
 
     updateProfileMutation(
       { nickname },
       {
-        onSuccess: () => {
-          toast.success('닉네임 변경 완료');
+        onSuccess: (response) => {
+          const message =
+            typeof response.message === 'string'
+              ? response.message.replace(/^body\//, '')
+              : '닉네임이 성공적으로 변경되었습니다.';
+
+          toast.success(message);
           setNickname('');
           setIsOpen(false);
         },
-        onError: (error) => {
-          console.error(error);
-          toast.error('닉네임 변경 실패');
+        onError: async (error) => {
+          if (error instanceof HTTPError) {
+            try {
+              const response = await error.response.json();
+              const message =
+                typeof response.message === 'string'
+                  ? response.message.replace(/^body\//, '')
+                  : '서버 오류가 발생했습니다.';
+              toast.error(message);
+            } catch {
+              toast.error('서버 응답을 해석하는 중 오류가 발생했습니다.');
+            }
+          } else if (error instanceof Error) {
+            toast.error(error.message);
+          } else {
+            toast.error('알 수 없는 오류가 발생했습니다.');
+          }
         },
       },
     );
