@@ -30,7 +30,7 @@ export const NicknameEditDialog = ({ children }: PropsWithChildren) => {
           const message =
             typeof response.message === 'string'
               ? response.message.replace(/^body\//, '')
-              : '닉네임이 성공적으로 변경되었습니다.';
+              : 'Nickname updated successfully.';
 
           toast.success(message);
           setNickname('');
@@ -39,19 +39,20 @@ export const NicknameEditDialog = ({ children }: PropsWithChildren) => {
         onError: async (error) => {
           if (error instanceof HTTPError) {
             try {
-              const response = await error.response.json();
+              const res = await error.response.json();
               const message =
-                typeof response.message === 'string'
-                  ? response.message.replace(/^body\//, '')
-                  : '서버 오류가 발생했습니다.';
+                typeof res.message === 'string'
+                  ? res.message.replace(/^body\//, '')
+                  : 'Failed to update nickname.';
+
               toast.error(message);
             } catch {
-              toast.error('서버 응답을 해석하는 중 오류가 발생했습니다.');
+              toast.error('Failed to parse server response.');
             }
           } else if (error instanceof Error) {
             toast.error(error.message);
           } else {
-            toast.error('알 수 없는 오류가 발생했습니다.');
+            toast.error('An unknown error occurred while updating nickname.');
           }
         },
       },
