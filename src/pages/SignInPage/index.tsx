@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { Flex } from '@/components/system';
 import { Branding, GameLicense, DefaultStepNavigator } from '@/components/ui';
 import { PATH } from '@/constants';
-import { redirectToGoogleOAuth } from '@/utils/auth/redirectToGoogleOAuth';
+import { redirectToOAuth } from '@/utils/auth/redirectToOAuth';
 
 import * as styles from './styles.css';
 
@@ -23,7 +23,7 @@ export const SignInPage = () => {
           break;
         }
 
-        redirectToGoogleOAuth({ type: 'signin', baseUrl });
+        redirectToOAuth({ type: 'signin', baseUrl });
         break;
       }
 

@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { Flex } from '@/components/system';
 import { Branding, GameLicense, DefaultStepNavigator } from '@/components/ui';
 import { PATH } from '@/constants';
-import { redirectToGoogleOAuth } from '@/utils/auth/redirectToGoogleOAuth';
+import { redirectToOAuth } from '@/utils/auth/redirectToOAuth';
 
 import * as styles from './EmailSignUpPage/styles.css';
 
@@ -22,7 +22,7 @@ export const SignUpPage = () => {
           toast.error('Google sign-up is currently unavailable. Please contact the administrator.');
           break;
         }
-        redirectToGoogleOAuth({ type: 'signup', baseUrl });
+        redirectToOAuth({ type: 'signup', baseUrl });
         break;
       }
 
