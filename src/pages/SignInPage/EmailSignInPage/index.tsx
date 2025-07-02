@@ -30,6 +30,7 @@ export const EmailSignInPage = () => {
 
           setToken(data.accessToken);
         } catch (error) {
+          console.error(error);
           const message = await parseErrorMessage(error, 'Login failed.');
 
           toast.error(message);

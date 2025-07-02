@@ -10,6 +10,7 @@ import {
   DialogClose,
 } from '@/components/system';
 import { parseErrorMessage } from '@/utils/parseErrorMessage';
+import { parseSuccessMessage } from '@/utils/parseSuccessMessage';
 
 import * as styles from './styles.css';
 
@@ -27,16 +28,14 @@ export const NicknameEditDialog = ({ children }: PropsWithChildren) => {
       { nickname },
       {
         onSuccess: (response) => {
-          const message =
-            typeof response.message === 'string'
-              ? response.message.replace(/^body\//, '')
-              : 'Nickname updated successfully.';
+          const message = parseSuccessMessage(response.message, 'Nickname updated successfully.');
 
           toast.success(message);
           setNickname('');
           setIsOpen(false);
         },
         onError: async (error) => {
+          console.error(error);
           const message = await parseErrorMessage(error, 'Failed to update nickname.');
 
           toast.error(message);

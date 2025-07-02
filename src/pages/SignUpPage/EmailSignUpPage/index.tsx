@@ -7,6 +7,7 @@ import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui/back-button';
 import { Branding } from '@/components/ui/branding';
 import { parseErrorMessage } from '@/utils/parseErrorMessage';
+import { parseSuccessMessage } from '@/utils/parseSuccessMessage';
 
 import * as styles from './styles.css';
 import { PasswordHint } from '../components/password-hint';
@@ -27,10 +28,7 @@ export const EmailSignUpPage = () => {
   const handleMailVerify = () => {
     mailVerifyMutation({ email })
       .then((res) => {
-        const message =
-          typeof res.message === 'string'
-            ? res.message.replace(/^body\//, '')
-            : 'Verification code sent to your email';
+        const message = parseSuccessMessage(res.message, 'Verification code sent to your email');
 
         toast.success(message);
       })
@@ -44,16 +42,13 @@ export const EmailSignUpPage = () => {
   const handleSelect = () => {
     registerMutation({ email, password, nickname, mailVerificationCode })
       .then((res) => {
-        const message =
-          typeof res.message === 'string'
-            ? res.message.replace(/^body\//, '')
-            : 'Registration successful';
+        const message = parseSuccessMessage(res.message, 'Registration successful');
 
         toast.success(message);
         navigate('/login', { replace: true });
       })
       .catch(async (error) => {
-        console.error('Error during registration:', error);
+        console.error(error);
         const message = await parseErrorMessage(error, 'Registration failed');
 
         toast.error(message);
