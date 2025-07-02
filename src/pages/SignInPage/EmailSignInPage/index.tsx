@@ -1,4 +1,3 @@
-import { HTTPError } from 'ky';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -7,6 +6,7 @@ import { useLogin } from '@/api';
 import { useAuthAtom } from '@/atoms/useAuthAtom';
 import { Flex } from '@/components/system';
 import { Branding, DefaultStepNavigator, GameLicense } from '@/components/ui';
+import { parseErrorMessage } from '@/utils/parseErrorMessage';
 
 import * as styles from './styles.css';
 
@@ -30,24 +30,9 @@ export const EmailSignInPage = () => {
 
           setToken(data.accessToken);
         } catch (error) {
-          if (error instanceof HTTPError) {
-            try {
-              const res = await error.response.json();
+          const message = await parseErrorMessage(error, 'Login failed.');
 
-              const message =
-                typeof res.message === 'string'
-                  ? res.message.replace(/^body\//, '')
-                  : 'Login failed.';
-
-              toast.error(message);
-            } catch {
-              toast.error('Failed to parse server response.');
-            }
-          } else if (error instanceof Error) {
-            toast.error(error.message);
-          } else {
-            toast.error('An unknown error occurred during login.');
-          }
+          toast.error(message);
         }
         break;
       }

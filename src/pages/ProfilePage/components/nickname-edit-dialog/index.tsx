@@ -1,4 +1,3 @@
-import { HTTPError } from 'ky';
 import { PropsWithChildren, useState, useRef } from 'react';
 import { toast } from 'sonner';
 
@@ -10,6 +9,7 @@ import {
   DialogTitle,
   DialogClose,
 } from '@/components/system';
+import { parseErrorMessage } from '@/utils/parseErrorMessage';
 
 import * as styles from './styles.css';
 
@@ -37,23 +37,9 @@ export const NicknameEditDialog = ({ children }: PropsWithChildren) => {
           setIsOpen(false);
         },
         onError: async (error) => {
-          if (error instanceof HTTPError) {
-            try {
-              const res = await error.response.json();
-              const message =
-                typeof res.message === 'string'
-                  ? res.message.replace(/^body\//, '')
-                  : 'Failed to update nickname.';
+          const message = await parseErrorMessage(error, 'Failed to update nickname.');
 
-              toast.error(message);
-            } catch {
-              toast.error('Failed to parse server response.');
-            }
-          } else if (error instanceof Error) {
-            toast.error(error.message);
-          } else {
-            toast.error('An unknown error occurred while updating nickname.');
-          }
+          toast.error(message);
         },
       },
     );
