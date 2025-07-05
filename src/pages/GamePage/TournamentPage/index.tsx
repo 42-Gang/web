@@ -6,23 +6,8 @@ import { useSocket } from '@/api/socket';
 import { BackButton } from '@/components/ui';
 
 import { MatchNode } from './components/MatchNode';
+import { TOURNAMENT_SIZES, TOURNAMENT_LABELS, DEFAULT_PLAYER_STATS } from './constants';
 import * as styles from './styles.css';
-
-const TOURNAMENT_SIZES = {
-  DUEL: 2,
-  QUAD: 4,
-} as const;
-
-const TOURNAMENT_LABELS = {
-  [TOURNAMENT_SIZES.DUEL]: '1vs1',
-  [TOURNAMENT_SIZES.QUAD]: '4인 토너먼트',
-} as const;
-
-const DEFAULT_PLAYER_STATS = {
-  win: 0,
-  lose: 0,
-  tournament: 0,
-} as const;
 
 type TournamentSize = (typeof TOURNAMENT_SIZES)[keyof typeof TOURNAMENT_SIZES];
 
@@ -113,11 +98,11 @@ export const TournamentPage = () => {
     const handleTournamentDataUpdate = (data: MatchInfoType) => {
       setTournamentData(data);
 
-      const readyUserIds = data.players
+      const readyPlayerIds = data.players
         .filter((player) => player.state === 'READY')
         .map((player) => player.userId);
 
-      setReadyPlayerIds(readyUserIds);
+      setReadyPlayerIds(readyPlayerIds);
     };
 
     const handlePlayerReady = (data: ReadyResponse) => {

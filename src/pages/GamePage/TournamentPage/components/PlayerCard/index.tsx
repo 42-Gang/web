@@ -3,22 +3,7 @@ import { useState } from 'react';
 import type { Player, TournamentRoundType } from '@/api';
 
 import * as styles from './styles.css.ts';
-
-const TOURNAMENT_ROUNDS = {
-  FINAL: 'ROUND_2',
-  SEMI_FINAL: 'ROUND_4',
-} as const;
-
-const PLAYER_POSITIONS = {
-  LEFT: 'left',
-  RIGHT: 'right',
-} as const;
-
-const PLAYER_STATS_LABELS = {
-  WIN: 'win',
-  LOSE: 'lose',
-  TOURNAMENT: 'tournament',
-} as const;
+import { TOURNAMENT_ROUNDS, PLAYER_POSITIONS, PLAYER_STATS_LABELS } from '../../constants';
 
 type PlayerCardProps = {
   player?: Player;

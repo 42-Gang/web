@@ -5,21 +5,7 @@ import type { Match, TournamentRoundType, VerticalPosition, HorizontalVariant } 
 import { MatchLines } from '../MatchLines';
 import { PlayerCard } from '../PlayerCard';
 import * as styles from './styles.css';
-
-const TOURNAMENT_ROUNDS = {
-  FINAL: 'ROUND_2',
-  SEMI_FINAL: 'ROUND_4',
-} as const;
-
-const PLAYER_POSITIONS = {
-  LEFT: 'left',
-  RIGHT: 'right',
-} as const;
-
-const WINNER_POSITIONS = {
-  TOP: 'top',
-  BOTTOM: 'bottom',
-} as const;
+import { TOURNAMENT_ROUNDS, PLAYER_POSITIONS, WINNER_POSITIONS } from '../../constants';
 
 type MatchNodeProps = {
   match: Match;
@@ -91,108 +77,6 @@ const calculateMatchTreePosition = (
     shouldRenderLeftLine,
     shouldRenderRightLine,
   };
-};
-
-const renderFinalMatch = (match: Match, readyPlayerIds: number[]) => {
-  const [semiFinal1, semiFinal2] = match.children ?? [];
-
-  const eliminatedPlayerIds = [semiFinal1, semiFinal2].flatMap((semiFinal) => {
-    if (!semiFinal?.player1 || !semiFinal?.player2 || !semiFinal.winnerId) return [];
-    return semiFinal.player1.id === semiFinal.winnerId
-      ? [semiFinal.player2.id]
-      : [semiFinal.player1.id];
-  });
-
-  return (
-    <div className={styles.matchBoxNoBorder}>
-      <PlayerCard
-        player={match.player1}
-        isWinner={match.player1?.id === match.winnerId}
-        isLoser={!!match.player1 && eliminatedPlayerIds.includes(match.player1.id)}
-        isReady={isPlayerReady(match.player1?.id, readyPlayerIds)}
-        showStats
-        round={TOURNAMENT_ROUNDS.FINAL}
-        side={PLAYER_POSITIONS.LEFT}
-      />
-      <span className={styles.vs}>vs</span>
-      <PlayerCard
-        player={match.player2}
-        isWinner={match.player2?.id === match.winnerId}
-        isLoser={!!match.player2 && eliminatedPlayerIds.includes(match.player2.id)}
-        isReady={isPlayerReady(match.player2?.id, readyPlayerIds)}
-        showStats
-        round={TOURNAMENT_ROUNDS.FINAL}
-        side={PLAYER_POSITIONS.RIGHT}
-      />
-    </div>
-  );
-};
-
-const renderSemiFinalDecoration = () => (
-  <div className={styles.centerDecoration}>
-    <img src="/assets/images/tournament-arrow.png" alt="Arrow Left" className={styles.arrowLeft} />
-    <img
-      src="/assets/images/tournament-placeholder-ball.png"
-      alt="Mystery Ball"
-      className={styles.questionImage}
-    />
-    <img
-      src="/assets/images/tournament-arrow.png"
-      alt="Arrow Right"
-      className={styles.arrowRight}
-    />
-  </div>
-);
-
-const renderNonRootMatch = (
-  match: Match,
-  winnerFromTop: VerticalPosition,
-  side: HorizontalVariant = PLAYER_POSITIONS.LEFT,
-  showLine = true,
-  highlight = true,
-  shouldRenderLine = true,
-  readyPlayerIds: number[] = [],
-  round: TournamentRoundType = TOURNAMENT_ROUNDS.SEMI_FINAL,
-) => {
-  const isFinalRound = round === TOURNAMENT_ROUNDS.FINAL;
-  const showStats = round === TOURNAMENT_ROUNDS.SEMI_FINAL;
-  const player1Eliminated = match.player1?.id !== match.winnerId;
-  const player2Eliminated = match.player2?.id !== match.winnerId;
-
-  return (
-    <>
-      {showLine && (
-        <MatchLines
-          winner={winnerFromTop}
-          variant={side}
-          highlight={highlight}
-          shouldRender={shouldRenderLine}
-          round={round}
-        />
-      )}
-      <div className={styles.matchBox}>
-        <PlayerCard
-          player={match.player1}
-          isWinner={match.player1?.id === match.winnerId}
-          isLoser={isFinalRound && player1Eliminated}
-          isReady={isPlayerReady(match.player1?.id, readyPlayerIds)}
-          showStats={showStats}
-          round={round}
-          side={side}
-        />
-        <span className={styles.vs}>vs</span>
-        <PlayerCard
-          player={match.player2}
-          isWinner={match.player2?.id === match.winnerId}
-          isLoser={isFinalRound && player2Eliminated}
-          isReady={isPlayerReady(match.player2?.id, readyPlayerIds)}
-          showStats={showStats}
-          round={round}
-          side={side}
-        />
-      </div>
-    </>
-  );
 };
 
 export const MatchNode = ({
@@ -283,26 +167,119 @@ export const MatchNode = ({
             />
           )}
           <div className={styles.centerColumn}>
-            {shouldRenderSemiFinalDecoration
-              ? renderSemiFinalDecoration()
-              : shouldRenderFinalMatch
-                ? renderFinalMatch(match, readyIds)
-                : renderNonRootMatch(
-                    match,
-                    winnerFromLeft,
-                    isRoot && isRound4
-                      ? matchTreePosition.centerSide
-                      : (side ?? PLAYER_POSITIONS.LEFT),
-                    isRoot && isRound4 ? false : showLine,
-                    isRound2,
-                    isRoot && isRound4
-                      ? matchTreePosition.centerSide === PLAYER_POSITIONS.LEFT
-                        ? matchTreePosition.shouldRenderLeftLine
-                        : matchTreePosition.shouldRenderRightLine
-                      : true,
-                    readyIds,
-                    currentRound,
-                  )}
+            {shouldRenderSemiFinalDecoration ? (
+              <div className={styles.centerDecoration}>
+                <img
+                  src="/assets/images/tournament-arrow.png"
+                  alt="Arrow Left"
+                  className={styles.arrowLeft}
+                />
+                <img
+                  src="/assets/images/tournament-placeholder-ball.png"
+                  alt="Mystery Ball"
+                  className={styles.questionImage}
+                />
+                <img
+                  src="/assets/images/tournament-arrow.png"
+                  alt="Arrow Right"
+                  className={styles.arrowRight}
+                />
+              </div>
+            ) : shouldRenderFinalMatch ? (
+              (() => {
+                const [semiFinal1, semiFinal2] = match.children ?? [];
+                const eliminatedPlayerIds = [semiFinal1, semiFinal2].flatMap((semiFinal) => {
+                  if (!semiFinal?.player1 || !semiFinal?.player2 || !semiFinal.winnerId) return [];
+                  return semiFinal.player1.id === semiFinal.winnerId
+                    ? [semiFinal.player2.id]
+                    : [semiFinal.player1.id];
+                });
+
+                return (
+                  <div className={styles.matchBoxNoBorder}>
+                    <PlayerCard
+                      player={match.player1}
+                      isWinner={match.player1?.id === match.winnerId}
+                      isLoser={!!match.player1 && eliminatedPlayerIds.includes(match.player1.id)}
+                      isReady={isPlayerReady(match.player1?.id, readyIds)}
+                      showStats
+                      round={TOURNAMENT_ROUNDS.FINAL}
+                      side={PLAYER_POSITIONS.LEFT}
+                    />
+                    <span className={styles.vs}>vs</span>
+                    <PlayerCard
+                      player={match.player2}
+                      isWinner={match.player2?.id === match.winnerId}
+                      isLoser={!!match.player2 && eliminatedPlayerIds.includes(match.player2.id)}
+                      isReady={isPlayerReady(match.player2?.id, readyIds)}
+                      showStats
+                      round={TOURNAMENT_ROUNDS.FINAL}
+                      side={PLAYER_POSITIONS.RIGHT}
+                    />
+                  </div>
+                );
+              })()
+            ) : (
+              (() => {
+                const isFinalRound = currentRound === TOURNAMENT_ROUNDS.FINAL;
+                const showStats = currentRound === TOURNAMENT_ROUNDS.SEMI_FINAL;
+                const player1Eliminated = match.player1?.id !== match.winnerId;
+                const player2Eliminated = match.player2?.id !== match.winnerId;
+
+                return (
+                  <>
+                    {showLine && (
+                      <MatchLines
+                        winner={winnerFromLeft}
+                        variant={
+                          isRoot && isRound4
+                            ? matchTreePosition.centerSide
+                            : (side ?? PLAYER_POSITIONS.LEFT)
+                        }
+                        highlight={isRound2}
+                        shouldRender={
+                          isRoot && isRound4
+                            ? matchTreePosition.centerSide === PLAYER_POSITIONS.LEFT
+                              ? matchTreePosition.shouldRenderLeftLine
+                              : matchTreePosition.shouldRenderRightLine
+                            : true
+                        }
+                        round={currentRound}
+                      />
+                    )}
+                    <div className={styles.matchBox}>
+                      <PlayerCard
+                        player={match.player1}
+                        isWinner={match.player1?.id === match.winnerId}
+                        isLoser={isFinalRound && player1Eliminated}
+                        isReady={isPlayerReady(match.player1?.id, readyIds)}
+                        showStats={showStats}
+                        round={currentRound}
+                        side={
+                          isRoot && isRound4
+                            ? matchTreePosition.centerSide
+                            : (side ?? PLAYER_POSITIONS.LEFT)
+                        }
+                      />
+                      <span className={styles.vs}>vs</span>
+                      <PlayerCard
+                        player={match.player2}
+                        isWinner={match.player2?.id === match.winnerId}
+                        isLoser={isFinalRound && player2Eliminated}
+                        isReady={isPlayerReady(match.player2?.id, readyIds)}
+                        showStats={showStats}
+                        round={currentRound}
+                        side={
+                          isRoot && isRound4
+                            ? matchTreePosition.centerSide
+                            : (side ?? PLAYER_POSITIONS.LEFT)
+                        }
+                      />
+                    </div>
+                  </>
+                );
+              })()
+            )}
           </div>
           {rightSemiFinal && (
             <MatchNode
