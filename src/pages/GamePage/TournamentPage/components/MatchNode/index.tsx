@@ -1,11 +1,14 @@
-import { useSearchParams } from 'react-router-dom';
-
 import type { Match, TournamentRoundType, VerticalPosition, HorizontalVariant } from '@/api';
 
 import { MatchLines } from '../MatchLines';
 import { PlayerCard } from '../PlayerCard';
 import * as styles from './styles.css';
-import { TOURNAMENT_ROUNDS, PLAYER_POSITIONS, WINNER_POSITIONS } from '../../constants';
+import {
+  TOURNAMENT_ROUNDS,
+  PLAYER_POSITIONS,
+  WINNER_POSITIONS,
+  TOURNAMENT_SIZES,
+} from '../../constants';
 
 type MatchNodeProps = {
   match: Match;
@@ -15,6 +18,7 @@ type MatchNodeProps = {
   currentUserId?: string;
   showLine?: boolean;
   isTwoPlayer?: boolean;
+  tournamentSize?: number;
 };
 
 type MatchTreePosition = {
@@ -48,14 +52,26 @@ const isPlayerInLeftSubtree = (match: Match, playerId: string): boolean => {
   return isPlayerInMatch(leftSemiFinal, playerId);
 };
 
+const getCurrentRound = (match: Match, tournamentSize?: number): TournamentRoundType => {
+  if (!match.children) {
+    return TOURNAMENT_ROUNDS.FINAL;
+  }
+
+  if (tournamentSize === TOURNAMENT_SIZES.DUEL) {
+    return TOURNAMENT_ROUNDS.FINAL;
+  }
+
+  return TOURNAMENT_ROUNDS.SEMI_FINAL;
+};
+
 const calculateMatchTreePosition = (
   match: Match,
   isRoot: boolean,
   side: HorizontalVariant | undefined,
   currentUserId: string,
-  round: TournamentRoundType,
+  currentRound: TournamentRoundType,
 ): MatchTreePosition => {
-  const isRound4 = round === TOURNAMENT_ROUNDS.SEMI_FINAL;
+  const isRound4 = currentRound === TOURNAMENT_ROUNDS.SEMI_FINAL;
 
   const isUserInLeftSubtree =
     isRound4 && isRoot ? isPlayerInLeftSubtree(match, currentUserId) : true;
@@ -87,11 +103,9 @@ export const MatchNode = ({
   currentUserId = '',
   showLine = true,
   isTwoPlayer = false,
+  tournamentSize,
 }: MatchNodeProps) => {
-  const [searchParams] = useSearchParams();
-  const roundParam = searchParams.get('round');
-  const currentRound =
-    (roundParam?.toUpperCase() as TournamentRoundType) ?? TOURNAMENT_ROUNDS.SEMI_FINAL;
+  const currentRound = getCurrentRound(match, tournamentSize);
 
   const isRound4 = currentRound === TOURNAMENT_ROUNDS.SEMI_FINAL;
   const isRound2 = currentRound === TOURNAMENT_ROUNDS.FINAL;
@@ -164,6 +178,7 @@ export const MatchNode = ({
               readyIds={readyIds}
               currentUserId={currentUserId}
               showLine={isRoot ? matchTreePosition.shouldRenderLeftLine : true}
+              tournamentSize={tournamentSize}
             />
           )}
           <div className={styles.centerColumn}>
@@ -288,6 +303,7 @@ export const MatchNode = ({
               readyIds={readyIds}
               currentUserId={currentUserId}
               showLine={isRoot ? matchTreePosition.shouldRenderRightLine : true}
+              tournamentSize={tournamentSize}
             />
           )}
         </div>

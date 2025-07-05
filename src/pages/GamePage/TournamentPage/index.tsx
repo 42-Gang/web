@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useEffect, useState, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
-import type { MatchInfoType, Match, ReadyResponse } from '@/api';
+import { MatchInfoType, Match, ReadyResponse, GameResultResponse } from '@/api';
 import { useSocket } from '@/api/socket';
 import { BackButton } from '@/components/ui';
 
@@ -19,6 +19,45 @@ const createPlayerFromMatchInfo = (playerInfo: MatchInfoType['players'][0]) => {
     name: playerInfo.nickname,
     avatarUrl: playerInfo.profileImage,
     ...DEFAULT_PLAYER_STATS,
+  };
+};
+
+const updateMatchWinner = (match: Match, matchId: string, winnerId: string): Match => {
+  if (match.id === matchId) {
+    return { ...match, winnerId };
+  }
+
+  if (match.children && match.children.length === 2) {
+    return {
+      ...match,
+      children: [
+        updateMatchWinner(match.children[0], matchId, winnerId),
+        updateMatchWinner(match.children[1], matchId, winnerId),
+      ],
+    };
+  }
+
+  return match;
+};
+
+const buildFinalMatch = (leftSemiFinal: Match, rightSemiFinal: Match): Match => {
+  const leftWinner = leftSemiFinal.winnerId
+    ? leftSemiFinal.player1?.id === leftSemiFinal.winnerId
+      ? leftSemiFinal.player1
+      : leftSemiFinal.player2
+    : undefined;
+
+  const rightWinner = rightSemiFinal.winnerId
+    ? rightSemiFinal.player1?.id === rightSemiFinal.winnerId
+      ? rightSemiFinal.player1
+      : rightSemiFinal.player2
+    : undefined;
+
+  return {
+    id: 'final',
+    player1: leftWinner,
+    player2: rightWinner,
+    winnerId: undefined,
   };
 };
 
@@ -72,10 +111,10 @@ const getTournamentLabel = (size: number): string => {
 };
 
 export const TournamentPage = () => {
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [tournamentData, setTournamentData] = useState<MatchInfoType | null>(null);
   const [readyPlayerIds, setReadyPlayerIds] = useState<number[]>([]);
+  const [tournamentMatch, setTournamentMatch] = useState<Match | null>(null);
 
   const tournamentId = searchParams.get('id');
 
@@ -85,6 +124,45 @@ export const TournamentPage = () => {
     withToken: true,
   });
 
+  const handleTournamentDataUpdate = useCallback((data: MatchInfoType) => {
+    setTournamentData(data);
+  }, []);
+
+  const handlePlayerReady = useCallback((data: ReadyResponse) => {
+    setReadyPlayerIds((prev) => {
+      if (prev.includes(data.userId)) return prev;
+      return [...prev, data.userId];
+    });
+  }, []);
+
+  const handleMatchResult = useCallback((data: GameResultResponse) => {
+    setTournamentMatch((prevMatch) => {
+      if (!prevMatch) return prevMatch;
+
+      const updatedMatch = updateMatchWinner(
+        prevMatch,
+        data.matchId.toString(),
+        data.winnerId.toString(),
+      );
+
+      if (updatedMatch.children && updatedMatch.children.length === 2) {
+        const [leftSemiFinal, rightSemiFinal] = updatedMatch.children;
+
+        if (leftSemiFinal.winnerId && rightSemiFinal.winnerId) {
+          const finalMatch = buildFinalMatch(leftSemiFinal, rightSemiFinal);
+          return {
+            ...updatedMatch,
+            player1: finalMatch.player1,
+            player2: finalMatch.player2,
+            winnerId: finalMatch.winnerId,
+          };
+        }
+      }
+
+      return updatedMatch;
+    });
+  }, []);
+
   useEffect(() => {
     if (!tournamentId) {
       console.error('Tournament ID is required');
@@ -92,41 +170,43 @@ export const TournamentPage = () => {
     }
     connect();
     return () => disconnect();
-  }, [connect, disconnect, tournamentId, navigate]);
+  }, [connect, disconnect, tournamentId]);
 
   useEffect(() => {
-    const handleTournamentDataUpdate = (data: MatchInfoType) => {
-      setTournamentData(data);
-
-      const readyPlayerIds = data.players
-        .filter((player) => player.state === 'READY')
-        .map((player) => player.userId);
-
-      setReadyPlayerIds(readyPlayerIds);
-    };
-
-    const handlePlayerReady = (data: ReadyResponse) => {
-      setReadyPlayerIds((prev) => [...prev, data.userId]);
-    };
+    if (!socket) return;
 
     socket.on('match-info', handleTournamentDataUpdate);
     socket.on('ready', handlePlayerReady);
+    socket.on('game-result', handleMatchResult);
 
     return () => {
       socket.off('match-info', handleTournamentDataUpdate);
       socket.off('ready', handlePlayerReady);
+      socket.off('game-result', handleMatchResult);
     };
-  }, [socket]);
+  }, [socket, handleTournamentDataUpdate, handlePlayerReady, handleMatchResult]);
 
-  const tournamentMatch = tournamentData
-    ? buildTournamentMatch(tournamentData.players, tournamentData.size as TournamentSize)
-    : null;
+  useEffect(() => {
+    if (tournamentData) {
+      const initialMatch = buildTournamentMatch(
+        tournamentData.players,
+        tournamentData.size as TournamentSize,
+      );
+      setTournamentMatch(initialMatch);
+
+      const readyPlayerIds = tournamentData.players
+        .filter((player) => player.state === 'READY')
+        .map((player) => player.userId);
+      setReadyPlayerIds(readyPlayerIds);
+    }
+  }, [tournamentData]);
+
   const isDuelMode = tournamentData?.size === TOURNAMENT_SIZES.DUEL;
 
-  const handleReady = () => {
+  const handleReady = useCallback(() => {
     if (!tournamentId) return;
-    socket.emit('ready', {});
-  };
+    socket?.emit('ready', {});
+  }, [tournamentId, socket]);
 
   return (
     <>
@@ -140,7 +220,7 @@ export const TournamentPage = () => {
           </h2>
         </header>
 
-        {tournamentMatch && (
+        {tournamentMatch && tournamentData && (
           <div className={styles.tournamentContainer}>
             <MatchNode
               match={tournamentMatch}
@@ -149,6 +229,7 @@ export const TournamentPage = () => {
               currentUserId=""
               showLine={true}
               isTwoPlayer={isDuelMode}
+              tournamentSize={tournamentData.size}
             />
           </div>
         )}

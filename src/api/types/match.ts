@@ -15,3 +15,14 @@ export type ReadyResponse = {
   type: 'user-ready' | 'all-users-ready';
   userId: number;
 };
+
+export type GameResultResponse = {
+  tournamentId: number;
+  matchId: number;
+  player1Id: number;
+  player2Id: number;
+  score: { player1: number; player2: number };
+  winnerId: number;
+  loserId: number;
+  round: number;
+};

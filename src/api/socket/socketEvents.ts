@@ -1,4 +1,4 @@
-import type {
+import {
   FriendAcceptStatus,
   FriendRequestStatus,
   UserStatus,
@@ -16,6 +16,7 @@ import type {
   CustomCreateResponse,
   MatchInfoType,
   ReadyResponse,
+  GameResultResponse,
 } from '@/api/types';
 
 type SocketEventData = {
@@ -32,6 +33,7 @@ type SocketEventData = {
 
   'match-info': MatchInfoType;
   ready: ReadyResponse;
+  'game-result': GameResultResponse;
 };
 
 export type ServerToClientEvents = {
