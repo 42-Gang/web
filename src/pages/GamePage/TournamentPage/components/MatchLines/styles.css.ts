@@ -21,6 +21,15 @@ export const linesWrapper = style({
   marginTop: rem(-40),
 });
 
+export const horizontalLinesWrapper = style({
+  position: 'relative',
+  width: rem(100),
+  height: rem(20),
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+});
+
 export const verticalLine = style({
   ...baseVertical,
   height: rem(128),
@@ -39,6 +48,18 @@ export const bottomHighlight = style({
   ...baseVertical,
   height: rem(64),
   bottom: rem(-4),
+  backgroundColor: theme.color.yellow,
+});
+
+export const horizontalLineCenter = style({
+  ...baseLine,
+  width: rem(80),
+  backgroundColor: theme.color.white,
+});
+
+export const horizontalLineCenterHighlight = style({
+  ...baseLine,
+  width: rem(80),
   backgroundColor: theme.color.yellow,
 });
 
@@ -68,7 +89,7 @@ export const horizontalLineRight = style({
 
 export const horizontalLineRightHighlight = style({
   ...baseLine,
-  width: rem(96),
+  width: rem(80),
   top: rem(60),
   right: '50%',
   backgroundColor: theme.color.yellow,

@@ -6,39 +6,101 @@ import { MatchLines } from '../MatchLines';
 import { PlayerCard } from '../PlayerCard';
 import * as styles from './styles.css';
 
+const TOURNAMENT_ROUNDS = {
+  FINAL: 'ROUND_2',
+  SEMI_FINAL: 'ROUND_4',
+} as const;
+
+const PLAYER_POSITIONS = {
+  LEFT: 'left',
+  RIGHT: 'right',
+} as const;
+
+const WINNER_POSITIONS = {
+  TOP: 'top',
+  BOTTOM: 'bottom',
+} as const;
+
 type MatchNodeProps = {
   match: Match;
   isRoot?: boolean;
-  side?: 'left' | 'right';
-  readyIds?: string[];
+  side?: HorizontalVariant;
+  readyIds?: number[];
   currentUserId?: string;
   showLine?: boolean;
+  isTwoPlayer?: boolean;
 };
 
-const isReady = (id: string | undefined, readyIds: string[]) => !!id && readyIds.includes(id);
+type MatchTreePosition = {
+  isUserInLeftSubtree: boolean;
+  centerSide: HorizontalVariant;
+  shouldRenderLeftLine: boolean;
+  shouldRenderRightLine: boolean;
+};
 
-const includesUser = (match: Match | undefined, userId: string): boolean => {
+const isPlayerReady = (playerId: string | undefined, readyPlayerIds: number[]): boolean => {
+  return !!playerId && readyPlayerIds.includes(parseInt(playerId, 10));
+};
+
+const isPlayerInMatch = (match: Match | undefined, playerId: string): boolean => {
   if (!match) return false;
+
   const { player1, player2, children } = match;
-  return (
-    player1?.id === userId ||
-    player2?.id === userId ||
-    (children?.length === 2 &&
-      (includesUser(children[0], userId) || includesUser(children[1], userId)))
-  );
+  const isInCurrentMatch = player1?.id === playerId || player2?.id === playerId;
+
+  if (isInCurrentMatch) return true;
+
+  if (children?.length === 2) {
+    return isPlayerInMatch(children[0], playerId) || isPlayerInMatch(children[1], playerId);
+  }
+
+  return false;
 };
 
-const isUserInLeftSubtree = (match: Match, userId: string): boolean => {
-  const [semi1] = match.children ?? [];
-  return includesUser(semi1, userId);
+const isPlayerInLeftSubtree = (match: Match, playerId: string): boolean => {
+  const [leftSemiFinal] = match.children ?? [];
+  return isPlayerInMatch(leftSemiFinal, playerId);
 };
 
-const renderRound2RootMatch = (match: Match, readyIds: string[]) => {
-  const [semi1, semi2] = match.children ?? [];
+const calculateMatchTreePosition = (
+  match: Match,
+  isRoot: boolean,
+  side: HorizontalVariant | undefined,
+  currentUserId: string,
+  round: TournamentRoundType,
+): MatchTreePosition => {
+  const isRound4 = round === TOURNAMENT_ROUNDS.SEMI_FINAL;
 
-  const loserIds = [semi1, semi2].flatMap((semi) => {
-    if (!semi?.player1 || !semi?.player2 || !semi.winnerId) return [];
-    return semi.player1.id === semi.winnerId ? [semi.player2.id] : [semi.player1.id];
+  const isUserInLeftSubtree =
+    isRound4 && isRoot ? isPlayerInLeftSubtree(match, currentUserId) : true;
+  const centerSide: HorizontalVariant = isUserInLeftSubtree
+    ? PLAYER_POSITIONS.LEFT
+    : PLAYER_POSITIONS.RIGHT;
+
+  const shouldRenderLeftLine =
+    (!isRoot && side === PLAYER_POSITIONS.LEFT) ||
+    (isRoot && isRound4 && isUserInLeftSubtree && side === PLAYER_POSITIONS.LEFT);
+
+  const shouldRenderRightLine =
+    (!isRoot && side === PLAYER_POSITIONS.RIGHT) ||
+    (isRoot && isRound4 && !isUserInLeftSubtree && side === PLAYER_POSITIONS.RIGHT);
+
+  return {
+    isUserInLeftSubtree,
+    centerSide,
+    shouldRenderLeftLine,
+    shouldRenderRightLine,
+  };
+};
+
+const renderFinalMatch = (match: Match, readyPlayerIds: number[]) => {
+  const [semiFinal1, semiFinal2] = match.children ?? [];
+
+  const eliminatedPlayerIds = [semiFinal1, semiFinal2].flatMap((semiFinal) => {
+    if (!semiFinal?.player1 || !semiFinal?.player2 || !semiFinal.winnerId) return [];
+    return semiFinal.player1.id === semiFinal.winnerId
+      ? [semiFinal.player2.id]
+      : [semiFinal.player1.id];
   });
 
   return (
@@ -46,27 +108,27 @@ const renderRound2RootMatch = (match: Match, readyIds: string[]) => {
       <PlayerCard
         player={match.player1}
         isWinner={match.player1?.id === match.winnerId}
-        isLoser={!!match.player1 && loserIds.includes(match.player1.id)}
-        isReady={isReady(match.player1?.id, readyIds)}
+        isLoser={!!match.player1 && eliminatedPlayerIds.includes(match.player1.id)}
+        isReady={isPlayerReady(match.player1?.id, readyPlayerIds)}
         showStats
-        round="ROUND_2"
-        side="left"
+        round={TOURNAMENT_ROUNDS.FINAL}
+        side={PLAYER_POSITIONS.LEFT}
       />
       <span className={styles.vs}>vs</span>
       <PlayerCard
         player={match.player2}
         isWinner={match.player2?.id === match.winnerId}
-        isLoser={!!match.player2 && loserIds.includes(match.player2.id)}
-        isReady={isReady(match.player2?.id, readyIds)}
+        isLoser={!!match.player2 && eliminatedPlayerIds.includes(match.player2.id)}
+        isReady={isPlayerReady(match.player2?.id, readyPlayerIds)}
         showStats
-        round="ROUND_2"
-        side="right"
+        round={TOURNAMENT_ROUNDS.FINAL}
+        side={PLAYER_POSITIONS.RIGHT}
       />
     </div>
   );
 };
 
-const renderRound4SemiMatch = () => (
+const renderSemiFinalDecoration = () => (
   <div className={styles.centerDecoration}>
     <img src="/assets/images/tournament-arrow.png" alt="Arrow Left" className={styles.arrowLeft} />
     <img
@@ -85,17 +147,17 @@ const renderRound4SemiMatch = () => (
 const renderNonRootMatch = (
   match: Match,
   winnerFromTop: VerticalPosition,
-  side: HorizontalVariant = 'left',
+  side: HorizontalVariant = PLAYER_POSITIONS.LEFT,
   showLine = true,
   highlight = true,
   shouldRenderLine = true,
-  readyIds: string[] = [],
-  round: TournamentRoundType = 'ROUND_4',
+  readyPlayerIds: number[] = [],
+  round: TournamentRoundType = TOURNAMENT_ROUNDS.SEMI_FINAL,
 ) => {
-  const isSemifinalLoser = round === 'ROUND_2';
-  const showStats = round === 'ROUND_4';
-  const player1Loser = match.player1?.id !== match.winnerId;
-  const player2Loser = match.player2?.id !== match.winnerId;
+  const isFinalRound = round === TOURNAMENT_ROUNDS.FINAL;
+  const showStats = round === TOURNAMENT_ROUNDS.SEMI_FINAL;
+  const player1Eliminated = match.player1?.id !== match.winnerId;
+  const player2Eliminated = match.player2?.id !== match.winnerId;
 
   return (
     <>
@@ -112,8 +174,8 @@ const renderNonRootMatch = (
         <PlayerCard
           player={match.player1}
           isWinner={match.player1?.id === match.winnerId}
-          isLoser={isSemifinalLoser && player1Loser}
-          isReady={isReady(match.player1?.id, readyIds)}
+          isLoser={isFinalRound && player1Eliminated}
+          isReady={isPlayerReady(match.player1?.id, readyPlayerIds)}
           showStats={showStats}
           round={round}
           side={side}
@@ -122,8 +184,8 @@ const renderNonRootMatch = (
         <PlayerCard
           player={match.player2}
           isWinner={match.player2?.id === match.winnerId}
-          isLoser={isSemifinalLoser && player2Loser}
-          isReady={isReady(match.player2?.id, readyIds)}
+          isLoser={isFinalRound && player2Eliminated}
+          isReady={isPlayerReady(match.player2?.id, readyPlayerIds)}
           showStats={showStats}
           round={round}
           side={side}
@@ -140,60 +202,67 @@ export const MatchNode = ({
   readyIds = [],
   currentUserId = '',
   showLine = true,
+  isTwoPlayer = false,
 }: MatchNodeProps) => {
   const [searchParams] = useSearchParams();
   const roundParam = searchParams.get('round');
-  const round = (roundParam?.toUpperCase() as TournamentRoundType) ?? 'ROUND_4';
+  const currentRound =
+    (roundParam?.toUpperCase() as TournamentRoundType) ?? TOURNAMENT_ROUNDS.SEMI_FINAL;
 
-  const isRound4 = round === 'ROUND_4';
-  const isRound2 = round === 'ROUND_2';
+  const isRound4 = currentRound === TOURNAMENT_ROUNDS.SEMI_FINAL;
+  const isRound2 = currentRound === TOURNAMENT_ROUNDS.FINAL;
   const hasChildren = !!match.children;
 
-  const [left, right] = match.children ?? [];
-  const userIsOnLeft = isRound4 && isRoot ? isUserInLeftSubtree(match, currentUserId) : true;
+  const [leftSemiFinal, rightSemiFinal] = match.children ?? [];
 
-  const shouldRenderRound4Semi = isRoot && isRound4 && left?.player1 && right?.player1;
-  const shouldRenderRound2Root = isRoot && isRound2;
+  const matchTreePosition = calculateMatchTreePosition(
+    match,
+    isRoot,
+    side,
+    currentUserId,
+    currentRound,
+  );
 
-  const winnerFromLeft: VerticalPosition = match.winnerId === left?.winnerId ? 'top' : 'bottom';
-  const centerSide: HorizontalVariant = userIsOnLeft ? 'left' : 'right';
+  const shouldRenderSemiFinalDecoration =
+    isRoot && isRound4 && leftSemiFinal?.player1 && rightSemiFinal?.player1;
+  const shouldRenderFinalMatch = isRoot && isRound2;
 
-  const shouldRenderLeftLine =
-    (!isRoot && side === 'left') || (isRoot && isRound4 && userIsOnLeft && side === 'left');
-
-  const shouldRenderRightLine =
-    (!isRoot && side === 'right') || (isRoot && isRound4 && !userIsOnLeft && side === 'right');
+  const winnerFromLeft: VerticalPosition =
+    match.winnerId === leftSemiFinal?.winnerId ? WINNER_POSITIONS.TOP : WINNER_POSITIONS.BOTTOM;
 
   if (!hasChildren) {
-    const isRound2Leaf = round === 'ROUND_2';
-    const showStats = round === 'ROUND_4';
-    const player1Loser = isRound2Leaf && match.player1?.id !== match.winnerId;
-    const player2Loser = isRound2Leaf && match.player2?.id !== match.winnerId;
+    const isFinalRoundLeaf = currentRound === TOURNAMENT_ROUNDS.FINAL;
+    const showStats = currentRound === TOURNAMENT_ROUNDS.SEMI_FINAL;
+    const player1Eliminated = isFinalRoundLeaf && match.player1?.id !== match.winnerId;
+    const player2Eliminated = isFinalRoundLeaf && match.player2?.id !== match.winnerId;
 
     return (
-      <div className={styles.leafWrapper}>
+      <div className={isTwoPlayer ? styles.leafWrapperHorizontal : styles.leafWrapper}>
         <PlayerCard
           player={match.player1}
           isWinner={match.player1?.id === match.winnerId}
-          isLoser={player1Loser}
-          isReady={isReady(match.player1?.id, readyIds)}
+          isLoser={player1Eliminated}
+          isReady={isPlayerReady(match.player1?.id, readyIds)}
           showStats={showStats}
-          round={round}
+          round={currentRound}
           side={side}
         />
         <MatchLines
-          winner={match.winnerId === match.player1?.id ? 'top' : 'bottom'}
-          variant={side ?? 'left'}
+          winner={
+            match.winnerId === match.player1?.id ? WINNER_POSITIONS.TOP : WINNER_POSITIONS.BOTTOM
+          }
+          variant={side ?? PLAYER_POSITIONS.LEFT}
           highlight={isRound2}
-          round={round}
+          round={currentRound}
+          isTwoPlayer={isTwoPlayer}
         />
         <PlayerCard
           player={match.player2}
           isWinner={match.player2?.id === match.winnerId}
-          isLoser={player2Loser}
-          isReady={isReady(match.player2?.id, readyIds)}
+          isLoser={player2Eliminated}
+          isReady={isPlayerReady(match.player2?.id, readyIds)}
           showStats={showStats}
-          round={round}
+          round={currentRound}
           side={side}
         />
       </div>
@@ -204,42 +273,44 @@ export const MatchNode = ({
     <div className={styles.treeWrapper}>
       <div className={styles.roundWrapper}>
         <div className={styles.branchWrapper}>
-          {left && (
+          {leftSemiFinal && (
             <MatchNode
-              match={left}
-              side="left"
+              match={leftSemiFinal}
+              side={PLAYER_POSITIONS.LEFT}
               readyIds={readyIds}
               currentUserId={currentUserId}
-              showLine={isRoot ? shouldRenderLeftLine : true}
+              showLine={isRoot ? matchTreePosition.shouldRenderLeftLine : true}
             />
           )}
           <div className={styles.centerColumn}>
-            {shouldRenderRound4Semi
-              ? renderRound4SemiMatch()
-              : shouldRenderRound2Root
-                ? renderRound2RootMatch(match, readyIds)
+            {shouldRenderSemiFinalDecoration
+              ? renderSemiFinalDecoration()
+              : shouldRenderFinalMatch
+                ? renderFinalMatch(match, readyIds)
                 : renderNonRootMatch(
                     match,
                     winnerFromLeft,
-                    isRoot && isRound4 ? centerSide : (side ?? 'left'),
+                    isRoot && isRound4
+                      ? matchTreePosition.centerSide
+                      : (side ?? PLAYER_POSITIONS.LEFT),
                     isRoot && isRound4 ? false : showLine,
                     isRound2,
                     isRoot && isRound4
-                      ? centerSide === 'left'
-                        ? shouldRenderLeftLine
-                        : shouldRenderRightLine
+                      ? matchTreePosition.centerSide === PLAYER_POSITIONS.LEFT
+                        ? matchTreePosition.shouldRenderLeftLine
+                        : matchTreePosition.shouldRenderRightLine
                       : true,
                     readyIds,
-                    round,
+                    currentRound,
                   )}
           </div>
-          {right && (
+          {rightSemiFinal && (
             <MatchNode
-              match={right}
-              side="right"
+              match={rightSemiFinal}
+              side={PLAYER_POSITIONS.RIGHT}
               readyIds={readyIds}
               currentUserId={currentUserId}
-              showLine={isRoot ? shouldRenderRightLine : true}
+              showLine={isRoot ? matchTreePosition.shouldRenderRightLine : true}
             />
           )}
         </div>

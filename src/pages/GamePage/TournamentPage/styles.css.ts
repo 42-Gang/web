@@ -25,6 +25,14 @@ export const round = style({
   fontWeight: 700,
 });
 
+export const tournamentContainer = style({
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  flex: 1,
+});
+
 export const buttonWrapper = style({
   ...theme.layout.center,
   marginBottom: rem(16),

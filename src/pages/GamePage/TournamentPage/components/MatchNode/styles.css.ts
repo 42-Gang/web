@@ -13,6 +13,15 @@ export const leafWrapper = style({
   marginTop: rem(-35),
 });
 
+export const leafWrapperHorizontal = style({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: rem(50),
+  width: '100%',
+});
+
 export const branchWrapper = style({
   display: 'flex',
   justifyContent: 'center',
@@ -85,22 +94,6 @@ export const arrowLeft = style({
 export const arrowRight = style({
   ...baseArrow,
   right: rem(-80),
-});
-
-export const semiMatchWrapper = style({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: rem(32),
-  marginBottom: rem(-12),
-});
-
-export const playerColumn = style({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  gap: rem(40),
 });
 
 export const centerDecoration = style({

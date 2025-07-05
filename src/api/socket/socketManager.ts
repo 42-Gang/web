@@ -13,7 +13,7 @@ export interface SocketOptions {
 const socketCache = new Map<string, Socket<ServerToClientEvents, ClientToServerEvents>>();
 
 const getSocketKey = (path: string, token: string | undefined, withToken: boolean): string =>
-  `${SOCKET_URL}/${path}${withToken && token ? `?token=${token}` : ''}`;
+  `${SOCKET_URL}/${path}${withToken && token ? `${path.includes('?') ? '&' : '?'}token=${token}` : ''}`;
 
 export const createSocket = (
   path: string,

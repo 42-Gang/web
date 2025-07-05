@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import {
   CustomCreateResponse,
+  type TournamentCreatedResponse,
   useUsersMe,
   WaitingRoomPlayer,
   WaitingRoomUpdateResponse,
@@ -10,6 +11,7 @@ import {
 import { useSocket } from '@/api/socket';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
+import { PATH } from '@/constants';
 
 import * as styles from './styles.css';
 import { UserCard } from '../../_components/user-card';
@@ -58,11 +60,17 @@ export const Custom1vs1 = () => {
       setUsers(data.users);
     };
 
+    const handleTournamentCreated = (data: TournamentCreatedResponse) => {
+      navigate(`${PATH.TOURNAMENT}?id=${data.tournamentId}`, { replace: true });
+    };
+
     socket.on('custom-create', handleCustomCreate);
     socket.on('waiting-room-update', handleWaitingRoomUpdate);
+    socket.on('tournament-created', handleTournamentCreated);
     return () => {
       socket.off('custom-create', handleCustomCreate);
       socket.off('waiting-room-update', handleWaitingRoomUpdate);
+      socket.off('tournament-created', handleTournamentCreated);
     };
   }, [searchParams, socket, navigate, users]);
 

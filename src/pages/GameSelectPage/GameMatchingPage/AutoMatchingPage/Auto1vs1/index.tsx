@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import {
   useUsersMe,
@@ -10,6 +10,7 @@ import {
 import { useSocket } from '@/api/socket';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
+import { PATH } from '@/constants';
 
 import * as styles from './styles.css.ts';
 import { UserCard } from '../../_components/user-card';
@@ -17,6 +18,7 @@ import { WaitingMessage } from '../../_components/waiting-message';
 
 export const Auto1vs1 = () => {
   const { data } = useUsersMe();
+  const navigate = useNavigate();
   const uid = data?.data?.id;
 
   const { socket } = useSocket({
@@ -44,7 +46,7 @@ export const Auto1vs1 = () => {
     };
 
     const handleTournamentCreated = (data: TournamentCreatedResponse) => {
-      alert(`Tournament created with ID: ${data.tournamentId} and size: ${data.size}`);
+      navigate(`${PATH.TOURNAMENT}?id=${data.tournamentId}`, { replace: true });
     };
 
     socket.on('waiting-room-update', handleWaitingRoomUpdate);
@@ -53,7 +55,7 @@ export const Auto1vs1 = () => {
       socket.off('waiting-room-update', handleWaitingRoomUpdate);
       socket.off('tournament-created', handleTournamentCreated);
     };
-  }, [socket]);
+  }, [navigate, socket]);
 
   const me = users.find((u) => u.id === uid);
   const opponent = users.find((u) => u.id !== uid);

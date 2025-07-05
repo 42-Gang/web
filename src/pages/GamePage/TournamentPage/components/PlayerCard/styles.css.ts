@@ -22,14 +22,6 @@ export const card = style([
   },
 ]);
 
-export const cardLarge = style([
-  baseCard,
-  {
-    gap: rem(2),
-    width: rem(90),
-  },
-]);
-
 export const avatarWrapper = style({
   width: '100%',
   aspectRatio: '1 / 1',
@@ -45,6 +37,11 @@ export const avatarBorder = style({
   border: `${rem(4)} solid #12FF7D`,
 });
 
+export const winnerBorder = style({
+  border: `${rem(4)} solid #FFD700`,
+  boxShadow: '0 0 10px rgba(255, 215, 0, 0.5)',
+});
+
 export const avatar = style({
   width: '100%',
   height: '100%',
@@ -55,11 +52,6 @@ export const avatar = style({
 export const empty = style({
   width: rem(70),
   height: rem(70),
-});
-
-export const emptyLarge = style({
-  width: rem(90),
-  height: rem(90),
 });
 
 export const popupBase = style({

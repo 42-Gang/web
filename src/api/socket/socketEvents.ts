@@ -1,4 +1,4 @@
-import {
+import type {
   FriendAcceptStatus,
   FriendRequestStatus,
   UserStatus,
@@ -14,6 +14,8 @@ import {
   ChatMessagePayload,
   ChatMessageResponse,
   CustomCreateResponse,
+  MatchInfoType,
+  ReadyResponse,
 } from '@/api/types';
 
 type SocketEventData = {
@@ -27,6 +29,9 @@ type SocketEventData = {
   'custom-invite': CustomInviteResponse;
 
   message: ChatMessageResponse;
+
+  'match-info': MatchInfoType;
+  ready: ReadyResponse;
 };
 
 export type ServerToClientEvents = {
