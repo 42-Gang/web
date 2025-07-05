@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { MatchInfoType, Match, ReadyResponse, GameResultResponse } from '@/api';
+import { MatchInfoType, Match, ReadyResponse, GameResultResponse, useUsersMe } from '@/api';
 import { useSocket } from '@/api/socket';
 import { BackButton } from '@/components/ui';
 
@@ -208,6 +208,8 @@ export const TournamentPage = () => {
     socket?.emit('ready', {});
   }, [tournamentId, socket]);
 
+  const me = useUsersMe();
+
   return (
     <>
       <BackButton />
@@ -226,7 +228,7 @@ export const TournamentPage = () => {
               match={tournamentMatch}
               isRoot={true}
               readyIds={readyPlayerIds}
-              currentUserId=""
+              currentUserId={me?.data?.data.id?.toString() ?? ''}
               showLine={true}
               isTwoPlayer={isDuelMode}
               tournamentSize={tournamentData.size}
