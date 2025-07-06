@@ -13,7 +13,7 @@ export * from './HistoryPage';
 export * from './ProfilePage';
 
 export * from './GamePage';
-export * from './GamePage/TournamentPage';
 export * from './GameLobbyPage';
 export * from './GameLobbyPage/AutoMatchingPage';
 export * from './GameLobbyPage/CustomMatchingPage';
+export * from './GameLobbyPage/TournamentPage';

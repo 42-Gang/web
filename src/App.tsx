@@ -17,22 +17,22 @@ import { useGameInviteSocket } from '@/api/socket/useGameInviteSocket';
 import { useAuthAtom } from '@/atoms/useAuthAtom';
 import { PATH } from '@/constants/routes';
 import {
-  EmailSignInPage,
-  EmailSignUpPage,
-  HomePage,
   LandingPage,
-  SignInPage,
-  SignUpPage,
+  HomePage,
+  SignInPage as AuthSignInPage,
+  EmailSignInPage as AuthEmailSignInPage,
+  SignUpPage as AuthSignUpPage,
+  EmailSignUpPage as AuthEmailSignUpPage,
+  OAuthCallbackPage as AuthOAuthCallbackPage,
   HistoryPage,
   ProfilePage,
   FriendPage,
-  ChatRoomPage,
-  TournamentPage,
-  OAuthCallbackPage,
+  ChatRoomPage as FriendChatRoomPage,
   GamePage,
   GameLobbyPage,
-  GameAutoMatchingPage,
-  CustomMatchingPage,
+  GameAutoMatchingPage as GameLobbyAutoMatchingPage,
+  CustomMatchingPage as GameLobbyCustomMatchingPage,
+  TournamentPage as GameLobbyTournamentPage,
 } from '@/pages';
 
 const App = () => {
@@ -56,11 +56,11 @@ const App = () => {
       element: <PublicRoute />,
       children: [
         { path: PATH.LANDING, element: <LandingPage /> },
-        { path: PATH.AUTH_SIGNIN, element: <SignInPage /> },
-        { path: PATH.AUTH_SIGNIN_EMAIL, element: <EmailSignInPage /> },
-        { path: PATH.AUTH_SIGNUP_EMAIL, element: <EmailSignUpPage /> },
-        { path: PATH.AUTH_SIGNUP, element: <SignUpPage /> },
-        { path: PATH.AUTH_OAUTH_CALLBACK, element: <OAuthCallbackPage /> },
+        { path: PATH.AUTH_SIGNIN, element: <AuthSignInPage /> },
+        { path: PATH.AUTH_SIGNIN_EMAIL, element: <AuthEmailSignInPage /> },
+        { path: PATH.AUTH_SIGNUP, element: <AuthSignUpPage /> },
+        { path: PATH.AUTH_SIGNUP_EMAIL, element: <AuthEmailSignUpPage /> },
+        { path: PATH.AUTH_OAUTH_CALLBACK, element: <AuthOAuthCallbackPage /> },
         { path: '*', element: <Navigate to={PATH.LANDING} replace /> },
       ],
     },
@@ -94,14 +94,14 @@ const App = () => {
         { path: PATH.HISTORY, element: <HistoryPage /> },
         { path: PATH.PROFILE, element: <ProfilePage /> },
         { path: PATH.FRIEND, element: <FriendPage /> },
-        { path: PATH.FRIEND_CHATROOM, element: <ChatRoomPage /> },
+        { path: PATH.FRIEND_CHATROOM, element: <FriendChatRoomPage /> },
 
         { path: PATH.GAME, element: <GamePage /> },
 
         { path: PATH.GAME_LOBBY, element: <GameLobbyPage /> },
-        { path: PATH.GAME_LOBBY_TOURNAMENT, element: <TournamentPage /> },
-        { path: PATH.GAME_LOBBY_AUTO_MATCHING, element: <GameAutoMatchingPage /> },
-        { path: PATH.GAME_LOBBY_CUSTOM_MATCHING, element: <CustomMatchingPage /> },
+        { path: PATH.GAME_LOBBY_AUTO_MATCHING, element: <GameLobbyAutoMatchingPage /> },
+        { path: PATH.GAME_LOBBY_CUSTOM_MATCHING, element: <GameLobbyCustomMatchingPage /> },
+        { path: PATH.GAME_LOBBY_TOURNAMENT, element: <GameLobbyTournamentPage /> },
       ],
     },
   ];
