@@ -2,21 +2,22 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Flex } from '@/components/system';
-import { BackButton, Branding, GameLicense, GameSelectStepNavigator } from '@/components/ui';
+import { BackButton, Branding, GameLicense, GameLobbyStepNavigator } from '@/components/ui';
 import { PATH } from '@/constants';
 
-import * as styles from './styles.css.ts';
+import * as styles from './styles.css';
 
-export const GameSelectPage = () => {
-  const [step, setStep] = useState<'auto-custom-select' | 'mode-select'>('auto-custom-select');
+export const GameLobbyPage = () => {
+  const [step, setStep] = useState<'AUTO-CUSTOM' | 'MODE'>('AUTO-CUSTOM');
   const [path, setPath] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
   const handleAutoConfirm = (index: number) => {
-    const selectedPath = index === 0 ? PATH.GAME_AUTO_MATCHING : PATH.GAME_CUSTOM_MATCHING;
+    const selectedPath =
+      index === 0 ? PATH.GAME_LOBBY_AUTO_MATCHING : PATH.GAME_LOBBY_CUSTOM_MATCHING;
     setPath(selectedPath);
-    setStep('mode-select');
+    setStep('MODE');
   };
 
   const handleModeConfirm = (index: number) => {
@@ -33,8 +34,8 @@ export const GameSelectPage = () => {
       <BackButton />
       <Branding className={styles.branding} />
 
-      {step === 'auto-custom-select' && (
-        <GameSelectStepNavigator
+      {step === 'AUTO-CUSTOM' && (
+        <GameLobbyStepNavigator
           items={['AUTO', 'CUSTOM']}
           onConfirm={handleAutoConfirm}
           wrapperClassName={styles.buttonWrapper}
@@ -42,7 +43,7 @@ export const GameSelectPage = () => {
         />
       )}
 
-      {step === 'mode-select' && (
+      {step === 'MODE' && (
         <div className={styles.modeWrapper}>
           <button
             className={styles.vsButton}

@@ -13,8 +13,8 @@ import { BackButton } from '@/components/ui';
 import { PATH } from '@/constants';
 
 import * as styles from './styles.css.ts';
-import { UserCard } from '../../_components/user-card';
-import { WaitingMessage } from '../../_components/waiting-message';
+import { UserCard } from '../../components/user-card';
+import { WaitingMessage } from '../../components/waiting-message';
 
 export const Auto1vs1 = () => {
   const { data } = useUsersMe();
@@ -46,7 +46,7 @@ export const Auto1vs1 = () => {
     };
 
     const handleTournamentCreated = (data: TournamentCreatedResponse) => {
-      navigate(`${PATH.TOURNAMENT}?id=${data.tournamentId}`, { replace: true });
+      navigate(`${PATH.GAME_LOBBY_TOURNAMENT}?id=${data.tournamentId}`, { replace: true });
     };
 
     socket.on('waiting-room-update', handleWaitingRoomUpdate);

@@ -8,7 +8,7 @@ type GameSelectStepNavigatorProps = {
   showText?: boolean;
 };
 
-export const GameSelectStepNavigator = ({
+export const GameLobbyStepNavigator = ({
   items,
   onConfirm,
   buttonClassName,

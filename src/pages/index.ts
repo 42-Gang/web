@@ -1,14 +1,19 @@
+export * from './LandingPage';
+export * from './HomePage';
+
+export * from './AuthPage/SignInPage';
+export * from './AuthPage/SignUpPage';
+export * from './AuthPage/SignUpPage/EmailSignUpPage';
+export * from './AuthPage/OAuthCallbackPage';
+
 export * from './FriendPage';
 export * from './FriendPage/ChatRoomPage';
-export * from './HomePage';
-export * from './LandingPage';
-export * from './SignInPage';
-export * from './SignUpPage';
-export * from './SignUpPage/EmailSignUpPage';
-export * from './OAuthPage/OAuthCallbackPage';
+
 export * from './HistoryPage';
 export * from './ProfilePage';
-export * from './GamePage/TournamentPage';
-export * from './GameSelectPage';
-export * from './GameSelectPage/GameMatchingPage/AutoMatchingPage';
-export * from './GameSelectPage/GameMatchingPage/CustomMatchingPage';
+
+export * from './GamePage';
+export * from './GameLobbyPage';
+export * from './GameLobbyPage/AutoMatchingPage';
+export * from './GameLobbyPage/CustomMatchingPage';
+export * from './GameLobbyPage/TournamentPage';

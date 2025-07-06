@@ -2,11 +2,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { useLogin } from '@/api';
+import { useLogin, parseErrorMessage } from '@/api';
 import { useAuthAtom } from '@/atoms/useAuthAtom';
 import { Flex } from '@/components/system';
 import { Branding, DefaultStepNavigator, GameLicense } from '@/components/ui';
-import { parseErrorMessage } from '@/utils/parseErrorMessage';
 
 import * as styles from './styles.css';
 
@@ -26,7 +25,10 @@ export const EmailSignInPage = () => {
         try {
           const { data } = await mutateAsync({ email, password });
 
-          if (!data) throw new Error('Login failed.');
+          if (!data) {
+            toast.error('Login failed. Please try again.');
+            return;
+          }
 
           setToken(data.accessToken);
         } catch (error) {

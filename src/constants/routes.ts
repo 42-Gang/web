@@ -1,18 +1,22 @@
 export const PATH = {
   LANDING: '/',
   HOME: '/home',
-  SIGNIN: '/signin',
-  SIGNIN_EMAIL: '/signin/email',
-  SIGNUP: '/signup',
-  SIGNUP_EMAIL: '/signup/email',
-  OAUTH_GOOGLE_CALLBACK: '/oauth/callback',
+
+  AUTH_SIGNIN: '/auth/signin',
+  AUTH_SIGNIN_EMAIL: '/auth/signin-email',
+  AUTH_SIGNUP: '/auth/signup',
+  AUTH_SIGNUP_EMAIL: '/auth/signup-email',
+  AUTH_OAUTH_CALLBACK: '/auth/oauth-callback',
+
   HISTORY: '/history',
-  GAME_SELECT: '/game-select',
-  GAME_AUTO_MATCHING: '/game-select/auto-matching',
-  GAME_CUSTOM_MATCHING: '/game-select/custom-matching',
-  TOURNAMENT: '/game/tournament',
+  PROFILE: '/profile',
+
+  GAME: '/game',
+  GAME_LOBBY: '/game-lobby',
+  GAME_LOBBY_AUTO_MATCHING: '/game-lobby/auto-matching',
+  GAME_LOBBY_CUSTOM_MATCHING: '/game-lobby/custom-matching',
+  GAME_LOBBY_TOURNAMENT: '/game-lobby/tournament',
 
   FRIEND: '/friend',
   FRIEND_CHATROOM: '/friend/chatroom',
-  PROFILE: '/profile',
 } as const;

@@ -12,7 +12,7 @@ export const HomePage = () => {
   const navigatorRef = useRef<HTMLDivElement>(null);
 
   const handleSelect = (index: number) => {
-    const paths = [PATH.GAME_SELECT, PATH.HISTORY, PATH.FRIEND, PATH.PROFILE];
+    const paths = [PATH.GAME_LOBBY, PATH.HISTORY, PATH.FRIEND, PATH.PROFILE];
     if (index >= 0 && index < paths.length) {
       navigate(paths[index]);
     }

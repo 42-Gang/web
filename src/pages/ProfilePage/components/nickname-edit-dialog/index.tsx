@@ -1,7 +1,7 @@
 import { PropsWithChildren, useState, useRef } from 'react';
 import { toast } from 'sonner';
 
-import { useUpdateProfile } from '@/api';
+import { useUpdateProfile, parseErrorMessage, parseSuccessMessage } from '@/api';
 import {
   Dialog,
   DialogTrigger,
@@ -9,8 +9,6 @@ import {
   DialogTitle,
   DialogClose,
 } from '@/components/system';
-import { parseErrorMessage } from '@/utils/parseErrorMessage';
-import { parseSuccessMessage } from '@/utils/parseSuccessMessage';
 
 import * as styles from './styles.css';
 

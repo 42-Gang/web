@@ -14,10 +14,10 @@ export const LandingPage = () => {
   const handleSelect = (index: number) => {
     switch (index) {
       case 0:
-        navigate(PATH.SIGNIN);
+        navigate(PATH.AUTH_SIGNIN);
         break;
       case 1:
-        navigate(PATH.SIGNUP);
+        navigate(PATH.AUTH_SIGNUP);
         break;
       default:
         break;

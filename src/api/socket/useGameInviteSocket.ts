@@ -31,11 +31,11 @@ export const useGameInviteSocket = () => {
           onClick: () => {
             if (data.tournamentSize && data.tournamentSize > 2) {
               navigate(
-                `${PATH.GAME_CUSTOM_MATCHING}?mode=tournament&size=${data.tournamentSize}&roomId=${data.roomId}`,
+                `${PATH.GAME_LOBBY_CUSTOM_MATCHING}?mode=tournament&size=${data.tournamentSize}&roomId=${data.roomId}`,
                 { replace: true },
               );
             } else {
-              navigate(`${PATH.GAME_CUSTOM_MATCHING}?mode=1vs1&roomId=${data.roomId}`, {
+              navigate(`${PATH.GAME_LOBBY_CUSTOM_MATCHING}?mode=1vs1&roomId=${data.roomId}`, {
                 replace: true,
               });
             }
