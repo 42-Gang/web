@@ -3,9 +3,9 @@ export const PATH = {
   HOME: '/home',
 
   AUTH_SIGNIN: '/auth/signin',
-  AUTH_SIGNIN_EMAIL: '/auth/signin/email',
+  AUTH_SIGNIN_EMAIL: '/auth/signin-email',
   AUTH_SIGNUP: '/auth/signup',
-  AUTH_SIGNUP_EMAIL: '/auth/signup/email',
+  AUTH_SIGNUP_EMAIL: '/auth/signup-email',
   AUTH_OAUTH_CALLBACK: '/auth/oauth-callback',
 
   HISTORY: '/history',
