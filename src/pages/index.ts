@@ -8,7 +8,9 @@ export * from './SignUpPage/EmailSignUpPage';
 export * from './OAuthPage/OAuthCallbackPage';
 export * from './HistoryPage';
 export * from './ProfilePage';
+
+export * from './GamePage';
 export * from './GamePage/TournamentPage';
-export * from './GameSelectPage';
-export * from './GameSelectPage/GameMatchingPage/AutoMatchingPage';
-export * from './GameSelectPage/GameMatchingPage/CustomMatchingPage';
+export * from './GameLobbyPage';
+export * from './GameLobbyPage/AutoMatchingPage';
+export * from './GameLobbyPage/CustomMatchingPage';

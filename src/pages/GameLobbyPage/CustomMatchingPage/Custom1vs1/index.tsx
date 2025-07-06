@@ -1,24 +1,24 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import {
-  useUsersMe,
+  CustomCreateResponse,
   type TournamentCreatedResponse,
-  type WaitingRoomPlayer,
-  type WaitingRoomUpdateResponse,
+  useUsersMe,
+  WaitingRoomPlayer,
+  WaitingRoomUpdateResponse,
 } from '@/api';
 import { useSocket } from '@/api/socket';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
 import { PATH } from '@/constants';
 
-import * as styles from './styles.css.ts';
+import * as styles from './styles.css';
 import { UserCard } from '../../_components/user-card';
 import { WaitingMessage } from '../../_components/waiting-message';
 
-export const Auto1vs1 = () => {
+export const Custom1vs1 = () => {
   const { data } = useUsersMe();
-  const navigate = useNavigate();
   const uid = data?.data?.id;
 
   const { socket } = useSocket({
@@ -28,6 +28,10 @@ export const Auto1vs1 = () => {
   });
 
   const [searchParams] = useSearchParams();
+  const roomId = searchParams.get('roomId');
+
+  const navigate = useNavigate();
+  const isAccept = useRef(false);
 
   const [users, setUsers] = useState<WaitingRoomPlayer[]>([]);
 
@@ -37,31 +41,51 @@ export const Auto1vs1 = () => {
     const _size = searchParams.get('size');
     const size = _size ? Number(_size) : NaN;
 
-    socket.emit('auto-join', { tournamentSize: size });
-  }, [searchParams, socket, socket.connected]);
+    if (!roomId && _size && !isNaN(size)) {
+      socket.emit('custom-create', { tournamentSize: size });
+    }
+    if (roomId && !_size && !isAccept.current) {
+      socket.emit('custom-accept', { roomId });
+    }
+  }, [roomId, searchParams, socket, socket.connected]);
 
   useEffect(() => {
+    const handleCustomCreate = (data: CustomCreateResponse) => {
+      const currentParams = new URLSearchParams(searchParams.toString());
+      currentParams.set('roomId', data.roomId);
+      navigate(`?${currentParams.toString()}`, { replace: true });
+    };
+
     const handleWaitingRoomUpdate = (data: WaitingRoomUpdateResponse) => {
       setUsers(data.users);
     };
 
     const handleTournamentCreated = (data: TournamentCreatedResponse) => {
-      navigate(`${PATH.TOURNAMENT}?id=${data.tournamentId}`, { replace: true });
+      navigate(`${PATH.GAME_LOBBY_TOURNAMENT}?id=${data.tournamentId}`, { replace: true });
     };
 
+    socket.on('custom-create', handleCustomCreate);
     socket.on('waiting-room-update', handleWaitingRoomUpdate);
     socket.on('tournament-created', handleTournamentCreated);
     return () => {
+      socket.off('custom-create', handleCustomCreate);
       socket.off('waiting-room-update', handleWaitingRoomUpdate);
       socket.off('tournament-created', handleTournamentCreated);
     };
-  }, [navigate, socket]);
+  }, [searchParams, socket, navigate, users]);
 
   const me = users.find((u) => u.id === uid);
   const opponent = users.find((u) => u.id !== uid);
 
+  const isHost = me?.isHost ?? false;
+
   const isMeFirst = users[0]?.id === uid || !opponent;
   const isOpponentWaiting = !opponent;
+
+  const handleInviteFriend = (userId: number) => {
+    if (!socket || !roomId) return;
+    socket.emit('custom-invite', { roomId, userId });
+  };
 
   const playerProps = {
     userAvatar: me?.avatarUrl,
@@ -69,8 +93,8 @@ export const Auto1vs1 = () => {
     isPlayer: true,
     isWaiting: false,
     mode: '1vs1' as const,
-    option: 'auto' as const,
-    isHostUser: false,
+    option: 'custom' as const,
+    isHostUser: isHost,
   };
 
   const opponentProps = {
@@ -79,14 +103,16 @@ export const Auto1vs1 = () => {
     isPlayer: false,
     isWaiting: isOpponentWaiting,
     mode: '1vs1' as const,
-    option: 'auto' as const,
-    isHostUser: false,
+    option: 'custom' as const,
+    isHostUser: isHost,
+    isPlayerHost: !isHost,
+    onClickAdd: handleInviteFriend,
   };
 
   return (
     <Flex direction="column" style={{ height: '100%' }}>
       <BackButton />
-      <h2 className={styles.title}>AUTO SOLO</h2>
+      <h2 className={styles.title}>CUSTOM SOLO</h2>
 
       <div className={styles.matchArea}>
         {isMeFirst ? (
@@ -104,7 +130,16 @@ export const Auto1vs1 = () => {
         )}
       </div>
 
-      <WaitingMessage isWaiting={isOpponentWaiting} option="auto" isHost={false} />
+      <WaitingMessage
+        isWaiting={isOpponentWaiting}
+        option="custom"
+        isHost={isHost}
+        onStartGame={() => {
+          if (socket && roomId) {
+            socket.emit('custom-start', { roomId });
+          }
+        }}
+      />
     </Flex>
   );
 };

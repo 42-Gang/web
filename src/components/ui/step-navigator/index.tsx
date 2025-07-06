@@ -61,4 +61,4 @@ const StepNavigator = ({
 export { StepNavigator };
 
 export { DefaultStepNavigator } from './variants/default-step-navigator';
-export { GameSelectStepNavigator } from './variants/game-step-navigator';
+export { GameLobbyStepNavigator } from './variants/game-step-navigator';
