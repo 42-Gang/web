@@ -14,8 +14,9 @@ export const GameLobbyPage = () => {
   const navigate = useNavigate();
 
   const handleAutoConfirm = (index: number) => {
-    const path = index === 0 ? PATH.GAME_LOBBY_AUTO_MATCHING : PATH.GAME_LOBBY_CUSTOM_MATCHING;
-    setPath(path);
+    const selectedPath =
+      index === 0 ? PATH.GAME_LOBBY_AUTO_MATCHING : PATH.GAME_LOBBY_CUSTOM_MATCHING;
+    setPath(selectedPath);
     setStep('MODE');
   };
 
