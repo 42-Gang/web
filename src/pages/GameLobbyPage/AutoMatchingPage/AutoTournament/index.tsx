@@ -8,8 +8,8 @@ import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
 
 import * as styles from './styles.css';
-import { UserCard } from '../../_components/user-card';
-import { WaitingMessage } from '../../_components/waiting-message';
+import { UserCard } from '../../components/user-card';
+import { WaitingMessage } from '../../components/waiting-message';
 
 export const AutoTournament = () => {
   const { data } = useUsersMe();

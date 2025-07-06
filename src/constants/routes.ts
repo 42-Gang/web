@@ -2,13 +2,14 @@ export const PATH = {
   LANDING: '/',
   HOME: '/home',
 
-  SIGNIN: '/signin',
-  SIGNIN_EMAIL: '/signin/email',
-  SIGNUP: '/signup',
-  SIGNUP_EMAIL: '/signup/email',
-  OAUTH_GOOGLE_CALLBACK: '/oauth/callback',
+  AUTH_SIGNIN: '/auth/signin',
+  AUTH_SIGNIN_EMAIL: '/auth/signin/email',
+  AUTH_SIGNUP: '/auth/signup',
+  AUTH_SIGNUP_EMAIL: '/auth/signup/email',
+  AUTH_OAUTH_CALLBACK: '/auth/oauth-callback',
 
   HISTORY: '/history',
+  PROFILE: '/profile',
 
   GAME: '/game',
   GAME_LOBBY: '/game-lobby',
@@ -18,5 +19,4 @@ export const PATH = {
 
   FRIEND: '/friend',
   FRIEND_CHATROOM: '/friend/chatroom',
-  PROFILE: '/profile',
 } as const;

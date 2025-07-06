@@ -2,6 +2,7 @@ export * from './useAcceptFriendsRequests';
 export * from './useBlockFriend';
 export * from './useCreateFriendsRequests';
 export * from './useDeleteAvatar';
+export * from './useGoogleLogin';
 export * from './useLogin';
 export * from './useLogout';
 export * from './useMailVerification';

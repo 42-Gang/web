@@ -26,7 +26,10 @@ export const EmailSignInPage = () => {
         try {
           const { data } = await mutateAsync({ email, password });
 
-          if (!data) throw new Error('Login failed.');
+          if (!data) {
+            toast.error('Login failed. Please try again.');
+            return;
+          }
 
           setToken(data.accessToken);
         } catch (error) {

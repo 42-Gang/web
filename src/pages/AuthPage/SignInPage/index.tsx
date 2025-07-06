@@ -5,8 +5,8 @@ import { toast } from 'sonner';
 import { Flex } from '@/components/system';
 import { Branding, GameLicense, DefaultStepNavigator } from '@/components/ui';
 import { PATH } from '@/constants';
-import { redirectToOAuth } from '@/utils/auth/redirectToOAuth';
 
+import { redirectOAuth } from '../utils';
 import * as styles from './styles.css';
 
 export const SignInPage = () => {
@@ -23,12 +23,12 @@ export const SignInPage = () => {
           break;
         }
 
-        redirectToOAuth({ type: 'signin', baseUrl });
+        redirectOAuth({ provider: 'GOOGLE', type: 'SIGNIN', baseUrl });
         break;
       }
 
       case 1:
-        navigate(PATH.SIGNIN_EMAIL);
+        navigate(PATH.AUTH_SIGNIN_EMAIL);
         break;
 
       case 2:

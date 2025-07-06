@@ -7,9 +7,9 @@ import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui';
 
 import * as styles from './styles.css';
-import { InviteFriendDialog } from '../../_components/invite-friend-dialog';
-import { UserCard } from '../../_components/user-card';
-import { WaitingMessage } from '../../_components/waiting-message';
+import { InviteFriendDialog } from '../../components/invite-friend-dialog';
+import { UserCard } from '../../components/user-card';
+import { WaitingMessage } from '../../components/waiting-message';
 
 export const CustomTournament = () => {
   useGameInviteSocket();
