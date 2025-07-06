@@ -2,12 +2,10 @@ import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { useMailVerification, useRegister } from '@/api';
+import { useMailVerification, useRegister, parseErrorMessage, parseSuccessMessage } from '@/api';
 import { Flex } from '@/components/system';
 import { BackButton } from '@/components/ui/back-button';
 import { Branding } from '@/components/ui/branding';
-import { parseErrorMessage } from '@/utils/parseErrorMessage';
-import { parseSuccessMessage } from '@/utils/parseSuccessMessage';
 
 import * as styles from './styles.css';
 import { PasswordHint } from '../components/password-hint';
