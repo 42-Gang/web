@@ -3,51 +3,38 @@ import { style } from '@vanilla-extract/css';
 import { rem, theme } from '@/styles';
 
 export const container = style({
-  width: theme.size.appWidth,
-  height: theme.size.appHeight,
-  display: 'flex',
-  flexDirection: 'row',
-  overflow: 'hidden',
-});
-
-export const bracketSection = style({
-  width: rem(600),
+  ...theme.layout.columnCenter,
+  width: '100%',
   height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
   padding: rem(20),
   gap: rem(20),
-  backgroundColor: theme.color.black,
 });
 
-export const chatSection = style({
-  width: rem(200),
-  height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  backgroundColor: theme.color.orangeChat,
-  padding: rem(16),
-});
-
-export const titleWrapper = style({
-  textAlign: 'center',
+export const header = style({
   color: theme.color.white,
+  textAlign: 'center',
 });
 
 export const title = style({
   fontSize: rem(50),
-  fontWeight: 'bold',
+  fontWeight: 700,
 });
 
 export const round = style({
   fontSize: rem(36),
-  fontWeight: 'bold',
+  fontWeight: 700,
 });
 
-export const readyButtonWrapper = style({
+export const tournamentContainer = style({
+  width: '100%',
   display: 'flex',
   justifyContent: 'center',
+  alignItems: 'center',
+  flex: 1,
+});
+
+export const buttonWrapper = style({
+  ...theme.layout.center,
   marginBottom: rem(16),
 });
 

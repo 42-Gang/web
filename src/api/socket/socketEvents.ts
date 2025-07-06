@@ -14,6 +14,9 @@ import {
   ChatMessagePayload,
   ChatMessageResponse,
   CustomCreateResponse,
+  MatchInfoType,
+  ReadyResponse,
+  GameResultResponse,
 } from '@/api/types';
 
 type SocketEventData = {
@@ -27,6 +30,10 @@ type SocketEventData = {
   'custom-invite': CustomInviteResponse;
 
   message: ChatMessageResponse;
+
+  'match-info': MatchInfoType;
+  ready: ReadyResponse;
+  'game-result': GameResultResponse;
 };
 
 export type ServerToClientEvents = {
