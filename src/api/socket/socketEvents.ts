@@ -17,6 +17,7 @@ import {
   MatchInfoType,
   ReadyResponse,
   GameResultResponse,
+  MatchCreatedEvent,
 } from '@/api/types';
 
 type SocketEventData = {
@@ -31,7 +32,7 @@ type SocketEventData = {
 
   message: ChatMessageResponse;
 
-  'match-info': MatchInfoType;
+  'match-info': MatchInfoType | MatchCreatedEvent;
   ready: ReadyResponse;
   'game-result': GameResultResponse;
 };

@@ -11,6 +11,15 @@ export type MatchInfoType = {
   size: number;
 };
 
+export type MatchCreatedEvent = {
+  eventType: 'CREATED';
+  matchId: number;
+  player1Id: number;
+  player2Id: number;
+  serverName: string;
+  tournamentId: number;
+};
+
 export type ReadyResponse = {
   type: 'user-ready' | 'all-users-ready';
   userId: number;
