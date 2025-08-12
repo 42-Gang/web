@@ -140,7 +140,9 @@ export const TournamentPage = () => {
       if ('eventType' in data && data.eventType === 'CREATED') {
         data = data as MatchCreatedEvent;
         const playerType = me?.data?.data.id === data.player1Id ? 'player1' : 'player2';
-        navigate(`${PATH.GAME}?id=${data.matchId}&playerType=${playerType}`);
+        navigate(
+          `${PATH.GAME}?serverName=${data.serverName}&tournamentId=${data.tournamentId}&matchId=${data.matchId}&playerType=${playerType}`,
+        );
         return;
       }
       setTournamentData(data as MatchInfoType);
