@@ -12,8 +12,8 @@ export const GamePage = () => {
   const playerType = searchParams.get('playerType');
 
   const { connect, disconnect } = useSocket({
-    path: `match?matchId=${matchId}`,
-    handshake: '/ws/match-server',
+    path: `?matchId=${matchId}&server=${serverName}`,
+    handshake: '/ws/match-game',
     withToken: true,
   });
 
