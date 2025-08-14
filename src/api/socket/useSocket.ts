@@ -55,7 +55,6 @@ export const useSocket = (options: UseSocketOptions) => {
     handleConnectError: async (error: Error) => {
       console.warn('connect_error:', error);
 
-      // If token is provided externally, do not refresh here; let the caller update it.
       if (externalAccessToken === undefined) {
         const newToken = await refreshAccessToken().catch(() => null);
         if (newToken) {
@@ -98,7 +97,6 @@ export const useSocket = (options: UseSocketOptions) => {
     }
   }, [socket]);
 
-  // Recreate socket when external token or relevant options change
   useEffect(() => {
     const currentToken = externalAccessToken ?? atomToken ?? undefined;
     const prevToken = prevTokenRef.current;
