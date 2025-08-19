@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { toast } from 'sonner';
 
+import { type PlayerConnectedResponse } from '@/api';
 import { useSocket } from '@/api/socket';
 
 export const GamePage = () => {
@@ -11,7 +13,7 @@ export const GamePage = () => {
   const matchId = searchParams.get('matchId');
   const playerType = searchParams.get('playerType');
 
-  const { connect, disconnect } = useSocket({
+  const { socket, connect, disconnect } = useSocket({
     path: `?matchId=${matchId}&server=${serverName}`,
     handshake: '/ws/match-game',
     withToken: true,
@@ -25,6 +27,19 @@ export const GamePage = () => {
     connect();
     return () => disconnect();
   }, [connect, disconnect, matchId, serverName]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleConnectMessage = ({ playerId }: PlayerConnectedResponse) => {
+      toast.message(`플레이어 ${playerId}님이 접속했습니다.`);
+    };
+
+    socket.on('player-connected', handleConnectMessage);
+    return () => {
+      socket.off('player-connected', handleConnectMessage);
+    };
+  }, [socket]);
 
   if (!serverName || !tournamentId || !matchId || !playerType) {
     return <div>Error: Missing required parameters.</div>;

@@ -83,3 +83,7 @@ export type TournamentCreatedResponse = {
   size: number;
   mode: string;
 };
+
+export type PlayerConnectedResponse = {
+  playerId: number;
+};

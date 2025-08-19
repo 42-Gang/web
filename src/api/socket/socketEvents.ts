@@ -18,6 +18,7 @@ import {
   ReadyResponse,
   GameResultResponse,
   MatchCreatedEvent,
+  PlayerConnectedResponse,
 } from '@/api/types';
 
 type SocketEventData = {
@@ -35,6 +36,8 @@ type SocketEventData = {
   'match-info': MatchInfoType | MatchCreatedEvent;
   ready: ReadyResponse;
   'game-result': GameResultResponse;
+
+  'player-connected': PlayerConnectedResponse;
 };
 
 export type ServerToClientEvents = {
