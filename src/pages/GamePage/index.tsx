@@ -41,10 +41,6 @@ export const GamePage = () => {
     };
   }, [socket]);
 
-  if (!serverName || !tournamentId || !matchId || !playerType) {
-    return <div>Error: Missing required parameters.</div>;
-  }
-
   return (
     <div>
       <h1>Game Page</h1>
