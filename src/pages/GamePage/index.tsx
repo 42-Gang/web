@@ -234,6 +234,7 @@ export const GamePage = () => {
       );
       setStatusVisible(true);
     };
+
     const handleMatchTimeout = ({
       reason,
       waitingTimeInSeconds,
@@ -243,14 +244,17 @@ export const GamePage = () => {
     }) => {
       showStatus(`매치 타임아웃: ${reason} (대기 ${waitingTimeInSeconds}s)`, 5000);
     };
+
     const handleCountdownCancelled = () => {
       setCountdownText('');
       setCountdownKey((k) => k + 1);
       showStatus('카운트다운이 취소되었습니다.');
     };
+
     const handleGameStart = () => {
       showStatus('게임이 시작되었습니다!');
     };
+
     const handleGameStateUpdate = ({
       ball,
       racket1,
@@ -271,6 +275,7 @@ export const GamePage = () => {
         const baseRadius = 3.2;
         const maxRadius = 4.5;
         const limitX = 0.75;
+
         let newRadius: number;
         if (isPlayer2) {
           if (x > 0) {
@@ -292,6 +297,7 @@ export const GamePage = () => {
         cam.radius = Math.min(Math.max(minRadius, newRadius), maxRadius);
       }
     };
+
     const handleGameEnd = ({
       winner,
     }: {
@@ -303,6 +309,7 @@ export const GamePage = () => {
       setWinnerText(`${text} WINS!`);
       setShowWinnerOverlay(true);
     };
+
     const handleDisconnect = () => {
       const dotPattern = [3, 2, 1, 2, 3];
       let step = 0;
@@ -313,6 +320,7 @@ export const GamePage = () => {
         if (step >= dotPattern.length) clearInterval(id);
       }, 500);
     };
+
     const handleCountdown = ({ count }: { count: number }) => {
       const text = count > 0 ? String(count) : 'SERVE!';
       setCountdownText(text);
