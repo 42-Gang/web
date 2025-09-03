@@ -1,24 +1,17 @@
-import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
-import react from '@vitejs/plugin-react-swc';
-import { defineConfig, loadEnv } from 'vite';
+import { resolve } from 'node:path';
+import { tanstackRouter } from '@tanstack/router-plugin/vite';
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vitest/config';
 
-export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
-
-  return {
-    plugins: [react(), vanillaExtractPlugin()],
-    resolve: {
-      alias: [{ find: '@', replacement: '/src' }],
+export default defineConfig({
+  plugins: [tanstackRouter({ target: 'react', autoCodeSplitting: true }), react()],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+  },
+  resolve: {
+    alias: {
+      '~': resolve(__dirname, './src'),
     },
-    server: {
-      proxy: {
-        '/api': {
-          target: env.VITE_API_URL,
-          changeOrigin: true,
-          secure: false,
-          rewrite: (path) => path.replace(/^\/api/, ''),
-        },
-      },
-    },
-  };
+  },
 });
