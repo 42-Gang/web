@@ -13,13 +13,26 @@ interface UseSocketOptions extends SocketOptions {
 }
 
 export const useSocket = (options: UseSocketOptions) => {
-  const { path, handshake, withToken = true, onConnect, onDisconnect, onError } = options;
-  const { token, setToken } = useAuthAtom();
+  const {
+    path,
+    handshake,
+    withToken = true,
+    token: externalTokenParam,
+    onConnect,
+    onDisconnect,
+    onError,
+  } = options;
+  const { token: atomToken, setToken } = useAuthAtom();
+
+  const externalAccessToken = externalTokenParam?.accessToken;
+  const effectiveAccessToken = externalAccessToken ?? atomToken ?? undefined;
 
   const [isConnected, setIsConnected] = useState(false);
   const [socket, setSocket] = useState(() =>
-    createSocket(path, token || '', { handshake, withToken }),
+    createSocket(path, { handshake, withToken, token: { accessToken: effectiveAccessToken } }),
   );
+
+  const prevTokenRef = useRef<string | undefined>(effectiveAccessToken);
 
   const retryTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -42,13 +55,24 @@ export const useSocket = (options: UseSocketOptions) => {
     handleConnectError: async (error: Error) => {
       console.warn('connect_error:', error);
 
-      const newToken = await refreshAccessToken().catch(() => null);
-      if (newToken) {
-        setToken(newToken);
-        destroySocket(path, token ?? undefined, { handshake, withToken });
-        const newSocket = createSocket(path, newToken, { handshake, withToken });
-        setSocket(newSocket);
-        newSocket.connect();
+      if (externalAccessToken === undefined) {
+        const newToken = await refreshAccessToken().catch(() => null);
+        if (newToken) {
+          setToken(newToken);
+          destroySocket(path, {
+            handshake,
+            withToken,
+            token: { accessToken: prevTokenRef.current },
+          });
+          const newSocket = createSocket(path, {
+            handshake,
+            withToken,
+            token: { accessToken: newToken },
+          });
+          prevTokenRef.current = newToken;
+          setSocket(newSocket);
+          newSocket.connect();
+        }
       }
 
       if (!retryTimerRef.current) {
@@ -72,6 +96,23 @@ export const useSocket = (options: UseSocketOptions) => {
       retryTimerRef.current = null;
     }
   }, [socket]);
+
+  useEffect(() => {
+    const currentToken = externalAccessToken ?? atomToken ?? undefined;
+    const prevToken = prevTokenRef.current;
+    const hasTokenChanged = prevToken !== currentToken;
+
+    if (hasTokenChanged) {
+      destroySocket(path, { handshake, withToken, token: { accessToken: prevToken } });
+      const newSocket = createSocket(path, {
+        handshake,
+        withToken,
+        token: { accessToken: currentToken },
+      });
+      prevTokenRef.current = currentToken;
+      setSocket(newSocket);
+    }
+  }, [externalAccessToken, atomToken, path, handshake, withToken]);
 
   useEffect(() => {
     const { handleConnect, handleDisconnect, handleConnectError } = handlersRef.current;

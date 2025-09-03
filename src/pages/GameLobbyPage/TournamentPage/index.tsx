@@ -1,9 +1,17 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { MatchInfoType, Match, ReadyResponse, GameResultResponse, useUsersMe } from '@/api';
+import {
+  MatchInfoType,
+  MatchCreatedEvent,
+  Match,
+  ReadyResponse,
+  GameResultResponse,
+  useUsersMe,
+} from '@/api';
 import { useSocket } from '@/api/socket';
 import { BackButton } from '@/components/ui';
+import { PATH } from '@/constants';
 
 import { MatchNode } from './components/MatchNode';
 import { TOURNAMENT_SIZES, TOURNAMENT_LABELS, DEFAULT_PLAYER_STATS } from './constants';
@@ -116,6 +124,9 @@ export const TournamentPage = () => {
   const [readyPlayerIds, setReadyPlayerIds] = useState<number[]>([]);
   const [tournamentMatch, setTournamentMatch] = useState<Match | null>(null);
 
+  const navigate = useNavigate();
+  const me = useUsersMe();
+
   const tournamentId = searchParams.get('id');
 
   const { socket, connect, disconnect } = useSocket({
@@ -124,9 +135,20 @@ export const TournamentPage = () => {
     withToken: true,
   });
 
-  const handleTournamentDataUpdate = useCallback((data: MatchInfoType) => {
-    setTournamentData(data);
-  }, []);
+  const handleTournamentDataUpdate = useCallback(
+    (data: MatchInfoType | MatchCreatedEvent) => {
+      if ('eventType' in data && data.eventType === 'CREATED') {
+        data = data as MatchCreatedEvent;
+        const playerType = me?.data?.data.id === data.player1Id ? 'player1' : 'player2';
+        navigate(
+          `${PATH.GAME}?serverName=${data.serverName}&tournamentId=${data.tournamentId}&matchId=${data.matchId}&playerType=${playerType}`,
+        );
+        return;
+      }
+      setTournamentData(data as MatchInfoType);
+    },
+    [me?.data?.data.id, navigate],
+  );
 
   const handlePlayerReady = useCallback((data: ReadyResponse) => {
     setReadyPlayerIds((prev) => {
@@ -207,8 +229,6 @@ export const TournamentPage = () => {
     if (!tournamentId) return;
     socket?.emit('ready', {});
   }, [tournamentId, socket]);
-
-  const me = useUsersMe();
 
   return (
     <>
