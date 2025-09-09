@@ -1,6 +1,6 @@
 import { Mutex } from 'async-mutex';
 import ky, { type BeforeRetryState, HTTPError, type Options, type ResponsePromise } from 'ky';
-import { LOCAL_STORAGE } from '~/api';
+import { type HttpResponse, LOCAL_STORAGE } from '~/api';
 
 const API_URL = typeof window === 'undefined' ? 'https://pingpong.n-e.kr/api' : '/api';
 const IS_BROWSER = typeof window !== 'undefined';
@@ -95,5 +95,13 @@ const refreshToken = async () => {
     credentials: 'include',
   });
 
-  await client.post('v1/auth/refresh-token').json();
+  const response = await client
+    .post<HttpResponse<{ accessToken: string }>>('v1/auth/refresh-token')
+    .json();
+
+  if (response.status === 'SUCCESS' && response.data?.accessToken) {
+    window.localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, response.data.accessToken);
+  } else {
+    throw new Error('토큰 갱신 실패: 유효하지 않은 응답');
+  }
 };
