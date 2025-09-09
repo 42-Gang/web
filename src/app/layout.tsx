@@ -3,6 +3,7 @@ import '~/styles/globals.css';
 import type { Metadata } from 'next';
 import type { PropsWithChildren } from 'react';
 import { twMerge } from 'tailwind-merge';
+import { QueryClientProvider } from '~/app/QueryClientProvider';
 import { DungGeunMo } from './_fonts';
 
 export const metadata: Metadata = {
@@ -14,7 +15,9 @@ const RootLayout = ({ children }: PropsWithChildren) => {
   return (
     <html lang="ko">
       <body className={twMerge('center size-full antialiased', DungGeunMo.className)}>
-        <div className="h-[600px] w-[800px] bg-black">{children}</div>
+        <QueryClientProvider>
+          <div className="h-[600px] w-[800px] bg-black">{children}</div>
+        </QueryClientProvider>
       </body>
     </html>
   );

@@ -25,8 +25,8 @@ export const BrandTitle = ({ className, showGuns = false, ...props }: Props) => 
 
       {showGuns && (
         <Fragment>
-          <GunIcon className="absolute top-8 left-8 select-none" size={268} />
-          <GunIcon className="absolute top-8 right-8 scale-x-[-1] select-none" size={268} />
+          <GunIcon className="absolute top-8 left-10 select-none" size={268} />
+          <GunIcon className="absolute top-8 right-10 scale-x-[-1] select-none" size={268} />
         </Fragment>
       )}
     </div>
