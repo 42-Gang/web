@@ -1,5 +1,6 @@
 import { Mutex } from 'async-mutex';
 import ky, { type BeforeRetryState, HTTPError, type Options, type ResponsePromise } from 'ky';
+import { LOCAL_STORAGE } from '~/api';
 
 const API_URL = typeof window === 'undefined' ? 'https://pingpong.n-e.kr/api' : '/api';
 const IS_BROWSER = typeof window !== 'undefined';
@@ -17,17 +18,9 @@ const defaultOption: Options = {
 };
 
 const handleTokenRefresh = async ({ error, request }: BeforeRetryState) => {
-  if (!IS_BROWSER) {
-    return ky.stop;
-  }
-
-  if (!(error instanceof HTTPError) || error.response.status !== 401) {
-    return ky.stop;
-  }
-
-  if (request.url.includes('logout')) {
-    return ky.stop;
-  }
+  if (!IS_BROWSER) return ky.stop;
+  if (!(error instanceof HTTPError) || error.response.status !== 401) return ky.stop;
+  if (request.url.includes('logout')) return ky.stop;
 
   try {
     if (tokenRefreshMutex.isLocked()) {
@@ -35,9 +28,7 @@ const handleTokenRefresh = async ({ error, request }: BeforeRetryState) => {
       return;
     }
 
-    await tokenRefreshMutex.runExclusive(async () => {
-      await refreshToken();
-    });
+    await tokenRefreshMutex.runExclusive(async () => await refreshToken());
 
     return;
   } catch (refreshError) {
@@ -52,7 +43,7 @@ const handleAuthFailure = (reason: string) => {
 
   if (IS_BROWSER) {
     alert('로그인이 만료되었습니다. 다시 로그인해주세요.');
-    window.location.href = '/auth/login';
+    window.location.href = '/auth';
   }
 };
 
@@ -60,6 +51,12 @@ export const instance = ky.create({
   prefixUrl: API_URL,
   headers: { 'Content-Type': 'application/json' },
   hooks: {
+    beforeRequest: [
+      request => {
+        const accessToken = window.localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN);
+        if (accessToken) request.headers.set('Authorization', `Bearer ${accessToken}`);
+      },
+    ],
     beforeRetry: [handleTokenRefresh],
   },
   ...defaultOption,
@@ -98,5 +95,5 @@ const refreshToken = async () => {
     credentials: 'include',
   });
 
-  await client.post('users/refresh-token').json();
+  await client.post('v1/auth/refresh-token').json();
 };
