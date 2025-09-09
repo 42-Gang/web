@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="10dbaefd-0081-4e1f-80d8-14018874af06" name="Changes" comment="feat(router): implement TanStack Router setup and initial routes">
+      <change beforePath="$PROJECT_DIR$/.cursor/rules/tanstack-react-router_api.mdc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.cursor/rules/tanstack-react-router_guide.mdc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.cursor/rules/tanstack-react-router_routing.mdc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.cursor/rules/tanstack-react-router_setup-and-architecture.mdc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/biome.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/fonts/DungGeunMo.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/fonts/StWinterPixel24Regular-w1e72.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/1vs1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/add-friend.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/alarm-ringing.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/alarm.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/approval.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/back-button.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/base-button-hover.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/base-button-normal.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/bullet.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/cameraIcon.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/check-circle.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/editProfileIcon.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/gun.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/invite-friend.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/message.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/ready-button.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/rejection.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/request-friend.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/request-success.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/sample-avatar.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/send-icon.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/show-password-false.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/show-password-true.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/spinner.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/tournament-arrow.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/tournament-pingpong.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/tournament-placeholder-ball.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/tournament-random-profile.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/tournament.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routeTree.gen.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/__root.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vite.config.ts" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="dev" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;ohprettyhak&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/42-Gang/frontend.git&quot;,
+    &quot;accountId&quot;: &quot;c682875b-d72e-4e64-aed2-351bfd40f1ee&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2yPIFrVGD8ZmUUcD32KYcikvgeP" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "refactor/tanstack-router",
+    "last_opened_file_path": "/Users/haklee/Web/42/frontend",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "pnpm",
+    "npm.lint.executor": "Run",
+    "prettierjs.PrettierConfiguration.Package": "/Users/haklee/Web/42/frontend/node_modules/prettier",
+    "settings.editor.selected.configurable": "Settings.Biome",
+    "ts.external.directory.path": "/Users/haklee/Web/42/frontend/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/src/pages/GameLobbyPage" />
+      <recent name="$PROJECT_DIR$/src/api" />
+      <recent name="$PROJECT_DIR$/src/pages/AuthPage" />
+      <recent name="$PROJECT_DIR$/src/pages/GamePage" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="lint" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="lint" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.lint" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-WS-251.26927.40" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="10dbaefd-0081-4e1f-80d8-14018874af06" name="Changes" comment="" />
+      <created>1749729681084</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1749729681084</updated>
+      <workItem from="1749729682175" duration="17344000" />
+      <workItem from="1749870587326" duration="1670000" />
+      <workItem from="1749873593023" duration="7160000" />
+      <workItem from="1749914207387" duration="4819000" />
+      <workItem from="1750001182719" duration="823000" />
+      <workItem from="1750081606514" duration="6409000" />
+      <workItem from="1750120042660" duration="7000" />
+      <workItem from="1750169225781" duration="900000" />
+      <workItem from="1750173413985" duration="2417000" />
+      <workItem from="1750207842607" duration="4000" />
+      <workItem from="1750216059937" duration="1000" />
+      <workItem from="1750352487816" duration="411000" />
+      <workItem from="1750405789223" duration="1738000" />
+      <workItem from="1750571177455" duration="65000" />
+      <workItem from="1750571256525" duration="393000" />
+      <workItem from="1750573191754" duration="5216000" />
+      <workItem from="1750641016336" duration="452000" />
+      <workItem from="1750655751777" duration="610000" />
+      <workItem from="1750691718704" duration="625000" />
+      <workItem from="1750740876983" duration="26000" />
+      <workItem from="1751122921712" duration="272000" />
+      <workItem from="1751123197206" duration="2974000" />
+      <workItem from="1751174247954" duration="8587000" />
+      <workItem from="1751344805822" duration="687000" />
+      <workItem from="1751374725295" duration="603000" />
+      <workItem from="1751638984026" duration="22724000" />
+      <workItem from="1751776292411" duration="3759000" />
+      <workItem from="1751784804996" duration="8045000" />
+      <workItem from="1751809336767" duration="646000" />
+      <workItem from="1751814747058" duration="1724000" />
+      <workItem from="1751869144288" duration="421000" />
+      <workItem from="1752078508904" duration="27000" />
+      <workItem from="1752303666366" duration="10000" />
+      <workItem from="1754312464702" duration="1647000" />
+      <workItem from="1754661571816" duration="1399000" />
+      <workItem from="1754716016088" duration="132000" />
+      <workItem from="1754994268286" duration="16385000" />
+      <workItem from="1755171143110" duration="5494000" />
+      <workItem from="1755239015589" duration="782000" />
+      <workItem from="1755240467444" duration="1211000" />
+      <workItem from="1755338568710" duration="744000" />
+      <workItem from="1755579811955" duration="22000" />
+      <workItem from="1755613549008" duration="2069000" />
+      <workItem from="1755648699490" duration="607000" />
+      <workItem from="1756787141015" duration="532000" />
+      <workItem from="1756907661854" duration="410000" />
+      <workItem from="1756908555241" duration="3172000" />
+      <workItem from="1757418933263" duration="1510000" />
+    </task>
+    <task id="LOCAL-00004" summary="refactor: update import paths to include file extensions and rename components for consistency">
+      <option name="closed" value="true" />
+      <created>1749735535923</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1749735535923</updated>
+    </task>
+    <task id="LOCAL-00005" summary="refactor: reorganize component structure and update import paths for consistency">
+      <option name="closed" value="true" />
+      <created>1749740714696</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1749740714696</updated>
+    </task>
+    <task id="LOCAL-00006" summary="refactor: update import paths to remove file extensions and streamline exports">
+      <option name="closed" value="true" />
+      <created>1749740797320</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1749740797320</updated>
+    </task>
+    <task id="LOCAL-00007" summary="refactor: update import paths to streamline type imports and adjust styles file extension">
+      <option name="closed" value="true" />
+      <created>1749740847878</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1749740847878</updated>
+    </task>
+    <task id="LOCAL-00008" summary="refactor: streamline type imports and adjust styles file extension">
+      <option name="closed" value="true" />
+      <created>1749740873091</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1749740873091</updated>
+    </task>
+    <task id="LOCAL-00009" summary="refactor: standardize handshake path casing in socket configuration">
+      <option name="closed" value="true" />
+      <created>1749740908747</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1749740908747</updated>
+    </task>
+    <task id="LOCAL-00010" summary="refactor: rename GameCustomMatchingPage to CustomMatchingPage and update related imports">
+      <option name="closed" value="true" />
+      <created>1749745724360</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1749745724360</updated>
+    </task>
+    <task id="LOCAL-00011" summary="refactor: extract roomId from searchParams and update dependencies in useEffect">
+      <option name="closed" value="true" />
+      <created>1749746771217</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1749746771217</updated>
+    </task>
+    <task id="LOCAL-00012" summary="refactor: enhance socket connection management with connect and disconnect hooks">
+      <option name="closed" value="true" />
+      <created>1749748648931</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1749748648932</updated>
+    </task>
+    <task id="LOCAL-00013" summary="refactor: rename payload types for clarity and update socket event handling">
+      <option name="closed" value="true" />
+      <created>1749882853689</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1749882853689</updated>
+    </task>
+    <task id="LOCAL-00014" summary="refactor: introduce WaitingRoomPlayer type and update socket handling in waiting room">
+      <option name="closed" value="true" />
+      <created>1749919394719</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1749919394719</updated>
+    </task>
+    <task id="LOCAL-00015" summary="refactor: remove unnecessary isHost ref and derive host status from user state">
+      <option name="closed" value="true" />
+      <created>1750082916688</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1750082916688</updated>
+    </task>
+    <task id="LOCAL-00016" summary="chore: update eslint and related dependencies to version 9.29.0">
+      <option name="closed" value="true" />
+      <created>1750084668395</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1750084668395</updated>
+    </task>
+    <task id="LOCAL-00017" summary="feat: implement auto-matching functionality with socket integration">
+      <option name="closed" value="true" />
+      <created>1750089096675</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1750089096675</updated>
+    </task>
+    <task id="LOCAL-00018" summary="fix: use nullish coalescing for user avatar fallback">
+      <option name="closed" value="true" />
+      <created>1750173587278</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1750173587278</updated>
+    </task>
+    <task id="LOCAL-00019" summary="fix: replace nullish coalescing with logical OR for user avatar fallback">
+      <option name="closed" value="true" />
+      <created>1750174585153</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1750174585153</updated>
+    </task>
+    <task id="LOCAL-00020" summary="fix: remove unused roomId variable from auto-join effect dependencies">
+      <option name="closed" value="true" />
+      <created>1750174649157</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1750174649157</updated>
+    </task>
+    <task id="LOCAL-00021" summary="fix: remove searchParams from effect dependencies in index.tsx">
+      <option name="closed" value="true" />
+      <created>1750174851365</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1750174851365</updated>
+    </task>
+    <task id="LOCAL-00022" summary="fix: improve access token refresh logic and error handling">
+      <option name="closed" value="true" />
+      <created>1750575270345</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1750575270345</updated>
+    </task>
+    <task id="LOCAL-00023" summary="fix: enhance access token refresh logic and add retry mechanism">
+      <option name="closed" value="true" />
+      <created>1750576496737</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1750576496737</updated>
+    </task>
+    <task id="LOCAL-00024" summary="fix: update type for retry timer reference in useSocket">
+      <option name="closed" value="true" />
+      <created>1750578209981</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1750578209981</updated>
+    </task>
+    <task id="LOCAL-00025" summary="refactor: simplify user handling in AutoTournament component">
+      <option name="closed" value="true" />
+      <created>1751124099119</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1751124099119</updated>
+    </task>
+    <task id="LOCAL-00026" summary="refactor: simplify user handling in AutoTournament component">
+      <option name="closed" value="true" />
+      <created>1751124120524</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1751124120524</updated>
+    </task>
+    <task id="LOCAL-00027" summary="chore: remove zustand socket import and reorganize socket imports">
+      <option name="closed" value="true" />
+      <created>1751124436963</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1751124436963</updated>
+    </task>
+    <task id="LOCAL-00028" summary="chore: remove zustand from dependencies in package.json">
+      <option name="closed" value="true" />
+      <created>1751124442709</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1751124442709</updated>
+    </task>
+    <task id="LOCAL-00029" summary="chore: remove zustand from pnpm-lock.yaml">
+      <option name="closed" value="true" />
+      <created>1751124708894</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1751124708894</updated>
+    </task>
+    <task id="LOCAL-00030" summary="refactor: 리팩토링 및 컴포넌트 경로 정리, 불필요한 props 제거">
+      <option name="closed" value="true" />
+      <created>1751179324328</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1751179324328</updated>
+    </task>
+    <task id="LOCAL-00031" summary="feat: add tournament match handling and player readiness features">
+      <option name="closed" value="true" />
+      <created>1751713863810</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1751713863810</updated>
+    </task>
+    <task id="LOCAL-00032" summary="refactor: move tournament constants to a separate file for better organization">
+      <option name="closed" value="true" />
+      <created>1751720257204</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1751720257204</updated>
+    </task>
+    <task id="LOCAL-00033" summary="feat: implement tournament match result handling and update player readiness logic">
+      <option name="closed" value="true" />
+      <created>1751721670385</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1751721670385</updated>
+    </task>
+    <task id="LOCAL-00034" summary="feat: integrate user data retrieval for current user in tournament match component">
+      <option name="closed" value="true" />
+      <created>1751721842349</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1751721842349</updated>
+    </task>
+    <task id="LOCAL-00035" summary="feat: implement FinalMatch and IntermediateMatch components for tournament display">
+      <option name="closed" value="true" />
+      <created>1751725709515</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1751725709515</updated>
+    </task>
+    <task id="LOCAL-00036" summary="refactor: reorganize game routing and rename components for game lobby structure">
+      <option name="closed" value="true" />
+      <created>1751777764060</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1751777764060</updated>
+    </task>
+    <task id="LOCAL-00037" summary="refactor: update authentication routes and reorganize component exports">
+      <option name="closed" value="true" />
+      <created>1751778834205</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1751778834205</updated>
+    </task>
+    <task id="LOCAL-00038" summary="refactor: rename authentication route paths for consistency">
+      <option name="closed" value="true" />
+      <created>1751779042734</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1751779042734</updated>
+    </task>
+    <task id="LOCAL-00039" summary="refactor: consolidate error and success message parsing utilities">
+      <option name="closed" value="true" />
+      <created>1751779394186</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1751779394186</updated>
+    </task>
+    <task id="LOCAL-00040" summary="refactor: rename tournament-related components and update routing for consistency">
+      <option name="closed" value="true" />
+      <created>1751779624683</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1751779624683</updated>
+    </task>
+    <task id="LOCAL-00041" summary="refactor: update OAuth provider type and enhance redirect URL construction">
+      <option name="closed" value="true" />
+      <created>1751784830491</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1751784830491</updated>
+    </task>
+    <task id="LOCAL-00042" summary="refactor: improve variable naming for clarity in path selection logic">
+      <option name="closed" value="true" />
+      <created>1751784868043</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1751784868043</updated>
+    </task>
+    <task id="LOCAL-00043" summary="feat: add MatchCreatedEvent type and update socket event handling">
+      <option name="closed" value="true" />
+      <created>1754661692642</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1754661692642</updated>
+    </task>
+    <task id="LOCAL-00044" summary="feat: implement main game page with socket handling and game state management">
+      <option name="closed" value="true" />
+      <created>1754994559718</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1754994559718</updated>
+    </task>
+    <task id="LOCAL-00045" summary="feat: enhance game page with server name and tournament ID handling in socket connection">
+      <option name="closed" value="true" />
+      <created>1754999139177</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1754999139177</updated>
+    </task>
+    <task id="LOCAL-00046" summary="feat: update socket connection handling to include server name and improve token management">
+      <option name="closed" value="true" />
+      <created>1755172333850</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1755172333850</updated>
+    </task>
+    <task id="LOCAL-00047" summary="feat: remove redundant comments in useSocket for clarity and maintainability">
+      <option name="closed" value="true" />
+      <created>1755172369669</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1755172369669</updated>
+    </task>
+    <task id="LOCAL-00048" summary="feat: add PlayerConnectedResponse type and handle player connection events in GamePage">
+      <option name="closed" value="true" />
+      <created>1755614037022</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1755614037022</updated>
+    </task>
+    <task id="LOCAL-00049" summary="feat: remove error handling for missing parameters in GamePage">
+      <option name="closed" value="true" />
+      <created>1755614050521</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1755614050521</updated>
+    </task>
+    <task id="LOCAL-00050" summary="feat: enhance GamePage with improved socket handling, player status updates, and UI elements">
+      <option name="closed" value="true" />
+      <created>1755614956852</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1755614956852</updated>
+    </task>
+    <task id="LOCAL-00051" summary="feat: add spacing for improved readability in index.tsx">
+      <option name="closed" value="true" />
+      <created>1755615494660</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1755615494660</updated>
+    </task>
+    <task id="LOCAL-00052" summary="feat(router): implement TanStack Router setup and initial routes">
+      <option name="closed" value="true" />
+      <created>1756912051828</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1756912051829</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="refactor: 리팩토링 및 컴포넌트 경로 정리, 불필요한 props 제거" />
+    <MESSAGE value="feat: add tournament match handling and player readiness features" />
+    <MESSAGE value="refactor: move tournament constants to a separate file for better organization" />
+    <MESSAGE value="feat: implement tournament match result handling and update player readiness logic" />
+    <MESSAGE value="feat: integrate user data retrieval for current user in tournament match component" />
+    <MESSAGE value="feat: implement tournament match components for leaf, intermediate, and final matches" />
+    <MESSAGE value="feat: implement FinalMatch and IntermediateMatch components for tournament display" />
+    <MESSAGE value="refactor: reorganize game routing and rename components for game lobby structure" />
+    <MESSAGE value="refactor: update authentication routes and reorganize component exports" />
+    <MESSAGE value="refactor: rename authentication route paths for consistency" />
+    <MESSAGE value="refactor: consolidate error and success message parsing utilities" />
+    <MESSAGE value="refactor: rename tournament-related components and update routing for consistency" />
+    <MESSAGE value="refactor: update OAuth provider type and enhance redirect URL construction" />
+    <MESSAGE value="refactor: improve variable naming for clarity in path selection logic" />
+    <MESSAGE value="feat(game): implement game page with Babylon.js and socket integration" />
+    <MESSAGE value="feat: add MatchCreatedEvent type and update socket event handling" />
+    <MESSAGE value="feat: implement main game page with socket handling and game state management" />
+    <MESSAGE value="feat: enhance game page with server name and tournament ID handling in socket connection" />
+    <MESSAGE value="feat: update socket connection handling to include server name and improve token management" />
+    <MESSAGE value="feat: remove redundant comments in useSocket for clarity and maintainability" />
+    <MESSAGE value="feat: add PlayerConnectedResponse type and handle player connection events in GamePage" />
+    <MESSAGE value="feat: remove error handling for missing parameters in GamePage" />
+    <MESSAGE value="feat: enhance GamePage with improved socket handling, player status updates, and UI elements" />
+    <MESSAGE value="feat: add spacing for improved readability in index.tsx" />
+    <MESSAGE value="feat(router): implement TanStack Router setup and initial routes" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(router): implement TanStack Router setup and initial routes" />
+  </component>
+</project>
