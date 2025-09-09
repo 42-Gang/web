@@ -1,5 +1,9 @@
+import '~/styles/globals.css';
+
 import type { Metadata } from 'next';
 import type { PropsWithChildren } from 'react';
+import { twMerge } from 'tailwind-merge';
+import { DungGeunMo } from './_fonts';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -9,7 +13,9 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: PropsWithChildren) => {
   return (
     <html lang="ko">
-      <body className="antialiased">{children}</body>
+      <body className={twMerge('center size-full antialiased', DungGeunMo.className)}>
+        <div className="h-[600px] w-[800px] bg-black">{children}</div>
+      </body>
     </html>
   );
 };
