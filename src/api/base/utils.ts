@@ -1,5 +1,5 @@
 import { HTTPError } from 'ky';
-import type { HttpResponse } from './types';
+import type { HttpResponse } from '~/api';
 
 export const extractErrorData = async <T = undefined>(
   error: unknown,
