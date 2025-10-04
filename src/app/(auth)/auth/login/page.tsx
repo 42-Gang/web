@@ -1,20 +1,14 @@
-import { BrandFooter, BrandTitle, MenuSelector, MenuSelectorBack } from '~/components/ui';
+import { MenuSelector, MenuSelectorBack } from '~/components/ui';
 import { routes } from '~/constants/routes';
 import { OAuthLoginButton } from '../_components/oauth-login-button';
 
 const Page = () => {
   return (
-    <div className="column-between h-full">
-      <BrandTitle />
-
-      <MenuSelector>
-        <OAuthLoginButton provider="GOOGLE" type="SIGNIN" />
-        <MenuSelector.Link href={`/${routes.register}`}>SIGN IN WITH EMAIL</MenuSelector.Link>
-        <MenuSelectorBack />
-      </MenuSelector>
-
-      <BrandFooter />
-    </div>
+    <MenuSelector>
+      <OAuthLoginButton provider="GOOGLE" type="SIGNIN" />
+      <MenuSelector.Link href={`/${routes.register}`}>SIGN IN WITH EMAIL</MenuSelector.Link>
+      <MenuSelectorBack />
+    </MenuSelector>
   );
 };
 

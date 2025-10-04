@@ -1,5 +1,4 @@
-import { BrandFooter, BrandTitle } from '~/components/ui';
-import { WaitingText } from './waiting-text';
+import { CallbackController } from './callback-controller';
 
 interface Props {
   searchParams: Promise<{ code: string; state: string }>;
@@ -8,15 +7,7 @@ interface Props {
 const Page = async ({ searchParams }: Props) => {
   const { code, state } = await searchParams;
 
-  return (
-    <div className="column-between h-full">
-      <BrandTitle />
-
-      <WaitingText />
-
-      <BrandFooter />
-    </div>
-  );
+  return <CallbackController code={code} state={state} />;
 };
 
 export default Page;
