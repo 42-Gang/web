@@ -1,7 +1,6 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
-
-import { queryKeys } from '@/api/queryKey';
-import { TournamentRoundType } from '@/api/types/game';
+import type { TournamentRoundType } from '~/api';
+import { queryKeys } from '../queryKey';
 
 export const useTournamentHistory = (type: TournamentRoundType) =>
   useQuery(queryKeys.games.tournamentHistory(type));

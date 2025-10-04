@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-
-import { fetcher } from '@/api/fetcher';
-import { queryKeys } from '@/api/queryKey';
+import { fetcher } from '../base';
+import { queryKeys } from '../queryKey';
 
 const deleteAvatar = () => fetcher.delete('v1/users/avatar', { json: {} });
 

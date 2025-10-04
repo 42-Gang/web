@@ -1,7 +1,6 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
-
-import { queryKeys } from '@/api/queryKey';
-import { UserProfilePayload } from '@/api/types';
+import type { UserProfilePayload } from '~/api';
+import { queryKeys } from '../queryKey';
 
 export const useUserProfile = (payload: UserProfilePayload) =>
   useQuery(queryKeys.users.profile(payload));

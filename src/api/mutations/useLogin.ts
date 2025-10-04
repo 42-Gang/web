@@ -1,7 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-
-import { fetcher } from '@/api';
-import { HttpResponse } from '@/api/types';
+import type { HttpResponse } from '~/api';
+import { fetcher } from '../base';
 
 type Request = {
   email: string;

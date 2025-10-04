@@ -1,20 +1,18 @@
 import { createQueryKeys, mergeQueryKeys } from '@lukemorales/query-key-factory';
-
-import {
-  HttpResponse,
+import { fetcher } from './base';
+import type {
+  ChatDmRoomInfo,
+  ChatHistory,
   FriendList,
-  UserInfo,
+  FriendRequestUserList,
+  HttpResponse,
   TournamentGameList,
   TournamentRoundType,
-  UsersSearchPayload,
+  UserInfo,
   UserList,
-  FriendRequestUserList,
-  ChatHistory,
-  ChatDmRoomInfo,
   UserProfilePayload,
-} from '@/api/types';
-
-import { fetcher } from './fetcher';
+  UsersSearchPayload,
+} from './types';
 
 const userQueryKeys = createQueryKeys('users', {
   me: {
@@ -33,7 +31,9 @@ const userQueryKeys = createQueryKeys('users', {
       }
 
       const searchParams = new URLSearchParams();
-      payload.status.forEach((status) => searchParams.append('status', status));
+      payload.status.forEach(status => {
+        searchParams.append('status', status);
+      });
       searchParams.append('exceptMe', String(payload.exceptMe));
 
       return fetcher.get<HttpResponse<UserList>>(`v1/users/search/${payload.nickname}`, {
@@ -51,11 +51,11 @@ const friendsQueryKeys = createQueryKeys('friends', {
   me: {
     queryKey: null,
     queryFn: () =>
-      fetcher.get<HttpResponse<FriendList>>(`v1/friends/me?status=ACCEPTED&status=BLOCKED`),
+      fetcher.get<HttpResponse<FriendList>>('v1/friends/me?status=ACCEPTED&status=BLOCKED'),
   },
   requests: {
     queryKey: null,
-    queryFn: () => fetcher.get<HttpResponse<FriendRequestUserList>>(`v1/friends/requests`),
+    queryFn: () => fetcher.get<HttpResponse<FriendRequestUserList>>('v1/friends/requests'),
   },
 });
 

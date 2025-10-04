@@ -1,7 +1,6 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
-
-import { queryKeys } from '@/api/queryKey';
-import { UsersSearchPayload } from '@/api/types';
+import type { UsersSearchPayload } from '~/api';
+import { queryKeys } from '../queryKey';
 
 export const useUsersSearch = (payload: UsersSearchPayload) =>
   useQuery(queryKeys.users.search(payload));

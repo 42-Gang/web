@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-
-import { fetcher } from '@/api';
-import { queryKeys } from '@/api/queryKey';
-import { HttpResponse } from '@/api/types';
+import type { HttpResponse } from '~/api';
+import { fetcher } from '../base';
+import { queryKeys } from '../queryKey';
 
 type Request = {
   id: number;
