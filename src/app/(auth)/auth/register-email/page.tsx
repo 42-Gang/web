@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { type FormEvent, useState } from 'react';
-import { useRegister } from '~/api';
+import { useMailVerification, useRegister } from '~/api';
 import { CloseButton, CTAButton } from '~/components/ui';
 import { routes } from '~/constants/routes';
 import { InputForm } from '../_components/input-form';
@@ -15,15 +15,25 @@ const Page = () => {
   const [nickname, setNickname] = useState<string>('');
   const router = useRouter();
 
-  const { mutateAsync } = useRegister();
+  const { mutateAsync: register } = useRegister();
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await mutateAsync({ email, password, nickname, mailVerificationCode });
+      await register({ email, password, nickname, mailVerificationCode });
       router.replace(`/${routes.auth}`);
     } catch (error) {
-      console.error('[auth/register-email]', error);
+      console.error('[auth/register-email] register', error);
+    }
+  };
+
+  const { mutateAsync: varification } = useMailVerification();
+
+  const handleVarify = async () => {
+    try {
+      await varification({ email });
+    } catch (error) {
+      console.error('[auth/register-email] varification', error);
     }
   };
 
@@ -40,6 +50,9 @@ const Page = () => {
               onChange={e => setEmail(e.target.value)}
               autoComplete="off"
             />
+            <CTAButton className="w-fit" type="button" size="sm" onClick={handleVarify}>
+              VARIFY
+            </CTAButton>
           </InputForm>
           <InputForm>
             <InputForm.Label className="min-w-[200px]">VERIFY CODE :&nbsp;</InputForm.Label>
