@@ -9,6 +9,7 @@ export type RegisterRequest = {
   mailVerificationCode: string;
 };
 
-const postRegister = (payload: RegisterRequest) => fetcher.post<HttpResponse>('v1/auth', { json: payload });
+const postRegister = (payload: RegisterRequest) =>
+  fetcher.post<HttpResponse>('v1/auth', { json: payload });
 
 export const useRegister = () => useMutation({ mutationFn: postRegister });
