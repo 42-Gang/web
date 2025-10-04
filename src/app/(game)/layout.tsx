@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 const RootLayout = ({ children }: PropsWithChildren) => {
-  return { children };
+  return children;
 };
 
 export default RootLayout;
