@@ -1,12 +1,8 @@
-import { Mutex } from 'async-mutex';
 import ky, { type BeforeRetryState, HTTPError, type Options, type ResponsePromise } from 'ky';
-import type { HttpResponse } from '~/api';
-import { env } from '~/constants/variables';
+import { getAccessToken, refreshToken, tokenRefreshMutex } from './token';
 
 const API_URL = typeof window === 'undefined' ? 'https://pingpong.n-e.kr/api' : '/api';
 const IS_BROWSER = typeof window !== 'undefined';
-
-const tokenRefreshMutex = new Mutex();
 
 const defaultOption: Options = {
   retry: {
@@ -54,7 +50,7 @@ export const instance = ky.create({
   hooks: {
     beforeRequest: [
       request => {
-        const accessToken = window.localStorage.getItem(env.access_token);
+        const accessToken = getAccessToken();
         if (accessToken) request.headers.set('Authorization', `Bearer ${accessToken}`);
       },
     ],
@@ -85,24 +81,4 @@ export const fetcher = {
     resultify<T>(instance.patch(pathname, options)),
   delete: <T>(pathname: string, options?: Options) =>
     resultify<T>(instance.delete(pathname, options)),
-};
-
-const refreshToken = async () => {
-  const client = ky.create({
-    prefixUrl: API_URL,
-    headers: { 'Content-Type': 'application/json' },
-    retry: 0,
-    timeout: 30000,
-    credentials: 'include',
-  });
-
-  const response = await client
-    .post<HttpResponse<{ accessToken: string }>>('v1/auth/refresh-token')
-    .json();
-
-  if (response.status === 'SUCCESS' && response.data?.accessToken) {
-    window.localStorage.setItem(env.access_token, response.data.accessToken);
-  } else {
-    throw new Error('토큰 갱신 실패: 유효하지 않은 응답');
-  }
 };
