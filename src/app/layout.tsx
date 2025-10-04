@@ -16,7 +16,7 @@ const RootLayout = ({ children }: PropsWithChildren) => {
     <html lang="ko">
       <body className={twMerge('center size-full antialiased', DungGeunMo.className)}>
         <QueryClientProvider>
-          <div className="h-[600px] w-[800px] bg-black">{children}</div>
+          <div className="relative h-[600px] w-[800px] bg-black">{children}</div>
         </QueryClientProvider>
       </body>
     </html>

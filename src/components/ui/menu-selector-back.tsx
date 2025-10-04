@@ -6,5 +6,9 @@ import { MenuSelector } from './menu-selector';
 export const MenuSelectorBack = () => {
   const router = useRouter();
 
-  return <MenuSelector.Button onClick={() => router.back()}>GO BACK</MenuSelector.Button>;
+  return (
+    <MenuSelector.Button type="button" onClick={() => router.back()}>
+      GO BACK
+    </MenuSelector.Button>
+  );
 };

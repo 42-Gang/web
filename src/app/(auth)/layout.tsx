@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from 'react';
-import { BrandFooter, BrandTitle } from '~/components/ui';
+import { BrandTitle } from '~/components/ui';
 
 const RootLayout = ({ children }: PropsWithChildren) => {
   return (
@@ -7,8 +7,6 @@ const RootLayout = ({ children }: PropsWithChildren) => {
       <BrandTitle />
 
       {children}
-
-      <BrandFooter />
     </div>
   );
 };

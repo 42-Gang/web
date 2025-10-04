@@ -14,7 +14,7 @@ export const OAuthLoginButton = ({ provider = 'GOOGLE', type }: Props) => {
     const baseURI = env.api_base;
     const redirectURI = `${window.location.origin}/${routes.oauth_callback}`;
     console.log(baseURI, redirectURI);
-    window.location.href = `${baseURI}/v1/oauth/${provider}?redirectUri=${redirectURI}&state=${type}`;
+    window.location.href = `${baseURI}/api/v1/oauth/${provider}?redirectUri=${redirectURI}&state=${type}`;
   };
 
   return (
