@@ -6,14 +6,22 @@ import { QuinqueFive } from '~/app/_fonts';
 interface MenuSelectorRootProps extends ComponentProps<'div'> {}
 
 const MenuSelectorRoot = ({ className, ...props }: MenuSelectorRootProps) => {
-  return <div className={twMerge('column gap-2', QuinqueFive.className, className)} {...props} />;
+  return <div className={twMerge('column gap-3', QuinqueFive.className, className)} {...props} />;
 };
 
 interface MenuSelectorLinkProps extends ComponentProps<typeof Link> {}
 
 const MenuSelectorLink = ({ className, ...props }: MenuSelectorLinkProps) => {
   return (
-    <Link className={twMerge('-tracking-[0.1rem] text-white text-xl', className)} {...props} />
+    <Link
+      className={twMerge(
+        '-tracking-[0.1rem] relative text-white text-xl',
+        'before:-left-8 before:-translate-y-1/2 before:absolute before:top-1/2 before:text-2xl before:opacity-0 before:transition-all before:duration-200 before:content-["▶"]',
+        'before:translate-x-[-4px] hover:before:translate-x-0 hover:before:opacity-100',
+        className,
+      )}
+      {...props}
+    />
   );
 };
 
