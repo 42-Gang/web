@@ -8,8 +8,8 @@ const Page = () => {
       <BrandTitle />
 
       <MenuSelector>
-        <OAuthLoginButton provider="GOOGLE" type="SIGNIN" />
-        <MenuSelector.Link href={`/${routes.register}`}>SIGN IN WITH EMAIL</MenuSelector.Link>
+        <OAuthLoginButton provider="GOOGLE" type="SIGNUP" />
+        <MenuSelector.Link href={`/${routes.register}`}>SIGN UP WITH EMAIL</MenuSelector.Link>
         <MenuSelectorBack />
       </MenuSelector>
 
