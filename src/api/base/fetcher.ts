@@ -1,6 +1,7 @@
 import { Mutex } from 'async-mutex';
 import ky, { type BeforeRetryState, HTTPError, type Options, type ResponsePromise } from 'ky';
-import { type HttpResponse, LOCAL_STORAGE } from '~/api';
+import type { HttpResponse } from '~/api';
+import { env } from '~/constants/variables';
 
 const API_URL = typeof window === 'undefined' ? 'https://pingpong.n-e.kr/api' : '/api';
 const IS_BROWSER = typeof window !== 'undefined';
@@ -53,7 +54,7 @@ export const instance = ky.create({
   hooks: {
     beforeRequest: [
       request => {
-        const accessToken = window.localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN);
+        const accessToken = window.localStorage.getItem(env.access_token);
         if (accessToken) request.headers.set('Authorization', `Bearer ${accessToken}`);
       },
     ],
@@ -100,7 +101,7 @@ const refreshToken = async () => {
     .json();
 
   if (response.status === 'SUCCESS' && response.data?.accessToken) {
-    window.localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, response.data.accessToken);
+    window.localStorage.setItem(env.access_token, response.data.accessToken);
   } else {
     throw new Error('토큰 갱신 실패: 유효하지 않은 응답');
   }

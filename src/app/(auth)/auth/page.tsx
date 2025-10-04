@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { BrandFooter, BrandTitle, MenuSelector } from '~/components/ui';
 import { routes } from '~/constants/routes';
 
