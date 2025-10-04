@@ -52,7 +52,8 @@
         "noBannedTypes": "off",
         "noForEach": "off",
         "noUselessFragments": "warn",
-        "useLiteralKeys": "off"
+        "useLiteralKeys": "off",
+        "noImportantStyles": "off"
       },
       "a11y": {
         "noLabelWithoutControl": "off",
@@ -83,14 +84,7 @@
   },
   "overrides": [
     {
-      "includes": ["**/*.ts", "**/*.tsx"],
-      "linter": {
-        "rules": {
-          "style": {
-            "noNonNullAssertion": "off"
-          }
-        }
-      }
+      "includes": ["**/*.ts", "**/*.tsx"]
     },
     {
       "includes": ["**/*.tsx", "**/*.jsx"],
@@ -98,9 +92,6 @@
         "rules": {
           "suspicious": {
             "noArrayIndexKey": "error"
-          },
-          "style": {
-            "noParameterAssign": "off"
           }
         }
       }
