@@ -1,4 +1,4 @@
-import { BrandFooter, BrandTitle, MenuSelector } from '~/components/ui';
+import { BrandFooter, BrandTitle, MenuSelector, MenuSelectorBack } from '~/components/ui';
 import { routes } from '~/constants/routes';
 
 const Page = () => {
@@ -9,7 +9,7 @@ const Page = () => {
       <MenuSelector>
         <MenuSelector.Link href={`/${routes.login}`}>SIGN IN WITH GOOGLE</MenuSelector.Link>
         <MenuSelector.Link href={`/${routes.register}`}>SIGN IN WITH EMAIL</MenuSelector.Link>
-        <MenuSelector.Button>GO BACK</MenuSelector.Button>
+        <MenuSelectorBack />
       </MenuSelector>
 
       <BrandFooter />
