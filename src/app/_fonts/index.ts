@@ -13,3 +13,10 @@ export const SuperPixel = localFont({
   weight: '45 920',
   preload: true,
 });
+
+export const QuinqueFive = localFont({
+  src: './QuinqueFive.woff2',
+  display: 'swap',
+  weight: '45 920',
+  preload: true,
+});
