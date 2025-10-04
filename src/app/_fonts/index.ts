@@ -1,3 +1,4 @@
+import { Tiny5 } from 'next/font/google';
 import localFont from 'next/font/local';
 
 export const DungGeunMo = localFont({
@@ -18,5 +19,12 @@ export const QuinqueFive = localFont({
   src: './QuinqueFive.woff2',
   display: 'swap',
   weight: '45 920',
+  preload: true,
+});
+
+export const Tiny = Tiny5({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: '400',
   preload: true,
 });
