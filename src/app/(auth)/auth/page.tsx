@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { BrandFooter, BrandTitle } from '~/components/ui';
+import { BrandFooter, BrandTitle, MenuSelector } from '~/components/ui';
 import { routes } from '~/constants/routes';
 
 const Page = () => {
@@ -7,14 +7,10 @@ const Page = () => {
     <div className="column-between h-full">
       <BrandTitle />
 
-      <div className="column">
-        <Link className="text-white" href={`/${routes.login}`}>
-          SIGN IN
-        </Link>
-        <Link className="text-white" href={`/${routes.register}`}>
-          SIGN UP
-        </Link>
-      </div>
+      <MenuSelector>
+        <MenuSelector.Link href={`/${routes.login}`}>SIGN IN</MenuSelector.Link>
+        <MenuSelector.Link href={`/${routes.register}`}>SIGN UP</MenuSelector.Link>
+      </MenuSelector>
 
       <BrandFooter />
     </div>
