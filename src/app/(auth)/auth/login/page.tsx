@@ -6,7 +6,7 @@ const Page = () => {
   return (
     <MenuSelector>
       <OAuthLoginButton provider="GOOGLE" type="SIGNIN" />
-      <MenuSelector.Link href={`/${routes.register}`}>SIGN IN WITH EMAIL</MenuSelector.Link>
+      <MenuSelector.Link href={`/${routes.register_email}`}>SIGN IN WITH EMAIL</MenuSelector.Link>
       <MenuSelectorBack />
     </MenuSelector>
   );
