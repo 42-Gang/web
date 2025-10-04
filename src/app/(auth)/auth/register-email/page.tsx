@@ -2,7 +2,9 @@
 
 import { useRouter } from 'next/navigation';
 import { type FormEvent, useState } from 'react';
+import { toast } from 'sonner';
 import { useMailVerification, useRegister } from '~/api';
+import { extractErrorData } from '~/api/base';
 import { CloseButton, CTAButton } from '~/components/ui';
 import { routes } from '~/constants/routes';
 import { InputForm } from '../_components/input-form';
@@ -24,6 +26,8 @@ const Page = () => {
       router.replace(`/${routes.auth}`);
     } catch (error) {
       console.error('[auth/register-email] register', error);
+      const data = await extractErrorData(error);
+      toast.error(data?.message || 'Error occurred during registration.');
     }
   };
 
@@ -31,9 +35,12 @@ const Page = () => {
 
   const handleVarify = async () => {
     try {
-      await varification({ email });
+      const { message } = await varification({ email });
+      toast.success(message);
     } catch (error) {
       console.error('[auth/register-email] varification', error);
+      const data = await extractErrorData(error);
+      toast.error(data?.message || 'Error occurred during email verification.');
     }
   };
 
@@ -92,7 +99,7 @@ const Page = () => {
           </InputForm>
         </div>
 
-        <CTAButton className="w-fit" type="submit">
+        <CTAButton className="w-fit self-center" type="submit">
           REGISTER
         </CTAButton>
       </form>

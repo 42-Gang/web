@@ -2,6 +2,7 @@ import '~/styles/globals.css';
 
 import type { Metadata } from 'next';
 import type { PropsWithChildren } from 'react';
+import { Toaster } from 'sonner';
 import { twMerge } from 'tailwind-merge';
 import { QueryClientProvider } from '~/app/QueryClientProvider';
 import { DungGeunMo } from './_fonts';
@@ -14,9 +15,10 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: PropsWithChildren) => {
   return (
     <html lang="ko">
-      <body className={twMerge('center size-full antialiased', DungGeunMo.className)}>
+      <body className={twMerge('antialiased', DungGeunMo.className)}>
         <QueryClientProvider>
-          <div className="relative h-[600px] w-[800px] bg-black">{children}</div>
+          {children}
+          <Toaster position="top-right" toastOptions={{ classNames: { toast: 'pixel-toast' } }} />
         </QueryClientProvider>
       </body>
     </html>

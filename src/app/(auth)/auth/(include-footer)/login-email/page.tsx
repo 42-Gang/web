@@ -2,7 +2,9 @@
 
 import { useRouter } from 'next/navigation';
 import { type FormEvent, useState } from 'react';
+import { toast } from 'sonner';
 import { useLogin } from '~/api';
+import { extractErrorData } from '~/api/base';
 import { MenuSelector, MenuSelectorBack } from '~/components/ui';
 import { env } from '~/constants/variables';
 import { InputForm } from '../../_components/input-form';
@@ -23,6 +25,8 @@ const Page = () => {
       router.replace('/');
     } catch (error) {
       console.error('[auth/login-email]', error);
+      const data = await extractErrorData(error);
+      toast.error(data?.message || 'Error occurred during registration.');
     }
   };
 
