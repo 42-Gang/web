@@ -34,7 +34,7 @@ export const isAuthError = (errorOrReason: unknown): boolean => {
     lowerMessage.includes('jwt') ||
     lowerMessage.includes('forbidden') ||
     message.includes('권한') ||
-    message.includes('인증')
+    message.includes('토큰')
   );
 };
 

@@ -7,8 +7,13 @@ export const routes = {
   register_email: 'auth/register-email',
   oauth_callback: 'auth/oauth-callback',
 
-  lobby: 'lobby',
   history: 'history',
+
   friend: 'friend',
+  friend_chatroom: 'friend/chatroom',
+
+  lobby: 'lobby',
+  game_lobby_custom_matching: 'lobby/custom',
+
   profile: 'profile',
 };

@@ -1,4 +1,4 @@
-import { type UseSocketOptions, useSocket } from '~/socket';
+import { type UseSocketOptions, useSocket } from './useSocket';
 
 export const useChatSocket = (options?: Partial<UseSocketOptions>) => {
   return useSocket({
