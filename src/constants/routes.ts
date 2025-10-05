@@ -13,7 +13,7 @@ export const routes = {
   friend_chatroom: 'friend/chatroom',
 
   lobby: 'lobby',
-  game_lobby_custom_matching: 'lobby/custom',
+  game_lobby_custom: 'lobby/custom',
 
   profile: 'profile',
 };

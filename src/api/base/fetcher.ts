@@ -1,5 +1,5 @@
 import ky, { type BeforeRetryState, HTTPError, type Options, type ResponsePromise } from 'ky';
-import { getAccessToken, refreshToken, tokenRefreshMutex } from './token';
+import { getAccessToken, refreshTokenWithMutex } from './token';
 
 const API_URL = typeof window === 'undefined' ? 'https://pingpong.n-e.kr/api' : '/api';
 const IS_BROWSER = typeof window !== 'undefined';
@@ -14,33 +14,37 @@ const defaultOption: Options = {
   credentials: 'include',
 };
 
+const handleAuthFailure = (reason: string) => {
+  console.warn(`[fetcher] Auth failure: ${reason}`);
+
+  if (IS_BROWSER) {
+    alert('로그인이 만료되었습니다. 다시 로그인해주세요.');
+    window.location.href = '/auth';
+  }
+};
+
 const handleTokenRefresh = async ({ error, request }: BeforeRetryState) => {
   if (!IS_BROWSER) return ky.stop;
   if (!(error instanceof HTTPError) || error.response.status !== 401) return ky.stop;
   if (request.url.includes('logout')) return ky.stop;
 
-  try {
-    if (tokenRefreshMutex.isLocked()) {
-      await tokenRefreshMutex.waitForUnlock();
-      return;
-    }
+  const oldToken = request.headers.get('Authorization')?.replace('Bearer ', '');
+  const currentToken = getAccessToken();
 
-    await tokenRefreshMutex.runExclusive(async () => await refreshToken());
+  if (oldToken !== currentToken && currentToken) {
+    console.log('[fetcher] Token already refreshed by another request, retrying');
+    return;
+  }
+
+  try {
+    await refreshTokenWithMutex({
+      onFailure: () => handleAuthFailure('토큰 갱신 실패'),
+    });
 
     return;
   } catch (refreshError) {
-    console.warn('[fetcher.ts] Token refresh failed:', refreshError);
-    handleAuthFailure('토큰 갱신 실패');
+    console.warn('[fetcher] Token refresh failed, stopping retry:', refreshError);
     return ky.stop;
-  }
-};
-
-const handleAuthFailure = (reason: string) => {
-  console.warn(`[fetcher.ts] Auth failure: ${reason}`);
-
-  if (IS_BROWSER) {
-    alert('로그인이 만료되었습니다. 다시 로그인해주세요.');
-    window.location.href = '/auth';
   }
 };
 

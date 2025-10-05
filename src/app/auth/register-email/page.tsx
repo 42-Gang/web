@@ -26,7 +26,7 @@ const Page = () => {
       await registerMutation(data);
       router.replace(`/${routes.auth}`);
     } catch (error) {
-      console.error('[auth/register-email] register', error);
+      console.error('[auth/register-email] Registration failed:', error);
       const errorData = await extractErrorData(error);
       toast.error(errorData?.message || 'Error occurred during registration.');
     }
@@ -50,7 +50,7 @@ const Page = () => {
       const { message } = await verification({ email: emailValue });
       toast.success(message);
     } catch (error) {
-      console.error('[auth/register-email] verification', error);
+      console.error('[auth/register-email] Email verification failed:', error);
       const errorData = await extractErrorData(error);
       toast.error(errorData?.message || 'Error occurred during email verification.');
     }

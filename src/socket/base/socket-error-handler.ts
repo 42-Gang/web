@@ -1,5 +1,5 @@
 import type { Socket } from 'socket.io-client';
-import { getAccessToken, refreshToken, tokenRefreshMutex } from '~/api/base/token';
+import { getAccessToken, refreshTokenWithMutex } from '~/api/base/token';
 import type { ClientToServerEvents, ServerToClientEvents } from './socket-events';
 
 type SocketInstance = Socket<ServerToClientEvents, ClientToServerEvents>;
@@ -47,33 +47,28 @@ export const handleTokenRefreshAndReconnect = async (
     return;
   }
 
-  console.log('[socket-error-handler] Attempting token refresh...');
+  console.log('[socket-error-handler] Attempting token refresh');
 
   try {
-    if (tokenRefreshMutex.isLocked()) {
-      console.log('[socket-error-handler] Token refresh already in progress, waiting...');
-      await tokenRefreshMutex.waitForUnlock();
-    } else {
-      await tokenRefreshMutex.runExclusive(async () => {
-        console.log('[socket-error-handler] Refreshing token...');
-        await refreshToken();
-        console.log('[socket-error-handler] Token refreshed successfully');
-      });
-    }
+    const result = await refreshTokenWithMutex({
+      onFailure: error => {
+        console.error('[socket-error-handler] Token refresh failed:', error);
+        socket.disconnect();
+      },
+    });
 
-    const newToken = getAccessToken();
-    if (newToken) {
+    if (result.success && result.token) {
       if (socket.io.opts.query) {
-        (socket.io.opts.query as Record<string, string>).token = newToken;
+        (socket.io.opts.query as Record<string, string>).token = result.token;
       }
-      console.log('[socket-error-handler] Reconnecting with new token...');
+      console.log('[socket-error-handler] Reconnecting with new token');
       socket.connect();
     } else {
       console.error('[socket-error-handler] No token available after refresh');
+      socket.disconnect();
     }
   } catch (refreshError) {
-    console.error('[socket-error-handler] Token refresh failed:', refreshError);
-    socket.disconnect();
+    console.error('[socket-error-handler] Token refresh exception:', refreshError);
   }
 };
 
@@ -95,7 +90,7 @@ export const setupAuthErrorHandlers = (socket: SocketInstance, options: SocketOp
   });
 
   socket.io.on('reconnect_attempt', () => {
-    console.log('[socket-error-handler] Reconnect attempt...');
+    console.log('[socket-error-handler] Reconnect attempt');
     const newToken = getAccessToken();
     if (newToken && socket.io.opts.query) {
       (socket.io.opts.query as Record<string, string>).token = newToken;

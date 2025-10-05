@@ -141,7 +141,7 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
     if (socket?.connected) {
       socket.emit(event as string, data);
     } else {
-      console.warn('[useSocket] Cannot emit: socket not connected');
+      console.warn('[use-socket] Cannot emit: socket not connected');
     }
   };
 
@@ -150,7 +150,7 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
     handler: ServerToClientEvents[K],
   ): (() => void) => {
     if (!socket) {
-      console.warn('[useSocket] Cannot listen: socket not initialized');
+      console.warn('[use-socket] Cannot listen: socket not initialized');
       return () => {};
     }
 

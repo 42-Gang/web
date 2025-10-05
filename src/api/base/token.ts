@@ -32,3 +32,41 @@ export const refreshToken = async () => {
     throw new Error('토큰 갱신 실패: 유효하지 않은 응답');
   }
 };
+
+export interface TokenRefreshResult {
+  success: boolean;
+  token: string | null;
+}
+
+export const refreshTokenWithMutex = async (options?: {
+  onFailure?: (error: Error) => void;
+}): Promise<TokenRefreshResult> => {
+  if (!IS_BROWSER) {
+    return { success: false, token: null };
+  }
+
+  try {
+    if (tokenRefreshMutex.isLocked()) {
+      console.log('[token] Token refresh already in progress, waiting');
+      await tokenRefreshMutex.waitForUnlock();
+      const token = getAccessToken();
+      return { success: !!token, token };
+    }
+
+    await tokenRefreshMutex.runExclusive(async () => {
+      console.log('[token] Refreshing token');
+      await refreshToken();
+      console.log('[token] Token refreshed successfully');
+    });
+
+    const token = getAccessToken();
+    return { success: true, token };
+  } catch (error) {
+    console.error('[token] Token refresh failed:', error);
+    const err = error instanceof Error ? error : new Error('토큰 갱신 실패');
+
+    options?.onFailure?.(err);
+
+    throw err;
+  }
+};

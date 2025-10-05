@@ -24,7 +24,7 @@ const Page = () => {
 
       router.replace('/');
     } catch (error) {
-      console.error('[auth/login-email]', error);
+      console.error('[auth/login-email] Login failed:', error);
       const data = await extractErrorData(error);
       toast.error(data?.message || 'Error occurred during registration.');
     }

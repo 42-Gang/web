@@ -21,7 +21,7 @@ export const GlobalSocket = () => {
 
   useEffect(() => {
     const friendRequest = onFriend('friend-request', async data => {
-      console.log('[GlobalSocket] Friend request received:', data);
+      console.log('[global-socket] Friend request received:', data);
 
       toast.info(`${data.fromUserNickname} sent you a friend request!`);
 
@@ -32,7 +32,7 @@ export const GlobalSocket = () => {
     });
 
     const friendAccept = onFriend('friend-accept', async data => {
-      console.log('[GlobalSocket] Friend accept received:', data);
+      console.log('[global-socket] Friend accept received:', data);
 
       toast.success(`${data.toUserNickname} accepted your friend request!`);
 
@@ -50,7 +50,7 @@ export const GlobalSocket = () => {
 
   useEffect(() => {
     const customInvite = onGameInvite('custom-invite', data => {
-      console.log('[GlobalSocket] Custom invite received:', data);
+      console.log('[global-socket] Custom invite received:', data);
 
       toast.info(`${data.hostName}님이 초대했습니다. 수락하시겠습니까?`, {
         action: {
@@ -58,10 +58,10 @@ export const GlobalSocket = () => {
           onClick: () => {
             if (data.tournamentSize && data.tournamentSize > 2) {
               router.push(
-                `/${routes.game_lobby_custom_matching}?mode=tournament&size=${data.tournamentSize}&roomId=${data.roomId}`,
+                `/${routes.game_lobby_custom}?mode=tournament&size=${data.tournamentSize}&roomId=${data.roomId}`,
               );
             } else {
-              router.push(`/${routes.game_lobby_custom_matching}?mode=1vs1&roomId=${data.roomId}`);
+              router.push(`/${routes.game_lobby_custom}?mode=1vs1&roomId=${data.roomId}`);
             }
           },
         },
@@ -80,20 +80,20 @@ export const GlobalSocket = () => {
 
   useEffect(() => {
     const message = onChat('message', data => {
-      console.log('[GlobalSocket] Chat message received:', data);
+      console.log('[global-socket] Chat message received:', data);
 
       if (!me?.data) return;
       if (data.userId === me.data.id) return;
 
-      const fidParam = searchParams.get('fid');
-      const fid = fidParam ? Number.parseInt(fidParam, 10) : null;
+      const friendIdParam = searchParams.get('friendId');
+      const friendId = friendIdParam ? Number.parseInt(friendIdParam, 10) : null;
 
-      if (fid && fid === data.userId) return;
+      if (friendId && friendId === data.userId) return;
 
       toast.info(`${data.nickname}: ${data.contents}`, {
         action: {
           label: 'Open',
-          onClick: () => router.push(`/${routes.friend_chatroom}?fid=${data.userId}`),
+          onClick: () => router.push(`/${routes.friend_chatroom}?friendId=${data.userId}`),
         },
       });
     });
