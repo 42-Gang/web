@@ -12,9 +12,18 @@ export type FriendAcceptStatus = {
   timestamp: string;
 };
 
+export type CustomInviteResponse = {
+  roomId: string;
+  hostId: number;
+  hostName: string;
+  hostAvatarUrl: string;
+  tournamentSize?: number;
+};
+
 export type ServerToClientEvents = {
   'friend-request': (data: FriendRequestStatus) => void;
   'friend-accept': (data: FriendAcceptStatus) => void;
+  'custom-invite': (data: CustomInviteResponse) => void;
 };
 
 export type ClientToServerEvents = Record<string, (data: unknown) => void>;
