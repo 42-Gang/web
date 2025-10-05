@@ -1,11 +1,13 @@
-import type { PropsWithChildren } from 'react';
+import { type PropsWithChildren, Suspense } from 'react';
 import { GlobalSocket } from './global-socket';
 
 const PrivateLayout = ({ children }: PropsWithChildren) => {
   return (
     <>
       {children}
-      <GlobalSocket />
+      <Suspense fallback={null}>
+        <GlobalSocket />
+      </Suspense>
     </>
   );
 };
