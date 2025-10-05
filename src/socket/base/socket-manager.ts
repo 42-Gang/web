@@ -33,7 +33,10 @@ const ensureValidToken = async (): Promise<string | null> => {
   return token;
 };
 
-export const createSocket = async (options: SocketOptions): Promise<SocketInstance> => {
+export const createSocket = async (
+  options: SocketOptions,
+  onSocketRecreate?: (newToken: string) => Promise<void>,
+): Promise<SocketInstance> => {
   const namespace = options.namespace || '/';
   const withAuth = options.withAuth !== false;
   const cacheKey = getSocketCacheKey(namespace, withAuth, options.query);
@@ -45,7 +48,8 @@ export const createSocket = async (options: SocketOptions): Promise<SocketInstan
     }
   }
 
-  const url = `${env.api_base}${namespace}`;
+  const baseUrl = env.api_base || 'http://localhost:3000';
+  const url = `${baseUrl}${namespace}`;
 
   const query: Record<string, string> = { ...options.query };
 
@@ -63,13 +67,12 @@ export const createSocket = async (options: SocketOptions): Promise<SocketInstan
     autoConnect: false,
     transports: ['websocket'],
     query,
-    reconnection: true,
-    reconnectionDelay: 1000,
-    reconnectionDelayMax: 5000,
-    reconnectionAttempts: 5,
+    reconnection: false,
   });
 
-  setupAuthErrorHandlers(socket, options);
+  if (onSocketRecreate) {
+    setupAuthErrorHandlers(socket, options, onSocketRecreate);
+  }
 
   socketCache.set(cacheKey, socket);
   return socket;

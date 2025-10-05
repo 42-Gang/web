@@ -1,5 +1,5 @@
 import type { Socket } from 'socket.io-client';
-import { getAccessToken, refreshTokenWithMutex } from '~/api/base/token';
+import { getAccessToken, refreshTokenWithMutex, tokenRefreshMutex } from '~/api/base/token';
 import type { ClientToServerEvents, ServerToClientEvents } from './socket-events';
 
 type SocketInstance = Socket<ServerToClientEvents, ClientToServerEvents>;
@@ -34,22 +34,33 @@ export const isAuthError = (errorOrReason: unknown): boolean => {
     lowerMessage.includes('jwt') ||
     lowerMessage.includes('forbidden') ||
     message.includes('권한') ||
-    message.includes('토큰')
+    message.includes('인증') ||
+    message.includes('유효하지 않은')
   );
 };
 
 export const handleTokenRefreshAndReconnect = async (
   socket: SocketInstance,
   options: SocketOptions,
+  onSocketRecreate: (newToken: string) => Promise<void>,
 ): Promise<void> => {
   if (options.autoReconnect === false) {
-    console.log('[socket-error-handler] autoReconnect disabled, skipping token refresh');
     return;
   }
 
-  console.log('[socket-error-handler] Attempting token refresh');
-
   try {
+    if (tokenRefreshMutex.isLocked()) {
+      console.log('[socket-error-handler] Token refresh in progress, waiting...');
+      await tokenRefreshMutex.waitForUnlock();
+
+      const newToken = getAccessToken();
+      if (newToken) {
+        console.log('[socket-error-handler] Using refreshed token, recreating socket');
+        await onSocketRecreate(newToken);
+      }
+      return;
+    }
+
     const result = await refreshTokenWithMutex({
       onFailure: error => {
         console.error('[socket-error-handler] Token refresh failed:', error);
@@ -58,11 +69,8 @@ export const handleTokenRefreshAndReconnect = async (
     });
 
     if (result.success && result.token) {
-      if (socket.io.opts.query) {
-        (socket.io.opts.query as Record<string, string>).token = result.token;
-      }
-      console.log('[socket-error-handler] Reconnecting with new token');
-      socket.connect();
+      console.log('[socket-error-handler] Token refreshed, recreating socket');
+      await onSocketRecreate(result.token);
     } else {
       console.error('[socket-error-handler] No token available after refresh');
       socket.disconnect();
@@ -72,12 +80,16 @@ export const handleTokenRefreshAndReconnect = async (
   }
 };
 
-export const setupAuthErrorHandlers = (socket: SocketInstance, options: SocketOptions) => {
+export const setupAuthErrorHandlers = (
+  socket: SocketInstance,
+  options: SocketOptions,
+  onSocketRecreate: (newToken: string) => Promise<void>,
+) => {
   socket.on('connect_error', async (error: unknown) => {
     console.error('[socket-error-handler] Connection error:', error);
 
     if (isAuthError(error)) {
-      await handleTokenRefreshAndReconnect(socket, options);
+      await handleTokenRefreshAndReconnect(socket, options, onSocketRecreate);
     }
   });
 
@@ -85,15 +97,7 @@ export const setupAuthErrorHandlers = (socket: SocketInstance, options: SocketOp
     console.log('[socket-error-handler] Disconnected:', reason);
 
     if (isAuthError(reason)) {
-      await handleTokenRefreshAndReconnect(socket, options);
-    }
-  });
-
-  socket.io.on('reconnect_attempt', () => {
-    console.log('[socket-error-handler] Reconnect attempt');
-    const newToken = getAccessToken();
-    if (newToken && socket.io.opts.query) {
-      (socket.io.opts.query as Record<string, string>).token = newToken;
+      await handleTokenRefreshAndReconnect(socket, options, onSocketRecreate);
     }
   });
 

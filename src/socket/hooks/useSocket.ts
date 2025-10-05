@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Socket } from 'socket.io-client';
 import type { ClientToServerEvents, ServerToClientEvents } from '../base/socket-events';
 import { createSocket, destroySocket, type SocketOptions } from '../base/socket-manager';
@@ -42,6 +42,7 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
     onDisconnect: options.onDisconnect,
     onError: options.onError,
   });
+  const mountedRef = useRef(true);
 
   useEffect(() => {
     optionsRef.current = options;
@@ -52,8 +53,63 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
     };
   }, [options]);
 
+  const setupSocketHandlers = useCallback((sock: SocketInstance) => {
+    sock.on('connect', () => {
+      if (mountedRef.current) {
+        setIsConnected(true);
+        setIsConnecting(false);
+        handlersRef.current.onConnect?.();
+      }
+    });
+
+    sock.on('disconnect', reason => {
+      if (mountedRef.current) {
+        setIsConnected(false);
+        setIsConnecting(false);
+        handlersRef.current.onDisconnect?.(reason);
+      }
+    });
+
+    sock.on('connect_error', err => {
+      if (mountedRef.current) {
+        setError(err as Error);
+        setIsConnecting(false);
+        handlersRef.current.onError?.(err as Error);
+      }
+    });
+  }, []);
+
+  const recreateSocket = useCallback(
+    async (newToken: string) => {
+      console.log('[use-socket] Recreating socket with new token');
+
+      if (!mountedRef.current) return;
+
+      const namespace = optionsRef.current.namespace || '/';
+      const withAuth = optionsRef.current.withAuth !== false;
+
+      destroySocket(namespace, withAuth, optionsRef.current.query);
+
+      const newOptions = {
+        ...optionsRef.current,
+        query: { ...optionsRef.current.query, token: newToken },
+      };
+
+      const newSocket = await createSocket(newOptions, recreateSocket);
+
+      if (!mountedRef.current) {
+        newSocket.disconnect();
+        return;
+      }
+
+      setupSocketHandlers(newSocket);
+      setSocket(newSocket);
+      newSocket.connect();
+    },
+    [setupSocketHandlers],
+  );
+
   useEffect(() => {
-    let mounted = true;
     let currentSocket: SocketInstance | null = null;
 
     const initSocket = async () => {
@@ -61,37 +117,14 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
         setIsConnecting(true);
         setError(null);
 
-        const newSocket = await createSocket(optionsRef.current);
+        const newSocket = await createSocket(optionsRef.current, recreateSocket);
 
-        if (!mounted) {
+        if (!mountedRef.current) {
           newSocket.disconnect();
           return;
         }
 
-        newSocket.on('connect', () => {
-          if (mounted) {
-            setIsConnected(true);
-            setIsConnecting(false);
-            handlersRef.current.onConnect?.();
-          }
-        });
-
-        newSocket.on('disconnect', reason => {
-          if (mounted) {
-            setIsConnected(false);
-            setIsConnecting(false);
-            handlersRef.current.onDisconnect?.(reason);
-          }
-        });
-
-        newSocket.on('connect_error', err => {
-          if (mounted) {
-            setError(err as Error);
-            setIsConnecting(false);
-            handlersRef.current.onError?.(err as Error);
-          }
-        });
-
+        setupSocketHandlers(newSocket);
         currentSocket = newSocket;
         setSocket(newSocket);
 
@@ -99,7 +132,7 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
           newSocket.connect();
         }
       } catch (err) {
-        if (mounted) {
+        if (mountedRef.current) {
           const error = err instanceof Error ? err : new Error('Failed to create socket');
           setError(error);
           setIsConnecting(false);
@@ -111,7 +144,7 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
     initSocket();
 
     return () => {
-      mounted = false;
+      mountedRef.current = false;
       if (currentSocket) {
         if (optionsRef.current.autoDisconnect !== false) {
           const namespace = optionsRef.current.namespace || '/';
@@ -120,7 +153,7 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
         }
       }
     };
-  }, []);
+  }, [recreateSocket, setupSocketHandlers]);
 
   const connect = () => {
     if (socket && !socket.connected) {
