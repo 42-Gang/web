@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Socket } from 'socket.io-client';
-import type { ClientToServerEvents, ServerToClientEvents } from './base/socket-events';
-import { createSocket, destroySocket, type SocketOptions } from './base/socket-manager';
+import type { ClientToServerEvents, ServerToClientEvents } from '../base/socket-events';
+import { createSocket, destroySocket, type SocketOptions } from '../base/socket-manager';
 
 type SocketInstance = Socket<ServerToClientEvents, ClientToServerEvents>;
 
@@ -154,10 +154,16 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
       return () => {};
     }
 
-    socket.on(event as string, handler as unknown as (...args: unknown[]) => void);
+    type UntypedSocketEvents = {
+      on: (event: string, handler: (...args: unknown[]) => void) => void;
+      off: (event: string, handler: (...args: unknown[]) => void) => void;
+    };
+    const untypedSocket = socket as unknown as UntypedSocketEvents;
+
+    untypedSocket.on(event as string, handler as (...args: unknown[]) => void);
 
     return () => {
-      socket.off(event as string, handler as unknown as (...args: unknown[]) => void);
+      untypedSocket.off(event as string, handler as (...args: unknown[]) => void);
     };
   };
 

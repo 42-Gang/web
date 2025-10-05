@@ -23,7 +23,7 @@ export const refreshToken = async () => {
   });
 
   const response = await client
-    .post<HttpResponse<{ accessToken: string }>>('v1/auth/refresh-token')
+    .post<HttpResponse<{ accessToken: string }>>('v1/auth/refresh-token', { json: null })
     .json();
 
   if (response.status === 'SUCCESS' && response.data?.accessToken) {

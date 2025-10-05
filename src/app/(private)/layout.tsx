@@ -1,7 +1,13 @@
 import type { PropsWithChildren } from 'react';
+import { GlobalSocket } from './global-socket';
 
-const RootLayout = ({ children }: PropsWithChildren) => {
-  return children;
+const PrivateLayout = ({ children }: PropsWithChildren) => {
+  return (
+    <>
+      {children}
+      <GlobalSocket />
+    </>
+  );
 };
 
-export default RootLayout;
+export default PrivateLayout;

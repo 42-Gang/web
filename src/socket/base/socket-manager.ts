@@ -1,15 +1,8 @@
 import { io, type Socket } from 'socket.io-client';
-import { getAccessToken, refreshToken, tokenRefreshMutex } from '~/api/base/token';
+import { getAccessToken, tokenRefreshMutex } from '~/api/base/token';
 import { env } from '~/constants/variables';
+import { type SocketOptions, setupAuthErrorHandlers } from './socket-error-handler';
 import type { ClientToServerEvents, ServerToClientEvents } from './socket-events';
-
-export interface SocketOptions {
-  path: string;
-  namespace?: string;
-  withAuth?: boolean;
-  autoReconnect?: boolean;
-  query?: Record<string, string>;
-}
 
 type SocketInstance = Socket<ServerToClientEvents, ClientToServerEvents>;
 
@@ -40,45 +33,6 @@ const ensureValidToken = async (): Promise<string | null> => {
   return token;
 };
 
-const setupAuthErrorHandlers = (socket: SocketInstance, options: SocketOptions) => {
-  socket.on('connect_error', async error => {
-    console.error('[socket-manager] Connection error:', error);
-
-    if (error.message.includes('auth') || error.message.includes('token')) {
-      if (options.autoReconnect !== false) {
-        console.log('[socket-manager] Attempting token refresh...');
-
-        try {
-          if (tokenRefreshMutex.isLocked()) {
-            await tokenRefreshMutex.waitForUnlock();
-          } else {
-            await tokenRefreshMutex.runExclusive(async () => {
-              await refreshToken();
-            });
-          }
-
-          const newToken = getAccessToken();
-          if (newToken && socket.io.opts.query) {
-            (socket.io.opts.query as Record<string, string>).token = newToken;
-            socket.connect();
-          }
-        } catch (refreshError) {
-          console.error('[socket-manager] Token refresh failed:', refreshError);
-          socket.disconnect();
-        }
-      }
-    }
-  });
-
-  socket.on('disconnect', reason => {
-    console.log('[socket-manager] Disconnected:', reason);
-  });
-
-  socket.on('error', error => {
-    console.error('[socket-manager] Socket error:', error);
-  });
-};
-
 export const createSocket = async (options: SocketOptions): Promise<SocketInstance> => {
   const namespace = options.namespace || '/';
   const withAuth = options.withAuth !== false;
@@ -91,8 +45,7 @@ export const createSocket = async (options: SocketOptions): Promise<SocketInstan
     }
   }
 
-  const baseUrl = env.api_base || 'http://localhost:3000';
-  const url = `${baseUrl}${namespace}`;
+  const url = `${env.api_base}${namespace}`;
 
   const query: Record<string, string> = { ...options.query };
 
@@ -100,6 +53,8 @@ export const createSocket = async (options: SocketOptions): Promise<SocketInstan
     const token = await ensureValidToken();
     if (token) {
       query.token = token;
+    } else {
+      console.warn('[socket-manager] Creating socket without token');
     }
   }
 
@@ -149,3 +104,5 @@ export const getSocket = (
   const cacheKey = getSocketCacheKey(namespace, withAuth, query);
   return socketCache.get(cacheKey) || null;
 };
+
+export type { SocketOptions } from './socket-error-handler';
