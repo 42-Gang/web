@@ -1,5 +1,5 @@
 import { io, type Socket } from 'socket.io-client';
-import { getAccessToken, tokenRefreshMutex } from '~/api/base/token';
+import { getAccessToken } from '~/api/base/token';
 import { env } from '~/constants/variables';
 import { type SocketOptions, setupErrorHandlers } from './socket-error-handler';
 import type { ClientToServerEvents, ServerToClientEvents } from './socket-events';
@@ -11,18 +11,6 @@ const cache = new Map<string, SocketInstance>();
 const getCacheKey = (ns: string, auth: boolean, query?: Record<string, string>): string => {
   const q = query ? JSON.stringify(query) : '';
   return `${ns}:${auth ? 'auth' : 'noauth'}:${q}`;
-};
-
-const getToken = async (): Promise<string | null> => {
-  const token = getAccessToken();
-  if (!token) return null;
-
-  if (tokenRefreshMutex.isLocked()) {
-    await tokenRefreshMutex.waitForUnlock();
-    return getAccessToken();
-  }
-
-  return token;
 };
 
 export const createSocket = async (
@@ -39,7 +27,7 @@ export const createSocket = async (
   const query: Record<string, string> = { ...options.query };
 
   if (auth && !query.token) {
-    const token = await getToken();
+    const token = await getAccessToken();
     if (token) {
       query.token = token;
     } else {

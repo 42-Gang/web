@@ -1,5 +1,5 @@
 import type { Socket } from 'socket.io-client';
-import { refreshTokenWithMutex, tokenRefreshMutex } from '~/api/base/token';
+import { refreshToken } from '~/api/base/token';
 import type { ClientToServerEvents, ServerToClientEvents } from './socket-events';
 
 type SocketInstance = Socket<ServerToClientEvents, ClientToServerEvents>;
@@ -39,9 +39,6 @@ const isAuthError = (err: unknown): boolean => {
   );
 };
 
-let isRefreshing = false;
-const pending: Array<(token: string) => Promise<void>> = [];
-
 const refreshAndReconnect = async (
   socket: SocketInstance,
   options: SocketOptions,
@@ -49,41 +46,25 @@ const refreshAndReconnect = async (
 ): Promise<void> => {
   if (options.autoReconnect === false) return;
 
-  if (isRefreshing || tokenRefreshMutex.isLocked()) {
-    console.log('[socket-error-handler] Waiting for token refresh...');
-    pending.push(onRecreate);
-    return;
-  }
-
-  isRefreshing = true;
+  console.log('[socket-error-handler] Attempting to refresh token and reconnect...');
 
   try {
-    const result = await refreshTokenWithMutex({
+    const result = await refreshToken({
       onFailure: err => {
-        console.error('[socket-error-handler] Token refresh failed:', err);
+        console.error('[socket-error-handler] Token refresh failed, disconnecting socket:', err);
         socket.disconnect();
       },
     });
 
     if (result.success && result.token) {
-      console.log('[socket-error-handler] Token refreshed, recreating');
-
+      console.log('[socket-error-handler] Token refreshed successfully, recreating socket.');
       await onRecreate(result.token);
-
-      for (const recreate of pending) {
-        await recreate(result.token);
-      }
-
-      pending.length = 0;
-    } else {
-      console.error('[socket-error-handler] Token refresh failed, disconnecting');
-      socket.disconnect();
     }
   } catch (err) {
-    console.error('[socket-error-handler] Refresh exception:', err);
-    socket.disconnect();
-  } finally {
-    isRefreshing = false;
+    console.error(
+      '[socket-error-handler] Unhandled exception during token refresh, socket may be disconnected.',
+      err,
+    );
   }
 };
 

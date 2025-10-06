@@ -1,4 +1,3 @@
-import { Mutex } from 'async-mutex';
 import ky from 'ky';
 import type { HttpResponse } from '~/api';
 import { env } from '~/constants/variables';
@@ -6,14 +5,14 @@ import { env } from '~/constants/variables';
 const API_URL = typeof window === 'undefined' ? 'https://pingpong.n-e.kr/api' : '/api';
 const IS_BROWSER = typeof window !== 'undefined';
 
-export const tokenRefreshMutex = new Mutex();
+let refreshPromise: Promise<TokenRefreshResult> | null = null;
 
 export const getAccessToken = (): string | null => {
   if (!IS_BROWSER) return null;
   return window.localStorage.getItem(env.access_token);
 };
 
-export const refreshToken = async () => {
+export const refreshTokenInternal = async () => {
   const client = ky.create({
     prefixUrl: API_URL,
     headers: { 'Content-Type': 'application/json' },
@@ -38,35 +37,35 @@ export interface TokenRefreshResult {
   token: string | null;
 }
 
-export const refreshTokenWithMutex = async (options?: {
+export const refreshToken = (options?: {
   onFailure?: (error: Error) => void;
 }): Promise<TokenRefreshResult> => {
   if (!IS_BROWSER) {
-    return { success: false, token: null };
+    return Promise.resolve({ success: false, token: null });
   }
 
-  try {
-    if (tokenRefreshMutex.isLocked()) {
-      console.log('[token] Token refresh already in progress, waiting');
-      await tokenRefreshMutex.waitForUnlock();
-      const token = getAccessToken();
-      return { success: !!token, token };
-    }
+  if (!refreshPromise) {
+    refreshPromise = (async () => {
+      try {
+        console.log('[token] Refreshing token');
+        await refreshTokenInternal();
+        console.log('[token] Token refreshed successfully');
+        const token = getAccessToken();
+        if (!token) {
+          throw new Error('Token is null after successful refresh');
+        }
+        return { success: true, token };
+      } catch (error) {
+        const err = error instanceof Error ? error : new Error('토큰 갱신 실패');
+        throw err;
+      } finally {
+        refreshPromise = null;
+      }
+    })();
+  }
 
-    await tokenRefreshMutex.runExclusive(async () => {
-      console.log('[token] Refreshing token');
-      await refreshToken();
-      console.log('[token] Token refreshed successfully');
-    });
-
-    const token = getAccessToken();
-    return { success: true, token };
-  } catch (error) {
-    console.error('[token] Token refresh failed:', error);
-    const err = error instanceof Error ? error : new Error('토큰 갱신 실패');
-
+  return refreshPromise.catch(err => {
     options?.onFailure?.(err);
-
     throw err;
-  }
+  });
 };

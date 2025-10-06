@@ -1,5 +1,5 @@
 import ky, { type BeforeRetryState, HTTPError, type Options, type ResponsePromise } from 'ky';
-import { getAccessToken, refreshTokenWithMutex } from './token';
+import { getAccessToken, refreshToken } from './token';
 
 const API_URL = typeof window === 'undefined' ? 'https://pingpong.n-e.kr/api' : '/api';
 const IS_BROWSER = typeof window !== 'undefined';
@@ -28,7 +28,7 @@ const handleTokenRefresh = async ({ error, request }: BeforeRetryState) => {
   }
 
   try {
-    await refreshTokenWithMutex({ onFailure: () => handleAuthFailure('토큰 갱신 실패') });
+    await refreshToken({ onFailure: () => handleAuthFailure('토큰 갱신 실패') });
     return;
   } catch (refreshError) {
     console.warn('[fetcher] Token refresh failed, stopping retry:', refreshError);
