@@ -39,6 +39,9 @@ export const isAuthError = (errorOrReason: unknown): boolean => {
   );
 };
 
+let isRefreshingGlobal = false;
+const pendingRecreates: Array<(token: string) => Promise<void>> = [];
+
 export const handleTokenRefreshAndReconnect = async (
   socket: SocketInstance,
   options: SocketOptions,
@@ -48,19 +51,24 @@ export const handleTokenRefreshAndReconnect = async (
     return;
   }
 
-  try {
-    if (tokenRefreshMutex.isLocked()) {
-      console.log('[socket-error-handler] Token refresh in progress, waiting...');
-      await tokenRefreshMutex.waitForUnlock();
+  if (isRefreshingGlobal || tokenRefreshMutex.isLocked()) {
+    console.log('[socket-error-handler] Token refresh in progress, waiting...');
 
-      const newToken = getAccessToken();
-      if (newToken) {
-        console.log('[socket-error-handler] Using refreshed token, recreating socket');
-        await onSocketRecreate(newToken);
-      }
-      return;
+    pendingRecreates.push(onSocketRecreate);
+
+    await tokenRefreshMutex.waitForUnlock();
+
+    const newToken = getAccessToken();
+    if (newToken) {
+      console.log('[socket-error-handler] Using refreshed token, recreating socket');
+      await onSocketRecreate(newToken);
     }
+    return;
+  }
 
+  isRefreshingGlobal = true;
+
+  try {
     const result = await refreshTokenWithMutex({
       onFailure: error => {
         console.error('[socket-error-handler] Token refresh failed:', error);
@@ -71,12 +79,21 @@ export const handleTokenRefreshAndReconnect = async (
     if (result.success && result.token) {
       console.log('[socket-error-handler] Token refreshed, recreating socket');
       await onSocketRecreate(result.token);
+
+      for (const recreate of pendingRecreates) {
+        await recreate(result.token);
+      }
+      pendingRecreates.length = 0;
     } else {
       console.error('[socket-error-handler] No token available after refresh');
       socket.disconnect();
     }
   } catch (refreshError) {
     console.error('[socket-error-handler] Token refresh exception:', refreshError);
+  } finally {
+    setTimeout(() => {
+      isRefreshingGlobal = false;
+    }, 2000);
   }
 };
 

@@ -53,7 +53,7 @@ export const createSocket = async (
 
   const query: Record<string, string> = { ...options.query };
 
-  if (withAuth) {
+  if (withAuth && !query.token) {
     const token = await ensureValidToken();
     if (token) {
       query.token = token;
