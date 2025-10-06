@@ -86,7 +86,9 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
 
   const recreate = useCallback(
     async (token: string) => {
-      console.log(`[use-socket] Recreating socket for namespace "${optsRef.current.namespace || '/'}" with new token`);
+      console.log(
+        `[use-socket] Recreating socket for namespace "${optsRef.current.namespace || '/'}" with new token`,
+      );
 
       if (!isMounted.current) return;
 
@@ -186,7 +188,6 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
     handler: ServerToClientEvents[K],
   ): (() => void) => {
     if (!socket) {
-      console.warn('[socket] Cannot listen: not initialized');
       return () => {};
     }
 

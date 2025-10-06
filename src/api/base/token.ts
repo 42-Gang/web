@@ -56,8 +56,7 @@ export const refreshToken = (options?: {
         }
         return { success: true, token };
       } catch (error) {
-        const err = error instanceof Error ? error : new Error('토큰 갱신 실패');
-        throw err;
+        throw error instanceof Error ? error : new Error('토큰 갱신 실패');
       } finally {
         refreshPromise = null;
       }

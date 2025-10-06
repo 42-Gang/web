@@ -18,13 +18,15 @@ export const GlobalSocket = () => {
   const { data: me } = useUsersMe();
   const updateStatus = useSetAtom(updateFriendStatusAtom);
 
-  const { on: onFriend } = useFriendSocket();
-  const { on: onGame } = useGameInviteSocket();
-  const { on: onChat } = useChatSocket();
-  const { on: onStatus } = useStatusSocket();
+  const friendSocket = useFriendSocket();
+  const gameSocket = useGameInviteSocket();
+  const chatSocket = useChatSocket();
+  const statusSocket = useStatusSocket();
 
   useEffect(() => {
-    const req = onFriend('friend-request', async data => {
+    if (!friendSocket.socket || !friendSocket.isConnected) return;
+
+    const req = friendSocket.on('friend-request', async data => {
       console.log('[global-socket] Friend request:', data);
       toast.info(`${data.fromUserNickname} sent you a friend request!`);
 
@@ -34,7 +36,7 @@ export const GlobalSocket = () => {
       ]);
     });
 
-    const accept = onFriend('friend-accept', async data => {
+    const accept = friendSocket.on('friend-accept', async data => {
       console.log('[global-socket] Friend accepted:', data);
       toast.success(`${data.toUserNickname} accepted your friend request!`);
 
@@ -48,10 +50,12 @@ export const GlobalSocket = () => {
       req();
       accept();
     };
-  }, [onFriend, qc]);
+  }, [friendSocket.socket, friendSocket.isConnected, qc, friendSocket.on]);
 
   useEffect(() => {
-    const invite = onGame('custom-invite', data => {
+    if (!gameSocket.socket || !gameSocket.isConnected) return;
+
+    const invite = gameSocket.on('custom-invite', data => {
       console.log('[global-socket] Game invite:', data);
 
       toast.info(`${data.hostName}님이 초대했습니다. 수락하시겠습니까?`, {
@@ -76,10 +80,12 @@ export const GlobalSocket = () => {
     });
 
     return () => invite();
-  }, [onGame, router]);
+  }, [gameSocket.socket, gameSocket.isConnected, router, gameSocket.on]);
 
   useEffect(() => {
-    const msg = onChat('message', data => {
+    if (!chatSocket.socket || !chatSocket.isConnected) return;
+
+    const msg = chatSocket.on('message', data => {
       console.log('[global-socket] Chat message:', data);
 
       if (!me?.data) return;
@@ -99,16 +105,18 @@ export const GlobalSocket = () => {
     });
 
     return () => msg();
-  }, [onChat, me, params, router]);
+  }, [chatSocket.socket, chatSocket.isConnected, me, params, router, chatSocket.on]);
 
   useEffect(() => {
-    const status = onStatus('friend-status', data => {
+    if (!statusSocket.socket || !statusSocket.isConnected) return;
+
+    const status = statusSocket.on('friend-status', data => {
       console.log('[global-socket] Friend status:', data);
       updateStatus(data);
     });
 
     return () => status();
-  }, [onStatus, updateStatus]);
+  }, [statusSocket.socket, statusSocket.isConnected, updateStatus, statusSocket.on]);
 
   return null;
 };
