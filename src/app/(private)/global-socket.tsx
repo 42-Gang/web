@@ -10,48 +10,46 @@ import { routes } from '~/constants/routes';
 import { useChatSocket, useFriendSocket, useGameInviteSocket, useStatusSocket } from '~/socket';
 
 export const GlobalSocket = () => {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const params = useSearchParams();
   const { data: me } = useUsersMe();
 
   const { on: onFriend } = useFriendSocket();
-  const { on: onGameInvite } = useGameInviteSocket();
+  const { on: onGame } = useGameInviteSocket();
   const { on: onChat } = useChatSocket();
   const { on: onStatus } = useStatusSocket();
 
   useEffect(() => {
-    const friendRequest = onFriend('friend-request', async data => {
-      console.log('[global-socket] Friend request received:', data);
-
+    const req = onFriend('friend-request', async data => {
+      console.log('[global-socket] Friend request:', data);
       toast.info(`${data.fromUserNickname} sent you a friend request!`);
 
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.users._def, refetchType: 'all' }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.friends._def, refetchType: 'all' }),
+        qc.invalidateQueries({ queryKey: queryKeys.users._def, refetchType: 'all' }),
+        qc.invalidateQueries({ queryKey: queryKeys.friends._def, refetchType: 'all' }),
       ]);
     });
 
-    const friendAccept = onFriend('friend-accept', async data => {
-      console.log('[global-socket] Friend accept received:', data);
-
+    const accept = onFriend('friend-accept', async data => {
+      console.log('[global-socket] Friend accepted:', data);
       toast.success(`${data.toUserNickname} accepted your friend request!`);
 
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.users._def, refetchType: 'all' }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.friends._def, refetchType: 'all' }),
+        qc.invalidateQueries({ queryKey: queryKeys.users._def, refetchType: 'all' }),
+        qc.invalidateQueries({ queryKey: queryKeys.friends._def, refetchType: 'all' }),
       ]);
     });
 
     return () => {
-      friendRequest();
-      friendAccept();
+      req();
+      accept();
     };
-  }, [onFriend, queryClient]);
+  }, [onFriend, qc]);
 
   useEffect(() => {
-    const customInvite = onGameInvite('custom-invite', data => {
-      console.log('[global-socket] Custom invite received:', data);
+    const invite = onGame('custom-invite', data => {
+      console.log('[global-socket] Game invite:', data);
 
       toast.info(`${data.hostName}님이 초대했습니다. 수락하시겠습니까?`, {
         action: {
@@ -74,22 +72,20 @@ export const GlobalSocket = () => {
       });
     });
 
-    return () => {
-      customInvite();
-    };
-  }, [onGameInvite, router]);
+    return () => invite();
+  }, [onGame, router]);
 
   useEffect(() => {
-    const message = onChat('message', data => {
-      console.log('[global-socket] Chat message received:', data);
+    const msg = onChat('message', data => {
+      console.log('[global-socket] Chat message:', data);
 
       if (!me?.data) return;
       if (data.userId === me.data.id) return;
 
-      const friendIdParam = searchParams.get('friendId');
-      const friendId = friendIdParam ? Number.parseInt(friendIdParam, 10) : null;
+      const fidParam = params.get('friendId');
+      const fid = fidParam ? Number.parseInt(fidParam, 10) : null;
 
-      if (friendId && friendId === data.userId) return;
+      if (fid && fid === data.userId) return;
 
       toast.info(`${data.nickname}: ${data.contents}`, {
         action: {
@@ -99,19 +95,15 @@ export const GlobalSocket = () => {
       });
     });
 
-    return () => {
-      message();
-    };
-  }, [onChat, me, searchParams, router]);
+    return () => msg();
+  }, [onChat, me, params, router]);
 
   useEffect(() => {
-    const friendStatus = onStatus('friend-status', data => {
-      console.log('[global-socket] Friend status changed:', data);
+    const status = onStatus('friend-status', data => {
+      console.log('[global-socket] Friend status:', data);
     });
 
-    return () => {
-      friendStatus();
-    };
+    return () => status();
   }, [onStatus]);
 
   return null;

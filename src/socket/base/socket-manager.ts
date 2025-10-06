@@ -1,29 +1,21 @@
 import { io, type Socket } from 'socket.io-client';
 import { getAccessToken, tokenRefreshMutex } from '~/api/base/token';
 import { env } from '~/constants/variables';
-import { type SocketOptions, setupAuthErrorHandlers } from './socket-error-handler';
+import { type SocketOptions, setupErrorHandlers } from './socket-error-handler';
 import type { ClientToServerEvents, ServerToClientEvents } from './socket-events';
 
 type SocketInstance = Socket<ServerToClientEvents, ClientToServerEvents>;
 
-const socketCache = new Map<string, SocketInstance>();
+const cache = new Map<string, SocketInstance>();
 
-const getSocketCacheKey = (
-  namespace: string,
-  withAuth: boolean,
-  query?: Record<string, string>,
-): string => {
-  const queryStr = query ? JSON.stringify(query) : '';
-  return `${namespace}:${withAuth ? 'auth' : 'noauth'}:${queryStr}`;
+const getCacheKey = (ns: string, auth: boolean, query?: Record<string, string>): string => {
+  const q = query ? JSON.stringify(query) : '';
+  return `${ns}:${auth ? 'auth' : 'noauth'}:${q}`;
 };
 
-const ensureValidToken = async (): Promise<string | null> => {
+const getToken = async (): Promise<string | null> => {
   const token = getAccessToken();
-
-  if (!token) {
-    console.warn('[socket-manager] No access token found');
-    return null;
-  }
+  if (!token) return null;
 
   if (tokenRefreshMutex.isLocked()) {
     await tokenRefreshMutex.waitForUnlock();
@@ -35,34 +27,27 @@ const ensureValidToken = async (): Promise<string | null> => {
 
 export const createSocket = async (
   options: SocketOptions,
-  onSocketRecreate?: (newToken: string) => Promise<void>,
+  onRecreate?: (token: string) => Promise<void>,
 ): Promise<SocketInstance> => {
-  const namespace = options.namespace || '/';
-  const withAuth = options.withAuth !== false;
-  const cacheKey = getSocketCacheKey(namespace, withAuth, options.query);
+  const ns = options.namespace || '/';
+  const auth = options.withAuth !== false;
+  const key = getCacheKey(ns, auth, options.query);
 
-  if (socketCache.has(cacheKey)) {
-    const cachedSocket = socketCache.get(cacheKey);
-    if (cachedSocket?.connected) {
-      return cachedSocket;
-    }
-  }
-
-  const baseUrl = env.api_base || 'http://localhost:3000';
-  const url = `${baseUrl}${namespace}`;
+  const cached = cache.get(key);
+  if (cached?.connected) return cached;
 
   const query: Record<string, string> = { ...options.query };
 
-  if (withAuth && !query.token) {
-    const token = await ensureValidToken();
+  if (auth && !query.token) {
+    const token = await getToken();
     if (token) {
       query.token = token;
     } else {
-      console.warn('[socket-manager] Creating socket without token');
+      console.warn('[socket] Creating without token');
     }
   }
 
-  const socket: SocketInstance = io(url, {
+  const socket: SocketInstance = io(`${env.api_base}${ns}`, {
     path: options.path,
     autoConnect: false,
     transports: ['websocket'],
@@ -70,42 +55,33 @@ export const createSocket = async (
     reconnection: false,
   });
 
-  if (onSocketRecreate) {
-    setupAuthErrorHandlers(socket, options, onSocketRecreate);
+  if (onRecreate) {
+    setupErrorHandlers(socket, options, onRecreate);
   }
 
-  socketCache.set(cacheKey, socket);
+  cache.set(key, socket);
   return socket;
 };
 
-export const destroySocket = (namespace = '/', withAuth = true, query?: Record<string, string>) => {
-  const cacheKey = getSocketCacheKey(namespace, withAuth, query);
-  const socket = socketCache.get(cacheKey);
+export const destroySocket = (ns = '/', auth = true, query?: Record<string, string>) => {
+  const key = getCacheKey(ns, auth, query);
+  const socket = cache.get(key);
 
   if (socket) {
     socket.removeAllListeners();
     socket.disconnect();
-    socketCache.delete(cacheKey);
-    console.log('[socket-manager] Socket destroyed:', cacheKey);
+    cache.delete(key);
+    console.log('[socket] Destroyed:', key);
   }
-};
-
-export const destroyAllSockets = () => {
-  for (const [key, socket] of socketCache) {
-    socket.removeAllListeners();
-    socket.disconnect();
-    console.log('[socket-manager] Socket destroyed:', key);
-  }
-  socketCache.clear();
 };
 
 export const getSocket = (
-  namespace = '/',
-  withAuth = true,
+  ns = '/',
+  auth = true,
   query?: Record<string, string>,
 ): SocketInstance | null => {
-  const cacheKey = getSocketCacheKey(namespace, withAuth, query);
-  return socketCache.get(cacheKey) || null;
+  const key = getCacheKey(ns, auth, query);
+  return cache.get(key) || null;
 };
 
 export type { SocketOptions } from './socket-error-handler';

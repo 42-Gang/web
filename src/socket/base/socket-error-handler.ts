@@ -12,113 +12,108 @@ export interface SocketOptions {
   query?: Record<string, string>;
 }
 
-export const isAuthError = (errorOrReason: unknown): boolean => {
-  if (!errorOrReason) return false;
+const isAuthError = (err: unknown): boolean => {
+  if (!err) return false;
 
-  let message = '';
-  if (typeof errorOrReason === 'string') {
-    message = errorOrReason;
-  } else if (errorOrReason instanceof Error) {
-    message = errorOrReason.message;
-  } else if (typeof errorOrReason === 'object' && 'message' in errorOrReason) {
-    message = String((errorOrReason as { message: unknown }).message);
+  let msg = '';
+  if (typeof err === 'string') {
+    msg = err;
+  } else if (err instanceof Error) {
+    msg = err.message;
+  } else if (typeof err === 'object' && 'message' in err) {
+    msg = String((err as { message: unknown }).message);
   }
 
-  const lowerMessage = message.toLowerCase();
+  const lower = msg.toLowerCase();
 
   return (
-    lowerMessage.includes('auth') ||
-    lowerMessage.includes('token') ||
-    lowerMessage.includes('unauthorized') ||
-    lowerMessage.includes('401') ||
-    lowerMessage.includes('jwt') ||
-    lowerMessage.includes('forbidden') ||
-    message.includes('권한') ||
-    message.includes('인증') ||
-    message.includes('유효하지 않은')
+    lower.includes('auth') ||
+    lower.includes('token') ||
+    lower.includes('unauthorized') ||
+    lower.includes('401') ||
+    lower.includes('jwt') ||
+    lower.includes('forbidden') ||
+    msg.includes('권한') ||
+    msg.includes('인증') ||
+    msg.includes('유효하지 않은')
   );
 };
 
-let isRefreshingGlobal = false;
-const pendingRecreates: Array<(token: string) => Promise<void>> = [];
+let isRefreshing = false;
+const pending: Array<(token: string) => Promise<void>> = [];
 
-export const handleTokenRefreshAndReconnect = async (
+const refreshAndReconnect = async (
   socket: SocketInstance,
   options: SocketOptions,
-  onSocketRecreate: (newToken: string) => Promise<void>,
+  onRecreate: (token: string) => Promise<void>,
 ): Promise<void> => {
-  if (options.autoReconnect === false) {
-    return;
-  }
+  if (options.autoReconnect === false) return;
 
-  if (isRefreshingGlobal || tokenRefreshMutex.isLocked()) {
-    console.log('[socket-error-handler] Token refresh in progress, waiting...');
+  if (isRefreshing || tokenRefreshMutex.isLocked()) {
+    console.log('[socket] Waiting for token refresh...');
 
-    pendingRecreates.push(onSocketRecreate);
+    pending.push(onRecreate);
 
     await tokenRefreshMutex.waitForUnlock();
 
-    const newToken = getAccessToken();
-    if (newToken) {
-      console.log('[socket-error-handler] Using refreshed token, recreating socket');
-      await onSocketRecreate(newToken);
+    const token = getAccessToken();
+    if (token) {
+      console.log('[socket] Using refreshed token');
+      await onRecreate(token);
     }
     return;
   }
 
-  isRefreshingGlobal = true;
+  isRefreshing = true;
 
   try {
     const result = await refreshTokenWithMutex({
-      onFailure: error => {
-        console.error('[socket-error-handler] Token refresh failed:', error);
+      onFailure: err => {
+        console.error('[socket] Token refresh failed:', err);
         socket.disconnect();
       },
     });
 
     if (result.success && result.token) {
-      console.log('[socket-error-handler] Token refreshed, recreating socket');
-      await onSocketRecreate(result.token);
+      console.log('[socket] Token refreshed, recreating');
+      await onRecreate(result.token);
 
-      for (const recreate of pendingRecreates) {
+      for (const recreate of pending) {
         await recreate(result.token);
       }
-      pendingRecreates.length = 0;
+      pending.length = 0;
     } else {
-      console.error('[socket-error-handler] No token available after refresh');
       socket.disconnect();
     }
-  } catch (refreshError) {
-    console.error('[socket-error-handler] Token refresh exception:', refreshError);
+  } catch (err) {
+    console.error('[socket] Refresh exception:', err);
   } finally {
     setTimeout(() => {
-      isRefreshingGlobal = false;
+      isRefreshing = false;
     }, 2000);
   }
 };
 
-export const setupAuthErrorHandlers = (
+export const setupErrorHandlers = (
   socket: SocketInstance,
   options: SocketOptions,
-  onSocketRecreate: (newToken: string) => Promise<void>,
+  onRecreate: (token: string) => Promise<void>,
 ) => {
-  socket.on('connect_error', async (error: unknown) => {
-    console.error('[socket-error-handler] Connection error:', error);
-
-    if (isAuthError(error)) {
-      await handleTokenRefreshAndReconnect(socket, options, onSocketRecreate);
+  socket.on('connect_error', async err => {
+    console.error('[socket] Connection error:', err);
+    if (isAuthError(err)) {
+      await refreshAndReconnect(socket, options, onRecreate);
     }
   });
 
-  socket.on('disconnect', async (reason: unknown) => {
-    console.log('[socket-error-handler] Disconnected:', reason);
-
+  socket.on('disconnect', async reason => {
+    console.log('[socket] Disconnected:', reason);
     if (isAuthError(reason)) {
-      await handleTokenRefreshAndReconnect(socket, options, onSocketRecreate);
+      await refreshAndReconnect(socket, options, onRecreate);
     }
   });
 
   socket.on('connect', () => {
-    console.log('[socket-error-handler] Connected successfully');
+    console.log('[socket] Connected');
   });
 };

@@ -1,4 +1,4 @@
-import { type UseSocketOptions, useSocket } from './useSocket';
+import { type UseSocketOptions, useSocket } from '~/socket';
 
 export const useFriendSocket = (options?: Partial<UseSocketOptions>) => {
   return useSocket({
