@@ -11,6 +11,9 @@ importers:
       '@lukemorales/query-key-factory':
         specifier: ^1.3.4
         version: 1.3.4(@tanstack/query-core@5.90.2)(@tanstack/react-query@5.90.2(react@19.2.0))
+      '@suspensive/react':
+        specifier: ^3.10.1
+        version: 3.10.1(react@19.2.0)
       '@tanstack/react-query':
         specifier: ^5.90.2
         version: 5.90.2(react@19.2.0)
@@ -335,6 +338,11 @@ packages:
 
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
+
+  '@suspensive/react@3.10.1':
+    resolution: {integrity: sha512-k1YPa5hpuYu1yOyOPqgVCWXsNqiYQI+g7cNfRSbMT4VLKQtqbbhm0xQa6rpjy99kA4oI+9Pzgt622aIW8Hsaww==}
+    peerDependencies:
+      react: ^18 || ^19
 
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
@@ -927,6 +935,10 @@ snapshots:
     optional: true
 
   '@socket.io/component-emitter@3.1.2': {}
+
+  '@suspensive/react@3.10.1(react@19.2.0)':
+    dependencies:
+      react: 19.2.0
 
   '@swc/helpers@0.5.15':
     dependencies:

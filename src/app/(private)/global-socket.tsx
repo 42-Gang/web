@@ -91,10 +91,10 @@ export const GlobalSocket = () => {
       if (!me?.data) return;
       if (data.userId === me.data.id) return;
 
-      const fidParam = params.get('friendId');
-      const fid = fidParam ? Number.parseInt(fidParam, 10) : null;
+      const friendIdParam = params.get('friendId');
+      const friendId = friendIdParam ? Number.parseInt(friendIdParam, 10) : null;
 
-      if (fid && fid === data.userId) return;
+      if (friendId && friendId === data.userId) return;
 
       toast.info(`${data.nickname}: ${data.contents}`, {
         action: {
