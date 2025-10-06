@@ -1,5 +1,5 @@
 import type { Socket } from 'socket.io-client';
-import { getAccessToken, refreshTokenWithMutex, tokenRefreshMutex } from '~/api/base/token';
+import { refreshTokenWithMutex, tokenRefreshMutex } from '~/api/base/token';
 import type { ClientToServerEvents, ServerToClientEvents } from './socket-events';
 
 type SocketInstance = Socket<ServerToClientEvents, ClientToServerEvents>;
@@ -50,17 +50,8 @@ const refreshAndReconnect = async (
   if (options.autoReconnect === false) return;
 
   if (isRefreshing || tokenRefreshMutex.isLocked()) {
-    console.log('[socket] Waiting for token refresh...');
-
+    console.log('[socket-error-handler] Waiting for token refresh...');
     pending.push(onRecreate);
-
-    await tokenRefreshMutex.waitForUnlock();
-
-    const token = getAccessToken();
-    if (token) {
-      console.log('[socket] Using refreshed token');
-      await onRecreate(token);
-    }
     return;
   }
 
@@ -69,28 +60,30 @@ const refreshAndReconnect = async (
   try {
     const result = await refreshTokenWithMutex({
       onFailure: err => {
-        console.error('[socket] Token refresh failed:', err);
+        console.error('[socket-error-handler] Token refresh failed:', err);
         socket.disconnect();
       },
     });
 
     if (result.success && result.token) {
-      console.log('[socket] Token refreshed, recreating');
+      console.log('[socket-error-handler] Token refreshed, recreating');
+
       await onRecreate(result.token);
 
       for (const recreate of pending) {
         await recreate(result.token);
       }
+
       pending.length = 0;
     } else {
+      console.error('[socket-error-handler] Token refresh failed, disconnecting');
       socket.disconnect();
     }
   } catch (err) {
-    console.error('[socket] Refresh exception:', err);
+    console.error('[socket-error-handler] Refresh exception:', err);
+    socket.disconnect();
   } finally {
-    setTimeout(() => {
-      isRefreshing = false;
-    }, 2000);
+    isRefreshing = false;
   }
 };
 
@@ -100,20 +93,20 @@ export const setupErrorHandlers = (
   onRecreate: (token: string) => Promise<void>,
 ) => {
   socket.on('connect_error', async err => {
-    console.error('[socket] Connection error:', err);
+    console.error('[socket-error-handler] Connection error:', err);
     if (isAuthError(err)) {
       await refreshAndReconnect(socket, options, onRecreate);
     }
   });
 
   socket.on('disconnect', async reason => {
-    console.log('[socket] Disconnected:', reason);
+    console.log('[socket-error-handler] Disconnected:', reason);
     if (isAuthError(reason)) {
       await refreshAndReconnect(socket, options, onRecreate);
     }
   });
 
   socket.on('connect', () => {
-    console.log('[socket] Connected');
+    console.log('[socket-error-handler] Connected');
   });
 };

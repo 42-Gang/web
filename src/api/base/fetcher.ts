@@ -14,15 +14,6 @@ const defaultOption: Options = {
   credentials: 'include',
 };
 
-const handleAuthFailure = (reason: string) => {
-  console.warn(`[fetcher] Auth failure: ${reason}`);
-
-  if (IS_BROWSER) {
-    alert('로그인이 만료되었습니다. 다시 로그인해주세요.');
-    window.location.href = '/auth';
-  }
-};
-
 const handleTokenRefresh = async ({ error, request }: BeforeRetryState) => {
   if (!IS_BROWSER) return ky.stop;
   if (!(error instanceof HTTPError) || error.response.status !== 401) return ky.stop;
@@ -37,14 +28,20 @@ const handleTokenRefresh = async ({ error, request }: BeforeRetryState) => {
   }
 
   try {
-    await refreshTokenWithMutex({
-      onFailure: () => handleAuthFailure('토큰 갱신 실패'),
-    });
-
+    await refreshTokenWithMutex({ onFailure: () => handleAuthFailure('토큰 갱신 실패') });
     return;
   } catch (refreshError) {
     console.warn('[fetcher] Token refresh failed, stopping retry:', refreshError);
     return ky.stop;
+  }
+};
+
+const handleAuthFailure = (reason: string) => {
+  console.warn(`[fetcher] Auth failure: ${reason}`);
+
+  if (IS_BROWSER) {
+    alert('로그인이 만료되었습니다. 다시 로그인해주세요.');
+    window.location.href = '/auth';
   }
 };
 
