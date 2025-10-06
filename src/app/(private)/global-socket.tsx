@@ -1,6 +1,7 @@
 'use client';
 
 import { useQueryClient } from '@tanstack/react-query';
+import { useSetAtom } from 'jotai';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
@@ -8,12 +9,14 @@ import { useUsersMe } from '~/api/queries';
 import { queryKeys } from '~/api/queryKey';
 import { routes } from '~/constants/routes';
 import { useChatSocket, useFriendSocket, useGameInviteSocket, useStatusSocket } from '~/socket';
+import { updateFriendStatusAtom } from '~/stores/friend-status';
 
 export const GlobalSocket = () => {
   const qc = useQueryClient();
   const router = useRouter();
   const params = useSearchParams();
   const { data: me } = useUsersMe();
+  const updateStatus = useSetAtom(updateFriendStatusAtom);
 
   const { on: onFriend } = useFriendSocket();
   const { on: onGame } = useGameInviteSocket();
@@ -101,10 +104,11 @@ export const GlobalSocket = () => {
   useEffect(() => {
     const status = onStatus('friend-status', data => {
       console.log('[global-socket] Friend status:', data);
+      updateStatus(data);
     });
 
     return () => status();
-  }, [onStatus]);
+  }, [onStatus, updateStatus]);
 
   return null;
 };
