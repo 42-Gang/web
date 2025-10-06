@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import { useUsersMe } from '~/api/queries';
 import { queryKeys } from '~/api/queryKey';
 import { routes } from '~/constants/routes';
-import { useChatSocket, useFriendSocket, useGameInviteSocket } from '~/socket';
+import { useChatSocket, useFriendSocket, useGameInviteSocket, useStatusSocket } from '~/socket';
 
 export const GlobalSocket = () => {
   const queryClient = useQueryClient();
@@ -18,6 +18,7 @@ export const GlobalSocket = () => {
   const { on: onFriend } = useFriendSocket();
   const { on: onGameInvite } = useGameInviteSocket();
   const { on: onChat } = useChatSocket();
+  const { on: onStatus } = useStatusSocket();
 
   useEffect(() => {
     const friendRequest = onFriend('friend-request', async data => {
@@ -102,6 +103,16 @@ export const GlobalSocket = () => {
       message();
     };
   }, [onChat, me, searchParams, router]);
+
+  useEffect(() => {
+    const friendStatus = onStatus('friend-status', data => {
+      console.log('[global-socket] Friend status changed:', data);
+    });
+
+    return () => {
+      friendStatus();
+    };
+  }, [onStatus]);
 
   return null;
 };

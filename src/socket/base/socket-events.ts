@@ -3,6 +3,7 @@ import type {
   CustomInviteResponse,
   FriendAcceptStatus,
   FriendRequestStatus,
+  UserStatus,
 } from '~/api/types';
 
 export type ServerToClientEvents = {
@@ -10,6 +11,7 @@ export type ServerToClientEvents = {
   'friend-accept': (data: FriendAcceptStatus) => void;
   'custom-invite': (data: CustomInviteResponse) => void;
   message: (data: ChatMessageResponse) => void;
+  'friend-status': (data: UserStatus) => void;
 };
 
 export type ClientToServerEvents = Record<string, (data: unknown) => void>;
