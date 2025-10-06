@@ -12,7 +12,7 @@ export const BrandTitle = ({ className, showGuns = false, ...props }: Props) => 
     <div className="relative mt-16 w-full">
       <h1
         className={twMerge(
-          'text-center text-6xl text-[hsl(0,48%,59%)] leading-tight',
+          'select-none text-center text-6xl text-[hsl(0,48%,59%)] leading-tight',
           SuperPixel.className,
           className,
         )}

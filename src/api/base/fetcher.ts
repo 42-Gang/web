@@ -1,12 +1,8 @@
-import { Mutex } from 'async-mutex';
 import ky, { type BeforeRetryState, HTTPError, type Options, type ResponsePromise } from 'ky';
-import type { HttpResponse } from '~/api';
-import { env } from '~/constants/variables';
+import { getAccessToken, refreshToken } from './token';
 
 const API_URL = typeof window === 'undefined' ? 'https://pingpong.n-e.kr/api' : '/api';
 const IS_BROWSER = typeof window !== 'undefined';
-
-const tokenRefreshMutex = new Mutex();
 
 const defaultOption: Options = {
   retry: {
@@ -23,24 +19,25 @@ const handleTokenRefresh = async ({ error, request }: BeforeRetryState) => {
   if (!(error instanceof HTTPError) || error.response.status !== 401) return ky.stop;
   if (request.url.includes('logout')) return ky.stop;
 
+  const oldToken = request.headers.get('Authorization')?.replace('Bearer ', '');
+  const currentToken = getAccessToken();
+
+  if (oldToken !== currentToken && currentToken) {
+    console.log('[fetcher] Token already refreshed by another request, retrying');
+    return;
+  }
+
   try {
-    if (tokenRefreshMutex.isLocked()) {
-      await tokenRefreshMutex.waitForUnlock();
-      return;
-    }
-
-    await tokenRefreshMutex.runExclusive(async () => await refreshToken());
-
+    await refreshToken({ onFailure: () => handleAuthFailure('토큰 갱신 실패') });
     return;
   } catch (refreshError) {
-    console.warn('[fetcher.ts] Token refresh failed:', refreshError);
-    handleAuthFailure('토큰 갱신 실패');
+    console.warn('[fetcher] Token refresh failed, stopping retry:', refreshError);
     return ky.stop;
   }
 };
 
 const handleAuthFailure = (reason: string) => {
-  console.warn(`[fetcher.ts] Auth failure: ${reason}`);
+  console.warn(`[fetcher] Auth failure: ${reason}`);
 
   if (IS_BROWSER) {
     alert('로그인이 만료되었습니다. 다시 로그인해주세요.');
@@ -54,7 +51,7 @@ export const instance = ky.create({
   hooks: {
     beforeRequest: [
       request => {
-        const accessToken = window.localStorage.getItem(env.access_token);
+        const accessToken = getAccessToken();
         if (accessToken) request.headers.set('Authorization', `Bearer ${accessToken}`);
       },
     ],
@@ -85,24 +82,4 @@ export const fetcher = {
     resultify<T>(instance.patch(pathname, options)),
   delete: <T>(pathname: string, options?: Options) =>
     resultify<T>(instance.delete(pathname, options)),
-};
-
-const refreshToken = async () => {
-  const client = ky.create({
-    prefixUrl: API_URL,
-    headers: { 'Content-Type': 'application/json' },
-    retry: 0,
-    timeout: 30000,
-    credentials: 'include',
-  });
-
-  const response = await client
-    .post<HttpResponse<{ accessToken: string }>>('v1/auth/refresh-token')
-    .json();
-
-  if (response.status === 'SUCCESS' && response.data?.accessToken) {
-    window.localStorage.setItem(env.access_token, response.data.accessToken);
-  } else {
-    throw new Error('토큰 갱신 실패: 유효하지 않은 응답');
-  }
 };

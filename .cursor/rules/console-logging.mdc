@@ -1,0 +1,107 @@
+---
+alwaysApply: false
+---
+- Console Logging Standards
+
+  - All console output must follow the rules below.
+
+- Prefix Format
+
+  - Utility/Feature Modules
+
+    - Use kebab-case for module names.
+    - Examples: `[token]`, `[socket-manager]`, `[use-socket]`
+
+  - Page Components
+
+    - Use forward slashes (/) to separate page paths.
+    - Examples: `[auth/login-email]`, `[auth/register-email]`, `[game/lobby]`
+
+- Log Levels
+
+  - console.log
+
+    - Normal flow state changes.
+    - Useful debugging information.
+    - Examples: connection success, token refresh start
+
+  - console.warn
+
+    - Warning: abnormal but recoverable situations.
+    - Unexpected state but application continues.
+    - Examples: creating socket without token, retrying
+
+  - console.error
+
+    - Error: operation failure.
+    - Exception cases, unrecoverable errors.
+    - Examples: API call failure, authentication failure
+
+- Message Format
+
+  - Good - Utility/Feature Modules
+
+    ```typescript
+    console.log('[socket-manager] Socket connected');
+    console.error('[fetcher] Auth failure:', error);
+    console.warn('[token] Token refresh already in progress, waiting');
+    ```
+
+  - Good - Page Components
+
+    ```typescript
+    console.log('[auth/login-email] Login successful');
+    console.error('[game/lobby] Failed to join room:', error);
+    console.error('[auth/register-email] Registration failed:', error);
+    ```
+
+  - Bad
+
+    ```typescript
+    console.log('message without prefix');
+    console.log('Module: message');  // Inconsistent format
+    console.error(`[fetcher] Error: ${error.message}`);  // Don't embed error in template
+    ```
+
+- Additional Rules
+
+  - Separate prefix and message with a single space.
+  - Pass error objects as the second argument (not inside template literals).
+  - Keep messages clear and concise.
+  - Do not explain logs with comments (logs should be self-explanatory).
+  - Use consistent tense (prefer present tense for actions).
+
+- Complete Examples
+
+  - API/Utility Modules
+
+    ```typescript
+    console.log('[fetcher] Retrying request');
+    console.warn('[fetcher] Token refresh failed, stopping retry:', refreshError);
+    console.error('[fetcher] Request failed:', error);
+    console.log('[token] Refreshing token');
+    console.log('[token] Token refreshed successfully');
+    console.error('[token] Token refresh failed:', error);
+    ```
+
+  - Socket Modules
+
+    ```typescript
+    console.log('[socket-manager] Socket connected');
+    console.warn('[socket-manager] Creating socket without token');
+    console.log('[socket-manager] Socket destroyed:', cacheKey);
+    console.error('[socket-error-handler] Connection error:', error);
+    console.log('[socket-error-handler] Reconnecting with new token');
+    console.log('[socket-error-handler] Connected successfully');
+    ```
+
+  - Page Components
+
+    ```typescript
+    console.log('[auth/login-email] Login successful');
+    console.error('[auth/login-email] Login failed:', error);
+    console.log('[auth/register-email] Registration successful');
+    console.error('[auth/register-email] Email verification failed:', error);
+    console.log('[game/lobby] Joined room successfully');
+    console.error('[game/lobby] Failed to join room:', error);
+    ```

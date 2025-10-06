@@ -38,7 +38,7 @@ export const CallbackController = ({ code, state }: Props) => {
 
         router.replace('/');
       } catch (error) {
-        console.error('[auth/oauth-callback] OAuth callback error:', error);
+        console.error('[auth/oauth-callback] OAuth callback failed:', error);
 
         router.replace(state === 'SIGNUP' ? `/${routes.register}` : `/${routes.login}`);
       } finally {
