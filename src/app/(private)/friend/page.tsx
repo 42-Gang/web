@@ -24,7 +24,7 @@ const Page = () => {
           >
             <UserPlusIcon size={24} />
           </button>
-          <input className="h-11 w-full rounded-xl bg-white" />
+          <input className="h-11 w-full rounded-xl bg-white px-4" />
         </div>
 
         <Suspense clientOnly>
