@@ -59,7 +59,6 @@ export const ChatHeader = ({ className, currentFriendId, ...props }: Props) => {
           alt={`${friend.nickname} Profile Image`}
           width={40}
           height={40}
-          draggable={false}
         />
 
         <p className="font-bold text-white text-xl leading-none">{friend.nickname}</p>
