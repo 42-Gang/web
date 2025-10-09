@@ -24,13 +24,14 @@ export const FriendItem = ({ friend, className, ...props }: FriendItemProps) => 
   const getFriendStatus = useAtomValue(getFriendStatusAtom);
 
   return (
-    <div className={twMerge('center-y gap-2', className)} {...props}>
+    <div className={twMerge('center-y select-none gap-2', className)} {...props}>
       <Image
         className="size-10 overflow-hidden rounded-full object-cover"
         src={friend.avatarUrl}
         alt={`${friend.nickname} Profile Image`}
         width={40}
         height={40}
+        draggable={false}
       />
       <div className="column">
         <p className="font-bold text-xl leading-none">{friend.nickname}</p>

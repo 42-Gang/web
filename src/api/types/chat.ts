@@ -5,11 +5,20 @@ export type ChatMessage = {
   message: string;
 };
 
+export type ChatHistoryPayload = {
+  roomId: number;
+};
+
 export type ChatHistory = {
   chatHistory: ChatMessage[];
 };
 
-export type ChatDmRoomInfo = {
+export type ChatDMRoomPayload = {
+  userId: number;
+  friendId: number;
+};
+
+export type ChatDMRoomResponse = {
   roomId: number;
 };
 

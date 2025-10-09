@@ -1,4 +1,4 @@
-export * from './useChatDmRoomId';
+export * from './useChatDMRoomId';
 export * from './useChatHistory';
 export * from './useFriendsMe';
 export * from './useFriendsRequests';
