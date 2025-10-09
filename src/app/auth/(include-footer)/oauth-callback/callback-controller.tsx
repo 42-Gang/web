@@ -36,7 +36,7 @@ export const CallbackController = ({ code, state }: Props) => {
         const { data } = await mutateAsync({ code, state, redirectUri });
         localStorage.setItem(env.access_token, data.accessToken);
 
-        router.replace('/');
+        window.location.replace('/');
       } catch (error) {
         console.error('[auth/oauth-callback] OAuth callback failed:', error);
 

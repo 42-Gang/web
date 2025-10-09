@@ -1,6 +1,7 @@
 import '~/styles/globals.css';
 
 import type { Metadata } from 'next';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import type { PropsWithChildren } from 'react';
 import { Toaster } from 'sonner';
 import { twMerge } from 'tailwind-merge';
@@ -17,7 +18,7 @@ const RootLayout = ({ children }: PropsWithChildren) => {
     <html lang="ko">
       <body className={twMerge('antialiased', DungGeunMo.className)}>
         <QueryClientProvider>
-          {children}
+          <NuqsAdapter>{children}</NuqsAdapter>
           <Toaster position="top-right" toastOptions={{ classNames: { toast: 'pixel-toast' } }} />
         </QueryClientProvider>
       </body>

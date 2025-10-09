@@ -1,8 +1,10 @@
 import { createQueryKeys, mergeQueryKeys } from '@lukemorales/query-key-factory';
 import { fetcher } from './base';
 import type {
-  ChatDmRoomInfo,
+  ChatDMRoomPayload,
+  ChatDMRoomResponse,
   ChatHistory,
+  ChatHistoryPayload,
   FriendList,
   FriendRequestUserList,
   HttpResponse,
@@ -67,18 +69,15 @@ const gameQueryKeys = createQueryKeys('games', {
 });
 
 const chatQueryKeys = createQueryKeys('chats', {
-  history: (roomId: number) => ({
-    queryKey: [roomId],
-    queryFn: () =>
-      roomId
-        ? fetcher.get<HttpResponse<ChatHistory>>(`v1/chat/${roomId}/messages`)
-        : Promise.reject(new Error('roomId is undefined')),
+  history: (payload: ChatHistoryPayload) => ({
+    queryKey: [payload],
+    queryFn: () => fetcher.get<HttpResponse<ChatHistory>>(`v1/chat/${payload.roomId}/messages`),
   }),
-  dmRoomId: (userId: number, friendId: number) => ({
-    queryKey: [userId, friendId],
+  dmRoomId: (payload: ChatDMRoomPayload) => ({
+    queryKey: [payload],
     queryFn: () =>
-      fetcher.get<HttpResponse<ChatDmRoomInfo>>(
-        `v1/chat/room/dm?userId=${userId}&friendId=${friendId}`,
+      fetcher.get<HttpResponse<ChatDMRoomResponse>>(
+        `v1/chat/room/dm?userId=${payload.userId}&friendId=${payload.friendId}`,
       ),
   }),
 });

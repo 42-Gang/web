@@ -2,6 +2,9 @@ import type { NextConfig } from 'next';
 import { env } from '~/constants/variables';
 
 const nextConfig: NextConfig = {
+  images: {
+    unoptimized: true,
+  },
   async rewrites() {
     return [
       {
