@@ -1,6 +1,7 @@
 import { Suspense } from '@suspensive/react';
-import { ChatList } from '~/app/(private)/friend/chatroom/chat-list';
+import { ChatHeader } from '~/app/(private)/friend/chatroom/chat-header';
 import { CloseButton } from '~/components/ui';
+import { ChatRoom } from './chat-room';
 import { FriendList } from './friend-list';
 
 interface Props {
@@ -17,12 +18,17 @@ const Page = async ({ searchParams }: Props) => {
       <CloseButton />
       <div className="flex h-full">
         <Suspense clientOnly>
-          <FriendList className="column mt-16 w-1/4" currentFriendId={friendId} />
+          <FriendList className="column mt-14 w-1/4" currentFriendId={friendId} />
         </Suspense>
 
-        <Suspense clientOnly>
-          <div className="column w-3/4">{friendId && <ChatList currentFriendId={friendId} />}</div>
-        </Suspense>
+        {friendId && (
+          <Suspense clientOnly>
+            <div className="column w-3/4 overflow-hidden">
+              <ChatHeader currentFriendId={friendId} />
+              <ChatRoom currentFriendId={friendId} />
+            </div>
+          </Suspense>
+        )}
       </div>
     </>
   );
