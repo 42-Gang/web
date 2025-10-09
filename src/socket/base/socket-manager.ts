@@ -6,7 +6,12 @@ import type { ClientToServerEvents, ServerToClientEvents } from './socket-events
 
 type SocketInstance = Socket<ServerToClientEvents, ClientToServerEvents>;
 
-const cache = new Map<string, SocketInstance>();
+interface CachedSocket {
+  socket: SocketInstance;
+  refCount: number;
+}
+
+const cache = new Map<string, CachedSocket>();
 
 const getCacheKey = (ns: string, auth: boolean, query?: Record<string, string>): string => {
   const q = query ? JSON.stringify(query) : '';
@@ -22,7 +27,10 @@ export const createSocket = async (
   const key = getCacheKey(ns, auth, options.query);
 
   const cached = cache.get(key);
-  if (cached?.connected) return cached;
+  if (cached) {
+    cached.refCount++;
+    return cached.socket;
+  }
 
   const query: Record<string, string> = { ...options.query };
 
@@ -31,7 +39,7 @@ export const createSocket = async (
     if (token) {
       query.token = token;
     } else {
-      console.warn('[socket] Creating without token');
+      console.warn('[socket] Creating socket without authentication token');
     }
   }
 
@@ -47,19 +55,22 @@ export const createSocket = async (
     setupErrorHandlers(socket, options, onRecreate);
   }
 
-  cache.set(key, socket);
+  cache.set(key, { socket, refCount: 1 });
   return socket;
 };
 
 export const destroySocket = (ns = '/', auth = true, query?: Record<string, string>) => {
   const key = getCacheKey(ns, auth, query);
-  const socket = cache.get(key);
+  const cached = cache.get(key);
 
-  if (socket) {
-    socket.removeAllListeners();
-    socket.disconnect();
-    cache.delete(key);
-    console.log('[socket] Destroyed:', key);
+  if (cached) {
+    cached.refCount--;
+    
+    if (cached.refCount <= 0) {
+      cached.socket.removeAllListeners();
+      cached.socket.disconnect();
+      cache.delete(key);
+    }
   }
 };
 
@@ -69,7 +80,8 @@ export const getSocket = (
   query?: Record<string, string>,
 ): SocketInstance | null => {
   const key = getCacheKey(ns, auth, query);
-  return cache.get(key) || null;
+  const cached = cache.get(key);
+  return cached?.socket || null;
 };
 
 export type { SocketOptions } from './socket-error-handler';

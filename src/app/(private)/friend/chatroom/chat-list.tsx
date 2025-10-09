@@ -43,7 +43,6 @@ export const ChatList = ({ className, currentFriendId, ...props }: Props) => {
     if (!socket.socket || !socket.isConnected) return;
 
     const msg = socket.on('message', data => {
-      console.log('[global-socket] Chat message:', data);
       if (!me?.data) return;
 
       const newMessage: ChatMessage = {

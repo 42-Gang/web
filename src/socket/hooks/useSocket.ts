@@ -86,10 +86,6 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
 
   const recreate = useCallback(
     async (token: string) => {
-      console.log(
-        `[use-socket] Recreating socket for namespace "${optsRef.current.namespace || '/'}" with new token`,
-      );
-
       if (!isMounted.current) return;
 
       const ns = optsRef.current.namespace || '/';
@@ -117,6 +113,7 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
   );
 
   useEffect(() => {
+    isMounted.current = true;
     let current: SocketInstance | null = null;
 
     const init = async () => {
@@ -135,12 +132,17 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
         current = sock;
         setSocket(sock);
 
-        if (optsRef.current.autoConnect !== false) {
+        if (sock.connected) {
+          setConnected(true);
+          setConnecting(false);
+          handlersRef.current.onConnect?.();
+        } else if (optsRef.current.autoConnect !== false) {
           sock.connect();
         }
       } catch (err) {
         if (isMounted.current) {
           const error = err instanceof Error ? err : new Error('Socket creation failed');
+          console.error('[useSocket] Socket initialization error:', error);
           setError(error);
           setConnecting(false);
           handlersRef.current.onError?.(error);
@@ -152,7 +154,7 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
 
     return () => {
       isMounted.current = false;
-      if (current && optsRef.current.autoDisconnect !== false) {
+      if (current) {
         const ns = optsRef.current.namespace || '/';
         const auth = optsRef.current.withAuth !== false;
         destroySocket(ns, auth, optsRef.current.query);
