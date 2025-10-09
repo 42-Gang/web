@@ -13,7 +13,7 @@ export const FriendFilterInput = () => {
       className="h-11 w-full rounded-xl bg-white px-4"
       placeholder="Search friends..."
       value={filter}
-      onChange={(e) => setFilter(e.target.value)}
+      onChange={e => setFilter(e.target.value)}
     />
   );
 };

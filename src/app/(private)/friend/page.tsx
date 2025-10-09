@@ -5,6 +5,7 @@ import { UserPlusIcon } from '~/components/icon';
 import { CloseButton } from '~/components/ui';
 import { FriendFilterInput } from './_components/friend-filter-input';
 import { FriendList } from './_components/friend-list';
+import { FriendRequestButton } from './_components/friend-request-button';
 
 const Page = () => {
   return (
@@ -15,17 +16,25 @@ const Page = () => {
           Friend List
         </h1>
 
-        <div className="center-y mt-6 w-[75%] gap-2">
-          <button
-            className={twMerge(
-              'center size-11 shrink-0 cursor-pointer rounded-2xl border-2 border-neutral-50 text-white',
-              'hover:bg-neutral-50/20 active:translate-y-px',
-            )}
-            type="button"
-          >
-            <UserPlusIcon size={24} />
-          </button>
-          <FriendFilterInput />
+        <div className="center relative mt-6 w-full">
+          <div className="center-y w-[75%] gap-2">
+            <button
+              className={twMerge(
+                'center size-11 shrink-0 cursor-pointer rounded-2xl border-2 border-neutral-50 text-white',
+                'hover:bg-neutral-50/20 active:translate-y-px',
+              )}
+              type="button"
+            >
+              <UserPlusIcon size={24} />
+            </button>
+            <Suspense>
+              <FriendFilterInput />
+            </Suspense>
+          </div>
+
+          <Suspense clientOnly>
+            <FriendRequestButton />
+          </Suspense>
         </div>
 
         <Suspense clientOnly>

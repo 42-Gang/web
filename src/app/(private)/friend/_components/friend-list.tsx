@@ -14,8 +14,8 @@ export const FriendList = () => {
     shallow: false,
   });
 
-  const filteredFriends = data.data.friends.filter(friend => 
-    friend.nickname.toLowerCase().includes(filter.toLowerCase())
+  const filteredFriends = data.data.friends.filter(friend =>
+    friend.nickname.toLowerCase().includes(filter.toLowerCase()),
   );
 
   return (
