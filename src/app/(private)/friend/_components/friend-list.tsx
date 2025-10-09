@@ -9,10 +9,7 @@ import { routes } from '~/constants/routes';
 
 export const FriendList = () => {
   const { data } = useSuspenseFriendsMe();
-  const [filter] = useQueryState('filter', {
-    defaultValue: '',
-    shallow: false,
-  });
+  const [filter] = useQueryState('filter', { defaultValue: '' });
 
   const filteredFriends = data.data.friends.filter(friend =>
     friend.nickname.toLowerCase().includes(filter.toLowerCase()),

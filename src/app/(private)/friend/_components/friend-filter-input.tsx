@@ -3,10 +3,7 @@
 import { useQueryState } from 'nuqs';
 
 export const FriendFilterInput = () => {
-  const [filter, setFilter] = useQueryState('filter', {
-    defaultValue: '',
-    shallow: false,
-  });
+  const [filter, setFilter] = useQueryState('filter', { defaultValue: '' });
 
   return (
     <input

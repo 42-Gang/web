@@ -52,7 +52,7 @@ export const ChatHeader = ({ className, currentFriendId, ...props }: Props) => {
 
   return (
     <div className={twMerge('row-between px-4', className)} {...props}>
-      <div className={twMerge('center-y h-14 select-none gap-2', className)} {...props}>
+      <div className="center-y h-14 select-none gap-2">
         <Image
           className="size-10 overflow-hidden rounded-full object-cover"
           src={friend.avatarUrl}
