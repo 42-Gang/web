@@ -18,7 +18,7 @@ export const FriendList = () => {
         >
           <FriendItem friend={friend} />
           <Link
-            className={'text-white active:translate-y-px'}
+            className="text-white active:translate-y-px"
             href={`/${routes.friend_chatroom}?friendId=${friend.friendId}`}
           >
             <MailIcon size={24} />
