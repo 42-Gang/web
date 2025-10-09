@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { type FormEvent, useState } from 'react';
 import { toast } from 'sonner';
 import { useLogin } from '~/api';
@@ -12,7 +11,6 @@ import { InputForm } from '../../_components/input-form';
 const Page = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const router = useRouter();
 
   const { mutateAsync } = useLogin();
 
@@ -22,7 +20,7 @@ const Page = () => {
       const { data } = await mutateAsync({ email, password });
       localStorage.setItem(env.access_token, data.accessToken);
 
-      router.replace('/');
+      window.location.replace('/');
     } catch (error) {
       console.error('[auth/login-email] Login failed:', error);
       const data = await extractErrorData(error);
