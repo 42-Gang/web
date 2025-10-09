@@ -65,23 +65,13 @@ export const destroySocket = (ns = '/', auth = true, query?: Record<string, stri
 
   if (cached) {
     cached.refCount--;
-    
+
     if (cached.refCount <= 0) {
       cached.socket.removeAllListeners();
       cached.socket.disconnect();
       cache.delete(key);
     }
   }
-};
-
-export const getSocket = (
-  ns = '/',
-  auth = true,
-  query?: Record<string, string>,
-): SocketInstance | null => {
-  const key = getCacheKey(ns, auth, query);
-  const cached = cache.get(key);
-  return cached?.socket || null;
 };
 
 export type { SocketOptions } from './socket-error-handler';

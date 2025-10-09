@@ -1,4 +1,5 @@
 export * from './components/GunIcon';
 export * from './components/MailIcon';
+export * from './components/SendIcon';
 export * from './components/UserPlusIcon';
 export * from './components/XIcon';
