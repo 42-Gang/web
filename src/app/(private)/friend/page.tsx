@@ -3,6 +3,7 @@ import { twMerge } from 'tailwind-merge';
 import { SuperPixel } from '~/app/_fonts';
 import { UserPlusIcon } from '~/components/icon';
 import { CloseButton } from '~/components/ui';
+import { FriendFilterInput } from './_components/friend-filter-input';
 import { FriendList } from './_components/friend-list';
 
 const Page = () => {
@@ -24,7 +25,7 @@ const Page = () => {
           >
             <UserPlusIcon size={24} />
           </button>
-          <input className="h-11 w-full rounded-xl bg-white px-4" />
+          <FriendFilterInput />
         </div>
 
         <Suspense clientOnly>
