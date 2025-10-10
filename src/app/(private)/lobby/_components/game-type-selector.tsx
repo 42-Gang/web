@@ -23,8 +23,8 @@ export const GameTypeSelector = ({ type }: GameTypeSelectorProps) => {
         <Image
           src="/assets/icon_type_1vs1.png"
           alt="1vs1"
-          width={150}
-          height={140}
+          width={140}
+          height={131}
           draggable={false}
         />
         <span className="font-medium text-2xl">1VS1</span>
@@ -39,8 +39,8 @@ export const GameTypeSelector = ({ type }: GameTypeSelectorProps) => {
         <Image
           src="/assets/icon_type_tournament.png"
           alt="1vs1"
-          width={150}
-          height={140}
+          width={140}
+          height={131}
           draggable={false}
         />
         <span className="font-medium text-2xl">TOURNAMENT</span>
