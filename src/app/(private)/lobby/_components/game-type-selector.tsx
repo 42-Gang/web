@@ -17,7 +17,7 @@ export const GameTypeSelector = ({ type }: GameTypeSelectorProps) => {
         href={`/${prefix}?mode=1vs1`}
         className={twMerge(
           'column-between size-[200px] select-none rounded-2xl border-2 border-white p-3',
-          'hover:border-yellow-300 hover:bg-neutral-50/20 hover:text-yellow-300',
+          'hover:border-yellow-300 hover:bg-neutral-50/20 hover:text-yellow-300 active:translate-y-px',
         )}
       >
         <Image
@@ -33,7 +33,7 @@ export const GameTypeSelector = ({ type }: GameTypeSelectorProps) => {
         href={`/${prefix}?mode=tournament`}
         className={twMerge(
           'column-between size-[200px] select-none rounded-2xl border-2 border-white p-3',
-          'hover:border-yellow-300 hover:bg-neutral-50/20 hover:text-yellow-300',
+          'hover:border-yellow-300 hover:bg-neutral-50/20 hover:text-yellow-300 active:translate-y-px',
         )}
       >
         <Image
