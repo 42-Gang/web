@@ -7,9 +7,9 @@ import type {
   ChatHistoryPayload,
   FriendList,
   FriendRequestUserList,
+  GameStatsPayload,
+  GameStatsResponse,
   HttpResponse,
-  TournamentGameList,
-  TournamentRoundType,
   UserInfo,
   UserList,
   UserProfilePayload,
@@ -62,9 +62,14 @@ const friendsQueryKeys = createQueryKeys('friends', {
 });
 
 const gameQueryKeys = createQueryKeys('games', {
-  tournamentHistory: (type: TournamentRoundType) => ({
-    queryKey: [type],
-    queryFn: () => fetcher.get<HttpResponse<TournamentGameList>>(`v1/game/history/${type}`),
+  stats: (payload: GameStatsPayload) => ({
+    queryKey: [payload],
+    queryFn: () => {
+      const { userId, ...params } = payload;
+      return fetcher.get<HttpResponse<GameStatsResponse>>(`v1/game/stats/${userId}`, {
+        searchParams: params,
+      });
+    },
   }),
 });
 
