@@ -56,10 +56,8 @@ const handleAuthFailure = ({
   if (IS_BROWSER) {
     if (showAlert) {
       alert('로그인이 만료되었습니다. 다시 로그인해주세요.');
-      window.location.replace('/auth');
-    } else {
-      window.location.replace('/auth');
     }
+    window.location.replace('/auth');
   }
 };
 
