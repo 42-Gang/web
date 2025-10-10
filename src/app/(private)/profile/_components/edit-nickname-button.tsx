@@ -9,10 +9,10 @@ export const EditNicknameButton = ({ onClick, className, disabled, ...rest }: Pr
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`active:translate-y-px ${className ?? ''}`}
+      className={`active:translate-y-px ${className ?? ''} cursor-pointer`}
       {...rest}
     >
-      <EditIcon className="size-6 cursor-pointer text-yellow-300" />
+      <EditIcon className="size-6 text-yellow-300" />
     </button>
   );
 };
