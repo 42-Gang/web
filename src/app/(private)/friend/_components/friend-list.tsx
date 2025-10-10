@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useQueryState } from 'nuqs';
 import { useSuspenseFriendsMe } from '~/api';
-import { MailIcon } from '~/components/icon';
+import { MessageIcon } from '~/components/icon';
 import { FriendItem } from '~/components/ui';
 import { routes } from '~/constants/routes';
 
@@ -27,7 +27,7 @@ export const FriendList = () => {
             className="text-white active:translate-y-px"
             href={`/${routes.friend_chatroom}?friendId=${friend.friendId}`}
           >
-            <MailIcon size={24} />
+            <MessageIcon size={24} />
           </Link>
         </li>
       ))}

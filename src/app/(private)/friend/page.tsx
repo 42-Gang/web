@@ -1,7 +1,7 @@
 import { Suspense } from '@suspensive/react';
 import { twMerge } from 'tailwind-merge';
 import { SuperPixel } from '~/app/_fonts';
-import { UserPlusIcon } from '~/components/icon';
+import { UsersIcon } from '~/components/icon';
 import { CloseButton } from '~/components/ui';
 import { FriendFilterInput } from './_components/friend-filter-input';
 import { FriendList } from './_components/friend-list';
@@ -25,7 +25,7 @@ const Page = () => {
               )}
               type="button"
             >
-              <UserPlusIcon size={24} />
+              <UsersIcon size={24} />
             </button>
             <Suspense>
               <FriendFilterInput />

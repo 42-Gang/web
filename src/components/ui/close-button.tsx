@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';
-import { XIcon } from '~/components/icon';
+import { TimesIcon } from '~/components/icon';
 
 export const CloseButton = () => {
   const router = useRouter();
@@ -20,7 +20,7 @@ export const CloseButton = () => {
       type="button"
       onClick={handleClose}
     >
-      <XIcon size={24} />
+      <TimesIcon size={20} />
     </button>
   );
 };

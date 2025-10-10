@@ -2,7 +2,7 @@
 
 import { type ComponentProps, type FormEvent, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { SendIcon } from '~/components/icon';
+import { PlayIcon } from '~/components/icon';
 
 interface Props extends ComponentProps<'form'> {
   onSend: (message: string) => void;
@@ -27,7 +27,7 @@ export const ChatInputForm = ({ className, onSend, ...props }: Props) => {
     >
       <div className="flex rounded-lg bg-neutral-50/50 px-3">
         <input
-          className="flex-1 py-2"
+          className="flex-1 py-2 outline-none"
           type="text"
           placeholder="Type a message"
           value={message}
@@ -38,7 +38,7 @@ export const ChatInputForm = ({ className, onSend, ...props }: Props) => {
           type="submit"
           aria-label="Send message"
         >
-          <SendIcon size={20} />
+          <PlayIcon size={20} />
         </button>
       </div>
     </form>
