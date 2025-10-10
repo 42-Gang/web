@@ -1,5 +1,6 @@
 export * from './components/BellIcon';
 export * from './components/BellRingIcon';
+export * from './components/BulletIcon';
 export * from './components/EnvelopeIcon';
 export * from './components/GunIcon';
 export * from './components/MessageIcon';
