@@ -3,8 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';
 import { useLogout } from '~/api';
+import { removeAccessToken } from '~/api/base';
 import { routes } from '~/constants/routes';
-import { env } from '~/constants/variables';
 
 export const LogoutButton = () => {
   const { mutate: logout, isPending } = useLogout();
@@ -15,11 +15,7 @@ export const LogoutButton = () => {
 
     logout(undefined, {
       onSuccess: async () => {
-        try {
-          window.localStorage.removeItem(env.access_token);
-        } catch (error) {
-          console.warn('Failed to remove item from localStorage:', error);
-        }
+        removeAccessToken();
 
         router.replace(`/${routes.auth}`);
       },

@@ -68,3 +68,12 @@ export const refreshToken = (options?: {
     throw err;
   });
 };
+
+export const removeAccessToken = (): void => {
+  if (!IS_BROWSER) return;
+  try {
+    window.localStorage.removeItem(env.access_token);
+  } catch (error) {
+    console.warn('Failed to remove access token:', error);
+  }
+};
