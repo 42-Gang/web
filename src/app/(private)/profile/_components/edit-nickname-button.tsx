@@ -3,7 +3,7 @@ import { EditIcon } from '~/components/icon';
 
 type Props = Pick<ComponentProps<'button'>, 'onClick' | 'className' | 'disabled' | 'aria-label'>;
 
-export const EditProfileImageButton = ({ onClick, className, disabled, ...rest }: Props) => {
+export const EditNicknameButton = ({ onClick, className, disabled, ...rest }: Props) => {
   return (
     <button
       type="button"
