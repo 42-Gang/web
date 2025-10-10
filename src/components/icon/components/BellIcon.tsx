@@ -6,18 +6,12 @@ export const BellIcon = (props: IconProps) => {
     <Icon {...props}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
         viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        fill="currentColor"
         aria-hidden="true"
       >
-        <path d="M10.268 21a2 2 0 0 0 3.464 0" />
-        <path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" />
+        <polygon points="15 20 15 22 14 22 14 23 10 23 10 22 9 22 9 20 15 20" />
+        <path d="m21,17v-1h-1v-2h-1v-6h-1v-2h-1v-1h-1v-1h-2v-1h-1V1h-2v2h-1v1h-2v1h-1v1h-1v2h-1v6h-1v2h-1v1h-1v1h1v1h18v-1h1v-1h-1Zm-15-1v-2h1v-6h1v-2h2v-1h4v1h2v2h1v6h1v2h1v1H5v-1h1Z" />
       </svg>
     </Icon>
   );

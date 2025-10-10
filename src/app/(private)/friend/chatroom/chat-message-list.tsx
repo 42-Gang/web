@@ -23,7 +23,7 @@ export const ChatMessageList = ({ className, messages, currentUserNickname, ...p
   return (
     <ul
       ref={listRef}
-      className={twMerge('column w-full overflow-y-auto px-4 py-3', className)}
+      className={twMerge('column w-full flex-1 overflow-y-auto px-4 py-3', className)}
       {...props}
     >
       {messages.map(msg => {
