@@ -27,9 +27,7 @@ export const ProfileStats = ({ userId, nickname }: ProfileStatsProps) => {
 					Nickname :
 					<div className="ml-4 flex flex-row items-center gap-2">
 						<span className="text-yellow-300">{nickname}</span>
-						<button type="button" onClick={() => setIsOpen(true)} className="active:translate-y-px">
-							<EditProfileImageButton />
-						</button>
+						<EditProfileImageButton onClick={() => setIsOpen(true)} />
 					</div>
 				</div>
 				<div>WIN : {duel.summary.wins}</div>
