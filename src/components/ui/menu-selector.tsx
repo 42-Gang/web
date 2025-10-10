@@ -6,7 +6,9 @@ import { Tiny } from '~/app/_fonts';
 interface MenuSelectorRootProps extends ComponentProps<'div'> {}
 
 const MenuSelectorRoot = ({ className, ...props }: MenuSelectorRootProps) => {
-  return <div className={twMerge('column-center-x', Tiny.className, className)} {...props} />;
+  return (
+    <div className={twMerge('flex flex-col items-center', Tiny.className, className)} {...props} />
+  );
 };
 
 interface MenuSelectorLinkProps extends ComponentProps<typeof Link> {}
