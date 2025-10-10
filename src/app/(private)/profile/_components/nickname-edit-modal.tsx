@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { useUpdateProfile } from '~/api';
+import { extractErrorData } from '~/api/base';
 import { TimesIcon } from '~/components/icon';
 import { CTAButton } from '~/components/ui';
 
@@ -32,10 +33,6 @@ export const NicknameEditModal = ({
       alert('닉네임을 입력해주세요.');
       return;
     }
-    if (value.length > 8) {
-      alert('닉네임은 최대 8자까지 가능합니다.');
-      return;
-    }
 
     updateProfile(
       { nickname: value },
@@ -43,9 +40,10 @@ export const NicknameEditModal = ({
         onSuccess: () => {
           onClose();
         },
-        onError: error => {
+        onError: async error => {
           console.error('Failed to update profile:', error);
-          alert('닉네임 변경에 실패했습니다.');
+          const data = await extractErrorData(error);
+          alert(data?.message ?? '프로필 업데이트에 실패했습니다. 다시 시도해주세요.');
         },
       },
     );
@@ -78,7 +76,7 @@ export const NicknameEditModal = ({
             value={nickname}
             onChange={e => setNickname(e.target.value)}
             placeholder="Max 8 letters!"
-            maxLength={8}
+            maxLength={10}
             className="w-full rounded-[16px] border-4 border-black/80 bg-white px-4 py-5 text-center text-[28px] text-black placeholder-black/40 outline-none"
             disabled={isPending}
           />
