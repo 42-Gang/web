@@ -3,7 +3,9 @@
 import Image from 'next/image';
 import { type ChangeEvent, useRef } from 'react';
 import { useUploadAvatar } from '~/api';
+import { extractErrorData } from '~/api/base';
 import { ImageIcon } from '~/components/icon';
+import { toast } from 'sonner';
 
 type ProfileAvatarProps = {
   avatarUrl: string;
@@ -31,10 +33,13 @@ export const ProfileAvatar = ({ avatarUrl, nickname }: ProfileAvatarProps) => {
     formData.append('file', file);
 
     uploadAvatar(formData, {
-      onSuccess: () => {},
-      onError: error => {
+      onSuccess: () => {
+        toast.success('프로필 변경 완료!', { duration: 2000 });
+      },
+      onError: async error => {
         console.error('Failed to upload avatar:', error);
-        alert('이미지 업로드에 실패했습니다.');
+        const errorData = await extractErrorData(error);
+        alert(errorData?.message || '이미지 업로드에 실패했습니다.');
       },
     });
   };

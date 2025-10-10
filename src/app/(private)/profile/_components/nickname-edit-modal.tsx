@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
 import { useUpdateProfile } from '~/api';
 import { extractErrorData } from '~/api/base';
@@ -38,6 +39,7 @@ export const NicknameEditModal = ({
       { nickname: value },
       {
         onSuccess: () => {
+          toast.success('프로필 업데이트완료!', { duration: 2000 });
           onClose();
         },
         onError: async error => {
