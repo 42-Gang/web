@@ -28,14 +28,14 @@ const handleTokenRefresh = async ({ error, request }: BeforeRetryState) => {
   }
 
   try {
-    await refreshToken({ 
-      onFailure: (error) => {
+    await refreshToken({
+      onFailure: (error: unknown) => {
         if (error instanceof HTTPError && error.response.status === 400) {
           handleAuthFailure({ reason: '토큰 갱신 실패', showAlert: false });
         } else {
           handleAuthFailure({ reason: '토큰 갱신 실패', showAlert: true });
         }
-      }
+      },
     });
     return;
   } catch (refreshError) {
@@ -44,7 +44,13 @@ const handleTokenRefresh = async ({ error, request }: BeforeRetryState) => {
   }
 };
 
-const handleAuthFailure = ({ reason, showAlert = true }: { reason: string; showAlert?: boolean }) => {
+const handleAuthFailure = ({
+  reason,
+  showAlert = true,
+}: {
+  reason: string;
+  showAlert?: boolean;
+}) => {
   console.warn(`[fetcher] Auth failure: ${reason}`);
 
   if (IS_BROWSER) {

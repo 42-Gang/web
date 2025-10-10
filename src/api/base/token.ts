@@ -21,18 +21,14 @@ export const refreshTokenInternal = async () => {
     credentials: 'include',
   });
 
-  try {
-    const response = await client
-      .post<HttpResponse<{ accessToken: string }>>('v1/auth/refresh-token', { json: null })
-      .json();
+  const response = await client
+    .post<HttpResponse<{ accessToken: string }>>('v1/auth/refresh-token', { json: null })
+    .json();
 
-    if (response.status === 'SUCCESS' && response.data?.accessToken) {
-      window.localStorage.setItem(env.access_token, response.data.accessToken);
-    } else {
-      throw new Error('토큰 갱신 실패: 유효하지 않은 응답');
-    }
-  } catch (error) {
-    throw error;
+  if (response.status === 'SUCCESS' && response.data?.accessToken) {
+    window.localStorage.setItem(env.access_token, response.data.accessToken);
+  } else {
+    throw new Error('토큰 갱신 실패: 유효하지 않은 응답');
   }
 };
 
@@ -42,7 +38,7 @@ export interface TokenRefreshResult {
 }
 
 export const refreshToken = (options?: {
-  onFailure?: (error: Error) => void;
+  onFailure?: (error: unknown) => void;
 }): Promise<TokenRefreshResult> => {
   if (!IS_BROWSER) {
     return Promise.resolve({ success: false, token: null });
@@ -50,25 +46,23 @@ export const refreshToken = (options?: {
 
   if (!refreshPromise) {
     refreshPromise = (async () => {
-      try {
-        console.log('[token] Refreshing token');
-        await refreshTokenInternal();
-        console.log('[token] Token refreshed successfully');
-        const token = getAccessToken();
-        if (!token) {
-          throw new Error('Token is null after successful refresh');
-        }
-        return { success: true, token };
-      } catch (error) {
-        throw error instanceof Error ? error : new Error('토큰 갱신 실패');
-      } finally {
-        refreshPromise = null;
+      console.log('[token] Refreshing token');
+      await refreshTokenInternal();
+      console.log('[token] Token refreshed successfully');
+      const token = getAccessToken();
+      if (!token) {
+        throw new Error('Token is null after successful refresh');
       }
+      return { success: true, token };
     })();
+
+    refreshPromise.finally(() => {
+      refreshPromise = null;
+    });
   }
 
-  return refreshPromise.catch(err => {
-    options?.onFailure?.(err);
-    throw err;
+  return refreshPromise.catch(error => {
+    options?.onFailure?.(error);
+    throw error;
   });
 };
