@@ -12,39 +12,44 @@ export const GameTypeSelector = ({ type }: GameTypeSelectorProps) => {
   const prefix = type === 'auto' ? routes.lobby_auto : routes.lobby_custom;
 
   return (
-    <MenuSelector className="flex-row gap-6">
-      <Link
-        href={`/${prefix}?mode=1vs1`}
-        className={twMerge(
-          'column-between size-[196px] select-none rounded-2xl border-2 border-white p-3',
-          'hover:border-yellow-300 hover:bg-neutral-50/20 hover:text-yellow-300 active:translate-y-px',
-        )}
-      >
-        <Image
-          src="/assets/icon_type_1vs1.png"
-          alt="1vs1"
-          width={140}
-          height={131}
-          draggable={false}
-        />
-        <span className="font-medium text-2xl">1VS1</span>
-      </Link>
-      <Link
-        href={`/${prefix}?mode=tournament`}
-        className={twMerge(
-          'column-between size-[196px] select-none rounded-2xl border-2 border-white p-3',
-          'hover:border-yellow-300 hover:bg-neutral-50/20 hover:text-yellow-300 active:translate-y-px',
-        )}
-      >
-        <Image
+    <div className="flex flex-col gap-6">
+      <MenuSelector className="flex-row gap-6">
+        <GameModeLink href={`/${prefix}?mode=1vs1`} src="/assets/icon_type_1vs1.png" label="1VS1" />
+        <GameModeLink
+          href={`/${prefix}?mode=tournament`}
           src="/assets/icon_type_tournament.png"
-          alt="TOURNAMENT"
-          width={140}
-          height={131}
-          draggable={false}
+          label="TOURNAMENT"
         />
-        <span className="font-medium text-2xl">TOURNAMENT</span>
-      </Link>
-    </MenuSelector>
+      </MenuSelector>
+    </div>
+  );
+};
+
+interface GameModeLinkProps {
+  href: string;
+  src: string;
+  label: string;
+  width?: number;
+  height?: number;
+}
+
+export const GameModeLink = ({
+  href,
+  src,
+  label,
+  width = 140,
+  height = 131,
+}: GameModeLinkProps) => {
+  return (
+    <Link
+      href={href}
+      className={twMerge(
+        'column-between size-[196px] select-none rounded-2xl border-2 border-white p-3',
+        'hover:border-yellow-300 hover:bg-neutral-50/20 hover:text-yellow-300 active:translate-y-px',
+      )}
+    >
+      <Image src={src} alt={label} width={width} height={height} draggable={false} />
+      <span className="font-medium text-2xl">{label}</span>
+    </Link>
   );
 };
