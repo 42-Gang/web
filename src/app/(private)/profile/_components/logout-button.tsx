@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 import { useLogout } from "~/api";
+import { env } from "~/constants/variables";
 
 export const LogoutButton = () => {
 	const router = useRouter();
@@ -13,8 +14,26 @@ export const LogoutButton = () => {
 
 		logout(undefined, {
 			onSuccess: () => {
-				// 로그아웃 성공 시 로그인 페이지로 이동
-				router.push("/");
+				// 로컬 스토리지 토큰 제거
+				try {
+					window.localStorage.removeItem(env.access_token);
+				} catch {}
+
+				// 쿠키 제거 (클라이언트에서 가능한 경우)
+				const deleteCookie = (name: string) => {
+					// Delete with common paths
+					document.cookie = `${name}=; Max-Age=0; path=/`;
+					document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+				};
+				if (env.access_token) deleteCookie(env.access_token);
+				if (env.refresh_token) deleteCookie(env.refresh_token);
+
+				// 최상단 페이지로 하드 리다이렉트
+				if (typeof window !== "undefined") {
+					window.location.replace("/auth");
+				} else {
+					router.push("/");
+				}
 			},
 			onError: (error) => {
 				console.error("Failed to logout:", error);
