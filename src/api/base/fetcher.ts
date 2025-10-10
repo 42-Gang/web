@@ -28,7 +28,15 @@ const handleTokenRefresh = async ({ error, request }: BeforeRetryState) => {
   }
 
   try {
-    await refreshToken({ onFailure: () => handleAuthFailure('토큰 갱신 실패') });
+    await refreshToken({ 
+      onFailure: (error) => {
+        if (error instanceof HTTPError && error.response.status === 400) {
+          handleAuthFailure({ reason: '토큰 갱신 실패', showAlert: false });
+        } else {
+          handleAuthFailure({ reason: '토큰 갱신 실패', showAlert: true });
+        }
+      }
+    });
     return;
   } catch (refreshError) {
     console.warn('[fetcher] Token refresh failed, stopping retry:', refreshError);
@@ -36,12 +44,16 @@ const handleTokenRefresh = async ({ error, request }: BeforeRetryState) => {
   }
 };
 
-const handleAuthFailure = (reason: string) => {
+const handleAuthFailure = ({ reason, showAlert = true }: { reason: string; showAlert?: boolean }) => {
   console.warn(`[fetcher] Auth failure: ${reason}`);
 
   if (IS_BROWSER) {
-    alert('로그인이 만료되었습니다. 다시 로그인해주세요.');
-    window.location.href = '/auth';
+    if (showAlert) {
+      alert('로그인이 만료되었습니다. 다시 로그인해주세요.');
+      window.location.href = '/auth';
+    } else {
+      window.location.replace('/auth');
+    }
   }
 };
 

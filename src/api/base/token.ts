@@ -21,14 +21,18 @@ export const refreshTokenInternal = async () => {
     credentials: 'include',
   });
 
-  const response = await client
-    .post<HttpResponse<{ accessToken: string }>>('v1/auth/refresh-token', { json: null })
-    .json();
+  try {
+    const response = await client
+      .post<HttpResponse<{ accessToken: string }>>('v1/auth/refresh-token', { json: null })
+      .json();
 
-  if (response.status === 'SUCCESS' && response.data?.accessToken) {
-    window.localStorage.setItem(env.access_token, response.data.accessToken);
-  } else {
-    throw new Error('토큰 갱신 실패: 유효하지 않은 응답');
+    if (response.status === 'SUCCESS' && response.data?.accessToken) {
+      window.localStorage.setItem(env.access_token, response.data.accessToken);
+    } else {
+      throw new Error('토큰 갱신 실패: 유효하지 않은 응답');
+    }
+  } catch (error) {
+    throw error;
   }
 };
 
