@@ -78,7 +78,7 @@ export const NicknameEditModal = ({
             value={nickname}
             onChange={e => setNickname(e.target.value)}
             placeholder="Max 8 letters!"
-            maxLength={10}
+            maxLength={8}
             className="w-full rounded-[16px] border-4 border-black/80 bg-white px-4 py-5 text-center text-[28px] text-black placeholder-black/40 outline-none"
             disabled={isPending}
           />
