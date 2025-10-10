@@ -1,6 +1,6 @@
 import type { ComponentProps } from 'react';
-import { EditIcon } from '~/components/icon';
 import { twMerge } from 'tailwind-merge';
+import { EditIcon } from '~/components/icon';
 
 type Props = Pick<ComponentProps<'button'>, 'onClick' | 'className' | 'disabled' | 'aria-label'>;
 
