@@ -1,8 +1,8 @@
 'use client';
 
-import { useLogout } from '~/api';
-import { twMerge } from 'tailwind-merge';
 import { useRouter } from 'next/navigation';
+import { twMerge } from 'tailwind-merge';
+import { useLogout } from '~/api';
 import { routes } from '~/constants/routes';
 import { env } from '~/constants/variables';
 
