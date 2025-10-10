@@ -38,7 +38,7 @@ export const GameTypeSelector = ({ type }: GameTypeSelectorProps) => {
       >
         <Image
           src="/assets/icon_type_tournament.png"
-          alt="1vs1"
+          alt="TOURNAMENT"
           width={140}
           height={131}
           draggable={false}
