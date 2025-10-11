@@ -106,6 +106,7 @@ export type TournamentHistoryItem = {
 };
 
 export type DuelHistoryItem = {
+  tournamentId: number;
   date: string;
   player1: GameParticipant;
   player2: GameParticipant;

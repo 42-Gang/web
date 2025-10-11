@@ -33,17 +33,19 @@ const HistoryList = ({ gameType, history, filter, currentUserId }: HistoryListPr
     <div className="max-h-96 w-full max-w-2xl space-y-3 overflow-y-auto">
       {filteredHistory.map(item => {
         if (gameType === 'duel') {
+          const duelItem = item as DuelHistoryItem;
           return (
             <DuelHistoryItemComponent
-              key={'duel'}
+              key={`duel-${duelItem.tournamentId}`}
               item={item as DuelHistoryItem}
               currentUserId={currentUserId}
             />
           );
         }
+        const tournamentItem = item as TournamentHistoryItem;
         return (
           <TournamentHistoryItemComponent
-            key={'tournament'}
+            key={`tournament-${tournamentItem.tournamentId}`}
             item={item as TournamentHistoryItem}
             currentUserId={currentUserId}
           />
