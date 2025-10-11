@@ -57,11 +57,11 @@ export const ProfileAvatar = ({ avatarUrl, nickname }: ProfileAvatarProps) => {
       <button
         type="button"
         onClick={handleImageClick}
-        className="absolute right-3 bottom-3 flex cursor-pointer items-center justify-center rounded-full bg-white p-2 shadow-lg hover:bg-gray-100 active:translate-y-px"
+        className="absolute right-3 bottom-3 flex cursor-pointer items-center justify-center rounded-full bg-white p-2 shadow-lg hover:bg-neutral-100 active:translate-y-px"
       >
-        <ImageIcon className="text-gray-700" size={24} />
+        <ImageIcon className="text-neutral-700" size={24} />
       </button>
-      
+
       <input
         ref={fileInputRef}
         type="file"

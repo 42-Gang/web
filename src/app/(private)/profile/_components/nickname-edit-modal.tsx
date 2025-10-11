@@ -37,11 +37,11 @@ export const NicknameEditModal = ({
       { nickname: value },
       {
         onSuccess: () => {
-          toast.success('프로필 업데이트완료!', { duration: 2000 });
+          toast.success('프로필 업데이트 완료!', { duration: 2000 });
           onClose();
         },
         onError: async error => {
-          console.error('Failed to update profile:', error);
+          console.error('[profile] Failed to update profile:', error);
           const data = await extractErrorData(error);
           alert(data?.message ?? '프로필 업데이트에 실패했습니다. 다시 시도해주세요.');
         },
@@ -65,7 +65,7 @@ export const NicknameEditModal = ({
           disabled={isPending}
           className="absolute top-4 right-4 text-black/70 hover:text-black active:translate-y-px disabled:opacity-50"
         >
-          <TimesIcon className="size-7" />
+          <TimesIcon size={28} />
         </button>
 
         <h2 className={twMerge('mb-6 text-center text-[40px] text-black')}>Change nickname</h2>
