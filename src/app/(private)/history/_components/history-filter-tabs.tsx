@@ -16,6 +16,7 @@ const HistoryFilterTabs = ({ wins, losses, currentFilter }: HistoryFilterTabsPro
   const filters = [
     { key: 'win', label: 'WIN', count: wins },
     { key: 'lose', label: 'LOSE', count: losses },
+    { key: 'all', label: 'ALL', count: wins + losses },
   ];
 
   return (
@@ -46,19 +47,6 @@ const HistoryFilterTabs = ({ wins, losses, currentFilter }: HistoryFilterTabsPro
             {filter.label}
           </button>
         ))}
-        <button
-          type="button"
-          onClick={() => setFilter('all')}
-          className={twMerge(
-            'rounded-lg px-4 py-2 font-medium text-sm transition-all',
-            'border border-white',
-            currentFilter === 'all'
-              ? 'bg-white text-black'
-              : 'bg-transparent text-white hover:bg-white/20',
-          )}
-        >
-          ALL
-        </button>
       </div>
     </div>
   );
