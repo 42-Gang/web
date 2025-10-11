@@ -1,6 +1,7 @@
 ---
-alwaysApply: false
+alwaysApply: true
 ---
+
 - Console Logging Standards
 
   - All console output must follow the rules below.
@@ -42,25 +43,25 @@ alwaysApply: false
   - Good - Utility/Feature Modules
 
     ```typescript
-    console.log('[socket-manager] Socket connected');
-    console.error('[fetcher] Auth failure:', error);
-    console.warn('[token] Token refresh already in progress, waiting');
+    console.log("[socket-manager] Socket connected");
+    console.error("[fetcher] Auth failure:", error);
+    console.warn("[token] Token refresh already in progress, waiting");
     ```
 
   - Good - Page Components
 
     ```typescript
-    console.log('[auth/login-email] Login successful');
-    console.error('[game/lobby] Failed to join room:', error);
-    console.error('[auth/register-email] Registration failed:', error);
+    console.log("[auth/login-email] Login successful");
+    console.error("[game/lobby] Failed to join room:", error);
+    console.error("[auth/register-email] Registration failed:", error);
     ```
 
   - Bad
 
     ```typescript
-    console.log('message without prefix');
-    console.log('Module: message');  // Inconsistent format
-    console.error(`[fetcher] Error: ${error.message}`);  // Don't embed error in template
+    console.log("message without prefix");
+    console.log("Module: message"); // Inconsistent format
+    console.error(`[fetcher] Error: ${error.message}`); // Don't embed error in template
     ```
 
 - Additional Rules
@@ -76,32 +77,32 @@ alwaysApply: false
   - API/Utility Modules
 
     ```typescript
-    console.log('[fetcher] Retrying request');
-    console.warn('[fetcher] Token refresh failed, stopping retry:', refreshError);
-    console.error('[fetcher] Request failed:', error);
-    console.log('[token] Refreshing token');
-    console.log('[token] Token refreshed successfully');
-    console.error('[token] Token refresh failed:', error);
+    console.log("[fetcher] Retrying request");
+    console.warn("[fetcher] Token refresh failed, stopping retry:", refreshError);
+    console.error("[fetcher] Request failed:", error);
+    console.log("[token] Refreshing token");
+    console.log("[token] Token refreshed successfully");
+    console.error("[token] Token refresh failed:", error);
     ```
 
   - Socket Modules
 
     ```typescript
-    console.log('[socket-manager] Socket connected');
-    console.warn('[socket-manager] Creating socket without token');
-    console.log('[socket-manager] Socket destroyed:', cacheKey);
-    console.error('[socket-error-handler] Connection error:', error);
-    console.log('[socket-error-handler] Reconnecting with new token');
-    console.log('[socket-error-handler] Connected successfully');
+    console.log("[socket-manager] Socket connected");
+    console.warn("[socket-manager] Creating socket without token");
+    console.log("[socket-manager] Socket destroyed:", cacheKey);
+    console.error("[socket-error-handler] Connection error:", error);
+    console.log("[socket-error-handler] Reconnecting with new token");
+    console.log("[socket-error-handler] Connected successfully");
     ```
 
   - Page Components
 
     ```typescript
-    console.log('[auth/login-email] Login successful');
-    console.error('[auth/login-email] Login failed:', error);
-    console.log('[auth/register-email] Registration successful');
-    console.error('[auth/register-email] Email verification failed:', error);
-    console.log('[game/lobby] Joined room successfully');
-    console.error('[game/lobby] Failed to join room:', error);
+    console.log("[auth/login-email] Login successful");
+    console.error("[auth/login-email] Login failed:", error);
+    console.log("[auth/register-email] Registration successful");
+    console.error("[auth/register-email] Email verification failed:", error);
+    console.log("[game/lobby] Joined room successfully");
+    console.error("[game/lobby] Failed to join room:", error);
     ```
