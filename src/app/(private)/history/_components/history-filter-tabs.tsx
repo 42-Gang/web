@@ -1,5 +1,3 @@
-'use client';
-
 import { useQueryState } from 'nuqs';
 import { twMerge } from 'tailwind-merge';
 import { SuperPixel } from '~/app/_fonts';
@@ -20,12 +18,14 @@ export const HistoryFilterTabs = ({ wins, losses, currentFilter }: Props) => {
   ];
 
   return (
-    <div className={twMerge('column-center-x gap-4', SuperPixel.className)}>
+    <div className="column-center-x gap-4">
       <div className="flex justify-center gap-8">
         {filters.map(filter => (
           <div key={filter.key} className="column-center-x">
-            <span className="font-medium text-white text-xl">{filter.label}</span>
-            <span className="font-bold text-2xl text-yellow-300">{filter.count}</span>
+            <span className={twMerge('font-medium text-white text-xl', SuperPixel.className)}>
+              {filter.label}
+            </span>
+            <span className={twMerge('font-bold text-3xl text-yellow-300')}>{filter.count}</span>
           </div>
         ))}
       </div>
@@ -42,6 +42,7 @@ export const HistoryFilterTabs = ({ wins, losses, currentFilter }: Props) => {
               currentFilter === filter.key
                 ? 'bg-white text-black'
                 : 'bg-transparent text-white hover:bg-white/20',
+              SuperPixel.className,
             )}
           >
             {filter.label}

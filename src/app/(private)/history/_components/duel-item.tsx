@@ -7,7 +7,7 @@ interface DuelHistoryItemProps {
   currentUserId: number;
 }
 
-export const DuelHistoryItemComponent = ({ item, currentUserId }: DuelHistoryItemProps) => {
+export const DuelItem = ({ item, currentUserId }: DuelHistoryItemProps) => {
   const isWinner = item.result.winnerId === currentUserId;
   const resultColor = isWinner ? 'text-blue-500' : 'text-red-500';
   const resultText = isWinner ? 'WIN' : 'LOSE';

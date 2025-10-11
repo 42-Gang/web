@@ -1,7 +1,6 @@
-import { twMerge } from 'tailwind-merge';
 import type { DuelHistoryItem, TournamentHistoryItem } from '~/api/types/game';
-import { DuelHistoryItemComponent } from './duel-history-item';
-import { TournamentHistoryItemComponent } from './tournament-history-item';
+import { DuelItem } from './duel-item';
+import { TournamentItem } from './tournament-item';
 
 interface Props {
   gameType: string;
@@ -19,6 +18,7 @@ export const HistoryList = ({ gameType, history, filter, currentUserId }: Props)
       const isWinner = duelItem.result.winnerId === currentUserId;
       return filter === 'win' ? isWinner : !isWinner;
     }
+
     const tournamentItem = item as TournamentHistoryItem;
     return filter === 'win'
       ? tournamentItem.myResult === 'WIN'
@@ -26,7 +26,7 @@ export const HistoryList = ({ gameType, history, filter, currentUserId }: Props)
   });
 
   if (filteredHistory.length === 0) {
-    return <div className={twMerge('py-8 text-center text-gray-400 text-lg')}>No games found</div>;
+    return <div className="py-8 text-center text-gray-400 text-lg">No games found</div>;
   }
 
   return (
@@ -35,16 +35,17 @@ export const HistoryList = ({ gameType, history, filter, currentUserId }: Props)
         if (gameType === 'duel') {
           const duelItem = item as DuelHistoryItem;
           return (
-            <DuelHistoryItemComponent
+            <DuelItem
               key={`duel-${duelItem.tournamentId}`}
               item={item as DuelHistoryItem}
               currentUserId={currentUserId}
             />
           );
         }
+
         const tournamentItem = item as TournamentHistoryItem;
         return (
-          <TournamentHistoryItemComponent
+          <TournamentItem
             key={`tournament-${tournamentItem.tournamentId}`}
             item={item as TournamentHistoryItem}
           />

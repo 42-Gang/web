@@ -1,11 +1,9 @@
-'use client';
-
 import { useQueryState } from 'nuqs';
 import { twMerge } from 'tailwind-merge';
 import { Tiny } from '~/app/_fonts';
 import { CTAButton } from '~/components/ui';
 
-const HistoryGameTypeSelector = () => {
+export const HistoryGameTypeSelector = () => {
   const [gameType, setGameType] = useQueryState('type', { defaultValue: 'duel' });
 
   return (
@@ -23,5 +21,3 @@ const HistoryGameTypeSelector = () => {
     </div>
   );
 };
-
-export { HistoryGameTypeSelector };

@@ -9,14 +9,14 @@ import { HistoryGameTypeSelector } from './history-game-type-selector';
 import { HistoryList } from './history-list';
 
 export function HistoryContent() {
-  const { data: user } = useSuspenseUsersMe();
+  const { data: me } = useSuspenseUsersMe();
   const [gameType] = useQueryState('type', { defaultValue: 'duel' });
   const [filter] = useQueryState('filter', { defaultValue: 'all' });
 
   const [{ data: duelStats }, { data: tournamentStats }] = useSuspenseQueries({
     queries: [
-      queryKeys.games.stats({ userId: user.data.id, mode: 'duel' }),
-      queryKeys.games.stats({ userId: user.data.id, mode: 'tournament' }),
+      queryKeys.games.stats({ userId: me.data.id, mode: 'duel' }),
+      queryKeys.games.stats({ userId: me.data.id, mode: 'tournament' }),
     ],
   });
 
@@ -37,7 +37,7 @@ export function HistoryContent() {
         gameType={gameType}
         history={currentHistory}
         filter={filter}
-        currentUserId={user.data.id}
+        currentUserId={me.data.id}
       />
     </>
   );
