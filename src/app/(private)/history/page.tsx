@@ -9,9 +9,7 @@ const Page = () => {
     <>
       <CloseButton />
       <div className="column-center-x h-full gap-6 p-6">
-        <h1 className={twMerge('font-bold text-3xl text-white', SuperPixel.className)}>
-          SELECT GAME TYPE
-        </h1>
+        <h1 className={twMerge('font-bold text-3xl text-white', SuperPixel.className)}>HISTORY</h1>
 
         <Suspense clientOnly>
           <HistoryContent />
