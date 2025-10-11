@@ -18,7 +18,7 @@ export const LogoutDialog = ({ children }: PropsWithChildren) => {
       onError: async error => {
         console.error('Failed to logout:', error);
         const errorData = await extractErrorData(error);
-        alert(errorData?.message || '로그아웃에 실패했습니다.');
+        toast.error(errorData?.message || '로그아웃에 실패했습니다.');
       },
     });
   };
