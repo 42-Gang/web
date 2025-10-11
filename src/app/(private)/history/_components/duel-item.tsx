@@ -9,17 +9,15 @@ interface DuelHistoryItemProps {
 
 export const DuelItem = ({ item, currentUserId }: DuelHistoryItemProps) => {
   const isWinner = item.result.winnerId === currentUserId;
-  const resultColor = isWinner ? 'text-blue-500' : 'text-red-500';
-  const resultText = isWinner ? 'WIN' : 'LOSE';
 
   return (
     <div
       className={twMerge(
-        'flex w-full items-center justify-between rounded-lg bg-neutral-300 p-4',
+        'flex w-full items-center justify-between rounded-lg bg-neutral-300 px-4 py-3',
         'border border-gray-400 shadow-sm',
       )}
     >
-      <div className={twMerge('flex-1')}>
+      <div className="flex-1">
         <span className="font-medium text-2xl text-black">
           {item.player1.nickname} VS {item.player2.nickname}
         </span>
@@ -28,8 +26,14 @@ export const DuelItem = ({ item, currentUserId }: DuelHistoryItemProps) => {
         </span>
       </div>
 
-      <div className={twMerge('font-bold text-xl', SuperPixel.className, resultColor)}>
-        {resultText}
+      <div
+        className={twMerge(
+          'font-bold text-xl',
+          isWinner ? 'text-blue-500' : 'text-red-500',
+          SuperPixel.className,
+        )}
+      >
+        {isWinner ? 'WIN' : 'LOSE'}
       </div>
     </div>
   );

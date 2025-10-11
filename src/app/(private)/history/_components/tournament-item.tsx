@@ -8,16 +8,16 @@ interface Props {
 
 export const TournamentItem = ({ item }: Props) => {
   const isWinner = item.myResult === 'WIN';
-  const resultColor = isWinner ? 'text-blue-500' : 'text-red-500';
 
   return (
     <div
       className={twMerge(
-        'flex w-full items-start justify-between rounded-lg bg-neutral-300 p-4',
+        'flex w-full items-start justify-between rounded-lg bg-neutral-300 px-4 py-3',
         'border border-gray-400 shadow-sm',
+        SuperPixel.className,
       )}
     >
-      <div className={twMerge('flex-1', SuperPixel.className)}>
+      <div className="flex-1">
         <div className="mb-2 font-medium text-black text-lg">Round{item.rounds}</div>
         <div className="flex flex-col gap-1">
           {item.participants.map(participant => (
@@ -28,7 +28,7 @@ export const TournamentItem = ({ item }: Props) => {
         </div>
       </div>
 
-      <div className={twMerge('font-bold text-xl', SuperPixel.className, resultColor)}>
+      <div className={twMerge('font-bold text-xl', isWinner ? 'text-blue-500' : 'text-red-500')}>
         {item.myResult}
       </div>
     </div>
