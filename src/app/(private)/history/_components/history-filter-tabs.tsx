@@ -25,7 +25,7 @@ export const HistoryFilterTabs = ({ wins, losses, currentFilter }: Props) => {
             <span className={twMerge('font-medium text-white text-xl', SuperPixel.className)}>
               {filter.label}
             </span>
-            <span className={twMerge('font-bold text-3xl text-yellow-300')}>{filter.count}</span>
+            <span className="font-bold text-3xl text-yellow-300">{filter.count}</span>
           </div>
         ))}
       </div>
