@@ -4,13 +4,13 @@ import { useQueryState } from 'nuqs';
 import { twMerge } from 'tailwind-merge';
 import { SuperPixel } from '~/app/_fonts';
 
-interface HistoryFilterTabsProps {
+interface Props {
   wins: number;
   losses: number;
   currentFilter: string;
 }
 
-const HistoryFilterTabs = ({ wins, losses, currentFilter }: HistoryFilterTabsProps) => {
+const HistoryFilterTabs = ({ wins, losses, currentFilter }: Props) => {
   const [, setFilter] = useQueryState('filter', { defaultValue: 'all' });
 
   const filters = [
@@ -23,7 +23,7 @@ const HistoryFilterTabs = ({ wins, losses, currentFilter }: HistoryFilterTabsPro
     <div className={twMerge('flex flex-col gap-4', SuperPixel.className)}>
       <div className="flex justify-center gap-8">
         {filters.map(filter => (
-          <div key={filter.key} className="flex flex-col items-center">
+          <div key={filter.key} className="column-center-x">
             <span className="font-medium text-white text-xl">{filter.label}</span>
             <span className="font-bold text-2xl text-yellow-300">{filter.count}</span>
           </div>

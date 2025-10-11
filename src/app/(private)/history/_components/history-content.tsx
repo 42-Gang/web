@@ -21,15 +21,15 @@ export function HistoryContent() {
   });
 
   const currentStats = gameType === 'duel' ? duelStats : tournamentStats;
-  const currentHistory = currentStats?.data?.history || [];
+  const currentHistory = currentStats.data.history || [];
 
   return (
     <>
       <HistoryGameTypeSelector />
 
       <HistoryFilterTabs
-        wins={currentStats?.data?.summary?.wins || 0}
-        losses={currentStats?.data?.summary?.losses || 0}
+        wins={currentStats.data.summary.wins ?? 0}
+        losses={currentStats.data.summary.losses ?? 0}
         currentFilter={filter}
       />
 
