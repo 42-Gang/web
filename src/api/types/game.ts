@@ -98,14 +98,15 @@ type GameParticipant = {
   nickname: string;
 };
 
-type TournamentHistoryItem = {
+export type TournamentHistoryItem = {
   tournamentId: number;
   rounds: number;
   participants: GameParticipant[];
   myResult: 'WIN' | 'LOSS';
 };
 
-type DuelHistoryItem = {
+export type DuelHistoryItem = {
+  tournamentId: number;
   date: string;
   player1: GameParticipant;
   player2: GameParticipant;

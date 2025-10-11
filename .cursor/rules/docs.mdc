@@ -1,6 +1,7 @@
 ---
-alwaysApply: false
+alwaysApply: true
 ---
+
 - You are an expert in TypeScript, Node.js, Next.js App Router, React, and Tailwind.
 
 - Code Style and Structure
@@ -70,19 +71,19 @@ By Feature: For larger applications, group components related to specific featur
 
 For example:
 
-  /src/components
-  ├── /ui
-  │   ├── /Button
-  │   ├── /Modal
-  │   └── /Card
-  ├── /forms
-  │   ├── /TextField
-  │   └── /Select
-  └── /layout
-      ├── /Navbar
-      └── /Footer
+/src/components
+├── /ui
+│ ├── /Button
+│ ├── /Modal
+│ └── /Card
+├── /forms
+│ ├── /TextField
+│ └── /Select
+└── /layout
+├── /Navbar
+└── /Footer
 
-- Private Components: For components used only within specific pages, you can create a _components folder within the relevant /app subdirectory.
+- Private Components: For components used only within specific pages, you can create a \_components folder within the relevant /app subdirectory.
 
 - Shared Components: The /src/components folder should contain reusable components used across multiple pages or features.
 
