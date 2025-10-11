@@ -1,5 +1,5 @@
 import { twMerge } from 'tailwind-merge';
-import type { TournamentHistoryItem } from '~/api';
+import type { TournamentHistoryItem } from '~/api/types/game';
 import { SuperPixel } from '~/app/_fonts';
 
 interface TournamentHistoryItemProps {
