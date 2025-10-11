@@ -45,21 +45,20 @@ const DialogContent = forwardRef<
 
   return (
     <DialogPrimitive.Portal>
-      <DialogOverlay>
-        <DialogPrimitive.Content
-          ref={ref}
-          className={twMerge(
-            'pixel-rounded fixed top-1/2 left-1/2 grid w-full max-w-[728px] bg-black p-7 text-white',
-            'shadow-[0_16px_70px_rgba(0,0,0,0.2)]',
-            '-translate-x-1/2 -translate-y-1/2 z-[1010]',
-            '[data-state=open]:animate-scale-up-and-fade',
-            '[data-state=closed]:animate-scale-down-and-fade',
-            className,
-          )}
-          style={style}
-          {...props}
-        />
-      </DialogOverlay>
+      <DialogOverlay />
+      <DialogPrimitive.Content
+        ref={ref}
+        className={twMerge(
+          'pixel-rounded fixed top-1/2 left-1/2 grid w-full max-w-[728px] bg-black p-7 text-white',
+          'shadow-[0_16px_70px_rgba(0,0,0,0.2)]',
+          '-translate-x-1/2 -translate-y-1/2 z-[1010]',
+          '[data-state=open]:animate-scale-up-and-fade',
+          '[data-state=closed]:animate-scale-down-and-fade',
+          className,
+        )}
+        style={style}
+        {...props}
+      />
     </DialogPrimitive.Portal>
   );
 });

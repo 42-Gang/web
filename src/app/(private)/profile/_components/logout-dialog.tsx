@@ -1,4 +1,7 @@
+'use client';
+
 import type { PropsWithChildren } from 'react';
+import { toast } from 'sonner';
 import { useLogout } from '~/api';
 import { extractErrorData, removeAccessToken } from '~/api/base';
 import { Dialog } from '~/components/system';
