@@ -2,9 +2,6 @@ export type UserInfo = {
   id: number;
   nickname: string;
   avatarUrl: string;
-  win: number;
-  lose: number;
-  tournament: number;
 };
 
 export type User = {

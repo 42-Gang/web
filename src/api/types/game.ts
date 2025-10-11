@@ -87,3 +87,53 @@ export type TournamentCreatedResponse = {
 export type PlayerConnectedResponse = {
   playerId: number;
 };
+
+export type GameStatsPayload = {
+  userId: number;
+  mode: 'duel' | 'tournament';
+};
+
+type GameParticipant = {
+  id: number;
+  nickname: string;
+};
+
+type TournamentHistoryItem = {
+  tournamentId: number;
+  rounds: number;
+  participants: GameParticipant[];
+  myResult: 'WIN' | 'LOSS';
+};
+
+type DuelHistoryItem = {
+  date: string;
+  player1: GameParticipant;
+  player2: GameParticipant;
+  result: {
+    winnerId: number;
+    scores: {
+      player1: number;
+      player2: number;
+    };
+  };
+};
+
+type TournamentStatsData = {
+  mode: 'tournament';
+  summary: {
+    wins: number;
+    losses: number;
+  };
+  history: TournamentHistoryItem[];
+};
+
+type DuelStatsData = {
+  mode: 'duel';
+  summary: {
+    wins: number;
+    losses: number;
+  };
+  history: DuelHistoryItem[];
+};
+
+export type GameStatsResponse = TournamentStatsData | DuelStatsData;
