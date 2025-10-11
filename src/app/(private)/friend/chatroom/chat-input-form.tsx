@@ -34,7 +34,7 @@ export const ChatInputForm = ({ className, onSend, ...props }: Props) => {
           onChange={e => setMessage(e.target.value)}
         />
         <button
-          className="shrink-0 cursor-pointer active:translate-y-px"
+          className="shrink-0 cursor-pointer text-neutral-950 active:translate-y-px"
           type="submit"
           aria-label="Send message"
         >

@@ -38,7 +38,7 @@ export interface TokenRefreshResult {
 }
 
 export const refreshToken = (options?: {
-  onFailure?: (error: Error) => void;
+  onFailure?: (error: unknown) => void;
 }): Promise<TokenRefreshResult> => {
   if (!IS_BROWSER) {
     return Promise.resolve({ success: false, token: null });
@@ -46,26 +46,24 @@ export const refreshToken = (options?: {
 
   if (!refreshPromise) {
     refreshPromise = (async () => {
-      try {
-        console.log('[token] Refreshing token');
-        await refreshTokenInternal();
-        console.log('[token] Token refreshed successfully');
-        const token = getAccessToken();
-        if (!token) {
-          throw new Error('Token is null after successful refresh');
-        }
-        return { success: true, token };
-      } catch (error) {
-        throw error instanceof Error ? error : new Error('토큰 갱신 실패');
-      } finally {
-        refreshPromise = null;
+      console.log('[token] Refreshing token');
+      await refreshTokenInternal();
+      console.log('[token] Token refreshed successfully');
+      const token = getAccessToken();
+      if (!token) {
+        throw new Error('Token is null after successful refresh');
       }
+      return { success: true, token };
     })();
+
+    refreshPromise.finally(() => {
+      refreshPromise = null;
+    });
   }
 
-  return refreshPromise.catch(err => {
-    options?.onFailure?.(err);
-    throw err;
+  return refreshPromise.catch(error => {
+    options?.onFailure?.(error);
+    throw error;
   });
 };
 

@@ -7,7 +7,7 @@ export const FriendFilterInput = () => {
 
   return (
     <input
-      className="h-11 w-full rounded-xl bg-white px-4"
+      className="h-11 w-full rounded-xl bg-white px-4 text-neutral-950"
       placeholder="Search friends..."
       value={filter}
       onChange={e => setFilter(e.target.value)}
