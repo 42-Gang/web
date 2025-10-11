@@ -1,9 +1,10 @@
 'use client';
 
+import { useSuspenseQueries } from '@tanstack/react-query';
 import { useState } from 'react';
-import { useSuspenseGameStats } from '~/api';
-import { EditNicknameButton } from '~/app/(private)/profile/_components/edit-nickname-button';
-import { NicknameEditModal } from '~/app/(private)/profile/_components/nickname-edit-modal';
+import { queryKeys } from '~/api/queryKey';
+import { EditNicknameButton } from './edit-nickname-button';
+import { NicknameEditModal } from './nickname-edit-modal';
 
 type ProfileStatsProps = {
   userId: number;
@@ -11,29 +12,28 @@ type ProfileStatsProps = {
 };
 
 export const ProfileStats = ({ userId, nickname }: ProfileStatsProps) => {
-  const {
-    data: { data: duel },
-  } = useSuspenseGameStats({ userId, mode: 'duel' });
-  const {
-    data: { data: tournament },
-  } = useSuspenseGameStats({ userId, mode: 'tournament' });
+  const [{ data: _duel }, { data: _tournament }] = useSuspenseQueries({
+    queries: [
+      queryKeys.games.stats({ userId, mode: 'duel' }),
+      queryKeys.games.stats({ userId, mode: 'tournament' }),
+    ],
+  });
+  const duel = _duel.data;
+  const tournament = _tournament.data;
 
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      <div className="column gap-4 text-3xl text-white">
-        <div className="flex flex-row items-center">
-          Nickname :
-          <div className="ml-4 flex flex-row items-center gap-2">
-            <span className="text-yellow-300">{nickname}</span>
-            <EditNicknameButton onClick={() => setIsOpen(true)} />
-          </div>
-        </div>
-        <div>WIN : {duel.summary.wins}</div>
-        <div>LOSE : {duel.summary.losses}</div>
-        <div>Tournament : {tournament.summary.wins}</div>
-      </div>
+      <ul className="column gap-4 text-3xl text-white">
+        <li className="center-y">
+          Nickname :&nbsp;<span className="text-yellow-300">{nickname}</span>
+          <EditNicknameButton className="ml-2" onClick={() => setIsOpen(true)} />
+        </li>
+        <li>WIN : {duel.summary.wins}</li>
+        <li>LOSE : {duel.summary.losses}</li>
+        <li>Tournament : {tournament.summary.wins}</li>
+      </ul>
 
       <NicknameEditModal
         isOpen={isOpen}

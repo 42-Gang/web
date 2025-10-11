@@ -1,14 +1,15 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import type { ComponentProps } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { useLogout } from '~/api';
-import { removeAccessToken } from '~/api/base';
+import { extractErrorData, removeAccessToken } from '~/api/base';
 import { routes } from '~/constants/routes';
 
-export const LogoutButton = () => {
+interface Props extends ComponentProps<'button'> {}
+
+export const LogoutButton = ({ className, ...props }: Props) => {
   const { mutate: logout, isPending } = useLogout();
-  const router = useRouter();
 
   const handleLogout = () => {
     if (isPending) return;
@@ -16,12 +17,12 @@ export const LogoutButton = () => {
     logout(undefined, {
       onSuccess: async () => {
         removeAccessToken();
-
-        router.replace(`/${routes.auth}`);
+        window.location.replace(`/${routes.auth}`);
       },
-      onError: error => {
+      onError: async error => {
         console.error('Failed to logout:', error);
-        alert('로그아웃에 실패했습니다.');
+        const errorData = await extractErrorData(error);
+        alert(errorData?.message || '로그아웃에 실패했습니다.');
       },
     });
   };
@@ -32,11 +33,12 @@ export const LogoutButton = () => {
       onClick={handleLogout}
       disabled={isPending}
       className={twMerge(
-        'cursor-pointer text-3xl text-red-800 tracking-wider hover:bg-white active:translate-y-px',
-        'pt-3 pr-10 pb-3 pl-10',
-        'rounded-4xl border-2 border-white',
-        isPending && 'cursor-not-allowed opacity-50',
+        'cursor-pointer rounded-4xl border-2 border-white px-10 py-2 text-2xl text-red-800 leading-snug',
+        'hover:bg-white active:translate-y-px',
+        isPending && 'cursor-not-allowed opacity-40',
+        className,
       )}
+      {...props}
     >
       <div className="flex gap-6">
         <span>L</span>

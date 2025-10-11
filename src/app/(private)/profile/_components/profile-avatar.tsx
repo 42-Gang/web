@@ -34,7 +34,7 @@ export const ProfileAvatar = ({ avatarUrl, nickname }: ProfileAvatarProps) => {
 
     uploadAvatar(formData, {
       onSuccess: () => {
-        toast.success('프로필 변경 완료!', { duration: 2000 });
+        toast.success('프로필 변경 완료!');
       },
       onError: async error => {
         console.error('Failed to upload avatar:', error);
@@ -59,14 +59,15 @@ export const ProfileAvatar = ({ avatarUrl, nickname }: ProfileAvatarProps) => {
         onClick={handleImageClick}
         className="absolute right-3 bottom-3 flex cursor-pointer items-center justify-center rounded-full bg-white p-2 shadow-lg hover:bg-gray-100 active:translate-y-px"
       >
-        <ImageIcon className="size-7 text-gray-700" />
+        <ImageIcon className="text-gray-700" size={24} />
       </button>
+      
       <input
         ref={fileInputRef}
         type="file"
         accept="image/*"
-        onChange={handleFileChange}
         className="hidden"
+        onChange={handleFileChange}
       />
     </div>
   );

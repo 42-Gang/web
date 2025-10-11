@@ -2,18 +2,16 @@ import type { ComponentProps } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { EditIcon } from '~/components/icon';
 
-type Props = Pick<ComponentProps<'button'>, 'onClick' | 'className' | 'disabled' | 'aria-label'>;
+interface Props extends ComponentProps<'button'> {}
 
-export const EditNicknameButton = ({ onClick, className, disabled, ...rest }: Props) => {
+export const EditNicknameButton = ({ className, ...props }: Props) => {
   return (
     <button
       type="button"
-      onClick={onClick}
-      disabled={disabled}
-      className={twMerge('cursor-pointer active:translate-y-px', 'className')}
-      {...rest}
+      className={twMerge('cursor-pointer active:translate-y-px', className)}
+      {...props}
     >
-      <EditIcon className="size-6 text-yellow-300" />
+      <EditIcon className="text-yellow-300" size={24} />
     </button>
   );
 };

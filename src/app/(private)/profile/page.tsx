@@ -1,23 +1,21 @@
 import { Suspense } from '@suspensive/react';
-import { LogoutButton } from '~/app/(private)/profile/_components/logout-button';
-import { ProfileDetail } from '~/app/(private)/profile/_components/profile-detail';
-import { ProfileDetailSkeleton } from '~/app/(private)/profile/_components/profile-detail-skeleton';
-import { ProfileHeader } from '~/app/(private)/profile/_components/profile-header';
+import { twMerge } from 'tailwind-merge';
+import { SuperPixel } from '~/app/_fonts';
 import { CloseButton } from '~/components/ui';
+import { LogoutButton } from './_components/logout-button';
+import { ProfileDetail } from './_components/profile-detail';
 
 const Page = () => {
   return (
     <>
       <CloseButton />
 
-      <div className="column-center-x h-full">
-        <ProfileHeader />
+      <div className="column-between h-full py-10">
+        <h1 className={twMerge('font-bold text-3xl text-white', SuperPixel.className)}>Profile</h1>
 
-        <div className="mt-10 flex flex-row">
-          <Suspense clientOnly={true} fallback={<ProfileDetailSkeleton />}>
-            <ProfileDetail />
-          </Suspense>
-        </div>
+        <Suspense clientOnly>
+          <ProfileDetail />
+        </Suspense>
 
         <LogoutButton />
       </div>
