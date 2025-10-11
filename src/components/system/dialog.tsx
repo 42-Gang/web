@@ -4,8 +4,6 @@ import { twMerge } from 'tailwind-merge';
 
 const DialogRoot = DialogPrimitive.Root;
 
-const DialogPortal = DialogPrimitive.Portal;
-
 const DialogOverlay = forwardRef<
   ComponentRef<typeof DialogPrimitive.Overlay>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
@@ -32,19 +30,23 @@ const DialogContent = forwardRef<
   ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
 >(({ className, ...props }, ref) => {
   return (
-    <DialogPrimitive.Content
-      className={twMerge(
-        'fixed top-1/2 left-1/2 grid w-full max-w-[728px] p-[28px]',
-        'rounded-[20px] bg-black text-white',
-        'shadow-[0_16px_70px_rgba(0,0,0,0.2)]',
-        '-translate-x-1/2 -translate-y-1/2 z-[1010]',
-        '[data-state=open]:animate-scale-up-and-fade',
-        '[data-state=closed]:animate-scale-down-and-fade',
-        className,
-      )}
-      ref={ref}
-      {...props}
-    />
+    <DialogPrimitive.Portal>
+      <DialogOverlay>
+        <DialogPrimitive.Content
+          className={twMerge(
+            'fixed top-1/2 left-1/2 grid w-full max-w-[728px] p-[28px]',
+            'rounded-[20px] bg-black text-white',
+            'shadow-[0_16px_70px_rgba(0,0,0,0.2)]',
+            '-translate-x-1/2 -translate-y-1/2 z-[1010]',
+            '[data-state=open]:animate-scale-up-and-fade',
+            '[data-state=closed]:animate-scale-down-and-fade',
+            className,
+          )}
+          ref={ref}
+          {...props}
+        />
+      </DialogOverlay>
+    </DialogPrimitive.Portal>
   );
 });
 DialogContent.displayName = DialogPrimitive.Content.displayName;
@@ -90,8 +92,6 @@ const DialogClose = forwardRef<
 DialogClose.displayName = DialogPrimitive.Close.displayName;
 
 export const Dialog = Object.assign(DialogRoot, {
-  Portal: DialogPortal,
-  Overlay: DialogOverlay,
   Trigger: DialogTrigger,
   Content: DialogContent,
   Title: DialogTitle,
