@@ -1,5 +1,10 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { type ComponentPropsWithoutRef, type ComponentRef, forwardRef } from 'react';
+import {
+  type ComponentPropsWithoutRef,
+  type ComponentRef,
+  type CSSProperties,
+  forwardRef,
+} from 'react';
 import { twMerge } from 'tailwind-merge';
 
 const DialogRoot = DialogPrimitive.Root;
@@ -12,8 +17,8 @@ const DialogOverlay = forwardRef<
     <DialogPrimitive.Overlay
       className={twMerge(
         'fixed inset-0 z-[1000] bg-white/20',
-        '[data-state=open]:animate-fade-in',
-        '[data-state=closed]:animate-fade-out',
+        '[data-state="open"]:animate-fade-in',
+        '[data-state="closed"]:animate-fade-out',
         className,
       )}
       ref={ref}
@@ -28,21 +33,34 @@ const DialogTrigger = DialogPrimitive.Trigger;
 const DialogContent = forwardRef<
   ComponentRef<typeof DialogPrimitive.Content>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, ...props }, ref) => {
+>(({ className, style: _style, ...props }, ref) => {
+  const style = {
+    ..._style,
+    boxShadow: `
+      0 0 0 2px #6E2F2D,
+      0 4px 0 0 #00000080,
+      inset 0 3px 0 0 #FFFFFF33,
+      inset 0 -3px 0 0 #1E3445,
+      inset 3px 0 0 0 #00000080,
+      inset -3px 0 0 0 #1E3445
+    `,
+    '--pixel-step': '4px',
+  } as CSSProperties;
+
   return (
     <DialogPrimitive.Portal>
       <DialogOverlay>
         <DialogPrimitive.Content
+          ref={ref}
           className={twMerge(
-            'fixed top-1/2 left-1/2 grid w-full max-w-[728px] p-[28px]',
-            'rounded-[20px] bg-black text-white',
+            'pixel-rounded fixed top-1/2 left-1/2 grid w-full max-w-[728px] bg-black p-7 text-white',
             'shadow-[0_16px_70px_rgba(0,0,0,0.2)]',
             '-translate-x-1/2 -translate-y-1/2 z-[1010]',
             '[data-state=open]:animate-scale-up-and-fade',
             '[data-state=closed]:animate-scale-down-and-fade',
             className,
           )}
-          ref={ref}
+          style={style}
           {...props}
         />
       </DialogOverlay>
@@ -57,7 +75,7 @@ const DialogTitle = forwardRef<
 >(({ className, ...props }, ref) => {
   return (
     <DialogPrimitive.Title
-      className={twMerge('text-center text-[28px]', className)}
+      className={twMerge('text-center text-2xl', className)}
       ref={ref}
       {...props}
     />
