@@ -1,11 +1,8 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import {
-  type ComponentPropsWithoutRef,
-  type ComponentRef,
-  type CSSProperties,
-  forwardRef,
-} from 'react';
+import type { ComponentPropsWithoutRef, ComponentRef, CSSProperties } from 'react';
+import { forwardRef } from 'react';
 import { twMerge } from 'tailwind-merge';
+import { TimesIcon } from '~/components/icon';
 
 const DialogRoot = DialogPrimitive.Root;
 
@@ -26,9 +23,8 @@ const DialogOverlay = forwardRef<
     />
   );
 });
-DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
-const DialogTrigger = DialogPrimitive.Trigger;
+DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const DialogContent = forwardRef<
   ComponentRef<typeof DialogPrimitive.Content>,
@@ -67,6 +63,7 @@ const DialogContent = forwardRef<
     </DialogPrimitive.Portal>
   );
 });
+
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogTitle = forwardRef<
@@ -81,9 +78,8 @@ const DialogTitle = forwardRef<
     />
   );
 });
-DialogTitle.displayName = DialogPrimitive.Title.displayName;
 
-const DialogDescription = DialogPrimitive.Description;
+DialogTitle.displayName = DialogPrimitive.Title.displayName;
 
 const DialogClose = forwardRef<
   ComponentRef<typeof DialogPrimitive.Close>,
@@ -96,23 +92,23 @@ const DialogClose = forwardRef<
       ) : (
         <span
           className={twMerge(
-            'absolute top-3 right-3 grid place-items-center',
-            'size-8 rounded-full bg-transparent opacity-100 transition-opacity hover:opacity-70',
+            'center absolute top-4 right-4 cursor-pointer opacity-100 hover:opacity-70 active:translate-y-px',
             className,
           )}
         >
-          ❌
+          <TimesIcon size={20} />
         </span>
       )}
     </DialogPrimitive.Close>
   );
 });
+
 DialogClose.displayName = DialogPrimitive.Close.displayName;
 
 export const Dialog = Object.assign(DialogRoot, {
-  Trigger: DialogTrigger,
+  Trigger: DialogPrimitive.Trigger,
   Content: DialogContent,
   Title: DialogTitle,
-  Description: DialogDescription,
+  Description: DialogPrimitive.Description,
   Close: DialogClose,
 });
