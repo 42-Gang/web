@@ -37,7 +37,7 @@ const HistoryFilterTabs = ({ wins, losses, currentFilter }: HistoryFilterTabsPro
             key={filter.key}
             onClick={() => setFilter(filter.key)}
             className={twMerge(
-              'rounded-lg px-4 py-2 font-medium text-sm transition-all',
+              'cursor-pointer rounded-lg px-4 py-2 font-medium text-sm transition-all',
               'border border-white',
               currentFilter === filter.key
                 ? 'bg-white text-black'
