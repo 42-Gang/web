@@ -10,7 +10,7 @@ interface Props {
   currentFilter: string;
 }
 
-const HistoryFilterTabs = ({ wins, losses, currentFilter }: Props) => {
+export const HistoryFilterTabs = ({ wins, losses, currentFilter }: Props) => {
   const [, setFilter] = useQueryState('filter', { defaultValue: 'all' });
 
   const filters = [
@@ -20,7 +20,7 @@ const HistoryFilterTabs = ({ wins, losses, currentFilter }: Props) => {
   ];
 
   return (
-    <div className={twMerge('flex flex-col gap-4', SuperPixel.className)}>
+    <div className={twMerge('column-center-x gap-4', SuperPixel.className)}>
       <div className="flex justify-center gap-8">
         {filters.map(filter => (
           <div key={filter.key} className="column-center-x">
@@ -51,5 +51,3 @@ const HistoryFilterTabs = ({ wins, losses, currentFilter }: Props) => {
     </div>
   );
 };
-
-export { HistoryFilterTabs };
