@@ -5,11 +5,18 @@ type CTAButtonSize = 'sm' | 'md' | 'lg';
 
 interface CTAButtonProps extends ComponentProps<'button'> {
   size?: CTAButtonSize;
-  isActive?: boolean;
 }
 
 export const CTAButton = forwardRef<HTMLButtonElement, CTAButtonProps>(function CTAButton(
-  { className, children, style: _style, disabled, size = 'md', isActive = false, ...props },
+  {
+    className,
+    children,
+    style: _style,
+    disabled,
+    size = 'md',
+    'aria-selected': selected,
+    ...props
+  },
   ref,
 ) {
   const style = {
@@ -33,7 +40,7 @@ export const CTAButton = forwardRef<HTMLButtonElement, CTAButtonProps>(function 
       className={twMerge(
         'pixel-rounded relative cursor-pointer bg-[#C25C5A] font-medium text-white',
         'hover:bg-[#E0706E] active:translate-y-[calc(var(--pixel-step)-1px)] active:shadow-none',
-        isActive && 'translate-y-[calc(var(--pixel-step)-1px)] bg-[#E0706E] shadow-none',
+        selected && 'translate-y-[calc(var(--pixel-step)-1px)] bg-[#E0706E] shadow-none',
         getHeight(size),
         className,
       )}

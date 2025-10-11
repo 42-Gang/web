@@ -10,14 +10,13 @@ const HistoryGameTypeSelector = () => {
 
   return (
     <div className={twMerge('flex gap-4 text-2xl', Tiny.className)}>
-      <CTAButton size="lg" onClick={() => setGameType('duel')} isActive={gameType === 'duel'}>
+      <CTAButton onClick={() => setGameType('duel')} aria-selected={gameType === 'duel'}>
         1 vs 1
       </CTAButton>
 
       <CTAButton
-        size="lg"
         onClick={() => setGameType('tournament')}
-        isActive={gameType === 'tournament'}
+        aria-selected={gameType === 'tournament'}
       >
         Tournament
       </CTAButton>
