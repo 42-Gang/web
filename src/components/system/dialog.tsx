@@ -12,13 +12,8 @@ const DialogOverlay = forwardRef<
 >(({ className, ...props }, ref) => {
   return (
     <DialogPrimitive.Overlay
-      className={twMerge(
-        'fixed inset-0 z-[1000] bg-white/20',
-        '[data-state="open"]:animate-fade-in',
-        '[data-state="closed"]:animate-fade-out',
-        className,
-      )}
       ref={ref}
+      className={twMerge('fixed inset-0 z-[1000] bg-white/20', className)}
       {...props}
     />
   );
@@ -52,8 +47,6 @@ const DialogContent = forwardRef<
           'pixel-rounded fixed top-1/2 left-1/2 grid w-full max-w-[728px] bg-black p-7 text-white',
           'shadow-[0_16px_70px_rgba(0,0,0,0.2)]',
           '-translate-x-1/2 -translate-y-1/2 z-[1010]',
-          '[data-state=open]:animate-scale-up-and-fade',
-          '[data-state=closed]:animate-scale-down-and-fade',
           className,
         )}
         style={style}
@@ -71,8 +64,8 @@ const DialogTitle = forwardRef<
 >(({ className, ...props }, ref) => {
   return (
     <DialogPrimitive.Title
-      className={twMerge('text-center text-2xl', className)}
       ref={ref}
+      className={twMerge('text-center text-2xl', className)}
       {...props}
     />
   );
