@@ -7,7 +7,8 @@ import { useMainGameSocket } from '~/socket';
 export const AutoLeaveHandler = () => {
   const socket = useMainGameSocket();
   const searchParams = useSearchParams();
-  const mode = searchParams.get('mode') as '1vs1' | 'tournament' | null;
+  const _mode = searchParams.get('mode');
+  const mode = _mode === '1vs1' || _mode === 'tournament' ? _mode : null;
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: socket.emit is stable
   useEffect(() => {
