@@ -1,8 +1,9 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useOAuthLogin } from '~/api';
+import { WaitingText } from '~/components/ui';
 import { routes } from '~/constants/routes';
 import { env } from '~/constants/variables';
 
@@ -48,20 +49,4 @@ export const CallbackController = ({ code, state }: Props) => {
   }, [code, state, key, mutateAsync, router]);
 
   return <WaitingText />;
-};
-
-const WaitingText = () => {
-  const [dotCount, setDotCount] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setDotCount(prev => (prev + 1) % 4);
-    }, 500);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <p className="font-medium text-[32px] text-white leading-snug">Waiting{'.'.repeat(dotCount)}</p>
-  );
 };
