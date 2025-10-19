@@ -39,13 +39,20 @@ const isAuthError = (err: unknown): boolean => {
   );
 };
 
+let isRefreshing = false;
+
 const refreshAndReconnect = async (
   socket: SocketInstance,
   options: SocketOptions,
   onRecreate: (token: string) => Promise<void>,
 ): Promise<void> => {
   if (options.autoReconnect === false) return;
+  if (isRefreshing) {
+    console.log('[socket-error-handler] Token refresh already in progress, skipping...');
+    return;
+  }
 
+  isRefreshing = true;
   console.log('[socket-error-handler] Attempting to refresh token and reconnect...');
 
   try {
@@ -65,6 +72,8 @@ const refreshAndReconnect = async (
       '[socket-error-handler] Unhandled exception during token refresh, socket may be disconnected.',
       err,
     );
+  } finally {
+    isRefreshing = false;
   }
 };
 

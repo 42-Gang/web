@@ -37,11 +37,12 @@ export const createSocket = async (
   if (pending) {
     return pending;
   }
+
   const createPromise = (async () => {
     const query: Record<string, string> = { ...options.query };
 
     if (auth && !query.token) {
-      const token = await getAccessToken();
+      const token = getAccessToken();
       if (token) {
         query.token = token;
       } else {
@@ -68,8 +69,7 @@ export const createSocket = async (
   pendingCreations.set(key, createPromise);
 
   try {
-    const socket = await createPromise;
-    return socket;
+    return await createPromise;
   } finally {
     pendingCreations.delete(key);
   }
