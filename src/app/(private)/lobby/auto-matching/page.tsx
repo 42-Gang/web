@@ -14,13 +14,10 @@ const Page = async ({ searchParams }: Props) => {
   const mode: MatchingMode = isValidMode(_mode) ? _mode : notFound();
 
   return (
-    <>
-      <CloseButton />
-      <div className="column-between h-full">
-        <Heading>AUTO {mode === '1vs1' ? 'SOLO' : 'TOURNAMENT'}</Heading>
-        <Client mode={mode} />
-      </div>
-    </>
+    <div className="column-between h-full">
+      <Heading>AUTO {mode === '1vs1' ? 'SOLO' : 'TOURNAMENT'}</Heading>
+      <Client mode={mode} />
+    </div>
   );
 };
 
