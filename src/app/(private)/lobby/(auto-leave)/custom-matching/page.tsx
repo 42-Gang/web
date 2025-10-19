@@ -1,21 +1,30 @@
 import { notFound } from 'next/navigation';
-import { CloseButton, WaitingText } from '~/components/ui';
+import { CloseButton } from '~/components/ui';
 import { Heading } from '../../_components/heading';
+import { isValidMode, type MatchingMode } from '../_types';
+import { ClientComponent } from './client-component';
 
 interface Props {
-  searchParams: Promise<{ mode: string }>;
+  searchParams: Promise<{
+    id?: string;
+    mode: string;
+  }>;
 }
 
 const Page = async ({ searchParams }: Props) => {
-  const { mode } = await searchParams;
+  const { id: _id, mode: _mode } = await searchParams;
+  const mode: MatchingMode | null = isValidMode(_mode) ? _mode : null;
+
   if (!mode) notFound();
+
+  const id = typeof _id === 'string' && _id.length > 0 ? _id : null;
 
   return (
     <>
       <CloseButton />
       <div className="column-between h-full">
         <Heading>CUSTOM {mode === '1vs1' ? 'SOLO' : 'TOURNAMENT'}</Heading>
-        <WaitingText className="mb-10 text-[#D2F474]" prefix="Invite your friend" />
+        <ClientComponent id={id} mode={mode} />
       </div>
     </>
   );

@@ -13,10 +13,11 @@ import { UserCard } from '../../_components/user-card';
 import type { MatchingMode } from '../_types';
 
 interface Props {
+  id: string | null;
   mode: MatchingMode;
 }
 
-export const ClientComponent = ({ mode }: Props) => {
+export const ClientComponent = ({ id, mode }: Props) => {
   const router = useRouter();
   const [users, setUsers] = useState<WaitingRoomPlayer[]>([]);
   const [isMatched, setIsMatched] = useState<boolean>(false);
@@ -26,6 +27,11 @@ export const ClientComponent = ({ mode }: Props) => {
   useEffect(() => {
     if (!socket.socket || !socket.isConnected) return;
 
+    const create = socket.on('custom-create', data => {
+      const searchParams = new URLSearchParams(window.location.search);
+      searchParams.set('id', data.roomId);
+      router.replace(`/${routes.lobby_custom}?${searchParams.toString()}`);
+    });
     const update = socket.on('waiting-room-update', data => setUsers(data.users));
     const created = socket.on('tournament-created', data => {
       setIsMatched(true);
@@ -35,6 +41,7 @@ export const ClientComponent = ({ mode }: Props) => {
     });
 
     return () => {
+      create();
       update();
       created();
     };
@@ -43,8 +50,12 @@ export const ClientComponent = ({ mode }: Props) => {
   // biome-ignore lint/correctness/useExhaustiveDependencies: socket.emit is stable
   useEffect(() => {
     if (!socket.socket || !socket.isConnected) return;
-    socket.emit('auto-join', { tournamentSize: mode === 'tournament' ? 4 : 2 });
-  }, [socket.socket, socket.isConnected, mode]);
+    if (!id) {
+      socket.emit('custom-create', { tournamentSize: mode === 'tournament' ? 4 : 2 });
+    } else {
+      socket.emit('custom-accept', { roomId: id });
+    }
+  }, [socket.socket, socket.isConnected, mode, id]);
 
   return (
     <>
@@ -73,7 +84,7 @@ export const ClientComponent = ({ mode }: Props) => {
       {isMatched ? (
         <p className={twMerge('mb-10 text-4xl text-[#E890C7]', Tiny.className)}>You're matched!</p>
       ) : (
-        <WaitingText className="mb-10 text-[#D2F474]" prefix="Waiting for opponent" />
+        <WaitingText className="mb-10 text-[#D2F474]" prefix="Invite your friend" />
       )}
     </>
   );
