@@ -1,7 +1,7 @@
 import { type PropsWithChildren, Suspense } from 'react';
 import { AutoLeaveHandler } from './auto-leave-handler';
 
-const AutoMatchingLayout = ({ children }: PropsWithChildren) => {
+const LobbyLayout = ({ children }: PropsWithChildren) => {
   return (
     <>
       <Suspense>
@@ -12,4 +12,4 @@ const AutoMatchingLayout = ({ children }: PropsWithChildren) => {
   );
 };
 
-export default AutoMatchingLayout;
+export default LobbyLayout;

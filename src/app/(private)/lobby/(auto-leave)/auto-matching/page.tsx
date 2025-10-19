@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { CloseButton } from '~/components/ui';
-import { Heading } from '../_components/heading';
+import { Heading } from '../../_components/heading';
 import { ClientComponent } from './client-component';
 
 export type MatchingMode = '1vs1' | 'tournament';
