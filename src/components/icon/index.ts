@@ -1,3 +1,4 @@
+export * from './components/AvatarFrameIcon';
 export * from './components/BellIcon';
 export * from './components/BellRingIcon';
 export * from './components/BulletIcon';

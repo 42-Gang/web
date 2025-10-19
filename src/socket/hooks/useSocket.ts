@@ -48,6 +48,7 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
     onError: options.onError,
   });
   const isMounted = useRef(true);
+  const isRecreating = useRef(false);
 
   useEffect(() => {
     optsRef.current = options;
@@ -88,30 +89,53 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
     async (token: string) => {
       if (!isMounted.current) return;
 
-      const ns = optsRef.current.namespace || '/';
-      const auth = optsRef.current.withAuth !== false;
-
-      destroySocket(ns, auth, optsRef.current.query);
-
-      const newOpts = {
-        ...optsRef.current,
-        query: { ...optsRef.current.query, token },
-      };
-
-      const newSocket = await createSocket(newOpts, recreate);
-
-      if (!isMounted.current) {
-        newSocket.disconnect();
+      if (isRecreating.current) {
+        console.log('[useSocket] Recreate already in progress, skipping...');
         return;
       }
 
-      setupHandlers(newSocket);
-      setSocket(newSocket);
-      newSocket.connect();
+      isRecreating.current = true;
+
+      try {
+        if (socket) {
+          socket.removeAllListeners();
+          socket.disconnect();
+        }
+
+        const newOpts = {
+          ...optsRef.current,
+          query: { ...optsRef.current.query, token },
+        };
+
+        const newSocket = await createSocket(newOpts, recreate);
+
+        if (!isMounted.current) {
+          newSocket.disconnect();
+          return;
+        }
+
+        setupHandlers(newSocket);
+        setSocket(newSocket);
+
+        setConnected(false);
+        setConnecting(true);
+        setError(null);
+
+        if (newSocket.connected) {
+          setConnected(true);
+          setConnecting(false);
+          handlersRef.current.onConnect?.();
+        } else {
+          newSocket.connect();
+        }
+      } finally {
+        isRecreating.current = false;
+      }
     },
-    [setupHandlers],
+    [setupHandlers, socket],
   );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: recreate and setupHandlers are stable, adding them would cause infinite loop
   useEffect(() => {
     isMounted.current = true;
     let current: SocketInstance | null = null;
@@ -160,7 +184,7 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
         destroySocket(ns, auth, optsRef.current.query);
       }
     };
-  }, [recreate, setupHandlers]);
+  }, []);
 
   const connect = () => {
     if (socket && !socket.connected) {

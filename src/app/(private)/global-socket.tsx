@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 import { useUsersMe } from '~/api/queries';
 import { queryKeys } from '~/api/queryKey';
 import { routes } from '~/constants/routes';
-import { useChatSocket, useFriendSocket, useGameInviteSocket, useStatusSocket } from '~/socket';
+import { useChatSocket, useFriendSocket, useMainGameSocket, useStatusSocket } from '~/socket';
 import { updateFriendStatusAtom } from '~/stores/friend-status';
 
 export const GlobalSocket = () => {
@@ -19,7 +19,7 @@ export const GlobalSocket = () => {
   const updateStatus = useSetAtom(updateFriendStatusAtom);
 
   const friendSocket = useFriendSocket();
-  const gameSocket = useGameInviteSocket();
+  const mainGameSocket = useMainGameSocket();
   const chatSocket = useChatSocket();
   const statusSocket = useStatusSocket();
 
@@ -53,9 +53,9 @@ export const GlobalSocket = () => {
   }, [friendSocket.socket, friendSocket.isConnected, qc, friendSocket.on]);
 
   useEffect(() => {
-    if (!gameSocket.socket || !gameSocket.isConnected) return;
+    if (!mainGameSocket.socket || !mainGameSocket.isConnected) return;
 
-    const invite = gameSocket.on('custom-invite', data => {
+    const invite = mainGameSocket.on('custom-invite', data => {
       console.log('[global-socket] Game invite:', data);
 
       toast.info(`${data.hostName}님이 초대했습니다. 수락하시겠습니까?`, {
@@ -80,7 +80,7 @@ export const GlobalSocket = () => {
     });
 
     return () => invite();
-  }, [gameSocket.socket, gameSocket.isConnected, router, gameSocket.on]);
+  }, [mainGameSocket.socket, mainGameSocket.isConnected, router, mainGameSocket.on]);
 
   useEffect(() => {
     if (!chatSocket.socket || !chatSocket.isConnected) return;
