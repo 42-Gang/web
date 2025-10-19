@@ -8,9 +8,9 @@ import type { WaitingRoomPlayer } from '~/api';
 import { Tiny } from '~/app/_fonts';
 import { WaitingText } from '~/components/ui';
 import { routes } from '~/constants/routes';
+import { useMainGameSocket } from '~/socket';
 import { UserCard } from '../_components/user-card';
 import type { MatchingMode } from './page';
-import { useMainGameSocket } from '~/socket';
 
 interface Props {
   mode: MatchingMode;

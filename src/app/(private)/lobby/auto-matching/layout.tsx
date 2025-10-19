@@ -1,10 +1,12 @@
-import type { PropsWithChildren } from 'react';
+import { type PropsWithChildren, Suspense } from 'react';
 import { AutoLeaveHandler } from './auto-leave-handler';
 
 const AutoMatchingLayout = ({ children }: PropsWithChildren) => {
   return (
     <>
-      <AutoLeaveHandler />
+      <Suspense>
+        <AutoLeaveHandler />
+      </Suspense>
       {children}
     </>
   );
