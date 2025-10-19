@@ -8,10 +8,9 @@ import { AvatarFrameIcon, GunIcon } from '~/components/icon';
 
 interface Props extends ComponentProps<'div'> {
   user: WaitingRoomPlayer | null;
-  onClick?: () => void;
 }
 
-export const UserCard = ({ user, className, onClick, ...props }: Props) => {
+export const UserCard = ({ user, className, ...props }: Props) => {
   const { data: me } = useSuspenseUsersMe();
 
   const isMe = (user && me.data.id === user.id) ?? false;
@@ -27,14 +26,7 @@ export const UserCard = ({ user, className, onClick, ...props }: Props) => {
       {...props}
     >
       <div className="column-center-x gap-4">
-        <button
-          type="button"
-          className={twMerge(
-            'center relative size-[120px]',
-            onClick ? 'cursor-pointer' : 'cursor-default',
-          )}
-          onClick={onClick}
-        >
+        <button type="button" className={twMerge('center relative size-[120px]')}>
           {user ? (
             <Image
               className="size-[120px] overflow-hidden rounded-full border-2 border-transparent object-cover"

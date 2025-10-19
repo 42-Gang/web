@@ -15,9 +15,10 @@ import type { MatchingMode } from '../_types';
 interface Props {
   id: string | null;
   mode: MatchingMode;
+  isHost: boolean;
 }
 
-export const ClientComponent = ({ id, mode }: Props) => {
+export const ClientComponent = ({ id, mode, isHost }: Props) => {
   const router = useRouter();
   const [users, setUsers] = useState<WaitingRoomPlayer[]>([]);
   const [isMatched, setIsMatched] = useState<boolean>(false);
@@ -30,6 +31,7 @@ export const ClientComponent = ({ id, mode }: Props) => {
     const create = socket.on('custom-create', data => {
       const searchParams = new URLSearchParams(window.location.search);
       searchParams.set('id', data.roomId);
+      searchParams.set('isHost', 'true');
       router.replace(`/${routes.lobby_custom}?${searchParams.toString()}`);
     });
     const update = socket.on('waiting-room-update', data => setUsers(data.users));
@@ -83,8 +85,10 @@ export const ClientComponent = ({ id, mode }: Props) => {
 
       {isMatched ? (
         <p className={twMerge('mb-10 text-4xl text-[#E890C7]', Tiny.className)}>You're matched!</p>
-      ) : (
+      ) : isHost ? (
         <WaitingText className="mb-10 text-[#D2F474]" prefix="Invite your friend" />
+      ) : (
+        <WaitingText className="mb-10 text-[#D2F474]" prefix="Waiting for host" />
       )}
     </>
   );
