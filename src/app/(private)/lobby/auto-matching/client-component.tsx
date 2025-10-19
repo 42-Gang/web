@@ -6,29 +6,22 @@ import { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import type { WaitingRoomPlayer } from '~/api';
 import { Tiny } from '~/app/_fonts';
-import { CloseButton, WaitingText } from '~/components/ui';
+import { WaitingText } from '~/components/ui';
 import { routes } from '~/constants/routes';
-import { useSocket } from '~/socket';
 import { UserCard } from '../_components/user-card';
 import type { MatchingMode } from './page';
+import { useMainGameSocket } from '~/socket';
 
 interface Props {
   mode: MatchingMode;
 }
 
-export const Client = ({ mode }: Props) => {
+export const ClientComponent = ({ mode }: Props) => {
   const router = useRouter();
   const [users, setUsers] = useState<WaitingRoomPlayer[]>([]);
   const [isMatched, setIsMatched] = useState<boolean>(false);
 
-  const socket = useSocket({
-    path: '/ws/main-game',
-    namespace: '/waiting',
-    withAuth: true,
-    autoConnect: true,
-    autoDisconnect: false,
-    autoReconnect: true,
-  });
+  const socket = useMainGameSocket();
 
   useEffect(() => {
     if (!socket.socket || !socket.isConnected) return;
@@ -53,28 +46,29 @@ export const Client = ({ mode }: Props) => {
     socket.emit('auto-join', { tournamentSize: mode === 'tournament' ? 4 : 2 });
   }, [socket.socket, socket.isConnected, mode]);
 
-  const handleClose = () => {
-    if (socket.socket && socket.isConnected) {
-      socket.emit('auto-leave', { tournamentSize: mode === 'tournament' ? 4 : 2 });
-      router.back();
-    }
-  };
-
   return (
     <>
-      <CloseButton onClick={handleClose} />
+      {mode === '1vs1' ? (
+        <div className="center w-full flex-1 gap-10 py-5">
+          <Suspense clientOnly>
+            <UserCard user={users[0] ?? null} />
+          </Suspense>
 
-      <div className="center w-full flex-1 gap-10 py-5">
-        <Suspense clientOnly>
-          <UserCard user={users[0] ?? null} />
-        </Suspense>
+          <p className={twMerge('text-4xl', Tiny.className)}>VS</p>
 
-        <p className={twMerge('text-4xl', Tiny.className)}>VS</p>
-
-        <Suspense clientOnly>
-          <UserCard user={users[1] ?? null} />
-        </Suspense>
-      </div>
+          <Suspense clientOnly>
+            <UserCard user={users[1] ?? null} />
+          </Suspense>
+        </div>
+      ) : (
+        <div className="center w-full flex-1 gap-3 py-5">
+          {[0, 1, 2, 3].map(idx => (
+            <Suspense key={idx} clientOnly>
+              <UserCard user={users?.[idx] ?? null} className="w-[175px]" />
+            </Suspense>
+          ))}
+        </div>
+      )}
 
       {isMatched ? (
         <p className={twMerge('mb-10 text-4xl text-[#E890C7]', Tiny.className)}>You're matched!</p>

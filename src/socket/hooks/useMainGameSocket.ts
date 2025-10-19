@@ -1,6 +1,6 @@
 import { type UseSocketOptions, useSocket } from '~/socket';
 
-export const useGameInviteSocket = (options?: Partial<UseSocketOptions>) => {
+export const useMainGameSocket = (options?: Partial<UseSocketOptions>) => {
   return useSocket({
     path: '/ws/main-game',
     namespace: '/waiting',

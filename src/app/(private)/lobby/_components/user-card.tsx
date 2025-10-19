@@ -31,6 +31,9 @@ export const UserCard = ({ user, className, ...props }: Props) => {
             className="size-[120px] overflow-hidden rounded-full border-2 border-transparent object-cover"
             src={user.avatarUrl}
             alt={`${user.nickname} 프로필 이미지`}
+            onError={e => {
+              e.currentTarget.src = '/assets/img-anonymous-profile.png';
+            }}
             width={120}
             height={120}
             draggable={false}
