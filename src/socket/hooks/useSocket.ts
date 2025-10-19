@@ -97,15 +97,10 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
       isRecreating.current = true;
 
       try {
-        const ns = optsRef.current.namespace || '/';
-        const auth = optsRef.current.withAuth !== false;
-
         if (socket) {
           socket.removeAllListeners();
           socket.disconnect();
         }
-
-        destroySocket(ns, auth, optsRef.current.query);
 
         const newOpts = {
           ...optsRef.current,

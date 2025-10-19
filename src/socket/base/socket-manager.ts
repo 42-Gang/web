@@ -15,7 +15,8 @@ const cache = new Map<string, CachedSocket>();
 const pendingCreations = new Map<string, Promise<SocketInstance>>();
 
 const getCacheKey = (ns: string, auth: boolean, query?: Record<string, string>): string => {
-  const q = query ? JSON.stringify(query) : '';
+  const { token: _token, ...otherQuery } = query || {};
+  const q = Object.keys(otherQuery).length > 0 ? JSON.stringify(otherQuery) : '';
   return `${ns}:${auth ? 'auth' : 'noauth'}:${q}`;
 };
 
@@ -30,6 +31,16 @@ export const createSocket = async (
   const cached = cache.get(key);
   if (cached) {
     cached.refCount++;
+
+    if (
+      auth &&
+      options.query?.token &&
+      cached.socket.io.opts.query?.token !== options.query.token
+    ) {
+      console.log('[socket-manager] Updating socket token for existing connection');
+      cached.socket.io.opts.query = { ...cached.socket.io.opts.query, token: options.query.token };
+    }
+
     return cached.socket;
   }
 
