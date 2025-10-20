@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { CloseButton, WaitingText } from '~/components/ui';
-import { Heading } from '../_components/heading';
+import { Heading } from '../../_components/heading';
 
 interface Props {
   searchParams: Promise<{ mode: string }>;
