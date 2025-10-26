@@ -40,11 +40,10 @@ export const ClientComponent = ({ mode }: Props) => {
     };
   }, [socket.socket, socket.isConnected, socket.on, router.replace]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: socket.emit is stable
   useEffect(() => {
     if (!socket.socket || !socket.isConnected) return;
     socket.emit('auto-join', { tournamentSize: mode === 'tournament' ? 4 : 2 });
-  }, [socket.socket, socket.isConnected, mode]);
+  }, [socket.socket, socket.isConnected, socket.emit, mode]);
 
   return (
     <>

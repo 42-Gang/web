@@ -49,15 +49,15 @@ export const ClientComponent = ({ id, mode, isHost }: Props) => {
     };
   }, [socket.socket, socket.isConnected, socket.on, router.replace]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: socket.emit is stable
   useEffect(() => {
     if (!socket.socket || !socket.isConnected) return;
+
     if (!id) {
       socket.emit('custom-create', { tournamentSize: mode === 'tournament' ? 4 : 2 });
-    } else {
+    } else if (!isHost) {
       socket.emit('custom-accept', { roomId: id });
     }
-  }, [socket.socket, socket.isConnected, mode, id]);
+  }, [socket.socket, socket.isConnected, socket.emit, mode, id, isHost]);
 
   return (
     <>
