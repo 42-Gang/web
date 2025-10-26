@@ -1,7 +1,7 @@
 'use client';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { type ReactNode, useState, useRef } from 'react';
+import { type ReactNode, useRef, useState } from 'react';
 import { queryKeys } from '~/api';
 import { CheckIcon, PlusIcon } from '~/components/icon';
 import { Dialog } from '~/components/system';
@@ -20,14 +20,13 @@ export const InviteDialog = ({ onInvite, children }: InviteDialogProps) => {
   const { data } = useSuspenseQuery(queryKeys.friends.me);
 
   const handleInvite = (friendId: number) => {
-    
     const existingTimeout = timeoutRefs.current.get(friendId);
     if (existingTimeout) {
       clearTimeout(existingTimeout);
     }
-    
+
     setCheckedFriends(prev => new Set(prev).add(friendId));
-  
+
     const timeout = setTimeout(() => {
       setCheckedFriends(prev => {
         const next = new Set(prev);
@@ -43,7 +42,7 @@ export const InviteDialog = ({ onInvite, children }: InviteDialogProps) => {
 
   return (
     <Dialog>
-      <Dialog.Trigger asChild>{children}</Dialog.Trigger>
+      <Dialog.Trigger className="flex h-full cursor-pointer">{children}</Dialog.Trigger>
       <Dialog.Content aria-describedby={undefined}>
         <Dialog.Title>Invite Friend</Dialog.Title>
         <input
@@ -53,8 +52,8 @@ export const InviteDialog = ({ onInvite, children }: InviteDialogProps) => {
           onChange={e => setFilter(e.target.value)}
         />
 
-        <div className="column mt-4 max-h-[280px] overflow-y-auto">
-          <ul className="column w-full flex-1 border-neutral-50 border-t">
+        <div className="mt-4 max-h-[280px] overflow-y-auto">
+          <ul className="column w-full border-neutral-50 border-t">
             {data.data.friends
               .filter(friend => friend.nickname.toLowerCase().includes(filter.toLowerCase()))
               .map(friend => (

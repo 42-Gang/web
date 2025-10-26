@@ -19,14 +19,14 @@ export const UserCard = ({ user, className, ...props }: Props) => {
     <div
       className={twMerge(
         'column-between h-full w-[200px] gap-6 px-4 py-6',
-        'shadow-[4px_4px_0px_0px_var(--color-neutral-800)]',
+        'shadow-[4px_4px_0px_0px_var(--color-neutral-700)]',
         isMe ? 'bg-[#A03434]' : 'bg-[#34A09B]',
         className,
       )}
       {...props}
     >
       <div className="column-center-x gap-4">
-        <button type="button" className={twMerge('center relative size-[120px]')}>
+        <div className="center relative size-[120px]">
           {user ? (
             <Image
               className="size-[120px] overflow-hidden rounded-full border-2 border-transparent object-cover"
@@ -45,7 +45,7 @@ export const UserCard = ({ user, className, ...props }: Props) => {
             </div>
           )}
           <AvatarFrameIcon className="absolute inset-0 text-neutral-950" size={120} />
-        </button>
+        </div>
 
         {user?.isHost && <p className="text-center text-[#ECF411]">Master</p>}
       </div>
