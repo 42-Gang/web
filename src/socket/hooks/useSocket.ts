@@ -198,32 +198,38 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
     }
   };
 
-  const emit = useCallback(<K extends keyof ClientToServerEvents>(
-    event: K,
-    data: Parameters<ClientToServerEvents[K]>[0],
-  ) => {
-    if (socket?.connected) {
-      socket.emit(event as string, data);
-    } else {
-      console.warn('[socket] Cannot emit: not connected');
-    }
-  }, [socket]);
+  const emit = useCallback(
+    <K extends keyof ClientToServerEvents>(
+      event: K,
+      data: Parameters<ClientToServerEvents[K]>[0],
+    ) => {
+      if (socket?.connected) {
+        socket.emit(event as string, data);
+      } else {
+        console.warn('[socket] Cannot emit: not connected');
+      }
+    },
+    [socket],
+  );
 
-  const on = useCallback(<K extends keyof ServerToClientEvents>(
-    event: K,
-    handler: ServerToClientEvents[K],
-  ): (() => void) => {
-    if (!socket) {
-      return () => {};
-    }
+  const on = useCallback(
+    <K extends keyof ServerToClientEvents>(
+      event: K,
+      handler: ServerToClientEvents[K],
+    ): (() => void) => {
+      if (!socket) {
+        return () => {};
+      }
 
-    const untyped = socket as unknown as UntypedSocket;
-    untyped.on(event as string, handler as (...args: unknown[]) => void);
+      const untyped = socket as unknown as UntypedSocket;
+      untyped.on(event as string, handler as (...args: unknown[]) => void);
 
-    return () => {
-      untyped.off(event as string, handler as (...args: unknown[]) => void);
-    };
-  }, [socket]);
+      return () => {
+        untyped.off(event as string, handler as (...args: unknown[]) => void);
+      };
+    },
+    [socket],
+  );
 
   return {
     socket,
