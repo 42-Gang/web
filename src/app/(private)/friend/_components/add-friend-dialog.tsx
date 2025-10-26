@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { type UsersSearchPayload, useCreateFriendsRequests, useUsersSearch } from '~/api';
 import { Dialog } from '~/components/system';
@@ -13,15 +13,11 @@ interface AddFriendDialogProps {
 export const AddFriendDialog = ({ children }: AddFriendDialogProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
-
-  // Dialog 상태 관리
   const [isOpen, setIsOpen] = useState(false);
 
-  // Dialog가 닫힐 때 state 초기화
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open);
     if (!open) {
-      // Dialog가 닫힐 때 state 초기화
       setSearchTerm('');
       setDebouncedSearchTerm('');
     }
@@ -37,15 +33,11 @@ export const AddFriendDialog = ({ children }: AddFriendDialogProps) => {
   }, [searchTerm]);
 
   // 검색 페이로드 생성
-  const searchPayload = useMemo(
-    () =>
-      ({
-        nickname: debouncedSearchTerm,
-        status: ['ACCEPTED', 'NONE', 'PENDING', 'REJECTED', 'BLOCKED'],
-        exceptMe: true,
-      }) satisfies UsersSearchPayload,
-    [debouncedSearchTerm],
-  );
+  const searchPayload = {
+    nickname: debouncedSearchTerm,
+    status: ['ACCEPTED', 'NONE', 'PENDING', 'REJECTED', 'BLOCKED'],
+    exceptMe: true,
+  } satisfies UsersSearchPayload;
 
   const { data: searchResults, isLoading } = useUsersSearch(searchPayload);
   const { mutate: createFriendRequest, isPending } = useCreateFriendsRequests();
