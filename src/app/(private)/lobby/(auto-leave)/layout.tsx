@@ -1,7 +1,7 @@
 import { type PropsWithChildren, Suspense } from 'react';
 import { AutoLeaveHandler } from './auto-leave-handler';
 
-const LobbyLayout = ({ children }: PropsWithChildren) => {
+const AutoLobbyLayout = ({ children }: PropsWithChildren) => {
   return (
     <>
       <Suspense>
@@ -12,4 +12,4 @@ const LobbyLayout = ({ children }: PropsWithChildren) => {
   );
 };
 
-export default LobbyLayout;
+export default AutoLobbyLayout;

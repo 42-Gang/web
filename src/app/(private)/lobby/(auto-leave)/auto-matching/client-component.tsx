@@ -10,7 +10,7 @@ import { WaitingText } from '~/components/ui';
 import { routes } from '~/constants/routes';
 import { useMainGameSocket } from '~/socket';
 import { UserCard } from '../../_components/user-card';
-import type { MatchingMode } from '../_types';
+import type { MatchingMode } from '../../_types';
 
 interface Props {
   mode: MatchingMode;

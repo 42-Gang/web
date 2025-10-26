@@ -2,7 +2,8 @@
 
 import { Suspense } from '@suspensive/react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
 import type { WaitingRoomPlayer } from '~/api';
 import { Tiny } from '~/app/_fonts';
@@ -10,7 +11,8 @@ import { WaitingText } from '~/components/ui';
 import { routes } from '~/constants/routes';
 import { useMainGameSocket } from '~/socket';
 import { UserCard } from '../../_components/user-card';
-import type { MatchingMode } from '../_types';
+import type { MatchingMode } from '../../_types';
+import { InviteDialog } from './invite-dialog';
 
 interface Props {
   id: string | null;
@@ -59,27 +61,60 @@ export const ClientComponent = ({ id, mode, isHost }: Props) => {
     }
   }, [socket.socket, socket.isConnected, socket.emit, mode, id, isHost]);
 
+  const handleInvite = useCallback(
+    (friendId: number) => {
+      if (!socket.socket || !socket.isConnected || !id) return;
+
+      socket.emit('custom-invite', { roomId: id, userId: friendId });
+      toast.success('Invitation sent!');
+    },
+    [socket.socket, socket.isConnected, socket.emit, id],
+  );
+
   return (
     <>
       {mode === '1vs1' ? (
         <div className="center w-full flex-1 gap-10 py-5">
           <Suspense clientOnly>
-            <UserCard user={users[0] ?? null} />
+            {isHost && (users[0] ?? null) === null ? (
+              <InviteDialog onInvite={handleInvite}>
+                <UserCard user={users[0] ?? null} />
+              </InviteDialog>
+            ) : (
+              <UserCard user={users[0] ?? null} />
+            )}
           </Suspense>
 
           <p className={twMerge('text-4xl', Tiny.className)}>VS</p>
 
           <Suspense clientOnly>
-            <UserCard user={users[1] ?? null} />
+            {isHost && (users[1] ?? null) === null ? (
+              <InviteDialog onInvite={handleInvite}>
+                <UserCard user={users[1] ?? null} />
+              </InviteDialog>
+            ) : (
+              <UserCard user={users[1] ?? null} />
+            )}
           </Suspense>
         </div>
       ) : (
         <div className="center w-full flex-1 gap-3 py-5">
-          {[0, 1, 2, 3].map(idx => (
-            <Suspense key={idx} clientOnly>
-              <UserCard user={users?.[idx] ?? null} className="w-[175px]" />
-            </Suspense>
-          ))}
+          {[0, 1, 2, 3].map(idx => {
+            const user = users?.[idx] ?? null;
+            const isEmpty = user === null;
+
+            return (
+              <Suspense key={idx} clientOnly>
+                {isHost && isEmpty ? (
+                  <InviteDialog onInvite={handleInvite}>
+                    <UserCard user={user} className="w-[175px]" />
+                  </InviteDialog>
+                ) : (
+                  <UserCard user={user} className="w-[175px]" />
+                )}
+              </Suspense>
+            );
+          })}
         </div>
       )}
 

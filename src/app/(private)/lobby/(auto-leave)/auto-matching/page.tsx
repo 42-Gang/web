@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { CloseButton } from '~/components/ui';
 import { Heading } from '../../_components/heading';
-import { isValidMode, type MatchingMode } from '../_types';
+import { isValidMode, type MatchingMode } from '../../_types';
 import { ClientComponent } from './client-component';
 
 interface Props {

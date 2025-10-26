@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { CloseButton } from '~/components/ui';
 import { Heading } from '../../_components/heading';
-import { isValidMode, type MatchingMode } from '../_types';
+import { isValidMode, type MatchingMode } from '../../_types';
 import { ClientComponent } from './client-component';
 
 interface Props {
@@ -24,6 +24,7 @@ const Page = async ({ searchParams }: Props) => {
   return (
     <>
       <CloseButton />
+
       <div className="column-between h-full">
         <Heading>CUSTOM {mode === '1vs1' ? 'SOLO' : 'TOURNAMENT'}</Heading>
         <ClientComponent id={id} mode={mode} isHost={isHost} />

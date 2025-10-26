@@ -10,7 +10,6 @@ export const AutoLeaveHandler = () => {
   const _mode = searchParams.get('mode');
   const mode = _mode === '1vs1' || _mode === 'tournament' ? _mode : null;
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: socket.emit is stable
   useEffect(() => {
     if (!socket.socket || !socket.isConnected || !mode) return;
 
@@ -20,7 +19,7 @@ export const AutoLeaveHandler = () => {
         socket.emit('auto-leave', { tournamentSize: mode === 'tournament' ? 4 : 2 });
       }
     };
-  }, [socket.socket, socket.isConnected, mode]);
+  }, [socket.socket, socket.isConnected, socket.emit, mode]);
 
   return null;
 };
