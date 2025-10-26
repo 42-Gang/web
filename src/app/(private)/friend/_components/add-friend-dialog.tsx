@@ -35,7 +35,7 @@ export const AddFriendDialog = ({ children }: AddFriendDialogProps) => {
   // 검색 페이로드 생성
   const searchPayload = {
     nickname: debouncedSearchTerm,
-    status: ['ACCEPTED', 'NONE', 'PENDING', 'REJECTED', 'BLOCKED'],
+    status: ['NONE', 'PENDING'],
     exceptMe: true,
   } satisfies UsersSearchPayload;
 
