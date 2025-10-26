@@ -1,14 +1,15 @@
 'use client';
 
+import { useSuspenseQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useQueryState } from 'nuqs';
-import { useSuspenseFriendsMe } from '~/api';
+import { queryKeys } from '~/api';
 import { MessageIcon } from '~/components/icon';
 import { FriendItem } from '~/components/ui';
 import { routes } from '~/constants/routes';
 
 export const FriendList = () => {
-  const { data } = useSuspenseFriendsMe();
+  const { data } = useSuspenseQuery(queryKeys.friends.me);
   const [filter] = useQueryState('filter', { defaultValue: '' });
 
   const filteredFriends = data.data.friends.filter(friend =>

@@ -84,11 +84,12 @@ const DialogClose = forwardRef<
       ) : (
         <span
           className={twMerge(
-            'center absolute top-4 right-4 cursor-pointer opacity-100 hover:opacity-70 active:translate-y-px',
+            'center absolute top-5 right-5 cursor-pointer border border-neutral-50/50 bg-neutral-50/50 p-0.5',
+            'active:translate-y-px',
             className,
           )}
         >
-          <TimesIcon size={20} />
+          <TimesIcon />
         </span>
       )}
     </DialogPrimitive.Close>

@@ -198,7 +198,7 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
     }
   };
 
-  const emit = <K extends keyof ClientToServerEvents>(
+  const emit = useCallback(<K extends keyof ClientToServerEvents>(
     event: K,
     data: Parameters<ClientToServerEvents[K]>[0],
   ) => {
@@ -207,9 +207,9 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
     } else {
       console.warn('[socket] Cannot emit: not connected');
     }
-  };
+  }, [socket]);
 
-  const on = <K extends keyof ServerToClientEvents>(
+  const on = useCallback(<K extends keyof ServerToClientEvents>(
     event: K,
     handler: ServerToClientEvents[K],
   ): (() => void) => {
@@ -223,7 +223,7 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
     return () => {
       untyped.off(event as string, handler as (...args: unknown[]) => void);
     };
-  };
+  }, [socket]);
 
   return {
     socket,

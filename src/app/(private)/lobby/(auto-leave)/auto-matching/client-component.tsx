@@ -10,7 +10,7 @@ import { WaitingText } from '~/components/ui';
 import { routes } from '~/constants/routes';
 import { useMainGameSocket } from '~/socket';
 import { UserCard } from '../../_components/user-card';
-import type { MatchingMode } from './page';
+import type { MatchingMode } from '../../_types';
 
 interface Props {
   mode: MatchingMode;
@@ -31,7 +31,7 @@ export const ClientComponent = ({ mode }: Props) => {
       setIsMatched(true);
       setTimeout(() => {
         router.replace(`/${routes.lobby_auto}?id=${data.tournamentId}`);
-      }, 2000);
+      }, 2500);
     });
 
     return () => {
@@ -40,11 +40,10 @@ export const ClientComponent = ({ mode }: Props) => {
     };
   }, [socket.socket, socket.isConnected, socket.on, router.replace]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: socket.emit is stable
   useEffect(() => {
     if (!socket.socket || !socket.isConnected) return;
     socket.emit('auto-join', { tournamentSize: mode === 'tournament' ? 4 : 2 });
-  }, [socket.socket, socket.isConnected, mode]);
+  }, [socket.socket, socket.isConnected, socket.emit, mode]);
 
   return (
     <>
@@ -71,9 +70,9 @@ export const ClientComponent = ({ mode }: Props) => {
       )}
 
       {isMatched ? (
-        <p className={twMerge('mb-10 text-4xl text-[#E890C7]', Tiny.className)}>You're matched!</p>
+        <p className={twMerge('mb-11 text-4xl text-[#E890C7]', Tiny.className)}>You're matched!</p>
       ) : (
-        <WaitingText className="mb-10 text-[#D2F474]" prefix="Waiting for opponent" />
+        <WaitingText className="mb-11 text-[#D2F474]" prefix="Waiting for opponent" />
       )}
     </>
   );

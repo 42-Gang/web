@@ -64,10 +64,10 @@ export const GlobalSocket = () => {
           onClick: () => {
             if (data.tournamentSize && data.tournamentSize > 2) {
               router.push(
-                `/${routes.lobby_custom}?mode=tournament&size=${data.tournamentSize}&roomId=${data.roomId}`,
+                `/${routes.lobby_custom}?mode=tournament&size=${data.tournamentSize}&id=${data.roomId}`,
               );
             } else {
-              router.push(`/${routes.lobby_custom}?mode=1vs1&roomId=${data.roomId}`);
+              router.push(`/${routes.lobby_custom}?mode=1vs1&id=${data.roomId}`);
             }
           },
         },
