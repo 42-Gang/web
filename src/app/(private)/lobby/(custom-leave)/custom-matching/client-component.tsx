@@ -41,7 +41,7 @@ export const ClientComponent = ({ id, mode, isHost }: Props) => {
       setIsMatched(true);
       setTimeout(() => {
         router.replace(`/${routes.lobby_auto}?id=${data.tournamentId}`);
-      }, 2000);
+      }, 2500);
     });
 
     return () => {
@@ -70,6 +70,12 @@ export const ClientComponent = ({ id, mode, isHost }: Props) => {
     },
     [socket.socket, socket.isConnected, socket.emit, id],
   );
+
+  const handleStartGame = useCallback(() => {
+    if (!socket.socket || !socket.isConnected || !id) return;
+
+    socket.emit('custom-start', { roomId: id });
+  }, [socket.socket, socket.isConnected, socket.emit, id]);
 
   return (
     <>
@@ -118,13 +124,26 @@ export const ClientComponent = ({ id, mode, isHost }: Props) => {
         </div>
       )}
 
-      {isMatched ? (
-        <p className={twMerge('mb-10 text-4xl text-[#E890C7]', Tiny.className)}>You're matched!</p>
-      ) : isHost ? (
-        <WaitingText className="mb-10 text-[#D2F474]" prefix="Invite your friend" />
-      ) : (
-        <WaitingText className="mb-10 text-[#D2F474]" prefix="Waiting for host" />
-      )}
+      <div className="mb-10 h-11 shrink-0">
+        {isHost && users.length === (mode === '1vs1' ? 2 : 4) ? (
+          <button
+            type="button"
+            className={twMerge(
+              'h-full shrink-0 cursor-pointer rounded-lg border border-neutral-50 px-3 text-3xl text-[#E890C7] active:translate-y-px',
+              Tiny.className,
+            )}
+            onClick={handleStartGame}
+          >
+            GAME START
+          </button>
+        ) : isMatched ? (
+          <p className={twMerge('text-4xl text-[#E890C7]', Tiny.className)}>Game starts soon.</p>
+        ) : isHost ? (
+          <WaitingText className="text-[#D2F474]" prefix="Invite your friend" />
+        ) : (
+          <WaitingText className="text-[#D2F474]" prefix="Waiting for host" />
+        )}
+      </div>
     </>
   );
 };

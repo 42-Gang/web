@@ -31,7 +31,7 @@ export const ClientComponent = ({ mode }: Props) => {
       setIsMatched(true);
       setTimeout(() => {
         router.replace(`/${routes.lobby_auto}?id=${data.tournamentId}`);
-      }, 2000);
+      }, 2500);
     });
 
     return () => {
@@ -70,9 +70,9 @@ export const ClientComponent = ({ mode }: Props) => {
       )}
 
       {isMatched ? (
-        <p className={twMerge('mb-10 text-4xl text-[#E890C7]', Tiny.className)}>You're matched!</p>
+        <p className={twMerge('mb-11 text-4xl text-[#E890C7]', Tiny.className)}>You're matched!</p>
       ) : (
-        <WaitingText className="mb-10 text-[#D2F474]" prefix="Waiting for opponent" />
+        <WaitingText className="mb-11 text-[#D2F474]" prefix="Waiting for opponent" />
       )}
     </>
   );
