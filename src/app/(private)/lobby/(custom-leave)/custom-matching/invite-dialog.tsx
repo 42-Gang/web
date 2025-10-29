@@ -44,22 +44,23 @@ export const InviteDialog = ({ onInvite, children }: InviteDialogProps) => {
     <Dialog>
       <Dialog.Trigger className="flex h-full cursor-pointer">{children}</Dialog.Trigger>
       <Dialog.Content aria-describedby={undefined}>
-        <Dialog.Title>Invite Friend</Dialog.Title>
+        <Dialog.Title>친구 초대</Dialog.Title>
         <input
-          className="mt-3 h-10 w-full rounded-xl bg-white px-4 text-neutral-950"
-          placeholder="Search friends..."
+          type="text"
+          className="mt-6 w-full rounded-lg border border-neutral-50/50 bg-black px-4 py-2 text-white placeholder-neutral-400 focus:border-white focus:outline-none"
+          placeholder="사용자명을 입력하세요"
           value={filter}
           onChange={e => setFilter(e.target.value)}
         />
 
         <div className="mt-4 max-h-[280px] overflow-y-auto">
-          <ul className="column w-full border-neutral-50 border-t">
+          <ul className="space-y-2">
             {data.data.friends
               .filter(friend => friend.nickname.toLowerCase().includes(filter.toLowerCase()))
               .map(friend => (
                 <li
                   key={friend.friendId}
-                  className="row-between w-full border-b border-b-neutral-50 px-4 py-3 text-white"
+                  className="flex items-center justify-between rounded-lg border border-neutral-50/50 bg-neutral-900/50 p-3"
                 >
                   <FriendItem friend={friend} />
                   <button
@@ -68,9 +69,9 @@ export const InviteDialog = ({ onInvite, children }: InviteDialogProps) => {
                     onClick={() => handleInvite(friend.friendId)}
                   >
                     {checkedFriends.has(friend.friendId) ? (
-                      <CheckIcon size={24} />
+                      <CheckIcon size={20} />
                     ) : (
-                      <PlusIcon size={24} />
+                      <PlusIcon size={20} />
                     )}
                   </button>
                 </li>

@@ -1,29 +1,28 @@
 'use client';
 
+import { useSuspenseQuery } from '@tanstack/react-query';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { type PropsWithChildren, useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { type UsersSearchPayload, useCreateFriendsRequests, useUsersSearch } from '~/api';
+import { queryKeys, useCreateFriendsRequests } from '~/api';
+import { PlusIcon } from '~/components/icon';
 import { Dialog } from '~/components/system';
 
-interface AddFriendDialogProps {
-  children: React.ReactNode;
-}
+export const AddFriendDialog = ({ children }: PropsWithChildren) => {
+  const [open, setOpen] = useState<boolean>(false);
 
-export const AddFriendDialog = ({ children }: AddFriendDialogProps) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>('');
 
   const handleOpenChange = (open: boolean) => {
-    setIsOpen(open);
+    setOpen(open);
+
     if (!open) {
       setSearchTerm('');
       setDebouncedSearchTerm('');
     }
   };
 
-  // 300ms 디바운싱
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
@@ -32,14 +31,13 @@ export const AddFriendDialog = ({ children }: AddFriendDialogProps) => {
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  // 검색 페이로드 생성
-  const searchPayload = {
-    nickname: debouncedSearchTerm,
-    status: ['NONE', 'PENDING'],
-    exceptMe: true,
-  } satisfies UsersSearchPayload;
-
-  const { data: searchResults, isLoading } = useUsersSearch(searchPayload);
+  const { data: searchResults, isLoading } = useSuspenseQuery(
+    queryKeys.users.search({
+      nickname: debouncedSearchTerm,
+      status: ['NONE', 'PENDING'],
+      exceptMe: true,
+    }),
+  );
   const { mutate: createFriendRequest, isPending } = useCreateFriendsRequests();
 
   const handleAddFriend = (friendId: number, nickname: string) => {
@@ -63,9 +61,9 @@ export const AddFriendDialog = ({ children }: AddFriendDialogProps) => {
   const users = searchResults?.data?.users || [];
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <Dialog.Trigger asChild>{children}</Dialog.Trigger>
-      <Dialog.Content className="w-[500px]">
+      <Dialog.Content>
         <Dialog.Title>친구 추가</Dialog.Title>
         <Dialog.Description className="mt-2 text-center">
           사용자명을 입력하여 친구를 찾아보세요.
@@ -74,10 +72,10 @@ export const AddFriendDialog = ({ children }: AddFriendDialogProps) => {
         <div className="mt-6">
           <input
             type="text"
+            className="w-full rounded-lg border border-neutral-50/50 bg-black px-4 py-2 text-white placeholder-neutral-400 focus:border-white focus:outline-none"
             placeholder="사용자명을 입력하세요"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
-            className="w-full rounded-lg border border-neutral-50/50 bg-black px-4 py-2 text-white placeholder-neutral-400 focus:border-white focus:outline-none"
           />
         </div>
 
@@ -105,10 +103,10 @@ export const AddFriendDialog = ({ children }: AddFriendDialogProps) => {
                   <button
                     type="button"
                     onClick={() => handleAddFriend(user.id, user.nickname)}
+                    className="cursor-pointer text-white active:translate-y-px"
                     disabled={isPending}
-                    className="center size-8 rounded-full border border-neutral-50/50 bg-neutral-50/50 text-white hover:bg-neutral-50/70 active:translate-y-px disabled:opacity-50"
                   >
-                    +
+                    <PlusIcon size={20} />
                   </button>
                 </div>
               ))}
@@ -117,6 +115,7 @@ export const AddFriendDialog = ({ children }: AddFriendDialogProps) => {
             <div className="text-center text-neutral-400">사용자를 찾을 수 없습니다.</div>
           ) : null}
         </div>
+        <Dialog.Close />
       </Dialog.Content>
     </Dialog>
   );

@@ -21,11 +21,11 @@ const Page = () => {
           <div className="center-y w-[75%] gap-2">
             <AddFriendDialog>
               <button
+                type="button"
                 className={twMerge(
                   'center size-11 shrink-0 cursor-pointer rounded-2xl border-2 border-neutral-50 text-white',
                   'hover:bg-neutral-50/20 active:translate-y-px',
                 )}
-                type="button"
               >
                 <UsersIcon size={24} />
               </button>
