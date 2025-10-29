@@ -40,7 +40,7 @@ export const ClientComponent = ({ id, mode, isHost }: Props) => {
     const created = socket.on('tournament-created', data => {
       setIsMatched(true);
       setTimeout(() => {
-        router.replace(`/${routes.lobby_auto}?id=${data.tournamentId}`);
+        router.replace(`/${routes.tournament}?id=${data.tournamentId}`);
       }, 2500);
     });
 
