@@ -3,9 +3,9 @@ import type { HttpResponse } from '~/api';
 import { fetcher } from '../base';
 import { queryKeys } from '../queryKey';
 
-type Request = {
+interface Request {
   friendId: number;
-};
+}
 
 const postFriendsRequests = (payload: Request) =>
   fetcher.post<HttpResponse>('v1/friends/requests', { json: payload });

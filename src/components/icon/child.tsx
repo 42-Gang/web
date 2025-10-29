@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-type ChildProps = {
+interface ChildProps {
   children: React.ReactNode;
   [key: string]: unknown;
-};
+}
 
 const Child = ({ children, ...props }: ChildProps) => {
   const child: React.ReactNode = React.Children.only(children);

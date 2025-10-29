@@ -1,37 +1,37 @@
-export type ChatMessage = {
+export interface ChatMessage {
   id: number;
   nickname: string;
   time: string;
   message: string;
-};
+}
 
-export type ChatHistoryPayload = {
+export interface ChatHistoryPayload {
   roomId: number;
-};
+}
 
-export type ChatHistory = {
+export interface ChatHistory {
   chatHistory: ChatMessage[];
-};
+}
 
-export type ChatDMRoomPayload = {
+export interface ChatDMRoomPayload {
   userId: number;
   friendId: number;
-};
+}
 
-export type ChatDMRoomResponse = {
+export interface ChatDMRoomResponse {
   roomId: number;
-};
+}
 
-export type ChatMessagePayload = {
+export interface ChatMessagePayload {
   roomId: number;
   contents: string;
-};
+}
 
-export type ChatMessageResponse = {
+export interface ChatMessageResponse {
   roomId: number;
   userId: number;
   messageId: number;
   nickname: string;
   contents: string;
   timestamp: string;
-};
+}

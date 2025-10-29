@@ -6,11 +6,12 @@ import {
   type QueryClientConfig,
 } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { type PropsWithChildren, useState } from 'react';
+import { type ReactNode, useState } from 'react';
 
-type Props = PropsWithChildren<{
+interface Props {
+  children: ReactNode;
   config?: QueryClientConfig;
-}>;
+}
 
 const defaultConfig: QueryClientConfig = {
   defaultOptions: {

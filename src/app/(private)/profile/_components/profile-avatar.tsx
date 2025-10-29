@@ -7,10 +7,10 @@ import { useUploadAvatar } from '~/api';
 import { extractErrorData } from '~/api/base';
 import { ImageIcon } from '~/components/icon';
 
-type ProfileAvatarProps = {
+interface ProfileAvatarProps {
   avatarUrl: string;
   nickname: string;
-};
+}
 
 export const ProfileAvatar = ({ avatarUrl, nickname }: ProfileAvatarProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);

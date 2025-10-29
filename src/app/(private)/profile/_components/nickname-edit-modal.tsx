@@ -6,11 +6,11 @@ import { extractErrorData } from '~/api/base';
 import { TimesIcon } from '~/components/icon';
 import { CTAButton } from '~/components/ui';
 
-type NicknameEditModalProps = {
+interface NicknameEditModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialNickname?: string;
-};
+}
 
 export const NicknameEditModal = ({
   isOpen,
