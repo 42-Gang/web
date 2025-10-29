@@ -4,8 +4,10 @@ import Image from 'next/image';
 import type { ComponentProps } from 'react';
 import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
-import { type Friend, useBlockFriend, useSuspenseFriendsMe, useUnblockFriend } from '~/api';
+import { type Friend, useSuspenseFriendsMe } from '~/api';
 import { CTAButton } from '~/components/ui';
+import { useBlockFriend } from '../_hooks/useBlockFriend';
+import { useUnblockFriend } from '../_hooks/useUnblockFriend';
 
 interface Props extends ComponentProps<'div'> {
   currentFriendId: number;
