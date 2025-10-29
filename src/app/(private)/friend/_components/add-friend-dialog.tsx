@@ -4,9 +4,10 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { type PropsWithChildren, useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { queryKeys, useCreateFriendsRequests } from '~/api';
+import { queryKeys } from '~/api';
 import { PlusIcon } from '~/components/icon';
 import { Dialog } from '~/components/system';
+import { useCreateFriendsRequests } from '../_hooks/useCreateFriendsRequests';
 
 export const AddFriendDialog = ({ children }: PropsWithChildren) => {
   const [open, setOpen] = useState<boolean>(false);

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { fetcher } from '../base';
-import { queryKeys } from '../queryKey';
+import { fetcher } from '~/api/base';
+import { queryKeys } from '~/api/queryKey';
 
 const postUploadAvatar = (data: FormData) =>
   fetcher.post('v1/users/avatar', { body: data, headers: undefined });

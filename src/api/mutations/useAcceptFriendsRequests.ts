@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { HttpResponse } from '~/api';
-import { fetcher } from '../base';
-import { queryKeys } from '../queryKey';
+import { fetcher } from '~/api/base';
+import { queryKeys } from '~/api/queryKey';
 
-type Request = {
+interface Request {
   id: number;
-};
+}
 
 const patchAcceptFriendsRequests = (payload: Request) =>
   fetcher.patch<HttpResponse>(`v1/friends/requests/${payload.id}/accept`, { json: {} });

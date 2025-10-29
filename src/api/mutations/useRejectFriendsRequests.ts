@@ -3,9 +3,9 @@ import type { HttpResponse } from '~/api';
 import { fetcher } from '../base';
 import { queryKeys } from '../queryKey';
 
-type Request = {
+interface Request {
   id: number;
-};
+}
 
 const patchRejectFriendsRequests = (payload: Request) =>
   fetcher.patch<HttpResponse>(`v1/friends/requests/${payload.id}/reject`, { json: {} });

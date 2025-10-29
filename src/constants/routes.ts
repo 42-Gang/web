@@ -16,5 +16,7 @@ export const routes = {
   lobby_auto: 'lobby/auto-matching',
   lobby_custom: 'lobby/custom-matching',
 
+  tournament: 'tournament',
+
   profile: 'profile',
 };

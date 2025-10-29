@@ -1,9 +1,10 @@
 'use client';
 
+import { useSuspenseQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import type { ComponentProps } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { useSuspenseUsersMe, type WaitingRoomPlayer } from '~/api';
+import { queryKeys, type WaitingRoomPlayer } from '~/api';
 import { AvatarFrameIcon, GunIcon } from '~/components/icon';
 
 interface Props extends ComponentProps<'div'> {
@@ -11,7 +12,7 @@ interface Props extends ComponentProps<'div'> {
 }
 
 export const UserCard = ({ user, className, ...props }: Props) => {
-  const { data: me } = useSuspenseUsersMe();
+  const { data: me } = useSuspenseQuery(queryKeys.users.me);
 
   const isMe = (user && me.data.id === user.id) ?? false;
 

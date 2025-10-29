@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { HttpResponse } from '~/api';
-import { fetcher } from '../base';
-import { queryKeys } from '../queryKey';
+import { fetcher } from '~/api/base';
+import { queryKeys } from '~/api/queryKey';
 
-type Request = {
+interface Request {
   friendId: number;
-};
+}
 
 const postFriendsRequests = (payload: Request) =>
   fetcher.post<HttpResponse>('v1/friends/requests', { json: payload });

@@ -3,11 +3,12 @@
 import { useRouter } from 'next/navigation';
 import { type FieldErrors, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { type RegisterRequest, useMailVerification, useRegister } from '~/api';
 import { extractErrorData } from '~/api/base';
 import { CloseButton, CTAButton } from '~/components/ui';
 import { routes } from '~/constants/routes';
 import { InputForm } from '../_components/input-form';
+import { useMailVerification } from './useMailVerification';
+import { type RegisterRequest, useRegister } from './useRegister';
 
 interface RegisterForm extends RegisterRequest {
   passwordConfirm: string;

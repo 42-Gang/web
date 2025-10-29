@@ -1,36 +1,36 @@
-export type FriendRequestUser = {
+export interface FriendRequestUser {
   userId: number;
   nickname: string;
   avatarUrl: string;
-};
+}
 
-export type FriendRequestUserList = {
+export interface FriendRequestUserList {
   requests: FriendRequestUser[];
-};
+}
 
 export type FriendStatusType = 'ACCEPTED' | 'BLOCKED' | 'PENDING';
 
-export type Friend = {
+export interface Friend {
   friendId: number;
   nickname: string;
   avatarUrl: string;
   status: FriendStatusType;
-};
+}
 
-export type FriendList = {
+export interface FriendList {
   friends: Friend[];
-};
+}
 
-export type FriendRequestStatus = {
+export interface FriendRequestStatus {
   fromUserId: number;
   fromUserNickname: string;
   toUserId: number;
   timestamp: string;
-};
+}
 
-export type FriendAcceptStatus = {
+export interface FriendAcceptStatus {
   fromUserId: number;
   toUserNickname: string;
   toUserId: number;
   timestamp: string;
-};
+}

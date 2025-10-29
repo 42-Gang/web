@@ -9,7 +9,7 @@ import type {
   WaitingRoomUpdateResponse,
 } from '~/api/types';
 
-export type ServerToClientEvents = {
+export interface ServerToClientEvents {
   'friend-request': (data: FriendRequestStatus) => void;
   'friend-accept': (data: FriendAcceptStatus) => void;
   'friend-status': (data: UserStatus) => void;
@@ -20,6 +20,6 @@ export type ServerToClientEvents = {
   'custom-create': (data: CustomCreateResponse) => void;
   'waiting-room-update': (data: WaitingRoomUpdateResponse) => void;
   'tournament-created': (data: TournamentCreatedResponse) => void;
-};
+}
 
 export type ClientToServerEvents = Record<string, (data: unknown) => void>;

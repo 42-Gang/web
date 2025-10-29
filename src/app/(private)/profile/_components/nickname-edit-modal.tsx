@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
-import { useUpdateProfile } from '~/api';
 import { extractErrorData } from '~/api/base';
 import { TimesIcon } from '~/components/icon';
 import { CTAButton } from '~/components/ui';
+import { useUpdateProfile } from '../_hooks/useUpdateProfile';
 
-type NicknameEditModalProps = {
+interface NicknameEditModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialNickname?: string;
-};
+}
 
 export const NicknameEditModal = ({
   isOpen,

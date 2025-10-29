@@ -5,10 +5,10 @@ import { createSocket, destroySocket, type SocketOptions } from '../base/socket-
 
 type SocketInstance = Socket<ServerToClientEvents, ClientToServerEvents>;
 
-type UntypedSocket = {
+interface UntypedSocket {
   on: (event: string, handler: (...args: unknown[]) => void) => void;
   off: (event: string, handler: (...args: unknown[]) => void) => void;
-};
+}
 
 export interface UseSocketOptions extends SocketOptions {
   autoConnect?: boolean;

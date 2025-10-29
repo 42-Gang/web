@@ -3,14 +3,14 @@
 import Image from 'next/image';
 import { type ChangeEvent, useRef } from 'react';
 import { toast } from 'sonner';
-import { useUploadAvatar } from '~/api';
 import { extractErrorData } from '~/api/base';
 import { ImageIcon } from '~/components/icon';
+import { useUploadAvatar } from '../_hooks/useUploadAvatar';
 
-type ProfileAvatarProps = {
+interface ProfileAvatarProps {
   avatarUrl: string;
   nickname: string;
-};
+}
 
 export const ProfileAvatar = ({ avatarUrl, nickname }: ProfileAvatarProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);

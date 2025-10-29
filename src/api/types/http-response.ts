@@ -1,7 +1,7 @@
-export type ErrorDetail = {
+export interface ErrorDetail {
   field: string;
   message: string;
-};
+}
 
 export type HttpResponse<T = undefined> = {
   status: 'SUCCESS' | 'FAIL' | string;

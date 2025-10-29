@@ -1,10 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
 import type { HttpResponse } from '~/api';
-import { fetcher } from '../base';
+import { fetcher } from '~/api/base';
 
-type Request = {
+interface Request {
   email: string;
-};
+}
 
 const postMailVerification = (payload: Request) =>
   fetcher.post<HttpResponse>('v1/auth/mail', { json: payload });

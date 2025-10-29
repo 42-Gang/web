@@ -6,10 +6,10 @@ import { queryKeys } from '~/api/queryKey';
 import { EditNicknameButton } from './edit-nickname-button';
 import { NicknameEditModal } from './nickname-edit-modal';
 
-type ProfileStatsProps = {
+interface ProfileStatsProps {
   userId: number;
   nickname: string;
-};
+}
 
 export const ProfileStats = ({ userId, nickname }: ProfileStatsProps) => {
   const [{ data: _duel }, { data: _tournament }] = useSuspenseQueries({

@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { HttpResponse, User } from '~/api';
-import { fetcher } from '../base';
-import { queryKeys } from '../queryKey';
+import { fetcher } from '~/api/base';
+import { queryKeys } from '~/api/queryKey';
 
-type Request = {
+interface Request {
   nickname: string;
-};
+}
 
 const patchUpdateProfile = (payload: Request) =>
   fetcher.patch<HttpResponse<User>>('v1/users/me', { json: payload });

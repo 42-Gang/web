@@ -1,15 +1,14 @@
 'use client';
 
-import { useSuspenseQueries } from '@tanstack/react-query';
+import { useSuspenseQueries, useSuspenseQuery } from '@tanstack/react-query';
 import { useQueryState } from 'nuqs';
-import { useSuspenseUsersMe } from '~/api/queries/useUsersMe';
 import { queryKeys } from '~/api/queryKey';
 import { HistoryFilterTabs } from './history-filter-tabs';
 import { HistoryGameTypeSelector } from './history-game-type-selector';
 import { HistoryList } from './history-list';
 
 export function HistoryContent() {
-  const { data: me } = useSuspenseUsersMe();
+  const { data: me } = useSuspenseQuery(queryKeys.users.me);
   const [gameType] = useQueryState('type', { defaultValue: 'duel' });
   const [filter] = useQueryState('filter', { defaultValue: 'all' });
 

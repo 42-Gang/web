@@ -1,13 +1,9 @@
 'use client';
 
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { type ComponentProps, useEffect, useMemo, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
-import {
-  type ChatMessage,
-  useSuspenseChatDmRoomId,
-  useSuspenseChatHistory,
-  useSuspenseUsersMe,
-} from '~/api';
+import { type ChatMessage, queryKeys } from '~/api';
 import { useChatSocket } from '~/socket';
 import { ChatInputForm } from './chat-input-form';
 import { ChatMessageList } from './chat-message-list';
@@ -17,11 +13,17 @@ interface Props extends ComponentProps<'div'> {
 }
 
 export const ChatRoom = ({ className, currentFriendId, ...props }: Props) => {
-  const { data: me } = useSuspenseUsersMe();
-  const { data: room } = useSuspenseChatDmRoomId({ userId: me.data.id, friendId: currentFriendId });
+  const { data: me } = useSuspenseQuery(queryKeys.users.me);
+  const { data: room } = useSuspenseQuery(
+    queryKeys.chats.dmRoomId({ userId: me.data.id, friendId: currentFriendId }),
+  );
 
   const roomId = room.data.roomId;
-  const { data } = useSuspenseChatHistory({ roomId });
+  const { data } = useSuspenseQuery({
+    ...queryKeys.chats.history({ roomId }),
+    staleTime: 0,
+    gcTime: 0,
+  });
 
   const socket = useChatSocket();
   const [socketMessages, setSocketMessages] = useState<ChatMessage[]>([]);

@@ -1,11 +1,12 @@
 'use client';
 
-import { type UserInfo, useSuspenseUsersMe } from '~/api';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { queryKeys, type UserInfo } from '~/api';
 import { ProfileAvatar } from './profile-avatar';
 import { ProfileStats } from './profile-stats';
 
 export const ProfileDetail = () => {
-  const { data } = useSuspenseUsersMe();
+  const { data } = useSuspenseQuery(queryKeys.users.me);
   const user: UserInfo = data.data;
 
   return (
