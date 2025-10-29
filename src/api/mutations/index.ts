@@ -5,5 +5,3 @@ export * from './useDeleteAvatar';
 export * from './useMailVerification';
 export * from './useRejectFriendsRequests';
 export * from './useUnblockFriend';
-export * from './useUpdateProfile';
-export * from './useUploadAvatar';

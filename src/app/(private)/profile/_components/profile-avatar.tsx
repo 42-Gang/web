@@ -3,9 +3,9 @@
 import Image from 'next/image';
 import { type ChangeEvent, useRef } from 'react';
 import { toast } from 'sonner';
-import { useUploadAvatar } from '~/api';
 import { extractErrorData } from '~/api/base';
 import { ImageIcon } from '~/components/icon';
+import { useUploadAvatar } from '../_hooks/useUploadAvatar';
 
 interface ProfileAvatarProps {
   avatarUrl: string;
