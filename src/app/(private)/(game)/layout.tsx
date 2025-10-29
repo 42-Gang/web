@@ -1,7 +1,8 @@
 import type { PropsWithChildren } from 'react';
+import { TournamentSocketProvider } from './tournament-socket-provider';
 
 const RootLayout = ({ children }: PropsWithChildren) => {
-  return children;
+  return <TournamentSocketProvider>{children}</TournamentSocketProvider>;
 };
 
 export default RootLayout;

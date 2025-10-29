@@ -1,17 +1,19 @@
 'use client';
 
-import { useSocket } from '~/socket';
+import { useTournamentMatchInfo } from '../tournament-socket-provider';
 
-interface ClientComponentsProps {
-  tid: string;
-}
-export const ClientComponents = ({ tid }: ClientComponentsProps) => {
-  const { socket } = useSocket({
-    path: '/ws/main-game',
-    namespace: '/tournament',
-    withAuth: true,
-    query: { tournamentId: tid },
-  });
+export const ClientComponents = () => {
+  const matchInfo = useTournamentMatchInfo();
 
-  return <></>;
+  if (!matchInfo) return null;
+
+  const { mode, size, players } = matchInfo;
+
+  return (
+    <>
+      <p>{mode}</p>
+      <p>{size}</p>
+      <p>{players.map(p => p.nickname).join(', ')}</p>
+    </>
+  );
 };
