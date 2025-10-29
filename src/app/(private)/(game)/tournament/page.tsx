@@ -1,11 +1,20 @@
+import { CloseButton } from '~/components/ui';
+import { ClientComponents } from './client-components';
+
 interface PageProps {
-  searchParams: Promise<{ id: string }>;
+  searchParams: Promise<{ tid: string }>;
 }
 
 const Page = async ({ searchParams }: PageProps) => {
-  const { id } = await searchParams;
+  const { tid } = await searchParams;
 
-  return <>{id}</>;
+  return (
+    <>
+      <CloseButton />
+
+      <ClientComponents tid={tid} />
+    </>
+  );
 };
 
 export default Page;
