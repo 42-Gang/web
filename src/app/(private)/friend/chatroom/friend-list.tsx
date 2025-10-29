@@ -1,9 +1,10 @@
 'use client';
 
+import { useSuspenseQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import type { ComponentProps } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { useSuspenseFriendsMe } from '~/api';
+import { queryKeys } from '~/api';
 import { FriendItem } from '~/components/ui';
 import { routes } from '~/constants/routes';
 
@@ -12,7 +13,7 @@ interface Props extends ComponentProps<'ul'> {
 }
 
 export const FriendList = ({ className, currentFriendId, ...props }: Props) => {
-  const { data } = useSuspenseFriendsMe();
+  const { data } = useSuspenseQuery(queryKeys.friends.me);
 
   return (
     <ul className={twMerge('column border-neutral-50 border-t', className)} {...props}>

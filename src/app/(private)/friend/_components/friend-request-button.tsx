@@ -1,11 +1,12 @@
 'use client';
 
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { twMerge } from 'tailwind-merge';
-import { useSuspenseFriendsRequests } from '~/api';
+import { queryKeys } from '~/api';
 import { BellIcon, BellRingIcon } from '~/components/icon';
 
 export const FriendRequestButton = () => {
-  const { data } = useSuspenseFriendsRequests();
+  const { data } = useSuspenseQuery(queryKeys.friends.requests);
   const requestsCount: number = data.data.requests.length ?? 0;
 
   return (

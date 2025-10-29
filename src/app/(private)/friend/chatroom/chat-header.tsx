@@ -1,10 +1,11 @@
 'use client';
 
+import { useSuspenseQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import type { ComponentProps } from 'react';
 import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
-import { type Friend, useSuspenseFriendsMe } from '~/api';
+import { type Friend, queryKeys } from '~/api';
 import { CTAButton } from '~/components/ui';
 import { useBlockFriend } from '../_hooks/useBlockFriend';
 import { useUnblockFriend } from '../_hooks/useUnblockFriend';
@@ -14,7 +15,7 @@ interface Props extends ComponentProps<'div'> {
 }
 
 export const ChatHeader = ({ className, currentFriendId, ...props }: Props) => {
-  const { data } = useSuspenseFriendsMe();
+  const { data } = useSuspenseQuery(queryKeys.friends.me);
   const friends: Friend[] = data?.data?.friends ?? [];
 
   const friend = friends.find(f => f.friendId === currentFriendId);
