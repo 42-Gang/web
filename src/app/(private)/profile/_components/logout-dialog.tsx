@@ -2,10 +2,10 @@
 
 import type { PropsWithChildren } from 'react';
 import { toast } from 'sonner';
-import { useLogout } from '~/api';
 import { extractErrorData, removeAccessToken } from '~/api/base';
 import { Dialog } from '~/components/system';
 import { routes } from '~/constants/routes';
+import { useLogout } from '../_hooks/useLogout';
 
 export const LogoutDialog = ({ children }: PropsWithChildren) => {
   const { mutate: logout, isPending } = useLogout();

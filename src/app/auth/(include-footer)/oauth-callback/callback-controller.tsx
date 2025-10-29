@@ -2,10 +2,10 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { useOAuthLogin } from '~/api';
 import { WaitingText } from '~/components/ui';
 import { routes } from '~/constants/routes';
 import { env } from '~/constants/variables';
+import { useOAuthLogin } from './useOAuthLogin';
 
 interface Props {
   code: string;

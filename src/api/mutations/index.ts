@@ -3,8 +3,6 @@ export * from './useBlockFriend';
 export * from './useCreateFriendsRequests';
 export * from './useDeleteAvatar';
 export * from './useMailVerification';
-export * from './useOAuthLogin';
-export * from './useRegister';
 export * from './useRejectFriendsRequests';
 export * from './useUnblockFriend';
 export * from './useUpdateProfile';

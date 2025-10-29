@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import type { HttpResponse } from '~/api';
-import { fetcher } from '../base';
+import { fetcher } from '~/api/base';
 
 export interface RegisterRequest {
   email: string;
