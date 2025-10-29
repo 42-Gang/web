@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { fetcher } from '../base';
+import { fetcher } from '~/api/base';
 
 const postLogout = () => fetcher.post<void>('v1/auth/logout', { json: {} });
 
