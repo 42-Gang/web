@@ -10,6 +10,7 @@ export interface SocketOptions {
   withAuth?: boolean;
   autoReconnect?: boolean;
   query?: Record<string, string>;
+  forceNew?: boolean;
 }
 
 const isAuthError = (err: unknown): boolean => {

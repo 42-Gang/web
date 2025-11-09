@@ -1,7 +1,14 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { createContext, type PropsWithChildren, Suspense, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  type PropsWithChildren,
+  Suspense,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import type { MatchInfoType } from '~/api/types';
 import { useSocket } from '~/socket';
 
@@ -33,6 +40,7 @@ const TournamentSocketManager = ({ tid, setMatchInfo }: TournamentSocketManagerP
     namespace: '/tournament',
     withAuth: true,
     query: { tournamentId: tid },
+    forceNew: true,
   });
 
   useEffect(() => {
@@ -65,6 +73,8 @@ export const TournamentSocketProvider = ({ children }: PropsWithChildren) => {
 const TournamentSocketProviderInner = ({ setMatchInfo }: MatchInfoSetter) => {
   const searchParams = useSearchParams();
   const tid = searchParams.get('tid');
+
+  console.log(tid);
 
   if (!(tid && tid.trim().length > 0)) return null;
 

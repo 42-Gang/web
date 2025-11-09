@@ -14,19 +14,31 @@ interface CachedSocket {
 const cache = new Map<string, CachedSocket>();
 const pendingCreations = new Map<string, Promise<SocketInstance>>();
 
-const getCacheKey = (ns: string, auth: boolean, query?: Record<string, string>): string => {
+const getCacheKey = (
+  path: string,
+  ns: string,
+  auth: boolean,
+  query?: Record<string, string>,
+): string => {
   const { token: _token, ...otherQuery } = query || {};
-  const q = Object.keys(otherQuery).length > 0 ? JSON.stringify(otherQuery) : '';
-  return `${ns}:${auth ? 'auth' : 'noauth'}:${q}`;
+  const sortedQuery = Object.keys(otherQuery)
+    .sort()
+    .reduce((acc, key) => {
+      acc[key] = otherQuery[key];
+      return acc;
+    }, {} as Record<string, string>);
+  const q = Object.keys(sortedQuery).length > 0 ? JSON.stringify(sortedQuery) : '';
+  return `${path}:${ns}:${auth ? 'auth' : 'noauth'}:${q}`;
 };
 
 export const createSocket = async (
   options: SocketOptions,
   onRecreate?: (token: string) => Promise<void>,
 ): Promise<SocketInstance> => {
+  const path = options.path;
   const ns = options.namespace || '/';
   const auth = options.withAuth !== false;
-  const key = getCacheKey(ns, auth, options.query);
+  const key = getCacheKey(path, ns, auth, options.query);
 
   const cached = cache.get(key);
   if (cached) {
@@ -67,6 +79,7 @@ export const createSocket = async (
       transports: ['websocket'],
       query,
       reconnection: false,
+      forceNew: options.forceNew ?? false,
     });
 
     if (onRecreate) {
@@ -86,8 +99,13 @@ export const createSocket = async (
   }
 };
 
-export const destroySocket = (ns = '/', auth = true, query?: Record<string, string>) => {
-  const key = getCacheKey(ns, auth, query);
+export const destroySocket = (
+  path: string,
+  ns = '/',
+  auth = true,
+  query?: Record<string, string>,
+) => {
+  const key = getCacheKey(path, ns, auth, query);
   const cached = cache.get(key);
 
   if (cached) {
