@@ -1,29 +1,28 @@
 'use client';
 
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter, useSearchParams } from 'next/navigation';
-import {
-  createContext,
-  type PropsWithChildren,
-  Suspense,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import type { PropsWithChildren } from 'react';
+import { createContext, Suspense, useCallback, useContext, useEffect, useState } from 'react';
 import { queryKeys } from '~/api';
 import type { MatchInfoType } from '~/api/types';
 import { routes } from '~/constants/routes';
-import { useSocket } from '~/socket';
+import { type UseSocketReturn, useSocket } from '~/socket';
 
 interface TournamentContextValue {
   matchInfo: MatchInfoType | null;
+  socket: UseSocketReturn | null;
 }
 
 interface MatchInfoSetter {
   setMatchInfo: (matchInfo: MatchInfoType | null) => void;
 }
 
-interface TournamentSocketManagerProps extends MatchInfoSetter {
+interface SocketSetter {
+  setSocket: (socket: UseSocketReturn) => void;
+}
+
+interface TournamentSocketManagerProps extends MatchInfoSetter, SocketSetter {
   tid: string;
 }
 
@@ -37,9 +36,21 @@ export const useTournamentMatchInfo = () => {
   return context.matchInfo;
 };
 
-const TournamentSocketManager = ({ tid, setMatchInfo }: TournamentSocketManagerProps) => {
+export const useTournamentSocket = () => {
+  const context = useContext(TournamentContext);
+  if (!context) {
+    throw new Error('useTournamentSocket must be used within TournamentSocketProvider');
+  }
+  return context.socket;
+};
+
+const TournamentSocketManager = ({
+  tid,
+  setMatchInfo,
+  setSocket,
+}: TournamentSocketManagerProps) => {
   const router = useRouter();
-  const me = useSuspenseQuery(queryKeys.users.me);
+  const { data: me } = useQuery(queryKeys.users.me);
 
   const tournamentSocket = useSocket({
     path: '/ws/main-game',
@@ -50,18 +61,26 @@ const TournamentSocketManager = ({ tid, setMatchInfo }: TournamentSocketManagerP
   });
 
   useEffect(() => {
-    if (!tournamentSocket.socket || !tournamentSocket.isConnected) return;
+    setSocket(tournamentSocket);
+  }, [tournamentSocket, setSocket]);
+
+  useEffect(() => {
+    setMatchInfo(null);
+  }, [setMatchInfo]);
+
+  useEffect(() => {
+    if (!tournamentSocket.socket || !tournamentSocket.isConnected || !me?.data) return;
 
     const info = tournamentSocket.on('match-info', data => {
       console.log('[tournament-socket-provider] Match info:', data);
 
       if ('eventType' in data && data.eventType === 'CREATED') {
-        const pType = me.data.data.id === data.player1Id ? 'player1' : 'player2';
+        const playerType = me.data.id === data.player1Id ? 'player1' : 'player2';
         const searchParams = new URLSearchParams();
         searchParams.set('server', data.serverName);
         searchParams.set('tid', data.tournamentId.toString());
         searchParams.set('mid', data.matchId.toString());
-        searchParams.set('pType', pType);
+        searchParams.set('playerType', playerType);
 
         router.push(`/${routes.game}?${searchParams.toString()}`);
         return;
@@ -76,7 +95,8 @@ const TournamentSocketManager = ({ tid, setMatchInfo }: TournamentSocketManagerP
     tournamentSocket.isConnected,
     tournamentSocket.on,
     setMatchInfo,
-    me.data.data.id,
+    me?.data,
+    router,
   ]);
 
   return null;
@@ -84,18 +104,33 @@ const TournamentSocketManager = ({ tid, setMatchInfo }: TournamentSocketManagerP
 
 export const TournamentSocketProvider = ({ children }: PropsWithChildren) => {
   const [matchInfo, setMatchInfo] = useState<MatchInfoType | null>(null);
+  const [socket, setSocket] = useState<UseSocketReturn | null>(null);
+
+  const handleSetMatchInfo = useCallback((info: MatchInfoType | null) => {
+    setMatchInfo(info);
+  }, []);
+
+  const handleSetSocket = useCallback((sock: UseSocketReturn) => {
+    setSocket(sock);
+  }, []);
 
   return (
-    <TournamentContext.Provider value={{ matchInfo }}>
+    <TournamentContext.Provider value={{ matchInfo, socket }}>
       <Suspense fallback={null}>
-        <TournamentSocketProviderInner setMatchInfo={setMatchInfo} />
+        <TournamentSocketProviderInner
+          setMatchInfo={handleSetMatchInfo}
+          setSocket={handleSetSocket}
+        />
       </Suspense>
       {children}
     </TournamentContext.Provider>
   );
 };
 
-const TournamentSocketProviderInner = ({ setMatchInfo }: MatchInfoSetter) => {
+const TournamentSocketProviderInner = ({
+  setMatchInfo,
+  setSocket,
+}: MatchInfoSetter & SocketSetter) => {
   const searchParams = useSearchParams();
   const tid = searchParams.get('tid');
 
@@ -103,5 +138,12 @@ const TournamentSocketProviderInner = ({ setMatchInfo }: MatchInfoSetter) => {
 
   if (!(tid && tid.trim().length > 0)) return null;
 
-  return <TournamentSocketManager key={tid} tid={tid} setMatchInfo={setMatchInfo} />;
+  return (
+    <TournamentSocketManager
+      key={tid}
+      tid={tid}
+      setMatchInfo={setMatchInfo}
+      setSocket={setSocket}
+    />
+  );
 };
