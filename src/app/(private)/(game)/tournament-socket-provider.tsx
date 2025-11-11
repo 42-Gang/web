@@ -1,6 +1,7 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   createContext,
   type PropsWithChildren,
@@ -9,7 +10,9 @@ import {
   useEffect,
   useState,
 } from 'react';
+import { queryKeys } from '~/api';
 import type { MatchInfoType } from '~/api/types';
+import { routes } from '~/constants/routes';
 import { useSocket } from '~/socket';
 
 interface TournamentContextValue {
@@ -35,6 +38,9 @@ export const useTournamentMatchInfo = () => {
 };
 
 const TournamentSocketManager = ({ tid, setMatchInfo }: TournamentSocketManagerProps) => {
+  const router = useRouter();
+  const me = useSuspenseQuery(queryKeys.users.me);
+
   const tournamentSocket = useSocket({
     path: '/ws/main-game',
     namespace: '/tournament',
@@ -48,11 +54,30 @@ const TournamentSocketManager = ({ tid, setMatchInfo }: TournamentSocketManagerP
 
     const info = tournamentSocket.on('match-info', data => {
       console.log('[tournament-socket-provider] Match info:', data);
-      setMatchInfo(data);
+
+      if ('eventType' in data && data.eventType === 'CREATED') {
+        const pType = me.data.data.id === data.player1Id ? 'player1' : 'player2';
+        const searchParams = new URLSearchParams();
+        searchParams.set('server', data.serverName);
+        searchParams.set('tid', data.tournamentId.toString());
+        searchParams.set('mid', data.matchId.toString());
+        searchParams.set('pType', pType);
+
+        router.push(`/${routes.game}?${searchParams.toString()}`);
+        return;
+      }
+
+      setMatchInfo(data as MatchInfoType);
     });
 
     return () => info();
-  }, [tournamentSocket.socket, tournamentSocket.isConnected, tournamentSocket.on, setMatchInfo]);
+  }, [
+    tournamentSocket.socket,
+    tournamentSocket.isConnected,
+    tournamentSocket.on,
+    setMatchInfo,
+    me.data.data.id,
+  ]);
 
   return null;
 };

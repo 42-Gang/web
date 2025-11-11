@@ -10,10 +10,10 @@ export const ClientComponents = () => {
   const { mode, size, players } = matchInfo;
 
   return (
-    <>
+    <div>
       <p>{mode}</p>
       <p>{size}</p>
       <p>{players.map(p => p.nickname).join(', ')}</p>
-    </>
+    </div>
   );
 };

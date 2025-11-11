@@ -18,5 +18,7 @@ export const routes = {
 
   tournament: 'tournament',
 
+  game: 'game',
+
   profile: 'profile',
 };
