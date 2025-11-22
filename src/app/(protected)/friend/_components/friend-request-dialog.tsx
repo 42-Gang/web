@@ -5,9 +5,10 @@ import Image from 'next/image';
 import { type PropsWithChildren, Suspense, useState } from 'react';
 import { toast } from 'sonner';
 import { queryKeys } from '~/api';
-import { useAcceptFriendsRequests, useRejectFriendsRequests } from '~/api/mutations';
 import { CheckIcon, TimesIcon } from '~/components/icon';
 import { Dialog } from '~/components/system';
+import { useAcceptFriendsRequests } from '../_hooks/useAcceptFriendsRequests';
+import { useRejectFriendsRequests } from '../_hooks/useRejectFriendsRequests';
 
 const FriendRequestList = () => {
   const { data } = useSuspenseQuery(queryKeys.friends.requests);
