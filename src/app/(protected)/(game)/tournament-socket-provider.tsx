@@ -119,7 +119,9 @@ const TournamentSocketManager = ({
       }
 
       setMatchInfo(data as MatchInfoType);
-      setReadyPlayerIds(() => []);
+      setReadyPlayerIds(() =>
+        (data as MatchInfoType).players.filter(p => p.state === 'READY').map(p => p.userId),
+      );
     });
 
     const ready = tournamentSocket.on('ready', (data: ReadyResponse) => {
