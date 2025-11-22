@@ -49,11 +49,11 @@ export const AddFriendDialog = ({ children }: PropsWithChildren) => {
       {
         onSuccess: () => {
           console.log('[friend/add-friend-dialog] Friend request sent successfully');
-          toast.success(`${nickname}님에게 친구 요청을 보냈습니다.`);
+          toast.success(`Friend request sent to ${nickname}.`);
         },
         onError: error => {
           console.error('[friend/add-friend-dialog] Failed to send friend request:', error);
-          toast.error('친구 요청 전송에 실패했습니다.');
+          toast.error('Failed to send friend request.');
         },
       },
     );
@@ -65,16 +65,16 @@ export const AddFriendDialog = ({ children }: PropsWithChildren) => {
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <Dialog.Trigger asChild>{children}</Dialog.Trigger>
       <Dialog.Content>
-        <Dialog.Title>친구 추가</Dialog.Title>
+        <Dialog.Title>Add Friend</Dialog.Title>
         <Dialog.Description className="mt-2 text-center">
-          사용자명을 입력하여 친구를 찾아보세요.
+          Search for friends by username.
         </Dialog.Description>
 
         <div className="mt-6">
           <input
             type="text"
             className="w-full rounded-lg border border-neutral-50/50 bg-black px-4 py-2 text-white placeholder-neutral-400 focus:border-white focus:outline-none"
-            placeholder="사용자명을 입력하세요"
+            placeholder="Enter username"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
           />
@@ -82,7 +82,7 @@ export const AddFriendDialog = ({ children }: PropsWithChildren) => {
 
         <div className="mt-4 max-h-64 overflow-y-auto">
           {isLoading ? (
-            <div className="text-center text-neutral-400">검색 중...</div>
+            <div className="text-center text-neutral-400">Searching...</div>
           ) : users.length > 0 ? (
             <div className="space-y-2">
               {users.map(user => (
@@ -113,7 +113,7 @@ export const AddFriendDialog = ({ children }: PropsWithChildren) => {
               ))}
             </div>
           ) : debouncedSearchTerm ? (
-            <div className="text-center text-neutral-400">사용자를 찾을 수 없습니다.</div>
+            <div className="text-center text-neutral-400">User not found.</div>
           ) : null}
         </div>
         <Dialog.Close />

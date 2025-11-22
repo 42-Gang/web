@@ -26,11 +26,11 @@ export const FriendRequestDialog = ({ children }: PropsWithChildren) => {
       {
         onSuccess: () => {
           console.log('[friend/friend-request-dialog] Friend request accepted successfully');
-          toast.success(`${nickname}님의 친구 요청을 수락했습니다.`);
+          toast.success(`You accepted ${nickname}'s friend request.`);
         },
         onError: error => {
           console.error('[friend/friend-request-dialog] Failed to accept friend request:', error);
-          toast.error('친구 요청 수락에 실패했습니다.');
+          toast.error('Failed to accept friend request.');
         },
       },
     );
@@ -44,11 +44,11 @@ export const FriendRequestDialog = ({ children }: PropsWithChildren) => {
       {
         onSuccess: () => {
           console.log('[friend/friend-request-dialog] Friend request rejected successfully');
-          toast.success(`${nickname}님의 친구 요청을 거절했습니다.`);
+          toast.success(`You rejected ${nickname}'s friend request.`);
         },
         onError: error => {
           console.error('[friend/friend-request-dialog] Failed to reject friend request:', error);
-          toast.error('친구 요청 거절에 실패했습니다.');
+          toast.error('Failed to reject friend request.');
         },
       },
     );
@@ -58,9 +58,9 @@ export const FriendRequestDialog = ({ children }: PropsWithChildren) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>{children}</Dialog.Trigger>
       <Dialog.Content>
-        <Dialog.Title>친구 요청</Dialog.Title>
+        <Dialog.Title>Friend Requests</Dialog.Title>
         <Dialog.Description className="mt-2 text-center">
-          받은 친구 요청을 확인하고 수락 또는 거절할 수 있습니다.
+          You can accept or reject friend requests.
         </Dialog.Description>
 
         <div className="mt-6 max-h-64 overflow-y-auto">
@@ -104,7 +104,7 @@ export const FriendRequestDialog = ({ children }: PropsWithChildren) => {
               ))}
             </div>
           ) : (
-            <div className="text-center text-neutral-400">받은 친구 요청이 없습니다.</div>
+            <div className="text-center text-neutral-400">No friend requests.</div>
           )}
         </div>
         <Dialog.Close />
