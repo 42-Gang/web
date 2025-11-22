@@ -24,7 +24,7 @@ export const ChatHeader = ({ className, currentFriendId, ...props }: Props) => {
   const { mutate: unblockFriend } = useUnblockFriend();
 
   if (!friend) {
-    return <div>친구 정보를 찾을 수 없습니다.</div>;
+    return <div>Unknown User</div>;
   }
 
   const isBlocked = friend.status === 'BLOCKED';
@@ -38,7 +38,7 @@ export const ChatHeader = ({ className, currentFriendId, ...props }: Props) => {
           toast.success(response.message);
         },
         onError: () => {
-          toast.error('차단 해제에 실패했습니다.');
+          toast.error('Failed to unblock user.');
         },
       });
     } else {
@@ -47,7 +47,7 @@ export const ChatHeader = ({ className, currentFriendId, ...props }: Props) => {
           toast.success(response.message);
         },
         onError: () => {
-          toast.error('차단에 실패했습니다.');
+          toast.error('Failed to block user.');
         },
       });
     }

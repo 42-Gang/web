@@ -27,7 +27,7 @@ export const ChatInputForm = ({ className, onSend, ...props }: Props) => {
     >
       <div className="flex rounded-lg bg-neutral-50/50 px-3">
         <input
-          className="flex-1 py-2 outline-none"
+          className="flex-1 py-2 text-neutral-950 outline-none placeholder:text-neutral-500"
           type="text"
           placeholder="Type a message"
           value={message}
