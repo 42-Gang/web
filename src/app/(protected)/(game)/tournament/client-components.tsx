@@ -34,20 +34,21 @@ export const ClientComponents = () => {
         </p>
       </div>
 
-      <div className="center-y gap-12">
+      <div className="center-y gap-20">
         {players.map(player => (
           <div key={player.userId} className="column-center-x">
             <div
               className={twMerge(
-                'size-[84px] overflow-hidden rounded-full border-2 border-transparent',
-                readyPlayerIds.includes(player.userId) ? 'border-green-500' : '',
+                'size-[80px] select-none overflow-hidden rounded-full border-4 border-transparent',
+                readyPlayerIds.includes(player.userId) ? 'border-[rgb(0,255,85)]' : '',
               )}
             >
               <Image
-                width={84}
-                height={84}
+                width={80}
+                height={80}
                 src={player.profileImage}
                 alt={`${player.userId} 이미지`}
+                draggable={false}
               />
             </div>
             <p className="mt-1 text-xl">{player.nickname}</p>
