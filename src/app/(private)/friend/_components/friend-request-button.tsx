@@ -12,14 +12,12 @@ export const FriendRequestButton = () => {
 
   return (
     <FriendRequestDialog>
-      <button
-        type="button"
-        className={twMerge(
-          '-translate-y-1/2 absolute top-1/2 right-4 shrink-0 cursor-pointer text-white',
-          'active:-translate-y-[calc(50%-1px)]',
+      <button type="button" className={twMerge('shrink-0 cursor-pointer text-white')}>
+        {requestsCount > 0 ? (
+          <BellRingIcon size={35} className="text-yellow-200" />
+        ) : (
+          <BellIcon size={35} />
         )}
-      >
-        {requestsCount > 0 ? <BellRingIcon size={24} /> : <BellIcon size={24} />}
       </button>
     </FriendRequestDialog>
   );
