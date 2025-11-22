@@ -1,6 +1,6 @@
 import { Suspense } from '@suspensive/react';
-import { ChatHeader } from '~/app/(protected)/friend/chatroom/chat-header';
 import { CloseButton } from '~/components/ui';
+import { ChatHeader } from './chat-header';
 import { ChatRoom } from './chat-room';
 import { FriendList } from './friend-list';
 
