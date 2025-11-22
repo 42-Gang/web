@@ -1,6 +1,6 @@
 'use client';
 
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { type ReactNode, useRef, useState } from 'react';
 import { queryKeys } from '~/api';
 import { CheckIcon, PlusIcon } from '~/components/icon';
@@ -17,7 +17,7 @@ export const InviteDialog = ({ onInvite, children }: InviteDialogProps) => {
   const [checkedFriends, setCheckedFriends] = useState<Set<number>>(new Set());
   const timeoutRefs = useRef<Map<number, NodeJS.Timeout>>(new Map());
 
-  const { data } = useSuspenseQuery(queryKeys.friends.me);
+  const { data } = useQuery(queryKeys.friends.me);
 
   const handleInvite = (friendId: number) => {
     const existingTimeout = timeoutRefs.current.get(friendId);
@@ -44,18 +44,18 @@ export const InviteDialog = ({ onInvite, children }: InviteDialogProps) => {
     <Dialog>
       <Dialog.Trigger className="flex h-full cursor-pointer">{children}</Dialog.Trigger>
       <Dialog.Content aria-describedby={undefined}>
-        <Dialog.Title>친구 초대</Dialog.Title>
+        <Dialog.Title>Friend Invitation</Dialog.Title>
         <input
           type="text"
           className="mt-6 w-full rounded-lg border border-neutral-50/50 bg-black px-4 py-2 text-white placeholder-neutral-400 focus:border-white focus:outline-none"
-          placeholder="사용자명을 입력하세요"
+          placeholder="Search by nickname"
           value={filter}
           onChange={e => setFilter(e.target.value)}
         />
 
         <div className="mt-4 max-h-[280px] overflow-y-auto">
           <ul className="space-y-2">
-            {data.data.friends
+            {data?.data.friends
               .filter(friend => friend.nickname.toLowerCase().includes(filter.toLowerCase()))
               .map(friend => (
                 <li
