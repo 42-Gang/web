@@ -1,25 +1,20 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
 import { queryKeys } from '~/api';
 import { useTournament } from '../tournament-socket-provider';
 
 export const ClientComponents = () => {
-  const searchParams = useSearchParams();
-  const tournamentId = searchParams.get('tid');
-
-  const { data: me } = useQuery(queryKeys.users.me);
-
   const { matchInfo, socket, readyPlayerIds, gameResult } = useTournament();
+  const { data: me } = useSuspenseQuery(queryKeys.users.me);
 
   const handleReady = useCallback(() => {
-    if (!tournamentId) return;
-    socket?.emit('ready', {});
+    if (!socket) return;
+    socket.emit('ready', {});
     console.log('[tournament/page] Ready emitted');
-  }, [tournamentId, socket]);
+  }, [socket]);
 
   if (!matchInfo) {
     return (
@@ -30,7 +25,7 @@ export const ClientComponents = () => {
   }
 
   const { mode, size, players } = matchInfo;
-  const currentUserId = me?.data?.id;
+  const currentUserId = me.data.id;
   const isCurrentUserReady = currentUserId ? readyPlayerIds.includes(currentUserId) : false;
 
   return (
