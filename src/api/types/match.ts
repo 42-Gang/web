@@ -1,31 +1,31 @@
-export type MatchPlayerInfoType = {
+export interface MatchPlayerInfoType {
   userId: number;
   nickname: string;
   profileImage: string;
   state: 'NOTHING' | 'READY' | 'PLAYING' | 'ELIMINATED';
-};
+}
 
-export type MatchInfoType = {
+export interface MatchInfoType {
   mode: 'AUTO' | 'CUSTOM';
   players: MatchPlayerInfoType[];
   size: number;
-};
+}
 
-export type MatchCreatedEvent = {
+export interface MatchCreatedEvent {
   eventType: 'CREATED';
   matchId: number;
   player1Id: number;
   player2Id: number;
   serverName: string;
   tournamentId: number;
-};
+}
 
-export type ReadyResponse = {
+export interface ReadyResponse {
   type: 'user-ready' | 'all-users-ready';
   userId: number;
-};
+}
 
-export type GameResultResponse = {
+export interface GameResultResponse {
   tournamentId: number;
   matchId: number;
   player1Id: number;
@@ -34,4 +34,4 @@ export type GameResultResponse = {
   winnerId: number;
   loserId: number;
   round: number;
-};
+}

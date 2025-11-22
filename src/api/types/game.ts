@@ -2,88 +2,139 @@ export type TournamentRoundType = 'ROUND_2' | 'ROUND_4';
 export type VerticalPosition = 'top' | 'bottom';
 export type HorizontalVariant = 'left' | 'right';
 
-export type Player = {
+export interface Player {
   id: string;
   name: string;
   avatarUrl: string;
   win: number;
   lose: number;
   tournament: number;
-};
+}
 
-export type WaitingRoomPlayer = {
+export interface WaitingRoomPlayer {
   id: number;
   nickname: string;
   avatarUrl: string;
   isHost: boolean;
-};
+}
 
-export type Match = {
+export interface Match {
   id: string;
   player1?: Player;
   player2?: Player;
   winnerId?: string;
   children?: [Match, Match];
-};
+}
 
-export type TournamentGame = {
+export interface TournamentGame {
   tournament_id: number;
   total_rounds: number;
   winner: string;
-};
+}
 
-export type TournamentGameList = {
+export interface TournamentGameList {
   game_list: TournamentGame[];
-};
+}
 
-export type AutoJoinPayload = {
+export interface AutoJoinPayload {
   tournamentSize: number;
-};
+}
 
-export type CustomCreatePayload = {
+export interface CustomCreatePayload {
   tournamentSize: number;
-};
+}
 
-export type CustomCreateResponse = {
+export interface CustomCreateResponse {
   roomId: string;
-};
+}
 
-export type CustomInvitePayload = {
+export interface CustomInvitePayload {
   roomId: string;
   userId: number;
   tournamentSize?: number;
-};
+}
 
-export type CustomInviteResponse = {
+export interface CustomInviteResponse {
   roomId: string;
   hostId: number;
   hostName: string;
   hostAvatarUrl: string;
   tournamentSize?: number;
-};
+}
 
-export type CustomAcceptPayload = {
+export interface CustomAcceptPayload {
   roomId: string;
-};
+}
 
-export type CustomStartPayload = {
+export interface CustomStartPayload {
   roomId: string;
-};
+}
 
-export type CustomLeavePayload = {
+export interface CustomLeavePayload {
   roomId: string;
-};
+}
 
-export type WaitingRoomUpdateResponse = {
+export interface WaitingRoomUpdateResponse {
   users: WaitingRoomPlayer[];
-};
+}
 
-export type TournamentCreatedResponse = {
+export interface TournamentCreatedResponse {
   tournamentId: number;
   size: number;
   mode: string;
-};
+}
 
-export type PlayerConnectedResponse = {
+export interface PlayerConnectedResponse {
   playerId: number;
-};
+}
+
+export interface GameStatsPayload {
+  userId: number;
+  mode: 'duel' | 'tournament';
+}
+
+interface GameParticipant {
+  id: number;
+  nickname: string;
+}
+
+export interface TournamentHistoryItem {
+  tournamentId: number;
+  rounds: number;
+  participants: GameParticipant[];
+  myResult: 'WIN' | 'LOSS';
+}
+
+export interface DuelHistoryItem {
+  tournamentId: number;
+  date: string;
+  player1: GameParticipant;
+  player2: GameParticipant;
+  result: {
+    winnerId: number;
+    scores: {
+      player1: number;
+      player2: number;
+    };
+  };
+}
+
+interface TournamentStatsData {
+  mode: 'tournament';
+  summary: {
+    wins: number;
+    losses: number;
+  };
+  history: TournamentHistoryItem[];
+}
+
+interface DuelStatsData {
+  mode: 'duel';
+  summary: {
+    wins: number;
+    losses: number;
+  };
+  history: DuelHistoryItem[];
+}
+
+export type GameStatsResponse = TournamentStatsData | DuelStatsData;
