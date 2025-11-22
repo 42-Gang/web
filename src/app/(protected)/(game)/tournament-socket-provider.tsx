@@ -112,7 +112,9 @@ const TournamentSocketManager = ({
         searchParams.set('mid', data.matchId.toString());
         searchParams.set('playerType', playerType);
 
-        router.push(`/${routes.game}?${searchParams.toString()}`);
+        setTimeout(() => {
+          router.push(`/${routes.game}?${searchParams.toString()}`);
+        }, 1000);
         return;
       }
 
