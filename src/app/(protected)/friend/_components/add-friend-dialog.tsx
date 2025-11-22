@@ -40,6 +40,14 @@ const UserSearchList = ({ searchTerm }: { searchTerm: string }) => {
   const users = searchResults?.data?.users || [];
 
   if (users.length === 0) {
+    if (searchTerm.length === 0) {
+      return null;
+    }
+    if (searchTerm.length < 3) {
+      return (
+        <div className="text-center text-neutral-400">Please enter at least 3 characters.</div>
+      );
+    }
     return searchTerm ? <div className="text-center text-neutral-400">User not found.</div> : null;
   }
 
