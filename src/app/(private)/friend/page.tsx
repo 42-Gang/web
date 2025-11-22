@@ -19,25 +19,26 @@ const Page = () => {
 
         <div className="center relative mt-6 w-full">
           <div className="center-y w-[75%] gap-2">
-            <AddFriendDialog>
-              <button
-                type="button"
-                className={twMerge(
-                  'center size-11 shrink-0 cursor-pointer rounded-2xl border-2 border-neutral-50 text-white',
-                  'hover:bg-neutral-50/20 active:translate-y-px',
-                )}
-              >
-                <UsersIcon size={24} />
-              </button>
-            </AddFriendDialog>
+            <Suspense clientOnly>
+              <AddFriendDialog>
+                <button
+                  type="button"
+                  className={twMerge(
+                    'center size-11 shrink-0 cursor-pointer rounded-2xl border-2 border-neutral-50 text-white',
+                    'hover:bg-neutral-50/20 active:translate-y-px',
+                  )}
+                >
+                  <UsersIcon size={24} />
+                </button>
+              </AddFriendDialog>
+            </Suspense>
             <Suspense>
               <FriendFilterInput />
             </Suspense>
+            <Suspense clientOnly>
+              <FriendRequestButton />
+            </Suspense>
           </div>
-
-          <Suspense clientOnly>
-            <FriendRequestButton />
-          </Suspense>
         </div>
 
         <Suspense clientOnly>
