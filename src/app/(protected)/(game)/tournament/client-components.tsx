@@ -3,11 +3,13 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useCallback } from 'react';
+import { twMerge } from 'tailwind-merge';
 import { queryKeys } from '~/api';
+import { CTAButton, WaitingText } from '~/components/ui';
 import { useTournament } from '../tournament-socket-provider';
 
 export const ClientComponents = () => {
-  const { matchInfo, socket, readyPlayerIds, gameResult } = useTournament();
+  const { matchInfo, socket, readyPlayerIds } = useTournament();
   const { data: me } = useSuspenseQuery(queryKeys.users.me);
 
   const handleReady = useCallback(() => {
@@ -16,100 +18,54 @@ export const ClientComponents = () => {
     console.log('[tournament/page] Ready emitted');
   }, [socket]);
 
-  if (!matchInfo) {
-    return (
-      <div className="flex flex-col items-center justify-center gap-4 p-8">
-        <p className="text-lg">대기 중...</p>
-      </div>
-    );
-  }
+  if (!matchInfo) return <TournamentLoading />;
 
   const { mode, size, players } = matchInfo;
   const currentUserId = me.data.id;
   const isCurrentUserReady = currentUserId ? readyPlayerIds.includes(currentUserId) : false;
 
   return (
-    <div className="flex flex-col gap-6 p-8">
-      <div className="flex flex-col gap-2">
-        <h2 className="font-bold text-2xl">토너먼트 정보</h2>
-        <div className="flex gap-4">
-          <p>
-            <span className="font-semibold">모드:</span> {mode}
-          </p>
-          <p>
-            <span className="font-semibold">인원:</span> {size}명
-          </p>
-        </div>
-      </div>
+    <div className="column-between h-full">
+      <div className="column-center-x">
+        <h1 className={twMerge('mt-10 font-bold text-5xl text-white')}>Tournament Match</h1>
 
-      <div className="flex flex-col gap-2">
-        <h3 className="font-semibold text-xl">참가자 목록</h3>
-        <div className="flex flex-col gap-2">
-          {players.map(player => {
-            const isReady = readyPlayerIds.includes(player.userId);
-            const isEliminated = player.state === 'ELIMINATED';
-            const isPlaying = player.state === 'PLAYING';
-
-            return (
-              <div key={player.userId} className="flex items-center gap-4 rounded border p-3">
-                <Image
-                  src={player.profileImage}
-                  alt={player.nickname}
-                  width={40}
-                  height={40}
-                  className="rounded-full"
-                />
-                <div className="flex-1">
-                  <p className="font-semibold">{player.nickname}</p>
-                  <p className="text-gray-600 text-sm">
-                    {isEliminated && '탈락'}
-                    {isPlaying && '게임 중'}
-                    {!isEliminated && !isPlaying && isReady && '준비 완료'}
-                    {!isEliminated && !isPlaying && !isReady && '대기 중'}
-                  </p>
-                </div>
-                {isReady && !isEliminated && !isPlaying && (
-                  <span className="rounded bg-green-500 px-2 py-1 text-sm text-white">✓</span>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <p className="text-gray-600 text-sm">
-          준비 완료: {readyPlayerIds.length} / {players.length}
+        <p className="mt-2 font-bold text-2xl">
+          {mode} {size === 2 ? '1vs1' : 'Free For All'} Match
         </p>
-        {socket?.isConnected ? (
-          <button
-            onClick={handleReady}
-            type="button"
-            disabled={isCurrentUserReady}
-            className="rounded bg-blue-500 px-4 py-2 font-semibold text-white hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-gray-400"
-          >
-            {isCurrentUserReady ? '준비 완료됨' : '준비 완료'}
-          </button>
-        ) : (
-          <p className="text-red-500">소켓 연결 중...</p>
-        )}
       </div>
 
-      {gameResult && (
-        <div className="mt-4 rounded border border-green-500 bg-green-50 p-4">
-          <h3 className="mb-2 font-semibold text-xl">게임 결과</h3>
-          <p>
-            <span className="font-semibold">승자:</span> Player {gameResult.winnerId}
-          </p>
-          <p>
-            <span className="font-semibold">스코어:</span> {gameResult.score.player1} :{' '}
-            {gameResult.score.player2}
-          </p>
-          <p>
-            <span className="font-semibold">라운드:</span> {gameResult.round}
-          </p>
-        </div>
-      )}
+      <div className="center-y gap-12">
+        {players.map(player => (
+          <div key={player.userId} className="column-center-x">
+            <div
+              className={twMerge(
+                'size-[84px] overflow-hidden rounded-full border-2 border-transparent',
+                readyPlayerIds.includes(player.userId) ? 'border-green-500' : '',
+              )}
+            >
+              <Image
+                width={84}
+                height={84}
+                src={player.profileImage}
+                alt={`${player.userId} 이미지`}
+              />
+            </div>
+            <p className="mt-1 text-xl">{player.nickname}</p>
+          </div>
+        ))}
+      </div>
+
+      <CTAButton className="mb-10" size="md" disabled={isCurrentUserReady} onClick={handleReady}>
+        {isCurrentUserReady ? 'Waiting...' : 'Ready'}
+      </CTAButton>
+    </div>
+  );
+};
+
+const TournamentLoading = () => {
+  return (
+    <div className="center size-full text-center">
+      <WaitingText className="text-xl" prefix="Tournament Loading..." />
     </div>
   );
 };
