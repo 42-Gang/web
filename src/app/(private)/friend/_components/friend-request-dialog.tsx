@@ -2,15 +2,14 @@
 
 import { useSuspenseQuery } from '@tanstack/react-query';
 import Image from 'next/image';
-import { type PropsWithChildren, useState } from 'react';
+import { type PropsWithChildren, Suspense, useState } from 'react';
 import { toast } from 'sonner';
 import { queryKeys } from '~/api';
 import { useAcceptFriendsRequests, useRejectFriendsRequests } from '~/api/mutations';
 import { CheckIcon, TimesIcon } from '~/components/icon';
 import { Dialog } from '~/components/system';
 
-export const FriendRequestDialog = ({ children }: PropsWithChildren) => {
-  const [open, setOpen] = useState<boolean>(false);
+const FriendRequestList = () => {
   const { data } = useSuspenseQuery(queryKeys.friends.requests);
   const { mutate: acceptRequest, isPending: isAccepting } = useAcceptFriendsRequests();
   const { mutate: rejectRequest, isPending: isRejecting } = useRejectFriendsRequests();
@@ -54,6 +53,55 @@ export const FriendRequestDialog = ({ children }: PropsWithChildren) => {
     );
   };
 
+  if (requests.length === 0) {
+    return <div className="text-center text-neutral-400">No friend requests.</div>;
+  }
+
+  return (
+    <div className="space-y-2">
+      {requests.map(request => (
+        <div
+          key={request.userId}
+          className="flex items-center justify-between rounded-lg border border-neutral-50/50 bg-neutral-900/50 p-3"
+        >
+          <div className="flex items-center gap-3">
+            <Image
+              src={request.avatarUrl}
+              alt={request.nickname}
+              width={40}
+              height={40}
+              className="size-10 rounded-full"
+              draggable={false}
+            />
+            <span className="text-white">{request.nickname}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => handleAccept(request.userId, request.nickname)}
+              className="center size-8 cursor-pointer rounded-lg border border-green-500/50 bg-green-500/20 text-green-500 hover:bg-green-500/30 active:translate-y-px disabled:opacity-50"
+              disabled={isPending}
+            >
+              <CheckIcon size={18} />
+            </button>
+            <button
+              type="button"
+              onClick={() => handleReject(request.userId, request.nickname)}
+              className="center size-8 cursor-pointer rounded-lg border border-red-500/50 bg-red-500/20 text-red-500 hover:bg-red-500/30 active:translate-y-px disabled:opacity-50"
+              disabled={isPending}
+            >
+              <TimesIcon size={18} />
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export const FriendRequestDialog = ({ children }: PropsWithChildren) => {
+  const [open, setOpen] = useState<boolean>(false);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>{children}</Dialog.Trigger>
@@ -64,48 +112,11 @@ export const FriendRequestDialog = ({ children }: PropsWithChildren) => {
         </Dialog.Description>
 
         <div className="mt-6 max-h-64 overflow-y-auto">
-          {requests.length > 0 ? (
-            <div className="space-y-2">
-              {requests.map(request => (
-                <div
-                  key={request.userId}
-                  className="flex items-center justify-between rounded-lg border border-neutral-50/50 bg-neutral-900/50 p-3"
-                >
-                  <div className="flex items-center gap-3">
-                    <Image
-                      src={request.avatarUrl}
-                      alt={request.nickname}
-                      width={40}
-                      height={40}
-                      className="size-10 rounded-full"
-                      draggable={false}
-                    />
-                    <span className="text-white">{request.nickname}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => handleAccept(request.userId, request.nickname)}
-                      className="center size-8 cursor-pointer rounded-lg border border-green-500/50 bg-green-500/20 text-green-500 hover:bg-green-500/30 active:translate-y-px disabled:opacity-50"
-                      disabled={isPending}
-                    >
-                      <CheckIcon size={18} />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleReject(request.userId, request.nickname)}
-                      className="center size-8 cursor-pointer rounded-lg border border-red-500/50 bg-red-500/20 text-red-500 hover:bg-red-500/30 active:translate-y-px disabled:opacity-50"
-                      disabled={isPending}
-                    >
-                      <TimesIcon size={18} />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center text-neutral-400">No friend requests.</div>
-          )}
+          <Suspense
+            fallback={<div className="text-center text-neutral-400">Loading requests...</div>}
+          >
+            <FriendRequestList />
+          </Suspense>
         </div>
         <Dialog.Close />
       </Dialog.Content>
