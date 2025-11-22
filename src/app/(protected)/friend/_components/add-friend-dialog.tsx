@@ -26,11 +26,9 @@ const UserSearchList = ({ searchTerm }: { searchTerm: string }) => {
       { friendId },
       {
         onSuccess: () => {
-          console.log('[friend/add-friend-dialog] Friend request sent successfully');
           toast.success(`Friend request sent to ${nickname}.`);
         },
-        onError: error => {
-          console.error('[friend/add-friend-dialog] Failed to send friend request:', error);
+        onError: () => {
           toast.error('Failed to send friend request.');
         },
       },
