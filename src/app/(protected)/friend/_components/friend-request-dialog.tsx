@@ -24,11 +24,9 @@ const FriendRequestList = () => {
       { id: userId },
       {
         onSuccess: () => {
-          console.log('[friend/friend-request-dialog] Friend request accepted successfully');
           toast.success(`You accepted ${nickname}'s friend request.`);
         },
-        onError: error => {
-          console.error('[friend/friend-request-dialog] Failed to accept friend request:', error);
+        onError: () => {
           toast.error('Failed to accept friend request.');
         },
       },
@@ -42,11 +40,9 @@ const FriendRequestList = () => {
       { id: userId },
       {
         onSuccess: () => {
-          console.log('[friend/friend-request-dialog] Friend request rejected successfully');
           toast.success(`You rejected ${nickname}'s friend request.`);
         },
-        onError: error => {
-          console.error('[friend/friend-request-dialog] Failed to reject friend request:', error);
+        onError: () => {
           toast.error('Failed to reject friend request.');
         },
       },
