@@ -1,8 +1,7 @@
 'use client';
 
-import { Suspense } from '@suspensive/react';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
 import type { WaitingRoomPlayer } from '~/api';
@@ -81,27 +80,23 @@ export const ClientComponent = ({ id, mode, isHost }: Props) => {
     <>
       {mode === '1vs1' ? (
         <div className="center w-full flex-1 gap-10 py-5">
-          <Suspense clientOnly>
-            {isHost && (users[0] ?? null) === null ? (
-              <InviteDialog onInvite={handleInvite}>
-                <UserCard user={users[0] ?? null} />
-              </InviteDialog>
-            ) : (
+          {isHost && (users[0] ?? null) === null ? (
+            <InviteDialog onInvite={handleInvite}>
               <UserCard user={users[0] ?? null} />
-            )}
-          </Suspense>
+            </InviteDialog>
+          ) : (
+            <UserCard user={users[0] ?? null} />
+          )}
 
           <p className={twMerge('text-4xl', Tiny.className)}>VS</p>
 
-          <Suspense clientOnly>
-            {isHost && (users[1] ?? null) === null ? (
-              <InviteDialog onInvite={handleInvite}>
-                <UserCard user={users[1] ?? null} />
-              </InviteDialog>
-            ) : (
+          {isHost && (users[1] ?? null) === null ? (
+            <InviteDialog onInvite={handleInvite}>
               <UserCard user={users[1] ?? null} />
-            )}
-          </Suspense>
+            </InviteDialog>
+          ) : (
+            <UserCard user={users[1] ?? null} />
+          )}
         </div>
       ) : (
         <div className="center w-full flex-1 gap-3 py-5">
@@ -110,7 +105,7 @@ export const ClientComponent = ({ id, mode, isHost }: Props) => {
             const isEmpty = user === null;
 
             return (
-              <Suspense key={idx} clientOnly>
+              <Fragment key={idx}>
                 {isHost && isEmpty ? (
                   <InviteDialog onInvite={handleInvite}>
                     <UserCard user={user} className="w-[175px]" />
@@ -118,7 +113,7 @@ export const ClientComponent = ({ id, mode, isHost }: Props) => {
                 ) : (
                   <UserCard user={user} className="w-[175px]" />
                 )}
-              </Suspense>
+              </Fragment>
             );
           })}
         </div>

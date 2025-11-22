@@ -23,10 +23,13 @@ const getCacheKey = (
   const { token: _token, ...otherQuery } = query || {};
   const sortedQuery = Object.keys(otherQuery)
     .sort()
-    .reduce((acc, key) => {
-      acc[key] = otherQuery[key];
-      return acc;
-    }, {} as Record<string, string>);
+    .reduce(
+      (acc, key) => {
+        acc[key] = otherQuery[key];
+        return acc;
+      },
+      {} as Record<string, string>,
+    );
   const q = Object.keys(sortedQuery).length > 0 ? JSON.stringify(sortedQuery) : '';
   return `${path}:${ns}:${auth ? 'auth' : 'noauth'}:${q}`;
 };
