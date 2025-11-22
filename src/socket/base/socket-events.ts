@@ -4,6 +4,10 @@ import type {
   CustomInviteResponse,
   FriendAcceptStatus,
   FriendRequestStatus,
+  GameResultResponse,
+  MatchCreatedEvent,
+  MatchInfoType,
+  ReadyResponse,
   TournamentCreatedResponse,
   UserStatus,
   WaitingRoomUpdateResponse,
@@ -20,6 +24,9 @@ export interface ServerToClientEvents {
   'custom-create': (data: CustomCreateResponse) => void;
   'waiting-room-update': (data: WaitingRoomUpdateResponse) => void;
   'tournament-created': (data: TournamentCreatedResponse) => void;
+  'match-info': (data: MatchInfoType | MatchCreatedEvent) => void;
+  ready: (data: ReadyResponse) => void;
+  'game-result': (data: GameResultResponse) => void;
 }
 
 export type ClientToServerEvents = Record<string, (data: unknown) => void>;

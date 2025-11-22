@@ -179,9 +179,10 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
     return () => {
       isMounted.current = false;
       if (current) {
+        const path = optsRef.current.path;
         const ns = optsRef.current.namespace || '/';
         const auth = optsRef.current.withAuth !== false;
-        destroySocket(ns, auth, optsRef.current.query);
+        destroySocket(path, ns, auth, optsRef.current.query);
       }
     };
   }, []);
