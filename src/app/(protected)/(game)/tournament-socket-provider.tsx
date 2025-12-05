@@ -43,9 +43,9 @@ interface GameResultSetter {
 
 interface TournamentSocketManagerProps
   extends MatchInfoSetter,
-  SocketSetter,
-  ReadyPlayerIdsSetter,
-  GameResultSetter {
+    SocketSetter,
+    ReadyPlayerIdsSetter,
+    GameResultSetter {
   tid: string;
 }
 
