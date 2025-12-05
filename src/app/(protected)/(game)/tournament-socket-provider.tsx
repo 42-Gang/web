@@ -72,8 +72,8 @@ const TournamentSocketManager = ({
   const tournamentSocket = useSocket({
     path: '/ws/main-game',
     namespace: '/tournament',
-    withAuth: true,
     query: { tournamentId: tid },
+    withAuth: true,
     forceNew: true,
   });
 
