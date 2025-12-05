@@ -43,9 +43,9 @@ interface GameResultSetter {
 
 interface TournamentSocketManagerProps
   extends MatchInfoSetter,
-    SocketSetter,
-    ReadyPlayerIdsSetter,
-    GameResultSetter {
+  SocketSetter,
+  ReadyPlayerIdsSetter,
+  GameResultSetter {
   tid: string;
 }
 
@@ -72,8 +72,8 @@ const TournamentSocketManager = ({
   const tournamentSocket = useSocket({
     path: '/ws/main-game',
     namespace: '/tournament',
-    withAuth: true,
     query: { tournamentId: tid },
+    withAuth: true,
     forceNew: true,
   });
 
