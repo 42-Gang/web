@@ -8,7 +8,6 @@ import { useSocket } from '~/socket';
 
 interface ClientComponentsProps {
   server: string;
-  tid: string;
   mid: string;
   playerType: 'player1' | 'player2';
 }
@@ -22,7 +21,7 @@ interface GameState {
   isConnected: boolean;
 }
 
-export const ClientComponents = ({ server, tid: _tid, mid, playerType }: ClientComponentsProps) => {
+export const ClientComponents = ({ server, mid, playerType }: ClientComponentsProps) => {
   const router = useRouter();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [gameState, setGameState] = useState<GameState>({
