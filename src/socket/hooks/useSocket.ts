@@ -27,7 +27,7 @@ export interface UseSocketReturn {
   disconnect: () => void;
   emit: <K extends keyof ClientToServerEvents>(
     event: K,
-    data: Parameters<ClientToServerEvents[K]>[0],
+    ...args: Parameters<ClientToServerEvents[K]>
   ) => void;
   on: <K extends keyof ServerToClientEvents>(
     event: K,
@@ -202,10 +202,10 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
   const emit = useCallback(
     <K extends keyof ClientToServerEvents>(
       event: K,
-      data: Parameters<ClientToServerEvents[K]>[0],
+      ...args: Parameters<ClientToServerEvents[K]>
     ) => {
       if (socket?.connected) {
-        socket.emit(event as string, data);
+        socket.emit(event, ...args);
       } else {
         console.warn('[socket] Cannot emit: not connected');
       }

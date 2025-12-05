@@ -52,4 +52,13 @@ export interface ServerToClientEvents {
 
 export interface ClientToServerEvents {
   'match-racket-update': (data: MatchRacketUpdate) => void;
+  ready: (data: object) => void;
+  'auto-join': (data: { tournamentSize: number }) => void;
+  'custom-create': (data: { tournamentSize: number }) => void;
+  'custom-accept': (data: { roomId: string }) => void;
+  'custom-invite': (data: { roomId: string; userId: number }) => void;
+  'custom-start': (data: { roomId: string }) => void;
+  'custom-leave': (data: { roomId: string }) => void;
+  'auto-leave': (data: { tournamentSize: number }) => void;
+  message: (data: { roomId: number; contents: string }) => void;
 }
