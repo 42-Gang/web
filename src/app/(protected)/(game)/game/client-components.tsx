@@ -70,9 +70,9 @@ export const ClientComponents = ({ server, tid: _tid, mid, playerType }: ClientC
 
     const engine = new BABYLON.Engine(canvasRef.current, true);
     const scene = new BABYLON.Scene(engine);
-    const identityMatrix = BABYLON.Matrix.Identity();
     scene.clearColor = new BABYLON.Color4(0, 0, 0, 0);
 
+    // Camera Setup
     const isPlayer2 = playerType === 'player2';
     const cameraAlpha = isPlayer2 ? Math.PI : Math.PI * 2;
     const cameraBeta = Math.PI / 2.5;
@@ -87,47 +87,73 @@ export const ClientComponents = ({ server, tid: _tid, mid, playerType }: ClientC
       cameraTarget,
       scene,
     );
-
     camera.attachControl(canvasRef.current, false);
     camera.inputs.clear();
 
+    // Lighting (Hemispheric + Directional w/ Shadows)
     new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), scene);
+    const dir = new BABYLON.DirectionalLight('dir', new BABYLON.Vector3(-1, -2, -1), scene);
+    dir.position.set(5, 10, 7);
+    dir.shadowEnabled = true;
 
+    const shadowGen = new BABYLON.ShadowGenerator(1024, dir);
+    shadowGen.useBlurExponentialShadowMap = true;
+    shadowGen.blurKernel = 4;
+
+    // Game Objects (Table, Ball, Rackets)
+    // Table
     const table = BABYLON.MeshBuilder.CreateBox(
       'table',
       { width: 3, height: 0.03, depth: 1.5 },
       scene,
     );
+    table.receiveShadows = true;
+    shadowGen.addShadowCaster(table);
     table.position.y = 0.76;
 
+    // Table Texture
     const texSize = { width: 1024, height: 512 };
     const dynamicTex = new BABYLON.DynamicTexture('dynamicTexture', texSize, scene, false);
     const ctx = dynamicTex.getContext();
 
     ctx.fillStyle = '#00AA33';
     ctx.fillRect(0, 0, texSize.width, texSize.height);
-
     ctx.strokeStyle = '#FFFFFF';
+    ctx.lineWidth = 12;
+    ctx.strokeRect(0, 0, texSize.width, texSize.height);
     ctx.lineWidth = 8;
-
     ctx.beginPath();
     ctx.moveTo(0, texSize.height / 2);
     ctx.lineTo(texSize.width, texSize.height / 2);
     ctx.stroke();
-
-    ctx.lineWidth = 12;
-    ctx.strokeRect(0, 0, texSize.width, texSize.height);
     dynamicTex.update();
 
-    const mat = new BABYLON.StandardMaterial('tableMat', scene);
-    mat.diffuseTexture = dynamicTex;
-    mat.specularColor = new BABYLON.Color3(0, 0, 0);
-    table.material = mat;
+    const tableMat = new BABYLON.StandardMaterial('tableMat', scene);
+    tableMat.diffuseTexture = dynamicTex;
+    tableMat.specularColor = new BABYLON.Color3(0, 0, 0);
+    table.material = tableMat;
 
+    // Net
+    const net = BABYLON.MeshBuilder.CreateBox(
+      'net',
+      { width: 0.02, height: 0.2, depth: 1.5 },
+      scene,
+    );
+    net.position.y = 0.875;
+    const netMat = new BABYLON.StandardMaterial('netMat', scene);
+    netMat.diffuseColor = new BABYLON.Color3(1, 1, 1);
+    netMat.alpha = 0.5;
+    net.material = netMat;
+    shadowGen.addShadowCaster(net);
+
+    // Ball
     const ballMesh = BABYLON.MeshBuilder.CreateSphere('ball', { diameter: 0.1 }, scene);
-    ballMesh.material = new BABYLON.StandardMaterial('ballMat', scene);
-    (ballMesh.material as BABYLON.StandardMaterial).diffuseColor = new BABYLON.Color3(1, 0.8, 0.2);
+    const ballMat = new BABYLON.StandardMaterial('ballMat', scene);
+    ballMat.diffuseColor = new BABYLON.Color3(1, 0.8, 0.2);
+    ballMesh.material = ballMat;
+    shadowGen.addShadowCaster(ballMesh);
 
+    // Rackets
     const racket1 = BABYLON.MeshBuilder.CreateBox(
       'r1',
       { width: 0.05, height: 0.3, depth: 0.3 },
@@ -138,29 +164,53 @@ export const ClientComponents = ({ server, tid: _tid, mid, playerType }: ClientC
       { width: 0.05, height: 0.3, depth: 0.3 },
       scene,
     );
+    racket1.position.set(1.35, 0.9, 0);
+    racket2.position.set(-1.35, 0.9, 0);
+    shadowGen.addShadowCaster(racket1);
+    shadowGen.addShadowCaster(racket2);
 
-    const racketMat1 = new BABYLON.StandardMaterial('racketMat1', scene);
-    racketMat1.diffuseColor = new BABYLON.Color3(0.8, 0.2, 0.2);
+    const rMat1 = new BABYLON.StandardMaterial('rMat1', scene);
+    rMat1.diffuseColor = new BABYLON.Color3(0.8, 0.2, 0.2);
+    racket1.material = rMat1;
 
-    const racketMat2 = new BABYLON.StandardMaterial('racketMat2', scene);
-    racketMat2.diffuseColor = new BABYLON.Color3(0.2, 0.2, 0.8);
+    const rMat2 = new BABYLON.StandardMaterial('rMat2', scene);
+    rMat2.diffuseColor = new BABYLON.Color3(0.2, 0.2, 0.8);
+    racket2.material = rMat2;
 
-    racket1.material = racketMat1;
-    racket2.material = racketMat2;
-
-    const racketPlaneY = 0.9;
-    racket1.position.y = racketPlaneY;
-    racket2.position.y = racketPlaneY;
-
-    racket1.position.x = 1.35;
-    racket1.position.z = 0;
-
-    racket2.position.x = -1.35;
-    racket2.position.z = 0;
-
+    // Set initial targets
     r2TargetRef.current = racket2.position.clone();
 
-    const plane = new BABYLON.Plane(0, 1, 0, -racketPlaneY);
+    // Post Process (Arcade Shader)
+    BABYLON.Effect.ShadersStore.arcadePixelFragmentShader = `
+      precision highp float;
+      varying vec2 vUV;
+      uniform sampler2D textureSampler;
+      uniform vec2 screenSize;
+      uniform vec2 pixelCount;
+      void main(void) {
+        vec2 uv = floor(vUV * pixelCount) / pixelCount;
+        vec4 c  = texture2D(textureSampler, uv);
+        float scan = mod(gl_FragCoord.y, 2.0) < 1.0 ? 0.85 : 1.0;
+        gl_FragColor = vec4(c.rgb * scan, c.a);
+      }
+    `;
+
+    const postProcess = new BABYLON.PostProcess(
+      'ArcadePixel',
+      'arcadePixel',
+      ['screenSize', 'pixelCount'],
+      null,
+      1.0,
+      camera,
+    );
+    postProcess.onApply = effect => {
+      effect.setFloat2('screenSize', postProcess.width, postProcess.height);
+      effect.setFloat2('pixelCount', postProcess.width, postProcess.height);
+    };
+
+    // Picking Ray
+    const identityMatrix = BABYLON.Matrix.Identity();
+    const plane = new BABYLON.Plane(0, 1, 0, -0.9);
     const ray = new BABYLON.Ray(BABYLON.Vector3.Zero(), BABYLON.Vector3.Zero());
 
     scene.onBeforeRenderObservable.add(() => {
@@ -185,11 +235,14 @@ export const ClientComponents = ({ server, tid: _tid, mid, playerType }: ClientC
       }
     });
 
+    // Render Loop
     engine.runRenderLoop(() => {
+      // Camera Zoom
       if (camera) {
         camera.radius = BABYLON.Scalar.Lerp(camera.radius, cameraTargetRadiusRef.current, 0.1);
       }
 
+      // Object Interpolation
       if (ballTargetRef.current) {
         ballMesh.position = BABYLON.Vector3.Lerp(ballMesh.position, ballTargetRef.current, 0.3);
       }
@@ -273,31 +326,19 @@ export const ClientComponents = ({ server, tid: _tid, mid, playerType }: ClientC
         let newRadius: number;
         const isPlayer2 = playerType === 'player2';
 
-        // Symmetric logic:
-        // If Ball is CLOSE to player -> Zoom OUT (radius gets larger)
-        // If Ball is FAR from player -> Zoom IN (radius gets smaller)
-
         if (isPlayer2) {
-          // Player 2 is at -X side.
-          // Ball x < 0 is Close. Ball x > 0 is Far.
           if (x > 0) {
-            // Far
             const d = Math.min(x, limitX);
             newRadius = baseRadius - (d / limitX) * (baseRadius - minRadius);
           } else {
-            // Close
             const d = Math.min(Math.abs(x), limitX);
             newRadius = baseRadius + (d / limitX) * 2.0;
           }
         } else {
-          // Player 1 is at +X side.
-          // Ball x > 0 is Close. Ball x < 0 is Far.
           if (x < 0) {
-            // Far
             const d = Math.min(Math.abs(x), limitX);
             newRadius = baseRadius - (d / limitX) * (baseRadius - minRadius);
           } else {
-            // Close
             const d = Math.min(x, limitX);
             newRadius = baseRadius + (d / limitX) * 2.0;
           }
@@ -364,6 +405,7 @@ export const ClientComponents = ({ server, tid: _tid, mid, playerType }: ClientC
       <canvas
         ref={canvasRef}
         className="touch-action-none block h-[600px] w-[800px] focus:outline-none"
+        style={{ imageRendering: 'pixelated' }}
       />
 
       {gameState.statusMessage && (
@@ -400,7 +442,7 @@ export const ClientComponents = ({ server, tid: _tid, mid, playerType }: ClientC
 
       {gameState.winner && (
         <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/70">
-          <h1 className="m-0 font-bold text-[#ffd700] text-[72px]">
+          <h1 className="m-0 font-bold text-[#ffd700] text-[48px]">
             {gameState.winner.name} WINS!
           </h1>
           <p className="mt-5 text-2xl text-white tracking-widest opacity-0">
