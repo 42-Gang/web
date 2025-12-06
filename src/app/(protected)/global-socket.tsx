@@ -23,7 +23,7 @@ export const GlobalSocket = () => {
   const statusSocket = useStatusSocket();
 
   useEffect(() => {
-    if (!friendSocket.socket || !friendSocket.isConnected) return;
+    if (!friendSocket.socket) return;
 
     const req = friendSocket.on('friend-request', async data => {
       console.log('[global-socket] Friend request:', data);
@@ -49,10 +49,10 @@ export const GlobalSocket = () => {
       req();
       accept();
     };
-  }, [friendSocket.socket, friendSocket.isConnected, qc, friendSocket.on]);
+  }, [friendSocket.socket, qc, friendSocket.on]);
 
   useEffect(() => {
-    if (!mainGameSocket.socket || !mainGameSocket.isConnected) return;
+    if (!mainGameSocket.socket) return;
 
     const invite = mainGameSocket.on('custom-invite', data => {
       console.log('[global-socket] Game invite:', data);
@@ -79,10 +79,10 @@ export const GlobalSocket = () => {
     });
 
     return () => invite();
-  }, [mainGameSocket.socket, mainGameSocket.isConnected, router, mainGameSocket.on]);
+  }, [mainGameSocket.socket, router, mainGameSocket.on]);
 
   useEffect(() => {
-    if (!chatSocket.socket || !chatSocket.isConnected) return;
+    if (!chatSocket.socket) return;
 
     const msg = chatSocket.on('message', data => {
       console.log('[global-socket] Chat message:', data);
@@ -104,10 +104,10 @@ export const GlobalSocket = () => {
     });
 
     return () => msg();
-  }, [chatSocket.socket, chatSocket.isConnected, me, params, router, chatSocket.on]);
+  }, [chatSocket.socket, me, params, router, chatSocket.on]);
 
   useEffect(() => {
-    if (!statusSocket.socket || !statusSocket.isConnected) return;
+    if (!statusSocket.socket) return;
 
     const status = statusSocket.on('friend-status', data => {
       console.log('[global-socket] Friend status:', data);
@@ -115,7 +115,7 @@ export const GlobalSocket = () => {
     });
 
     return () => status();
-  }, [statusSocket.socket, statusSocket.isConnected, updateStatus, statusSocket.on]);
+  }, [statusSocket.socket, updateStatus, statusSocket.on]);
 
   return null;
 };

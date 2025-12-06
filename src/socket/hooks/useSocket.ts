@@ -59,31 +59,60 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
     };
   }, [options]);
 
-  const setupHandlers = useCallback((sock: SocketInstance) => {
-    sock.on('connect', () => {
-      if (isMounted.current) {
-        setConnected(true);
-        setConnecting(false);
-        handlersRef.current.onConnect?.();
-      }
-    });
+  const internalListeners = useRef<{
+    connect: () => void;
+    disconnect: (reason: string) => void;
+    connect_error: (err: Error) => void;
+  } | null>(null);
 
-    sock.on('disconnect', reason => {
-      if (isMounted.current) {
-        setConnected(false);
-        setConnecting(false);
-        handlersRef.current.onDisconnect?.(reason);
-      }
-    });
-
-    sock.on('connect_error', err => {
-      if (isMounted.current) {
-        setError(err as Error);
-        setConnecting(false);
-        handlersRef.current.onError?.(err as Error);
-      }
-    });
+  const cleanupHandlers = useCallback((sock: SocketInstance) => {
+    if (!internalListeners.current) return;
+    sock.off('connect', internalListeners.current.connect);
+    sock.off('disconnect', internalListeners.current.disconnect);
+    sock.off('connect_error', internalListeners.current.connect_error);
+    internalListeners.current = null;
   }, []);
+
+  const setupHandlers = useCallback(
+    (sock: SocketInstance) => {
+      cleanupHandlers(sock);
+
+      const onConnect = () => {
+        if (isMounted.current) {
+          setConnected(true);
+          setConnecting(false);
+          handlersRef.current.onConnect?.();
+        }
+      };
+
+      const onDisconnect = (reason: string) => {
+        if (isMounted.current) {
+          setConnected(false);
+          setConnecting(false);
+          handlersRef.current.onDisconnect?.(reason);
+        }
+      };
+
+      const onError = (err: Error) => {
+        if (isMounted.current) {
+          setError(err);
+          setConnecting(false);
+          handlersRef.current.onError?.(err);
+        }
+      };
+
+      internalListeners.current = {
+        connect: onConnect,
+        disconnect: onDisconnect,
+        connect_error: onError,
+      };
+
+      sock.on('connect', onConnect);
+      sock.on('disconnect', onDisconnect);
+      sock.on('connect_error', onError);
+    },
+    [cleanupHandlers],
+  );
 
   const recreate = useCallback(
     async (token: string) => {
@@ -98,8 +127,11 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
 
       try {
         if (socket) {
-          socket.removeAllListeners();
-          socket.disconnect();
+          cleanupHandlers(socket);
+
+          if (socket.connected) {
+            socket.disconnect();
+          }
         }
 
         const newOpts = {
@@ -110,7 +142,6 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
         const newSocket = await createSocket(newOpts, recreate);
 
         if (!isMounted.current) {
-          newSocket.disconnect();
           return;
         }
 
@@ -132,7 +163,7 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
         isRecreating.current = false;
       }
     },
-    [setupHandlers, socket],
+    [setupHandlers, cleanupHandlers, socket],
   );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: recreate and setupHandlers are stable, adding them would cause infinite loop
