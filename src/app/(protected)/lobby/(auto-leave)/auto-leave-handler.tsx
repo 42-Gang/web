@@ -11,13 +11,13 @@ export const AutoLeaveHandler = () => {
   const mode = _mode === '1vs1' || _mode === 'tournament' ? _mode : null;
 
   useEffect(() => {
-    if (!socket.socket || !mode) return;
+    if (!socket.socket || !socket.isConnected || !mode) return;
 
     return () => {
       socket.emit('auto-leave', { tournamentSize: mode === 'tournament' ? 4 : 2 });
       console.log('[leave] Leaving queue:', mode);
     };
-  }, [socket.socket, socket.emit, mode]);
+  }, [socket.socket, socket.isConnected, socket.emit, mode]);
 
   return null;
 };

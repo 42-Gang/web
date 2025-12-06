@@ -10,13 +10,13 @@ export const CustomLeaveHandler = () => {
   const id = searchParams.get('id');
 
   useEffect(() => {
-    if (!socket.socket || !id) return;
+    if (!socket.socket || !socket.isConnected || !id) return;
 
     return () => {
       socket.emit('custom-leave', { roomId: id });
       console.log('[leave] Leaving room:', id);
     };
-  }, [socket.socket, socket.emit, id]);
+  }, [socket.socket, socket.isConnected, socket.emit, id]);
 
   return null;
 };

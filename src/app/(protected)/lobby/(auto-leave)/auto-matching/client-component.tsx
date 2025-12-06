@@ -41,9 +41,9 @@ export const ClientComponent = ({ mode }: Props) => {
   }, [socket.socket, socket.on, router.replace]);
 
   useEffect(() => {
-    if (!socket.socket) return;
+    if (!socket.socket || !socket.isConnected) return;
     socket.emit('auto-join', { tournamentSize: mode === 'tournament' ? 4 : 2 });
-  }, [socket.socket, socket.emit, mode]);
+  }, [socket.socket, socket.emit, mode, socket.isConnected]);
 
   return (
     <>
