@@ -27,7 +27,7 @@ export const ClientComponent = ({ id, mode, isHost }: Props) => {
   const socket = useMainGameSocket();
 
   useEffect(() => {
-    if (!socket.socket || !socket.isConnected) return;
+    if (!socket.socket) return;
 
     const create = socket.on('custom-create', data => {
       const searchParams = new URLSearchParams(window.location.search);
@@ -48,7 +48,7 @@ export const ClientComponent = ({ id, mode, isHost }: Props) => {
       update();
       created();
     };
-  }, [socket.socket, socket.isConnected, socket.on, router.replace]);
+  }, [socket.socket, socket.on, router.replace]);
 
   useEffect(() => {
     if (!socket.socket || !socket.isConnected) return;

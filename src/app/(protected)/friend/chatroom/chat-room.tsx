@@ -34,7 +34,7 @@ export const ChatRoom = ({ className, currentFriendId, ...props }: Props) => {
   }, [roomId]);
 
   useEffect(() => {
-    if (!socket.socket || !socket.isConnected) return;
+    if (!socket.socket) return;
 
     return socket.on('message', data => {
       if (!me?.data) return;
@@ -48,7 +48,7 @@ export const ChatRoom = ({ className, currentFriendId, ...props }: Props) => {
 
       setSocketMessages(prev => [...prev, newMessage]);
     });
-  }, [socket.socket, socket.isConnected, me, socket.on]);
+  }, [socket.socket, me, socket.on]);
 
   const mergedMessages = useMemo(() => {
     const map = new Map<number, ChatMessage>();

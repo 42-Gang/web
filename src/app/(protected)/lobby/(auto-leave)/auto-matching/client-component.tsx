@@ -24,7 +24,7 @@ export const ClientComponent = ({ mode }: Props) => {
   const socket = useMainGameSocket();
 
   useEffect(() => {
-    if (!socket.socket || !socket.isConnected) return;
+    if (!socket.socket) return;
 
     const update = socket.on('waiting-room-update', data => setUsers(data.users));
     const created = socket.on('tournament-created', data => {
@@ -38,12 +38,12 @@ export const ClientComponent = ({ mode }: Props) => {
       update();
       created();
     };
-  }, [socket.socket, socket.isConnected, socket.on, router.replace]);
+  }, [socket.socket, socket.on, router.replace]);
 
   useEffect(() => {
-    if (!socket.socket || !socket.isConnected) return;
+    if (!socket.socket) return;
     socket.emit('auto-join', { tournamentSize: mode === 'tournament' ? 4 : 2 });
-  }, [socket.socket, socket.isConnected, socket.emit, mode]);
+  }, [socket.socket, socket.emit, mode]);
 
   return (
     <>
