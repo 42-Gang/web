@@ -142,6 +142,10 @@ export const useSocket = (options: UseSocketOptions): UseSocketReturn => {
         const newSocket = await createSocket(newOpts, recreate);
 
         if (!isMounted.current) {
+          const path = newOpts.path;
+          const ns = newOpts.namespace || '/';
+          const auth = newOpts.withAuth !== false;
+          destroySocket(path, ns, auth, newOpts.query);
           return;
         }
 
