@@ -99,7 +99,7 @@ const TournamentSocketManager = ({
   }, [setMatchInfo, setReadyPlayerIds, setGameResult]);
 
   useEffect(() => {
-    if (!tournamentSocket.socket || !tournamentSocket.isConnected || !me?.data) return;
+    if (!tournamentSocket.socket || !me?.data) return;
 
     const matchInfo = tournamentSocket.on('match-info', data => {
       console.log('[tournament-socket-provider] Match info:', data);
@@ -149,7 +149,6 @@ const TournamentSocketManager = ({
     };
   }, [
     tournamentSocket.socket,
-    tournamentSocket.isConnected,
     tournamentSocket.on,
     setMatchInfo,
     setReadyPlayerIds,
