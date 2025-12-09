@@ -74,22 +74,24 @@ const gameQueryKeys = createQueryKeys('games', {
 });
 
 const chatQueryKeys = createQueryKeys('chats', {
-  history: (payload: ChatHistoryPayload) => ({
-    queryKey: [payload],
-    queryFn: () => fetcher.get<HttpResponse<ChatHistory>>(`v1/chat/${payload.roomId}/messages`),
-  }),
-  dmRoomId: (payload: ChatDMRoomPayload) => ({
-    queryKey: [payload],
-    queryFn: () =>
-      fetcher.get<HttpResponse<ChatDMRoomResponse>>(
-        `v1/chat/room/dm?userId=${payload.userId}&friendId=${payload.friendId}`,
-      ),
-  }),
+	history: (payload: ChatHistoryPayload) => ({
+		queryKey: [payload],
+		queryFn: () => {
+			const searchParams: Record<string, string> = {
+				limit: String(payload.limit ?? '30'),
+			};
+			if (payload.nextCursor !== undefined) {
+				searchParams.nextCursor = String(payload.nextCursor);
+			}
+			return fetcher.get<HttpResponse<ChatHistory>>(`v1/chat/${payload.roomId}/messages`, {
+				searchParams,
+			});
+		},
+	}),
+	dmRoomId: (payload: ChatDMRoomPayload) => ({
+		queryKey: [payload],
+		queryFn: () => fetcher.get<HttpResponse<ChatDMRoomResponse>>(`v1/chat/room/dm?userId=${payload.userId}&friendId=${payload.friendId}`),
+	}),
 });
 
-export const queryKeys = mergeQueryKeys(
-  userQueryKeys,
-  friendsQueryKeys,
-  gameQueryKeys,
-  chatQueryKeys,
-);
+export const queryKeys = mergeQueryKeys(userQueryKeys, friendsQueryKeys, gameQueryKeys, chatQueryKeys);
