@@ -76,7 +76,17 @@ const gameQueryKeys = createQueryKeys('games', {
 const chatQueryKeys = createQueryKeys('chats', {
   history: (payload: ChatHistoryPayload) => ({
     queryKey: [payload],
-    queryFn: () => fetcher.get<HttpResponse<ChatHistory>>(`v1/chat/${payload.roomId}/messages`),
+    queryFn: () => {
+      const searchParams: Record<string, string> = {
+        limit: String(payload.limit ?? '30'),
+      };
+      if (payload.nextCursor !== undefined) {
+        searchParams.nextCursor = String(payload.nextCursor);
+      }
+      return fetcher.get<HttpResponse<ChatHistory>>(`v1/chat/${payload.roomId}/messages`, {
+        searchParams,
+      });
+    },
   }),
   dmRoomId: (payload: ChatDMRoomPayload) => ({
     queryKey: [payload],

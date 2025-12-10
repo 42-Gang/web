@@ -5,12 +5,23 @@ export interface ChatMessage {
   message: string;
 }
 
+export interface ChatHistoryMessage {
+  id: number;
+  nickname: string;
+  timestamp: string;
+  message: string;
+}
+
 export interface ChatHistoryPayload {
   roomId: number;
+  nextCursor?: number;
+  limit?: number;
 }
 
 export interface ChatHistory {
-  chatHistory: ChatMessage[];
+  chatHistory: ChatHistoryMessage[];
+  hasNext: boolean;
+  nextCursor: number;
 }
 
 export interface ChatDMRoomPayload {
