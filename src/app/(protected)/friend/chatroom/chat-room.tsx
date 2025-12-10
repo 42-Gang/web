@@ -7,7 +7,7 @@ import { type ChatHistory, type ChatMessage, type HttpResponse, queryKeys } from
 import { fetcher } from '~/api/base';
 import { useChatSocket } from '~/socket';
 import { ChatInputForm } from './chat-input-form';
-import { type ChatMessageListRef, ChatMessageList } from './chat-message-list';
+import { ChatMessageList, type ChatMessageListRef } from './chat-message-list';
 
 interface Props extends ComponentProps<'div'> {
   currentFriendId: number;
@@ -19,15 +19,16 @@ export const ChatRoom = ({ className, currentFriendId, ...props }: Props) => {
     queryKeys.chats.dmRoomId({ userId: me.data.id, friendId: currentFriendId }),
   );
 
+  const LIMIT = 50;
   const roomId = room.data.roomId;
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
-    queryKey: ['chats', 'history', { roomId, limit: 50 }],
+    queryKey: ['chats', 'history', { roomId, limit: LIMIT }],
     queryFn: ({ pageParam }: { pageParam: number | undefined }) => {
       const searchParams = new URLSearchParams();
       if (pageParam !== undefined) {
         searchParams.append('nextCursor', String(pageParam));
       }
-      searchParams.append('limit', '30');
+      searchParams.append('limit', String(LIMIT));
       return fetcher.get<HttpResponse<ChatHistory>>(`v1/chat/${roomId}/messages`, {
         searchParams,
       });
@@ -72,9 +73,6 @@ export const ChatRoom = ({ className, currentFriendId, ...props }: Props) => {
   const mergedMessages = useMemo(() => {
     const map = new Map<number, ChatMessage>();
 
-    // API에서 받은 메시지들을 ChatMessage 형식으로 변환
-    // pages는 첫 번째가 최신, 나중 페이지가 더 오래된 메시지
-    // 역순으로 합쳐서 오래된 메시지가 앞에 오도록 함
     const apiMessages: ChatMessage[] =
       data?.pages
         .slice()
@@ -96,7 +94,6 @@ export const ChatRoom = ({ className, currentFriendId, ...props }: Props) => {
 
   const handleSend = (message: string) => {
     socket.emit('message', { roomId, contents: message });
-    // 메시지 전송 후 스크롤을 하단으로 이동
     setTimeout(() => {
       messageListRef.current?.scrollToBottom();
     }, 0);
